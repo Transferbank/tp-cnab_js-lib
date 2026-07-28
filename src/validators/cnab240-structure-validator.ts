@@ -1,15 +1,6 @@
-/**
- * Validador estrutural para CNAB 240
- * 
- * Foca exclusivamente em estrutura/formato do documento:
- * - Tamanho de linha
- * - Tipos de registro válidos para o banco
- * - Sequência correta de registros (máquina de estados)
- * 
- * Não valida dados de negócio (valores, datas, documentos).
- */
-
-import { BankSchema, ValidationError } from '../types'
+import { BankSchema, ValidationError } from '@tp-types/index'
+import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
+import { getCnab240SegmentYVariant } from '@parser/cnab-positions'
 
 const LINE_LENGTH = 240
 
@@ -26,7 +17,7 @@ type Cnab240RecordKind =
   | 'trailerArquivo'
   | 'segmentoP'
   | 'segmentoQ'
-  | { kind: 'optional'; identifier: string } // Registros opcionais (R, S, Y*)
+  | { kind: 'optional'; identifier: string }
 
 type MachineState =
   | 'aguardando_header_arquivo'
@@ -34,22 +25,17 @@ type MachineState =
   | 'dentro_lote_aguardando_boleto'
   | 'dentro_boleto_aguardando_q'
   | 'dentro_boleto_com_nucleo_completo'
-  | 'pareamento_interrompido'  // NOVO: P foi visto mas algo inválido interrompeu antes do Q
+  | 'pareamento_interrompido'
   | 'arquivo_fechado'
 
 /**
- * Identifica o tipo de registro usando posições fixas do padrão FEBRABAN.
- * 
- * @param line - Linha do arquivo (deve ter 240 caracteres)
- * @returns Tipo do registro ou 'desconhecido' se não reconhecido
+ * Identifica tipo de registro por posições FEBRABAN fixas.
  */
 function identifyRecordKind(line: string): Cnab240RecordKind | 'desconhecido' {
   if (line.length !== LINE_LENGTH) {
     return 'desconhecido'
   }
-
-  // Posição 8 (charAt(7)) = tipo de registro
-  const recordType = line.charAt(7)
+  const recordType = getCnab240RecordType(line)
 
   switch (recordType) {
     case '0':
@@ -61,9 +47,7 @@ function identifyRecordKind(line: string): Cnab240RecordKind | 'desconhecido' {
     case '9':
       return 'trailerArquivo'
     case '3': {
-      // Registro de detalhe - verificar segmento
-      // Posição 14 (charAt(13)) = código do segmento
-      const segment = line.charAt(13)
+      const segment = getCnab240SegmentCode(line)
 
       switch (segment) {
         case 'P':
@@ -75,8 +59,7 @@ function identifyRecordKind(line: string): Cnab240RecordKind | 'desconhecido' {
         case 'S':
           return { kind: 'optional', identifier: 'S' }
         case 'Y': {
-          // Segmento Y tem variantes - posições 18-19 (substring(17, 19))
-          const variant = line.substring(17, 19)
+          const variant = getCnab240SegmentYVariant(line)
           return { kind: 'optional', identifier: `Y${variant}` }
         }
         default:
@@ -113,7 +96,7 @@ export function validateCnab240Structure(
   if (lines.length < 4) {
     errors.push({
       line: 1,
-      column: 'Estrutura',
+      field: 'Estrutura',
       message: 'Arquivo CNAB 240 deve ter no mínimo 4 registros (Header Arquivo, Header Lote, Detalhe, Trailer Lote, Trailer Arquivo)',
     })
     return { errors, batchCount, billCount }
@@ -138,7 +121,7 @@ export function validateCnab240Structure(
     if (line.length !== LINE_LENGTH) {
       errors.push({
         line: lineNumber,
-        column: 'Tamanho do registro',
+        field: 'Tamanho do registro',
         message: `Esperado ${LINE_LENGTH} caracteres, encontrado ${line.length}`,
       })
       // Modo estrito: se estava aguardando Q, interrompe o pareamento
@@ -156,7 +139,7 @@ export function validateCnab240Structure(
     if (kind === 'desconhecido') {
       errors.push({
         line: lineNumber,
-        column: 'Tipo de registro',
+        field: 'Tipo de registro',
         message: 'Tipo de registro não reconhecido ou não suportado',
       })
       // Modo estrito: se estava aguardando Q, interrompe o pareamento
@@ -174,7 +157,7 @@ export function validateCnab240Structure(
       if (!bankSchema[kind]) {
         errors.push({
           line: lineNumber,
-          column: 'Tipo de registro',
+          field: 'Tipo de registro',
           message: `Registro ${kind} não está definido no schema do banco ${bankSchema.bankName}`,
         })
         // Modo estrito: se estava aguardando Q, interrompe o pareamento
@@ -190,7 +173,7 @@ export function validateCnab240Structure(
       if (!optionalRecord) {
         errors.push({
           line: lineNumber,
-          column: `Segmento ${kind.identifier}`,
+          field: `Segmento ${kind.identifier}`,
           message: `Segmento ${kind.identifier} não está definido no schema do banco ${bankSchema.bankName}`,
         })
         // Modo estrito: se estava aguardando Q, interrompe o pareamento
@@ -209,7 +192,7 @@ export function validateCnab240Structure(
       if (state !== 'dentro_boleto_com_nucleo_completo') {
         errors.push({
           line: lineNumber,
-          column: `Segmento ${kind.identifier}`,
+          field: `Segmento ${kind.identifier}`,
           message: `Segmento opcional ${kind.identifier} sem par P+Q completo antes`,
         })
         // Modo estrito: se estava aguardando Q, registra a interrupção
@@ -229,21 +212,21 @@ export function validateCnab240Structure(
         if (sawFileHeader) {
           errors.push({
             line: lineNumber,
-            column: 'Header de Arquivo',
+            field: 'Header de Arquivo',
             message: 'Header de Arquivo duplicado',
           })
         }
         if (lineNumber !== 1) {
           errors.push({
             line: lineNumber,
-            column: 'Header de Arquivo',
+            field: 'Header de Arquivo',
             message: 'Header de Arquivo deve ser a primeira linha',
           })
         }
         if (state === 'arquivo_fechado') {
           errors.push({
             line: lineNumber,
-            column: 'Header de Arquivo',
+            field: 'Header de Arquivo',
             message: 'Header de Arquivo após Trailer de Arquivo',
           })
         }
@@ -258,21 +241,21 @@ export function validateCnab240Structure(
         if (!sawFileHeader) {
           errors.push({
             line: lineNumber,
-            column: 'Header de Lote',
+            field: 'Header de Lote',
             message: 'Header de Lote antes do Header de Arquivo',
           })
         }
         if (batchOpen) {
           errors.push({
             line: lineNumber,
-            column: 'Header de Lote',
+            field: 'Header de Lote',
             message: 'Header de Lote sem Trailer de Lote correspondente do lote anterior',
           })
         }
         if (state === 'arquivo_fechado') {
           errors.push({
             line: lineNumber,
-            column: 'Header de Lote',
+            field: 'Header de Lote',
             message: 'Header de Lote após Trailer de Arquivo',
           })
         }
@@ -288,7 +271,7 @@ export function validateCnab240Structure(
         if (!batchOpen) {
           errors.push({
             line: lineNumber,
-            column: 'Segmento P',
+            field: 'Segmento P',
             message: 'Segmento P fora de lote',
           })
           // Não avançar o estado - tratar como ruído estrutural
@@ -297,7 +280,7 @@ export function validateCnab240Structure(
         if (billInProgress) {
           errors.push({
             line: lineNumber,
-            column: 'Segmento P',
+            field: 'Segmento P',
             message: 'Segmento P sem Segmento Q correspondente do título anterior',
           })
         }
@@ -315,7 +298,7 @@ export function validateCnab240Structure(
             : ''
           errors.push({
             line: lineNumber,
-            column: 'Segmento Q',
+            field: 'Segmento Q',
             message: `Segmento Q sem Segmento P correspondente${detail}`,
           })
         } else {
@@ -332,21 +315,21 @@ export function validateCnab240Structure(
         if (billInProgress) {
           errors.push({
             line: lineNumber,
-            column: 'Trailer de Lote',
+            field: 'Trailer de Lote',
             message: 'Trailer de Lote com Segmento P pendente (sem Segmento Q correspondente)',
           })
         }
         if (!batchOpen) {
           errors.push({
             line: lineNumber,
-            column: 'Trailer de Lote',
+            field: 'Trailer de Lote',
             message: 'Trailer de Lote sem Header de Lote correspondente',
           })
         }
         if (state === 'dentro_lote_aguardando_boleto') {
           errors.push({
             line: lineNumber,
-            column: 'Trailer de Lote',
+            field: 'Trailer de Lote',
             message: 'Lote sem nenhum título (nenhum par P+Q)',
           })
         }
@@ -360,21 +343,21 @@ export function validateCnab240Structure(
         if (sawFileTrailer) {
           errors.push({
             line: lineNumber,
-            column: 'Trailer de Arquivo',
+            field: 'Trailer de Arquivo',
             message: 'Trailer de Arquivo duplicado',
           })
         }
         if (lineNumber !== lines.length) {
           errors.push({
             line: lineNumber,
-            column: 'Trailer de Arquivo',
+            field: 'Trailer de Arquivo',
             message: 'Trailer de Arquivo deve ser a última linha',
           })
         }
         if (batchOpen) {
           errors.push({
             line: lineNumber,
-            column: 'Trailer de Arquivo',
+            field: 'Trailer de Arquivo',
             message: 'Trailer de Arquivo com lote ainda aberto (falta Trailer de Lote)',
           })
         }
@@ -389,7 +372,7 @@ export function validateCnab240Structure(
   if (!sawFileHeader) {
     errors.push({
       line: 1,
-      column: 'Estrutura',
+      field: 'Estrutura',
       message: 'Arquivo sem Header de Arquivo',
     })
   }
@@ -397,7 +380,7 @@ export function validateCnab240Structure(
   if (!sawFileTrailer) {
     errors.push({
       line: lines.length,
-      column: 'Estrutura',
+      field: 'Estrutura',
       message: 'Arquivo sem Trailer de Arquivo',
     })
   }

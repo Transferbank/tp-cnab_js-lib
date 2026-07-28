@@ -1,19 +1,7 @@
-/**
- * Validador estrutural para CNAB 400
- * 
- * Foca exclusivamente em estrutura/formato do documento:
- * - Tamanho de linha (400 caracteres)
- * - Tipos de registro válidos (header, detail, trailer)
- * - Posicionamento correto (header primeira linha, trailer última, detalhes no meio)
- * - Contagem de registros quando o banco define qtd_documentos no trailer
- * 
- * Estrutura linear: Header → Detalhes → Trailer (sem lotes/segmentos como no CNAB 240)
- * 
- * Não valida dados de negócio (valores, datas, documentos).
- */
-
-import { BankSchema, ValidationError } from '../types'
-import { getRecordTypePattern } from '../parser/field-extractor'
+import { BankSchema, ValidationError } from '@tp-types/index'
+import { getRecordTypePattern } from '@parser/field-extractor'
+import { getCnab400RecordType } from '@parser/position-reader'
+import { getCnab400OptionalSuffix1, getCnab400OptionalSuffix2 } from '@parser/cnab-positions'
 
 const LINE_LENGTH = 400
 
@@ -22,21 +10,6 @@ export interface Cnab400StructureResult {
   detailCount: number
 }
 
-/**
- * Valida a estrutura de um arquivo CNAB 400.
- * 
- * Verifica:
- * - Tamanho correto de todas as linhas (400 caracteres)
- * - Header na primeira linha
- * - Trailer na última linha
- * - Apenas registros de detalhe no meio
- * - Pelo menos 1 registro de detalhe
- * - Quantidade de registros declarada no trailer (quando o banco define esse campo)
- * 
- * @param lines - Linhas do arquivo (já separadas, sem linhas vazias)
- * @param bankSchema - Schema do banco (obrigatório)
- * @returns Erros estruturais encontrados e contagem de detalhes
- */
 export function validateCnab400Structure(
   lines: string[],
   bankSchema: BankSchema
@@ -44,11 +17,10 @@ export function validateCnab400Structure(
   const errors: ValidationError[] = []
   let detailCount = 0
 
-  // Guard inicial: arquivo deve ter no mínimo 3 linhas
   if (lines.length < 3) {
     errors.push({
       line: 1,
-      column: 'Estrutura',
+      field: 'Estrutura',
       message: 'Arquivo CNAB 400 deve ter no mínimo 3 registros (Header, Detalhe, Trailer)',
     })
     return { errors, detailCount }
@@ -58,7 +30,7 @@ export function validateCnab400Structure(
   if (!bankSchema.header) {
     errors.push({
       line: 1,
-      column: 'Schema',
+      field: 'Schema',
       message: 'Schema do banco não define header para CNAB 400',
     })
     return { errors, detailCount }
@@ -67,7 +39,7 @@ export function validateCnab400Structure(
   if (!bankSchema.detail) {
     errors.push({
       line: 1,
-      column: 'Schema',
+      field: 'Schema',
       message: 'Schema do banco não define detail para CNAB 400',
     })
     return { errors, detailCount }
@@ -76,7 +48,7 @@ export function validateCnab400Structure(
   if (!bankSchema.trailer) {
     errors.push({
       line: 1,
-      column: 'Schema',
+      field: 'Schema',
       message: 'Schema do banco não define trailer para CNAB 400',
     })
     return { errors, detailCount }
@@ -103,21 +75,19 @@ export function validateCnab400Structure(
     if (line.length !== LINE_LENGTH) {
       errors.push({
         line: lineNumber,
-        column: 'Tamanho do registro',
+        field: 'Tamanho do registro',
         message: `Esperado ${LINE_LENGTH} caracteres, encontrado ${line.length}`,
       })
       continue
     }
 
-    // Tipo do registro (posição 1, charAt(0))
-    const recordType = line.charAt(0)
+    const recordType = getCnab400RecordType(line)
 
-    // Primeira linha deve ser Header
     if (i === 0) {
       if (recordType !== headerType) {
         errors.push({
           line: lineNumber,
-          column: 'Header',
+          field: 'Header',
           message: `Primeira linha deve ser Header (tipo ${headerType}), encontrado tipo ${recordType}`,
         })
       }
@@ -129,7 +99,7 @@ export function validateCnab400Structure(
       if (recordType !== trailerType) {
         errors.push({
           line: lineNumber,
-          column: 'Trailer',
+          field: 'Trailer',
           message: `Última linha deve ser Trailer (tipo ${trailerType}), encontrado tipo ${recordType}`,
         })
       }
@@ -142,13 +112,13 @@ export function validateCnab400Structure(
     } else if (recordType === headerType) {
       errors.push({
         line: lineNumber,
-        column: 'Header',
+        field: 'Header',
         message: 'Header encontrado no meio do arquivo (deve estar apenas na primeira linha)',
       })
     } else if (recordType === trailerType) {
       errors.push({
         line: lineNumber,
-        column: 'Trailer',
+        field: 'Trailer',
         message: 'Trailer encontrado no meio do arquivo (deve estar apenas na última linha)',
       })
     } else {
@@ -157,8 +127,8 @@ export function validateCnab400Structure(
       // 1. Chave composta com 2 dígitos de sufixo (ex: '5-99' do BB)
       // 2. Chave composta com 1 dígito de sufixo (ex: '6-1' do Itaú)
       // 3. Chave simples (ex: '2')
-      const suffix2 = line.substring(1, 3) // Posições 2-3
-      const suffix1 = line.substring(1, 2) // Posição 2
+      const suffix2 = getCnab400OptionalSuffix2(line)
+      const suffix1 = getCnab400OptionalSuffix1(line)
       
       const optionalRecord = 
         optionalByIdentifier.get(`${recordType}-${suffix2}`) ||
@@ -169,7 +139,7 @@ export function validateCnab400Structure(
         // Não é um registro opcional reconhecido
         errors.push({
           line: lineNumber,
-          column: 'Tipo de registro',
+          field: 'Tipo de registro',
           message: `Tipo de registro '${recordType}' não corresponde a nenhum tipo reconhecido (Header=${headerType}, Detalhe=${detailType}, Trailer=${trailerType})`,
         })
       }
@@ -181,7 +151,7 @@ export function validateCnab400Structure(
   if (detailCount === 0) {
     errors.push({
       line: 2,
-      column: 'Detalhe',
+      field: 'Detalhe',
       message: 'Arquivo deve conter pelo menos um registro de detalhe',
     })
   }
@@ -202,7 +172,7 @@ export function validateCnab400Structure(
       if (declaredCount > 0 && declaredCount !== detailCount) {
         errors.push({
           line: lines.length,
-          column: 'Quantidade no Trailer',
+          field: 'Quantidade no Trailer',
           message: `Trailer declara ${declaredCount} títulos, mas o arquivo contém ${detailCount}`,
         })
       }
