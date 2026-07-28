@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Banco do Brasil (001) — CNAB 400 — Registro Tipo 5, Serviço '07' (2º e 3º Descontos)
  *
  * Registro opcional que especifica 2º e 3º descontos. Deve ser enviado imediatamente
@@ -22,12 +22,12 @@
  * - Usar zeros nas datas/valores quando não houver o respectivo desconto
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
 
 export const TYPE5_DISCOUNTS: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -38,7 +38,7 @@ export const TYPE5_DISCOUNTS: RecordSchema = {
   },
   tipo_servico: {
     pos: [2, 3],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: true,
@@ -49,11 +49,11 @@ export const TYPE5_DISCOUNTS: RecordSchema = {
   },
   data_limite_2_desconto: {
     pos: [4, 9],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description:
       'Data limite para concessão do 2º desconto. Não pode ser posterior à data de vencimento do título nem à data do desconto anterior. Zeros se não houver',
@@ -61,7 +61,7 @@ export const TYPE5_DISCOUNTS: RecordSchema = {
   },
   valor_2_desconto: {
     pos: [10, 26],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
@@ -73,11 +73,11 @@ export const TYPE5_DISCOUNTS: RecordSchema = {
   },
   data_limite_3_desconto: {
     pos: [27, 32],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description:
       'Data limite para concessão do 3º desconto. Não pode ser posterior à data de vencimento do título nem à data do desconto anterior. Zeros se não houver',
@@ -85,7 +85,7 @@ export const TYPE5_DISCOUNTS: RecordSchema = {
   },
   valor_3_desconto: {
     pos: [33, 49],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
@@ -97,7 +97,7 @@ export const TYPE5_DISCOUNTS: RecordSchema = {
   },
   brancos: {
     pos: [50, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 345,
     decimals: 0,
     required: false,
@@ -108,7 +108,7 @@ export const TYPE5_DISCOUNTS: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Itaú (341) — CNAB 400 — Registro Tipo 6, Layout 1 (Dados do Título)
  *
  * Registro para emissão física de boleto pelo cedente (fluxo paralelo ao tipo 1).
@@ -16,12 +16,12 @@
  * Fonte: Manual oficial Itaú, layout_cobranca_400bytes_cnab_itau.pdf, §6, p.44-45
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
 
 export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -32,7 +32,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   codigo_layout: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -43,7 +43,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   agencia: {
     pos: [3, 6],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
@@ -54,7 +54,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   zeros: {
     pos: [7, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -65,7 +65,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   conta: {
     pos: [9, 13],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
@@ -76,7 +76,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   dac: {
     pos: [14, 14],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -87,7 +87,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   numero_carteira: {
     pos: [15, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
@@ -98,7 +98,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   nosso_numero: {
     pos: [18, 25],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: true,
@@ -109,7 +109,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   dac_nosso_numero: {
     pos: [26, 26],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -120,7 +120,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   codigo_moeda: {
     pos: [27, 27],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -131,7 +131,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   literal_moeda: {
     pos: [28, 31],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 4,
     decimals: 0,
     required: false,
@@ -142,7 +142,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   valor_titulo: {
     pos: [32, 44],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: true,
@@ -153,7 +153,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   seu_numero: {
     pos: [45, 54],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
@@ -164,18 +164,18 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   vencimento: {
     pos: [55, 60],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description: 'Data de vencimento do título',
     canonical: null,
   },
   especie: {
     pos: [61, 62],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: true,
@@ -186,7 +186,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   aceite: {
     pos: [63, 63],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -197,18 +197,18 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   data_emissao: {
     pos: [64, 69],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description: 'Data de emissão do título',
     canonical: null,
   },
   codigo_inscricao: {
     pos: [70, 71],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
@@ -219,7 +219,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   numero_inscricao: {
     pos: [72, 86],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: true,
@@ -230,7 +230,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   nome: {
     pos: [87, 116],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 30,
     decimals: 0,
     required: true,
@@ -241,7 +241,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   brancos_1: {
     pos: [117, 125],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
@@ -252,7 +252,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   logradouro: {
     pos: [126, 165],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -263,7 +263,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   bairro: {
     pos: [166, 177],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 12,
     decimals: 0,
     required: false,
@@ -274,7 +274,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   cep: {
     pos: [178, 185],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -285,7 +285,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   cidade: {
     pos: [186, 200],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -296,7 +296,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   estado: {
     pos: [201, 202],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: false,
@@ -307,7 +307,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   sacador_avalista: {
     pos: [203, 232],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 30,
     decimals: 0,
     required: false,
@@ -318,7 +318,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   brancos_2: {
     pos: [233, 236],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 4,
     decimals: 0,
     required: false,
@@ -329,7 +329,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   local_pagamento_1: {
     pos: [237, 291],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 55,
     decimals: 0,
     required: false,
@@ -340,7 +340,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   local_pagamento_2: {
     pos: [292, 346],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 55,
     decimals: 0,
     required: false,
@@ -351,7 +351,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   sacador_codigo_inscricao: {
     pos: [347, 348],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -362,7 +362,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   sacador_numero_inscricao: {
     pos: [349, 363],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -373,7 +373,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   brancos_3: {
     pos: [364, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 31,
     decimals: 0,
     required: false,
@@ -384,7 +384,7 @@ export const TYPE6_LAYOUT1_TITLE: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

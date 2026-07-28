@@ -1,45 +1,40 @@
-/**
- * Schema do Header de Arquivo - Bradesco CNAB 400
- * 
- * Primeira linha do arquivo CNAB 400. Contém identificação do banco,
- * dados do cedente e informações sobre o arquivo.
- * 
- * Tipo de registro: 0
+﻿/* *
+ * Primeira linha do arquivo CNAB 400. Cont�m identifica��o do banco,
+ * dados do cedente e informa��es sobre o arquivo.
  * 
  * Baseado em:
- * - Manual "Layout de Cobrança CNAB 400 — versão em português" (27/07/2017)
+ * - Manual "Layout de Cobran�a CNAB 400 � vers�o em portugu�s" (27/07/2017)
  * - brcobranca, cnab_yaml, laravel-boleto
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
 
 export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
-  // ========== IDENTIFICAÇÃO (1-9) ==========
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identificação do registro: 0=Header',
+    description: 'Identifica��o do registro: 0=Header',
     canonical: null,
   },
   tipo_operacao: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de operação: 1=Remessa',
+    description: 'Tipo de opera��o: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
     pos: [3, 9],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 7,
     decimals: 0,
     required: true,
@@ -48,76 +43,64 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     description: 'Literal REMESSA',
     canonical: null,
   },
-
-  // ========== CÓDIGO DE SERVIÇO (10-11) ==========
   codigo_servico: {
     pos: [10, 11],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Código de serviço: 01=Cobrança',
+    description: 'C�digo de servi�o: 01=Cobran�a',
     canonical: null,
   },
-
-  // ========== LITERAL SERVIÇO (12-26) ==========
   literal_servico: {
     pos: [12, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal COBRANCA (com espaços à direita)',
+    description: 'Literal COBRANCA (com espa�os � direita)',
     canonical: null,
   },
-
-  // ========== CÓDIGO DO CEDENTE (27-46) ==========
   codigo_cedente: {
     pos: [27, 46],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 20,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código da empresa no banco (20 posições)',
+    description: 'C�digo da empresa no banco (20 posi��es)',
     canonical: null,
   },
-
-  // ========== NOME DA EMPRESA (47-76) ==========
   nome_empresa: {
     pos: [47, 76],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 30,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Razão social do cedente',
+    description: 'Raz�o social do cedente',
     canonical: 'cedente.nome',
   },
-
-  // ========== CÓDIGO DO BANCO (77-79) ==========
   codigo_banco: {
     pos: [77, 79],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'Código FEBRABAN do Bradesco',
+    description: 'C�digo FEBRABAN do Bradesco',
     canonical: null,
   },
-
-  // ========== NOME DO BANCO (80-94) ==========
   nome_banco: {
     pos: [80, 94],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -126,113 +109,100 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     description: 'Nome do banco',
     canonical: null,
   },
-
-  // ========== DATA DE GERAÇÃO (95-100) ==========
   data_geracao: {
     pos: [95, 100],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de geração do arquivo',
+    description: 'Data de gera��o do arquivo',
     canonical: 'dataGeracao',
   },
-
-  // ========== BRANCOS (101-108) ==========
   brancos_1: {
     pos: [101, 108],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 8,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espaços em branco',
+    description: 'Espa�os em branco',
     canonical: null,
   },
-
-  // ========== IDENTIFICAÇÃO DO SISTEMA (109-110) ==========
   identificacao_sistema: {
     pos: [109, 110],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: 'MX',
-    description: 'Identificação do sistema: MX (fixo)',
+    description: 'Identifica��o do sistema: MX (fixo)',
     canonical: null,
   },
-
-  // ========== NÚMERO SEQUENCIAL DE REMESSA (111-117) ==========
   sequencial_remessa: {
     pos: [111, 117],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial da remessa',
+    description: 'N�mero sequencial da remessa',
     canonical: null,
   },
-
-  // ========== BRANCOS (118-394) ==========
   brancos_2: {
     pos: [118, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 277,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espaços em branco',
+    description: 'Espa�os em branco',
     canonical: null,
   },
-
-  // ========== NÚMERO SEQUENCIAL DO REGISTRO (395-400) ==========
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'Número sequencial do registro (sempre 000001 no header)',
+    description: 'N�mero sequencial do registro (sempre 000001 no header)',
     canonical: null,
   },
 }
 
 export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
-  // ========== IDENTIFICAÇÃO (1-9) ==========
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identificação do registro: 0=Header',
+    description: 'Identifica��o do registro: 0=Header',
     canonical: null,
   },
   tipo_operacao: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '2',
-    description: 'Tipo de operação: 2=Retorno',
+    description: 'Tipo de opera��o: 2=Retorno',
     canonical: null,
   },
   literal_retorno: {
     pos: [3, 9],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 7,
     decimals: 0,
     required: true,
@@ -241,76 +211,64 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     description: 'Literal RETORNO',
     canonical: null,
   },
-
-  // ========== CÓDIGO DE SERVIÇO (10-11) ==========
   codigo_servico: {
     pos: [10, 11],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Código de serviço: 01=Cobrança',
+    description: 'C�digo de servi�o: 01=Cobran�a',
     canonical: null,
   },
-
-  // ========== LITERAL SERVIÇO (12-26) ==========
   literal_servico: {
     pos: [12, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal COBRANCA (com espaços à direita)',
+    description: 'Literal COBRANCA (com espa�os � direita)',
     canonical: null,
   },
-
-  // ========== CÓDIGO DO CEDENTE (27-46) ==========
   codigo_cedente: {
     pos: [27, 46],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 20,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código da empresa no banco (20 posições)',
+    description: 'C�digo da empresa no banco (20 posi��es)',
     canonical: null,
   },
-
-  // ========== NOME DA EMPRESA (47-76) ==========
   nome_empresa: {
     pos: [47, 76],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 30,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Razão social do cedente',
+    description: 'Raz�o social do cedente',
     canonical: 'cedente.nome',
   },
-
-  // ========== CÓDIGO DO BANCO (77-79) ==========
   codigo_banco: {
     pos: [77, 79],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'Código FEBRABAN do Bradesco',
+    description: 'C�digo FEBRABAN do Bradesco',
     canonical: null,
   },
-
-  // ========== NOME DO BANCO (80-94) ==========
   nome_banco: {
     pos: [80, 94],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -319,95 +277,81 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     description: 'Nome do banco',
     canonical: null,
   },
-
-  // ========== DATA DE GERAÇÃO (95-100) ==========
   data_geracao: {
     pos: [95, 100],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de geração do arquivo de retorno',
+    description: 'Data de gera��o do arquivo de retorno',
     canonical: 'dataGeracao',
   },
-
-  // ========== DENSIDADE DE GRAVAÇÃO (101-108) ==========
   densidade_gravacao: {
     pos: [101, 108],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: '01600000',
-    description: 'Densidade de gravação (campo legado)',
+    description: 'Densidade de grava��o (campo legado)',
     canonical: null,
   },
-
-  // ========== NÚMERO DE AVISO BANCÁRIO (109-113) ==========
   numero_aviso_bancario: {
     pos: [109, 113],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Número do aviso bancário (5 dígitos no retorno)',
+    description: 'N�mero do aviso banc�rio (5 d�gitos no retorno)',
     canonical: null,
   },
-
-  // ========== BRANCOS (114-379) ==========
   brancos: {
     pos: [114, 379],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 266,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espaços em branco',
+    description: 'Espa�os em branco',
     canonical: null,
   },
-
-  // ========== DATA DO CRÉDITO (380-385) ==========
   data_credito: {
     pos: [380, 385],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de crédito dos valores',
+    description: 'Data de cr�dito dos valores',
     canonical: null,
   },
-
-  // ========== BRANCOS (386-394) ==========
   brancos_2: {
     pos: [386, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espaços em branco',
+    description: 'Espa�os em branco',
     canonical: null,
   },
-
-  // ========== NÚMERO SEQUENCIAL DO REGISTRO (395-400) ==========
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'Número sequencial do registro (sempre 000001 no header)',
+    description: 'N�mero sequencial do registro (sempre 000001 no header)',
     canonical: null,
   },
 }

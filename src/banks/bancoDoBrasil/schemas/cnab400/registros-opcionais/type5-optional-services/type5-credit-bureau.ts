@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Banco do Brasil (001) — CNAB 400 — Registro Tipo 5, Serviço '08' (Agente Negativador)
  *
  * Registro opcional que especifica o agente negativador. Deve ser enviado imediatamente
@@ -22,12 +22,12 @@
  *   Se necessário, conferir visualmente p.8-9 do PDF para confirmação definitiva.
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE5_CREDIT_BUREAU: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -38,7 +38,7 @@ export const TYPE5_CREDIT_BUREAU: RecordSchema = {
   },
   tipo_servico: {
     pos: [2, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
@@ -49,7 +49,7 @@ export const TYPE5_CREDIT_BUREAU: RecordSchema = {
   },
   codigo_agente_negativador: {
     pos: [4, 5],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
@@ -60,7 +60,7 @@ export const TYPE5_CREDIT_BUREAU: RecordSchema = {
   },
   brancos: {
     pos: [6, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 389,
     decimals: 0,
     required: false,
@@ -71,7 +71,7 @@ export const TYPE5_CREDIT_BUREAU: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

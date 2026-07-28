@@ -1,22 +1,9 @@
 /**
  * Santander (033) — CNAB 400
- *
- * Estrutura de um arquivo CNAB 400 (cada linha tem exatamente 400 caracteres):
- * - HEADER (primeira linha, tipo_registro = '0')
- * - DETALHE (linhas intermediárias, tipo_registro = '1')
- * - TRAILER (última linha, tipo_registro = '9')
- *
- * Fontes do layout:
- * - brcobranca (Ruby)
- * - cnab_yaml (YAML)
- * - laravel-boleto (PHP)
- *
- * Todas as três fontes concordam byte a byte em toda a remessa.
- * Confirmado contra arquivo real de 130 linhas (1 header + 128 detalhes + 1 trailer).
- *
+ * Fonte: brcobranca, cnab_yaml, laravel-boleto (concordantes byte a byte)
  */
 
-import { BankSchema, BANK_CODES } from '../../../../types'
+import { BankSchema, BANK_CODES } from '@tp-types/index'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'

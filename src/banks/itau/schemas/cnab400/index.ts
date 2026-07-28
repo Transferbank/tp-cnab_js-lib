@@ -1,26 +1,17 @@
 /**
  * Itaú (341) — CNAB 400
- *
- * Estrutura de um arquivo CNAB 400 (cada linha tem exatamente 400 caracteres):
- * - HEADER (primeira linha, tipo_registro = '0')
- * - DETALHE (linhas intermediárias, tipo_registro = '1')
- * - TRAILER (última linha, tipo_registro = '9')
- *
- * Registros opcionais (não incluídos no BankSchema padrão):
- * - TIPO 2: Complemento de multa (após cada detalhe tipo 1)
- * - TIPO 4: Rateio de crédito (não implementado)
- * - TIPO 5: E-mail sacador/avalista (não implementado)
- * - TIPO 6: Emissão de boleto (não implementado)
- *
- * Ver: ./registros-opcionais/ para schemas dos tipos opcionais
- *
- * Fontes do layout:
- * - Manual oficial Itaú (layout_cobranca_400bytes_cnab_itau.pdf)
- * - brcobranca (Ruby)
- * - laravel-boleto (PHP)
+ * 
+ * Registros opcionais disponíveis:
+ * - TIPO 2: Complemento de multa
+ * - TIPO 4: Rateio de crédito
+ * - TIPO 5: E-mail sacador/avalista
+ * - TIPO 6: Emissão de boleto (4 layouts)
+ * 
+ * Ver: ./registros-opcionais/
+ * Fonte: Manual oficial Itaú (layout_cobranca_400bytes_cnab_itau.pdf)
  */
 
-import { BankSchema, BANK_CODES } from '../../../../types'
+import { BankSchema, BANK_CODES } from '@tp-types/index'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'
@@ -52,8 +43,4 @@ export const itauCnab400: BankSchema = {
 }
 
 export { HEADER, DETAIL, TRAILER }
-
-// Registros opcionais (não fazem parte do BankSchema padrão)
-// Importar diretamente quando necessário:
-// import { TIPO2_MULTA } from './registros-opcionais'
 export * from './registros-opcionais'

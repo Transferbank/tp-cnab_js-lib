@@ -1,15 +1,10 @@
 /**
  * Sicoob / Bancoob (756) — CNAB 400
- *
  * Cooperativa de crédito, nosso número 12 dígitos (com DV).
- *
- * Fontes:
- * - Planilha oficial Sicoob (Layout_Cobranca_CNAB400 (1).xls, mai/2025)
- * - cnab_yaml (fonte original, concordante)
- *
+ * Fonte: Planilha oficial Sicoob (Layout_Cobranca_CNAB400.xls, mai/2025)
  */
 
-import { BankSchema, BANK_CODES } from '../../../../types'
+import { BankSchema, BANK_CODES } from '@tp-types/index'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'

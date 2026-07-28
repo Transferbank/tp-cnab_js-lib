@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Sicredi (748) — CNAB 400 — Registro Tipo 8 (Híbrido / QR Code)
  *
  * Único registro opcional classificado pelo manual como "obrigatório quando emissão de
@@ -14,12 +14,12 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo8/tipo8-hibrido.md
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE8_HYBRID: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -30,7 +30,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   nosso_numero_sicredi_sem_edicao: {
     pos: [2, 16],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -41,7 +41,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   brancos_1: {
     pos: [17, 17],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -52,7 +52,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   hibrido: {
     pos: [18, 18],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -63,7 +63,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   brancos_2: {
     pos: [19, 30],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 12,
     decimals: 0,
     required: false,
@@ -74,7 +74,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   numero_documento: {
     pos: [31, 40],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
@@ -85,7 +85,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   txid: {
     pos: [41, 75],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 35,
     decimals: 0,
     required: false,
@@ -96,7 +96,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   brancos_3: {
     pos: [76, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 319,
     decimals: 0,
     required: false,
@@ -107,7 +107,7 @@ export const TYPE8_HYBRID: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

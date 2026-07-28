@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Sicredi (748) — CNAB 400 — Registro Tipo 2 (Mensagem)
  *
  * Registro opcional de texto livre (até 4 linhas de 80 caracteres) para impressão no boleto.
@@ -13,12 +13,12 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo2/tipo2-mensagem.md
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE2_MESSAGE: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -29,7 +29,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   brancos_1: {
     pos: [2, 12],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 11,
     decimals: 0,
     required: false,
@@ -40,7 +40,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   nosso_numero: {
     pos: [13, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 9,
     decimals: 0,
     required: false,
@@ -51,7 +51,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   instrucao_linha_1: {
     pos: [22, 101],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -62,7 +62,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   instrucao_linha_2: {
     pos: [102, 181],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -73,7 +73,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   instrucao_linha_3: {
     pos: [182, 261],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -84,7 +84,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   instrucao_linha_4: {
     pos: [262, 341],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -95,7 +95,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   numero_documento: {
     pos: [342, 351],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
@@ -106,7 +106,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   brancos_2: {
     pos: [352, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 43,
     decimals: 0,
     required: false,
@@ -117,7 +117,7 @@ export const TYPE2_MESSAGE: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

@@ -1,46 +1,43 @@
-/**
- * Sicredi (748) — CNAB 400 — Header de Arquivo (Remessa)
- *
+﻿/**
+ * Sicredi (748) � CNAB 400 � Header de Arquivo (Remessa)
  * Fonte:
- * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) — §8.1, p.25
+ * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) � �8.1, p.25
  * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Sicredi.php)
  *
- * Ambas as fontes concordam byte a byte.
- *
  * Particularidades do Sicredi:
- * - Usa "código do cliente/cedente" (5 dígitos) em vez de agência+conta separados.
- * - Data de geração no formato AAAAMMDD (8 dígitos), não DDMMAA como a maioria dos bancos.
+ * - Usa "c�digo do cliente/cedente" (5 d�gitos) em vez de ag�ncia+conta separados.
+ * - Data de gera��o no formato AAAAMMDD (8 d�gitos), n�o DDMMAA como a maioria dos bancos.
  *
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
 
 export const HEADER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identificação do registro header',
+    description: 'Identifica��o do registro header',
     canonical: null,
   },
   tipo_operacao: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Identificação do arquivo: 1=Remessa',
+    description: 'Identifica��o do arquivo: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
     pos: [3, 9],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 7,
     decimals: 0,
     required: true,
@@ -51,51 +48,51 @@ export const HEADER: RecordSchema = {
   },
   codigo_servico: {
     pos: [10, 11],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Código do serviço de cobrança',
+    description: 'C�digo do servi�o de cobran�a',
     canonical: null,
   },
   literal_servico: {
     pos: [12, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal do tipo de serviço',
+    description: 'Literal do tipo de servi�o',
     canonical: null,
   },
   codigo_cliente: {
     pos: [27, 31],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código do beneficiário/cedente cadastrado na Cooperativa (não é agência+conta)',
+    description: 'C�digo do benefici�rio/cedente cadastrado na Cooperativa (n�o � ag�ncia+conta)',
     canonical: null,
   },
   numero_inscricao_cedente: {
     pos: [32, 45],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF/CNPJ do beneficiário/cedente',
+    description: 'CPF/CNPJ do benefici�rio/cedente',
     canonical: 'cedente.documento',
   },
   brancos_1: {
     pos: [46, 76],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 31,
     decimals: 0,
     required: false,
@@ -106,18 +103,18 @@ export const HEADER: RecordSchema = {
   },
   codigo_banco: {
     pos: [77, 79],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'Código FEBRABAN do Sicredi',
+    description: 'C�digo FEBRABAN do Sicredi',
     canonical: null,
   },
   nome_banco: {
     pos: [80, 94],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -128,18 +125,18 @@ export const HEADER: RecordSchema = {
   },
   data_geracao: {
     pos: [95, 102],
-    type: 'data',
+    type: FieldType.DATA,
     size: 8,
     decimals: 0,
     required: true,
-    dateFormat: 'AAAAMMDD',
+    dateFormat: DateFormat.AAAAMMDD,
     pattern: null,
-    description: 'Data de geração do arquivo (AAAAMMDD — não DDMMAA)',
+    description: 'Data de gera��o do arquivo (AAAAMMDD � n�o DDMMAA)',
     canonical: 'dataGeracao',
   },
   brancos_2: {
     pos: [103, 110],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 8,
     decimals: 0,
     required: false,
@@ -150,18 +147,18 @@ export const HEADER: RecordSchema = {
   },
   sequencial_remessa: {
     pos: [111, 117],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial da remessa: primeiro arquivo = 0000001, incrementa a cada envio',
+    description: 'N�mero sequencial da remessa: primeiro arquivo = 0000001, incrementa a cada envio',
     canonical: null,
   },
   brancos_3: {
     pos: [118, 390],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 273,
     decimals: 0,
     required: false,
@@ -172,24 +169,24 @@ export const HEADER: RecordSchema = {
   },
   versao_sistema: {
     pos: [391, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '2.00',
-    description: 'Versão do sistema (literal com ponto decimal)',
+    description: 'Vers�o do sistema (literal com ponto decimal)',
     canonical: null,
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'Número sequencial do registro no arquivo (sempre 000001 no header)',
+    description: 'N�mero sequencial do registro no arquivo (sempre 000001 no header)',
     canonical: null,
   },
 }

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Itaú (341) — CNAB 400 — Registro Tipo 5 (E-mail / Sacador-Avalista)
  *
  * Registro opcional para informar o e-mail do pagador para entrega do boleto
@@ -17,12 +17,12 @@
  * Fonte: Manual oficial Itaú, layout_cobranca_400bytes_cnab_itau.pdf, p.12
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -33,7 +33,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   email_pagador: {
     pos: [2, 121],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 120,
     decimals: 0,
     required: false,
@@ -44,7 +44,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   sacador_codigo_inscricao: {
     pos: [122, 123],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -55,7 +55,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   sacador_numero_inscricao: {
     pos: [124, 137],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: false,
@@ -66,7 +66,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   sacador_logradouro: {
     pos: [138, 177],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -77,7 +77,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   sacador_bairro: {
     pos: [178, 189],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 12,
     decimals: 0,
     required: false,
@@ -88,7 +88,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   sacador_cep: {
     pos: [190, 197],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -99,7 +99,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   sacador_cidade: {
     pos: [198, 212],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -110,7 +110,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   sacador_estado: {
     pos: [213, 214],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: false,
@@ -121,7 +121,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   brancos: {
     pos: [215, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 180,
     decimals: 0,
     required: false,
@@ -132,7 +132,7 @@ export const TYPE5_EMAIL_ENDORSER: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

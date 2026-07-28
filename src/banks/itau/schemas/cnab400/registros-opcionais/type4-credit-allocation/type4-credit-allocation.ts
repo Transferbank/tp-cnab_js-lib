@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Itaú (341) — CNAB 400 — Registro Tipo 4 (Rateio de Crédito)
  *
  * Registro opcional para indicar que o crédito do título deve ser rateado
@@ -23,14 +23,13 @@
  * Fonte: Manual oficial Itaú, layout_cobranca_400bytes_cnab_itau.pdf, p.10-11
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
-  // ========== Campos fixos (posições 1-43) ==========
   
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -41,7 +40,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   codigo_inscricao: {
     pos: [2, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -52,7 +51,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   numero_inscricao: {
     pos: [4, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: false,
@@ -63,7 +62,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   agencia: {
     pos: [18, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -74,7 +73,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   zeros: {
     pos: [22, 23],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -85,7 +84,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta: {
     pos: [24, 28],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
@@ -96,7 +95,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac: {
     pos: [29, 29],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -107,7 +106,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   numero_carteira: {
     pos: [30, 32],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
@@ -118,7 +117,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   nosso_numero: {
     pos: [33, 40],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -129,7 +128,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_nosso_numero: {
     pos: [41, 41],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -140,7 +139,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   sequencia_registro: {
     pos: [42, 43],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -149,12 +148,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Número sequencial dos registros tipo 4 do título (1 a 3)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 01 ==========
   
   agencia_credito_01: {
     pos: [44, 47],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -165,7 +162,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_01: {
     pos: [48, 54],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -176,7 +173,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_01: {
     pos: [55, 55],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -187,7 +184,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_01: {
     pos: [56, 68],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -196,12 +193,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 01 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 02 ==========
   
   agencia_credito_02: {
     pos: [69, 72],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -212,7 +207,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_02: {
     pos: [73, 79],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -223,7 +218,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_02: {
     pos: [80, 80],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -234,7 +229,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_02: {
     pos: [81, 93],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -243,12 +238,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 02 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 03 ==========
   
   agencia_credito_03: {
     pos: [94, 97],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -259,7 +252,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_03: {
     pos: [98, 104],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -270,7 +263,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_03: {
     pos: [105, 105],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -281,7 +274,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_03: {
     pos: [106, 118],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -290,12 +283,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 03 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 04 ==========
   
   agencia_credito_04: {
     pos: [119, 122],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -306,7 +297,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_04: {
     pos: [123, 129],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -317,7 +308,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_04: {
     pos: [130, 130],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -328,7 +319,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_04: {
     pos: [131, 143],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -337,12 +328,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 04 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 05 ==========
   
   agencia_credito_05: {
     pos: [144, 147],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -353,7 +342,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_05: {
     pos: [148, 154],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -364,7 +353,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_05: {
     pos: [155, 155],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -375,7 +364,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_05: {
     pos: [156, 168],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -384,12 +373,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 05 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 06 ==========
   
   agencia_credito_06: {
     pos: [169, 172],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -400,7 +387,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_06: {
     pos: [173, 179],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -411,7 +398,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_06: {
     pos: [180, 180],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -422,7 +409,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_06: {
     pos: [181, 193],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -431,12 +418,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 06 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 07 ==========
   
   agencia_credito_07: {
     pos: [194, 197],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -447,7 +432,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_07: {
     pos: [198, 204],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -458,7 +443,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_07: {
     pos: [205, 205],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -469,7 +454,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_07: {
     pos: [206, 218],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -478,12 +463,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 07 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 08 ==========
   
   agencia_credito_08: {
     pos: [219, 222],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -494,7 +477,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_08: {
     pos: [223, 229],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -505,7 +488,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_08: {
     pos: [230, 230],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -516,7 +499,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_08: {
     pos: [231, 243],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -525,12 +508,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 08 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 09 ==========
   
   agencia_credito_09: {
     pos: [244, 247],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -541,7 +522,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_09: {
     pos: [248, 254],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -552,7 +533,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_09: {
     pos: [255, 255],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -563,7 +544,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_09: {
     pos: [256, 268],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -572,12 +553,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 09 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 10 ==========
   
   agencia_credito_10: {
     pos: [269, 272],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -588,7 +567,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_10: {
     pos: [273, 279],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -599,7 +578,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_10: {
     pos: [280, 280],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -610,7 +589,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_10: {
     pos: [281, 293],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -619,12 +598,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 10 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 11 ==========
   
   agencia_credito_11: {
     pos: [294, 297],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -635,7 +612,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_11: {
     pos: [298, 304],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -646,7 +623,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_11: {
     pos: [305, 305],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -657,7 +634,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_11: {
     pos: [306, 318],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -666,12 +643,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 11 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 12 ==========
   
   agencia_credito_12: {
     pos: [319, 322],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -682,7 +657,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_12: {
     pos: [323, 329],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -693,7 +668,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_12: {
     pos: [330, 330],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -704,7 +679,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_12: {
     pos: [331, 343],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -713,12 +688,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 12 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 13 ==========
   
   agencia_credito_13: {
     pos: [344, 347],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -729,7 +702,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_13: {
     pos: [348, 354],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -740,7 +713,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_13: {
     pos: [355, 355],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -751,7 +724,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_13: {
     pos: [356, 368],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -760,12 +733,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 13 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Bloco de Rateio 14 ==========
   
   agencia_credito_14: {
     pos: [369, 372],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -776,7 +747,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   conta_credito_14: {
     pos: [373, 379],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -787,7 +758,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   dac_credito_14: {
     pos: [380, 380],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -798,7 +769,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   valor_credito_14: {
     pos: [381, 393],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -807,12 +778,10 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
     description: 'Valor ou percentual de crédito - Conta 14 (ver tipo_valor)',
     canonical: null,
   },
-
-  // ========== Campos finais ==========
   
   tipo_valor: {
     pos: [394, 394],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -823,7 +792,7 @@ export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

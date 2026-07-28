@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Sicredi (748) — CNAB 400 — Registro Tipo 6 (Beneficiário Final)
  *
  * Registro obrigatório apenas quando houver um Beneficiário Final para o título cadastrado
@@ -17,12 +17,12 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo6/tipo6-beneficiario-final.md
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE6_ENDORSER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -33,7 +33,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   nosso_numero: {
     pos: [2, 16],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -44,7 +44,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   numero_documento: {
     pos: [17, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
@@ -55,7 +55,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   codigo_pagador_cliente: {
     pos: [27, 31],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 5,
     decimals: 0,
     required: false,
@@ -66,7 +66,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   numero_inscricao_beneficiario_final: {
     pos: [32, 45],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: true,
@@ -77,7 +77,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   nome_beneficiario_final: {
     pos: [46, 86],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 41,
     decimals: 0,
     required: true,
@@ -88,7 +88,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   endereco: {
     pos: [87, 131],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 45,
     decimals: 0,
     required: true,
@@ -99,7 +99,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   cidade: {
     pos: [132, 151],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 20,
     decimals: 0,
     required: false,
@@ -110,7 +110,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   cep: {
     pos: [152, 159],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -121,7 +121,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   uf: {
     pos: [160, 161],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: true,
@@ -132,7 +132,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   brancos: {
     pos: [162, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 233,
     decimals: 0,
     required: false,
@@ -143,7 +143,7 @@ export const TYPE6_ENDORSER: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

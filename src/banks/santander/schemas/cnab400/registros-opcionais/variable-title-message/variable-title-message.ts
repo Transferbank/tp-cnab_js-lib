@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Santander (033) — CNAB 400 — Registros Tipo 2/4/5/6/7 (Mensagem Variável por Título)
  *
  * Cinco códigos de registro diferentes (2, 4, 5, 6 e 7) que compartilham exatamente
@@ -30,12 +30,12 @@
  *   no manual de 2009, que errou a estrutura ao não reconhecer os blocos 2 e 3)
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   codigo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -47,7 +47,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   reservado_1: {
     pos: [2, 17],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 16,
     decimals: 0,
     required: false,
@@ -58,7 +58,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   codigo_agencia: {
     pos: [18, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -69,7 +69,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   conta_movimento: {
     pos: [22, 29],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -80,7 +80,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   conta_cobranca: {
     pos: [30, 37],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -91,7 +91,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   reservado_2: {
     pos: [38, 47],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
@@ -102,7 +102,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   subsequencia_1: {
     pos: [48, 49],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -113,7 +113,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   mensagem_1: {
     pos: [50, 99],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 50,
     decimals: 0,
     required: false,
@@ -124,7 +124,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   subsequencia_2: {
     pos: [100, 101],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -135,7 +135,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   mensagem_2: {
     pos: [102, 151],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 50,
     decimals: 0,
     required: false,
@@ -146,7 +146,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   subsequencia_3: {
     pos: [152, 153],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -158,7 +158,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   mensagem_3: {
     pos: [154, 203],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 50,
     decimals: 0,
     required: false,
@@ -169,7 +169,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   reservado_3: {
     pos: [204, 382],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 179,
     decimals: 0,
     required: false,
@@ -180,7 +180,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   identificador_complemento: {
     pos: [383, 383],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -191,7 +191,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   complemento: {
     pos: [384, 385],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -202,7 +202,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   reservado_4: {
     pos: [386, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
@@ -213,7 +213,7 @@ export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

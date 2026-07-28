@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Caixa Econômica Federal (104) — CNAB 400 — Registro Tipo 3 (Envio por E-mail/SMS)
  *
  * Registro opcional que informa o e-mail e/ou celular do pagador para que o boleto
@@ -22,12 +22,12 @@
  *   lógica que dependa do valor exato desse campo.
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE3_EMAIL_SMS: RecordSchema = {
   codigo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -39,7 +39,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   tipo_inscricao_empresa: {
     pos: [2, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -50,7 +50,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   numero_inscricao_empresa: {
     pos: [4, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: false,
@@ -61,7 +61,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   codigo_agencia: {
     pos: [18, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -72,7 +72,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   codigo_beneficiario: {
     pos: [22, 28],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -83,7 +83,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   brancos_1: {
     pos: [29, 53],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 25,
     decimals: 0,
     required: false,
@@ -94,7 +94,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   dados_destinatario: {
     pos: [54, 103],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 50,
     decimals: 0,
     required: false,
@@ -106,7 +106,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   codigo_ddd: {
     pos: [104, 105],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: false,
@@ -117,7 +117,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   numero_celular: {
     pos: [106, 114],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
@@ -128,7 +128,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   tipo_mensagem_sms: {
     pos: [115, 115],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -140,7 +140,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   brancos_2: {
     pos: [116, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 279,
     decimals: 0,
     required: false,
@@ -151,7 +151,7 @@ export const TYPE3_EMAIL_SMS: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

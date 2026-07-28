@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Sicredi (748) — CNAB 400 — Registro Tipo 5 (Informativo)
  *
  * Registro opcional para incluir dados/texto adicional ao boleto, além do que cabe no
@@ -12,12 +12,12 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo5/tipo5-informativo.md
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE5_INFORMATIVE: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -28,7 +28,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   tipo_informativo: {
     pos: [2, 2],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -39,7 +39,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   codigo_beneficiario_cedente: {
     pos: [3, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
@@ -50,7 +50,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   identificacao_titulo_seu_numero: {
     pos: [8, 17],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
@@ -61,7 +61,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   brancos_1: {
     pos: [18, 18],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -72,7 +72,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   tipo_cobranca: {
     pos: [19, 19],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -83,7 +83,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   numero_linha_informativo_1: {
     pos: [20, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -94,7 +94,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   texto_linha_informativo_1: {
     pos: [22, 101],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -105,7 +105,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   numero_linha_informativo_2: {
     pos: [102, 103],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -116,7 +116,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   texto_linha_informativo_2: {
     pos: [104, 183],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -127,7 +127,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   numero_linha_informativo_3: {
     pos: [184, 185],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -138,7 +138,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   texto_linha_informativo_3: {
     pos: [186, 265],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -149,7 +149,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   numero_linha_informativo_4: {
     pos: [266, 267],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -160,7 +160,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   texto_linha_informativo_4: {
     pos: [268, 347],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -171,7 +171,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   brancos_2: {
     pos: [348, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 47,
     decimals: 0,
     required: false,
@@ -182,7 +182,7 @@ export const TYPE5_INFORMATIVE: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
