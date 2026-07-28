@@ -35,7 +35,7 @@ describe('validateCnabFile - Identificação de registros tipo 5 (Banco do Brasi
     
     // Filtrar apenas erros que não sejam de vencimento no passado
     const errosReais = result.errors.filter(
-      (error) => !(error.column === 'Data de vencimento' && error.message.includes('anterior à data atual'))
+      (error) => !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual'))
     )
     
     // Não deve haver erros relacionados a registros tipo 5

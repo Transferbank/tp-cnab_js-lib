@@ -278,7 +278,7 @@ describe('Schema Itaú CNAB 400 - Detalhe (Dados Reais)', () => {
       // mas não deve ter erros de parsing/schema (posição errada, campo obrigatório vazio, etc.)
       const errosReais = result.errors.filter(
         (error) =>
-          !(error.column === 'Data de vencimento' && error.message.includes('anterior à data atual')),
+          !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual')),
       )
 
       // Se houver erros de parsing/schema, listar para debug e falhar

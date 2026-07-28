@@ -11,7 +11,7 @@ import {
   isValidCNPJ,
   isValidCpfCnpj,
   validatePayerDocument
-} from '../../src/validators/document-validator'
+} from '@validators/document-validator'
 
 describe('document-validator (re-exports)', () => {
   describe('isValidCPF', () => {

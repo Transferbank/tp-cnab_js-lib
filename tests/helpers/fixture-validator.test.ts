@@ -4,7 +4,7 @@
 
 import { validateFixtureIntegrity } from './fixture-validator'
 import { loadFixtureMetadata } from './fixture-metadata'
-import { bradescoCnab240 } from '../../src/banks/bradesco/schemas/cnab240'
+import { bradescoCnab240 } from '@banks/bradesco/schemas/cnab240'
 import * as fs from 'fs'
 import * as path from 'path'
 

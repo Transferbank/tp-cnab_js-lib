@@ -51,7 +51,7 @@ describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
       const cnabFile = openCnab([header, detail, trailer].join('\n'))
       const result = cnabFile.validate()
 
-      expect(result.feedback.lines.filter((e) => e.column === 'Quantidade no Trailer')).toEqual([])
+      expect(result.feedback.lines.filter((e) => e.field === 'Quantidade no Trailer')).toEqual([])
     })
 
     test('deve validar trailer com múltiplos detalhes', () => {
@@ -85,7 +85,7 @@ describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
       const cnabFile = openCnab([header, detail1, detail2, trailer].join('\n'))
       const result = cnabFile.validate()
 
-      expect(result.feedback.lines.filter((e) => e.column === 'Quantidade no Trailer')).toEqual([])
+      expect(result.feedback.lines.filter((e) => e.field === 'Quantidade no Trailer')).toEqual([])
       expect(result.isValid).toBe(true)
     })
   })

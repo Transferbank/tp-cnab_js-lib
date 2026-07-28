@@ -4,28 +4,29 @@
  * Valida a estrutura e campos do Segmento Q (dados do pagador/sacado).
  * 
  * IMPORTANTE: Estes testes focam APENAS no PARSING do schema:
- * - PosiÃ§Ãµes corretas dos campos
- * - ExtraÃ§Ã£o correta dos valores
+ * - Posições corretas dos campos
+ * - Extração correta dos valores
  * - Tipos de dados corretos
  * 
- * NÃƒO testam regras de negÃ³cio (CPF/CNPJ vÃ¡lidos, etc.)
+ * NÃO testam regras de negócio (CPF/CNPJ válidos, etc.)
  */
 
 import { bradescoCnab240 } from '../../../../../src/banks/bradesco/schemas/cnab240'
 import { extractLineFields } from '../../../../../src/parser/field-extractor'
 import { loadFixtureMetadata } from '../../../../helpers/fixture-metadata'
 import { readFixture, findSegmentLines } from './shared'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
-  describe('DefiniÃ§Ã£o dos campos', () => {
-    test('deve ter cÃ³digo do banco na posiÃ§Ã£o 1-3 com padrÃ£o "237"', () => {
+  describe('Definição dos campos', () => {
+    test('deve ter código do banco na posição 1-3 com padrão "237"', () => {
       const field = bradescoCnab240.segmentoQ!.controle_banco
       
       expect(field.pos).toEqual([1, 3])
       expect(field.pattern).toBe('237')
     })
 
-    test('deve ter lote na posiÃ§Ã£o 4-7', () => {
+    test('deve ter lote na posição 4-7', () => {
       const field = bradescoCnab240.segmentoQ!.controle_lote
       
       expect(field.pos).toEqual([4, 7])
@@ -33,14 +34,14 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter tipo de registro "3" (detalhe) na posiÃ§Ã£o 8', () => {
+    test('deve ter tipo de registro "3" (detalhe) na posição 8', () => {
       const field = bradescoCnab240.segmentoQ!.controle_registro
       
       expect(field.pos).toEqual([8, 8])
       expect(field.pattern).toBe('3')
     })
 
-    test('deve ter nÃºmero sequencial do registro na posiÃ§Ã£o 9-13', () => {
+    test('deve ter número sequencial do registro na posição 9-13', () => {
       const field = bradescoCnab240.segmentoQ!.servico_numero_registro
       
       expect(field.pos).toEqual([9, 13])
@@ -48,7 +49,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter identificador do segmento "Q" na posiÃ§Ã£o 14', () => {
+    test('deve ter identificador do segmento "Q" na posição 14', () => {
       const field = bradescoCnab240.segmentoQ!.servico_segmento
       
       expect(field.pos).toEqual([14, 14])
@@ -56,7 +57,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.pattern).toBe('Q')
     })
 
-    test('deve ter cÃ³digo de movimento na posiÃ§Ã£o 16-17', () => {
+    test('deve ter código de movimento na posição 16-17', () => {
       const field = bradescoCnab240.segmentoQ!.servico_codigo_movimento
       
       expect(field.pos).toEqual([16, 17])
@@ -64,7 +65,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter tipo de inscriÃ§Ã£o do sacado na posiÃ§Ã£o 18', () => {
+    test('deve ter tipo de inscrição do sacado na posição 18', () => {
       const field = bradescoCnab240.segmentoQ!.sacado_inscricao_tipo
       
       expect(field.pos).toEqual([18, 18])
@@ -72,7 +73,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter nÃºmero de inscriÃ§Ã£o (CPF/CNPJ) na posiÃ§Ã£o 19-33', () => {
+    test('deve ter número de inscrição (CPF/CNPJ) na posição 19-33', () => {
       const field = bradescoCnab240.segmentoQ!.sacado_inscricao_numero
       
       expect(field.pos).toEqual([19, 33])
@@ -81,7 +82,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter nome do sacado na posiÃ§Ã£o 34-73', () => {
+    test('deve ter nome do sacado na posição 34-73', () => {
       const field = bradescoCnab240.segmentoQ!.sacado_nome
       
       expect(field.pos).toEqual([34, 73])
@@ -90,7 +91,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter endereÃ§o do sacado na posiÃ§Ã£o 74-113', () => {
+    test('deve ter endereço do sacado na posição 74-113', () => {
       const field = bradescoCnab240.segmentoQ!.sacado_endereco
       
       expect(field.pos).toEqual([74, 113])
@@ -99,7 +100,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter bairro do sacado na posiÃ§Ã£o 114-128', () => {
+    test('deve ter bairro do sacado na posição 114-128', () => {
       const field = bradescoCnab240.segmentoQ!.sacado_bairro
       
       expect(field.pos).toEqual([114, 128])
@@ -108,12 +109,12 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter campos de CEP (posiÃ§Ã£o 129-136)', () => {
+    test('deve ter campos de CEP (posição 129-136)', () => {
       expect(bradescoCnab240.segmentoQ!.sacado_cep.pos).toEqual([129, 133])
       expect(bradescoCnab240.segmentoQ!.sacado_cep_sufixo.pos).toEqual([134, 136])
     })
 
-    test('deve ter cidade na posiÃ§Ã£o 137-151', () => {
+    test('deve ter cidade na posição 137-151', () => {
       const field = bradescoCnab240.segmentoQ!.sacado_cidade
       
       expect(field.pos).toEqual([137, 151])
@@ -121,7 +122,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.size).toBe(15)
     })
 
-    test('deve ter UF na posiÃ§Ã£o 152-153', () => {
+    test('deve ter UF na posição 152-153', () => {
       const field = bradescoCnab240.segmentoQ!.sacado_uf
       
       expect(field.pos).toEqual([152, 153])
@@ -129,18 +130,18 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(field.size).toBe(2)
     })
 
-    test('deve ter campos do BeneficiÃ¡rio Final nas posiÃ§Ãµes 154-209', () => {
+    test('deve ter campos do Beneficiário Final nas posições 154-209', () => {
       expect(bradescoCnab240.segmentoQ!.beneficiario_final_inscricao_tipo.pos).toEqual([154, 154])
       expect(bradescoCnab240.segmentoQ!.beneficiario_final_inscricao_numero.pos).toEqual([155, 169])
       expect(bradescoCnab240.segmentoQ!.beneficiario_final_nome.pos).toEqual([170, 209])
     })
 
-    test('deve ter campos de banco correspondente nas posiÃ§Ãµes 210-232', () => {
+    test('deve ter campos de banco correspondente nas posições 210-232', () => {
       expect(bradescoCnab240.segmentoQ!.banco_correspondente.pos).toEqual([210, 212])
       expect(bradescoCnab240.segmentoQ!.numero_banco_correspondente.pos).toEqual([213, 232])
     })
 
-    test('deve ter campo CNAB exclusivo na posiÃ§Ã£o 233-240', () => {
+    test('deve ter campo CNAB exclusivo na posição 233-240', () => {
       const field = bradescoCnab240.segmentoQ!.cnab_exclusivo_2
       
       expect(field.pos).toEqual([233, 240])
@@ -160,13 +161,13 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
 
     beforeAll(() => {
       lines = readFixture('remessa-multipla.txt')
-      // Segmentos Q sÃ£o localizados pelo conteÃºdo (pos 8 = '3', pos 14 = 'Q'), nÃ£o por
-      // Ã­ndice fixo, jÃ¡ que o arquivo tambÃ©m tem Header de Lote e Segmentos P/R/S entre eles.
+      // Segmentos Q são localizados pelo conteúdo (pos 8 = '3', pos 14 = 'Q'), não por
+      // índice fixo, já que o arquivo também tem Header de Lote e Segmentos P/R/S entre eles.
       segQLines = findSegmentLines(lines, 'Q')
     })
 
     test('deve extrair tipo de documento do primeiro pagador (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -175,7 +176,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair documento do primeiro pagador (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -186,7 +187,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair nome do primeiro pagador (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -196,8 +197,8 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       expect(segQ.sacado_nome.error).toBeFalsy()
     })
 
-    test('deve extrair endereÃ§o completo do primeiro pagador (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+    test('deve extrair endereço completo do primeiro pagador (do JSON)', () => {
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -210,7 +211,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair nomes de todos os pagadores (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
 
       metadata.records.forEach((expected, index) => {
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
@@ -221,7 +222,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair documentos completos de todos os pagadores (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
 
       metadata.records.forEach((expected, index) => {
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
@@ -232,7 +233,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair tipo de documento de todos os pagadores (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
 
       metadata.records.forEach((record, index) => {
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
@@ -243,7 +244,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair documentos raw de todos os pagadores (do JSON)', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
 
       metadata.records.forEach((record, index) => {
         if (record.documentRaw) {
@@ -255,8 +256,8 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
       })
     })
 
-    test('deve incluir endereÃ§os em todos os registros parseados', () => {
-      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+    test('deve incluir endereços em todos os registros parseados', () => {
+      const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
 
       metadata.records.forEach((expected, index) => {
         if (expected.address) {

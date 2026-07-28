@@ -1,18 +1,19 @@
 /**
  * Validador de integridade entre arquivo CNAB e metadados JSON
  * 
- * Este m√≥dulo fornece fun√ß√µes para comparar o conte√∫do do arquivo TXT
- * com os metadados JSON, detectando inconsist√™ncias automaticamente.
+ * Este mÛdulo fornece funÁıes para comparar o conte˙do do arquivo TXT
+ * com os metadados JSON, detectando inconsistÍncias automaticamente.
  */
 
-import { FixtureMetadata } from '../../src/types/testing'
-import { BankSchema } from '../../src/types/bank'
-import { validateCnab240Business } from '../../src/validators/cnab240-business-validator'
-import { validateCnab400Business } from '../../src/validators/cnab400-business-validator'
-import { extractLineFields } from '../../src/parser/field-extractor'
+import { FixtureMetadata } from '@tp-types/testing'
+import { BankSchema } from '@tp-types/bank'
+import { validateCnab240Content } from '@validators/cnab240-content-validator'
+import { validateCnab400Content } from '@validators/cnab400-content-validator'
+import { extractLineFields } from '@parser/field-extractor'
+import { CNABFormatCode } from '@tp-types/index'
 
 /**
- * Erro de valida√ß√£o de integridade
+ * Erro de validaÁ„o de integridade
  */
 export interface IntegrityError {
   /** Tipo do erro */
@@ -21,7 +22,7 @@ export interface IntegrityError {
   /** Mensagem descritiva */
   message: string
   
-  /** Campo afetado (se aplic√°vel) */
+  /** Campo afetado (se aplic·vel) */
   field?: string
   
   /** Valor esperado (do JSON) */
@@ -30,17 +31,17 @@ export interface IntegrityError {
   /** Valor encontrado (no TXT) */
   actual?: unknown
   
-  /** √çndice do registro (se aplic√°vel) */
+  /** Õndice do registro (se aplic·vel) */
   recordIndex?: number
 }
 
 /**
  * Valida que arquivo TXT corresponde aos metadados JSON
  * 
- * Compara estrutura, c√≥digo do banco, quantidade de registros,
- * valores dos t√≠tulos e totalizadores.
+ * Compara estrutura, cÛdigo do banco, quantidade de registros,
+ * valores dos tÌtulos e totalizadores.
  * 
- * @param lines - Linhas do arquivo CNAB j√° parseadas
+ * @param lines - Linhas do arquivo CNAB j· parseadas
  * @param metadata - Metadados carregados do JSON
  * @param schema - Schema do banco para parsing
  * @returns Array de erros (vazio se tudo OK)
@@ -52,7 +53,7 @@ export interface IntegrityError {
  * const errors = validateFixtureIntegrity(lines, metadata, bradescoCnab240)
  * 
  * if (errors.length > 0) {
- *   console.error('Inconsist√™ncias encontradas:', errors)
+ *   console.error('InconsistÍncias encontradas:', errors)
  * }
  * ```
  */
@@ -64,7 +65,7 @@ export function validateFixtureIntegrity(
   const errors: IntegrityError[] = []
 
   // 1. Validar tamanho de linha baseado no formato
-  const expectedLineLength = metadata.format === 'CNAB240' ? 240 : 400
+  const expectedLineLength = metadata.format === CNABFormatCode.CNAB240 ? 240 : 400
   lines.forEach((line, index) => {
     if (line.length !== expectedLineLength) {
       errors.push({
@@ -81,16 +82,16 @@ export function validateFixtureIntegrity(
   if (lines.length !== metadata.structure.totalLines) {
     errors.push({
       type: 'line-count',
-      message: `N√∫mero de linhas n√£o corresponde aos metadados`,
+      message: `N˙mero de linhas n„o corresponde aos metadados`,
       field: 'totalLines',
       expected: metadata.structure.totalLines,
       actual: lines.length
     })
-    // Se total de linhas est√° errado, outros erros ser√£o cascata - retornar cedo
+    // Se total de linhas est· errado, outros erros ser„o cascata - retornar cedo
     return errors
   }
 
-  // 3. Validar c√≥digo do banco no header
+  // 3. Validar cÛdigo do banco no header
   if (schema.headerArquivo && lines.length > 0) {
     const header = extractLineFields(lines[0], schema.headerArquivo)
     const bankCodeFromFile = header.controle_banco?.raw || header.controle_banco?.value
@@ -98,7 +99,7 @@ export function validateFixtureIntegrity(
     if (bankCodeFromFile !== metadata.bankCode) {
       errors.push({
         type: 'bank-code',
-        message: `C√≥digo do banco no arquivo n√£o corresponde aos metadados`,
+        message: `CÛdigo do banco no arquivo n„o corresponde aos metadados`,
         field: 'bankCode',
         expected: metadata.bankCode,
         actual: bankCodeFromFile
@@ -106,15 +107,15 @@ export function validateFixtureIntegrity(
     }
   }
 
-  // 4. Validar c√≥digo do banco usando validator apropriado
+  // 4. Validar cÛdigo do banco usando validator apropriado
   const result =
-    metadata.format === 'CNAB240' ? validateCnab240Business(lines, schema) : validateCnab400Business(lines, schema)
+    metadata.format === CNABFormatCode.CNAB240 ? validateCnab240Content(lines, schema) : validateCnab400Content(lines, schema)
 
-  // Se h√° erros de parsing, reportar mas continuar valida√ß√£o. Vencimento no passado √© uma
-  // regra de neg√≥cio esperada em arquivo real anonimizado (n√£o um problema de parsing/schema),
-  // ent√£o n√£o conta como falha de integridade aqui ‚Äî quem trata isso √© outra camada.
+  // Se h· erros de parsing, reportar mas continuar validaÁ„o. Vencimento no passado È uma
+  // regra de negÛcio esperada em arquivo real anonimizado (n„o um problema de parsing/schema),
+  // ent„o n„o conta como falha de integridade aqui ó quem trata isso È outra camada.
   const parsingErrors = result.errors.filter(
-    (error) => !(error.column === 'Data de vencimento' && error.message.includes('anterior √† data atual'))
+    (error) => !(error.field === 'Data de vencimento' && error.message.includes('anterior ‡ data atual'))
   )
   if (parsingErrors.length > 0) {
     parsingErrors.forEach(error => {
@@ -130,12 +131,12 @@ export function validateFixtureIntegrity(
   if (result.records.length !== metadata.records.length) {
     errors.push({
       type: 'record-count',
-      message: `Quantidade de registros n√£o corresponde aos metadados`,
+      message: `Quantidade de registros n„o corresponde aos metadados`,
       field: 'recordCount',
       expected: metadata.records.length,
       actual: result.records.length
     })
-    // Se quantidade difere, n√£o faz sentido validar campos individuais
+    // Se quantidade difere, n„o faz sentido validar campos individuais
     return errors
   }
 
@@ -147,7 +148,7 @@ export function validateFixtureIntegrity(
     if (actualRecord.amount !== expectedRecord.amount) {
       errors.push({
         type: 'field-mismatch',
-        message: `Valor do t√≠tulo ${index} n√£o corresponde`,
+        message: `Valor do tÌtulo ${index} n„o corresponde`,
         field: 'amount',
         expected: expectedRecord.amount,
         actual: actualRecord.amount,
@@ -159,7 +160,7 @@ export function validateFixtureIntegrity(
     if (actualRecord.document !== expectedRecord.document) {
       errors.push({
         type: 'field-mismatch',
-        message: `Documento do t√≠tulo ${index} n√£o corresponde`,
+        message: `Documento do tÌtulo ${index} n„o corresponde`,
         field: 'document',
         expected: expectedRecord.document,
         actual: actualRecord.document,
@@ -171,7 +172,7 @@ export function validateFixtureIntegrity(
     if (!actualRecord.name.includes(expectedRecord.name)) {
       errors.push({
         type: 'field-mismatch',
-        message: `Nome do t√≠tulo ${index} n√£o cont√©m o esperado`,
+        message: `Nome do tÌtulo ${index} n„o contÈm o esperado`,
         field: 'name',
         expected: expectedRecord.name,
         actual: actualRecord.name,
@@ -183,7 +184,7 @@ export function validateFixtureIntegrity(
     if (actualRecord.dueDate !== expectedRecord.dueDate) {
       errors.push({
         type: 'field-mismatch',
-        message: `Data de vencimento do t√≠tulo ${index} n√£o corresponde`,
+        message: `Data de vencimento do tÌtulo ${index} n„o corresponde`,
         field: 'dueDate',
         expected: expectedRecord.dueDate,
         actual: actualRecord.dueDate,
@@ -191,12 +192,12 @@ export function validateFixtureIntegrity(
       })
     }
 
-    // Validar endere√ßo (se existir nos metadados)
+    // Validar endereÁo (se existir nos metadados)
     if (expectedRecord.address && actualRecord.address) {
       if (!actualRecord.address.includes(expectedRecord.address)) {
         errors.push({
           type: 'field-mismatch',
-          message: `Endere√ßo do t√≠tulo ${index} n√£o cont√©m o esperado`,
+          message: `EndereÁo do tÌtulo ${index} n„o contÈm o esperado`,
           field: 'address',
           expected: expectedRecord.address,
           actual: actualRecord.address,
@@ -210,7 +211,7 @@ export function validateFixtureIntegrity(
   if (result.records.length !== metadata.totals.recordCount) {
     errors.push({
       type: 'total-mismatch',
-      message: `Total de registros n√£o corresponde ao declarado em totals`,
+      message: `Total de registros n„o corresponde ao declarado em totals`,
       field: 'totals.recordCount',
       expected: metadata.totals.recordCount,
       actual: result.records.length
@@ -218,11 +219,11 @@ export function validateFixtureIntegrity(
   }
 
   const actualTotalAmount = result.records.reduce((sum, r) => sum + r.amount, 0)
-  // Comparar com toler√¢ncia de 0.01 para evitar problemas de ponto flutuante
+  // Comparar com toler‚ncia de 0.01 para evitar problemas de ponto flutuante
   if (Math.abs(actualTotalAmount - metadata.totals.totalAmount) > 0.01) {
     errors.push({
       type: 'total-mismatch',
-      message: `Soma dos valores n√£o corresponde ao total declarado`,
+      message: `Soma dos valores n„o corresponde ao total declarado`,
       field: 'totals.totalAmount',
       expected: metadata.totals.totalAmount,
       actual: actualTotalAmount
@@ -230,10 +231,10 @@ export function validateFixtureIntegrity(
   }
 
   // 8. Validar campos raw (se existirem)
-  if (metadata.format === 'CNAB240' && schema.segmentoP && schema.segmentoQ) {
-    // Localiza as linhas de Segmento P/Q pelo conte√∫do (pos 8 = '3', pos 14 = 'P'/'Q'),
-    // n√£o por √≠ndice fixo ‚Äî o arquivo pode ter Header de Lote e Segmentos R/S entre os
-    // t√≠tulos (ex.: fixtures com estrutura completa por t√≠tulo: P, Q, R, S).
+  if (metadata.format === CNABFormatCode.CNAB240 && schema.segmentoP && schema.segmentoQ) {
+    // Localiza as linhas de Segmento P/Q pelo conte˙do (pos 8 = '3', pos 14 = 'P'/'Q'),
+    // n„o por Ìndice fixo ó o arquivo pode ter Header de Lote e Segmentos R/S entre os
+    // tÌtulos (ex.: fixtures com estrutura completa por tÌtulo: P, Q, R, S).
     const segPLines = lines.filter((line) => line.length === 240 && line.charAt(7) === '3' && line.charAt(13) === 'P')
     const segQLines = lines.filter((line) => line.length === 240 && line.charAt(7) === '3' && line.charAt(13) === 'Q')
 
@@ -245,7 +246,7 @@ export function validateFixtureIntegrity(
         if (expectedRecord.amountRaw && segP.valor_titulo?.raw !== expectedRecord.amountRaw) {
           errors.push({
             type: 'field-mismatch',
-            message: `Valor raw do t√≠tulo ${index} n√£o corresponde`,
+            message: `Valor raw do tÌtulo ${index} n„o corresponde`,
             field: 'amountRaw',
             expected: expectedRecord.amountRaw,
             actual: segP.valor_titulo?.raw,
@@ -257,7 +258,7 @@ export function validateFixtureIntegrity(
         if (expectedRecord.dueDateRaw && segP.vencimento_titulo?.raw !== expectedRecord.dueDateRaw) {
           errors.push({
             type: 'field-mismatch',
-            message: `Data de vencimento raw do t√≠tulo ${index} n√£o corresponde`,
+            message: `Data de vencimento raw do tÌtulo ${index} n„o corresponde`,
             field: 'dueDateRaw',
             expected: expectedRecord.dueDateRaw,
             actual: segP.vencimento_titulo?.raw,
@@ -273,7 +274,7 @@ export function validateFixtureIntegrity(
         if (expectedRecord.documentRaw && segQ.sacado_inscricao_numero?.raw !== expectedRecord.documentRaw) {
           errors.push({
             type: 'field-mismatch',
-            message: `Documento raw do t√≠tulo ${index} n√£o corresponde`,
+            message: `Documento raw do tÌtulo ${index} n„o corresponde`,
             field: 'documentRaw',
             expected: expectedRecord.documentRaw,
             actual: segQ.sacado_inscricao_numero?.raw,
@@ -285,7 +286,7 @@ export function validateFixtureIntegrity(
         if (expectedRecord.documentTypeCode && segQ.sacado_inscricao_tipo?.raw !== expectedRecord.documentTypeCode) {
           errors.push({
             type: 'field-mismatch',
-            message: `Tipo de documento raw do t√≠tulo ${index} n√£o corresponde`,
+            message: `Tipo de documento raw do tÌtulo ${index} n„o corresponde`,
             field: 'documentTypeCode',
             expected: expectedRecord.documentTypeCode,
             actual: segQ.sacado_inscricao_tipo?.raw,
@@ -304,7 +305,7 @@ export function validateFixtureIntegrity(
     if (metadata.header.dataGeracaoRaw && header.arquivo_data_de_geracao?.raw !== metadata.header.dataGeracaoRaw) {
       errors.push({
         type: 'field-mismatch',
-        message: `Data de gera√ß√£o raw no header n√£o corresponde`,
+        message: `Data de geraÁ„o raw no header n„o corresponde`,
         field: 'header.dataGeracaoRaw',
         expected: metadata.header.dataGeracaoRaw,
         actual: header.arquivo_data_de_geracao?.raw
@@ -317,7 +318,7 @@ export function validateFixtureIntegrity(
       if (!cedenteValue.includes(metadata.header.cedenteNome)) {
         errors.push({
           type: 'field-mismatch',
-          message: `Nome do cedente no header n√£o cont√©m o esperado`,
+          message: `Nome do cedente no header n„o contÈm o esperado`,
           field: 'header.cedenteNome',
           expected: metadata.header.cedenteNome,
           actual: cedenteValue

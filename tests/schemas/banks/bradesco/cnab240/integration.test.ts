@@ -1,8 +1,8 @@
 /**
- * Testes de IntegraÃ§Ã£o - Bradesco CNAB 240
+ * Testes de Integração - Bradesco CNAB 240
  * 
- * Valida o parsing completo de arquivos CNAB reais com mÃºltiplos tÃ­tulos.
- * Testa a estrutura geral do arquivo e extraÃ§Ã£o de todos os campos principais.
+ * Valida o parsing completo de arquivos CNAB reais com múltiplos títulos.
+ * Testa a estrutura geral do arquivo e extração de todos os campos principais.
  */
 
 import { bradescoCnab240 } from '../../../../../src/banks/bradesco/schemas/cnab240'
@@ -10,18 +10,19 @@ import { extractLineFields } from '../../../../../src/parser/field-extractor'
 import { loadFixtureMetadata } from '../../../../helpers/fixture-metadata'
 import { readFixture, findSegmentLines } from './shared'
 import type { FixtureMetadata } from '../../../../../src/types/testing'
+import { CNABFormatCode } from '@tp-types/index'
 
-describe('Schema Bradesco CNAB 240 - IntegraÃ§Ã£o (Parsing Completo)', () => {
+describe('Schema Bradesco CNAB 240 - Integração (Parsing Completo)', () => {
   let lines: string[]
   let metadata: FixtureMetadata
 
   beforeAll(() => {
     lines = readFixture('remessa-multipla.txt')
-    metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab240')
+    metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
   })
 
   describe('Estrutura do arquivo', () => {
-    test('deve ter nÃºmero correto de linhas (do JSON)', () => {
+    test('deve ter número correto de linhas (do JSON)', () => {
       expect(lines).toHaveLength(metadata.structure.totalLines)
     })
 
@@ -31,16 +32,16 @@ describe('Schema Bradesco CNAB 240 - IntegraÃ§Ã£o (Parsing Completo)', () => {
       })
     })
 
-    test('deve parsear todos os campos sem erros de extraÃ§Ã£o', () => {
+    test('deve parsear todos os campos sem erros de extração', () => {
       // Header de Arquivo
       const headerArquivo = extractLineFields(lines[0], bradescoCnab240.headerArquivo!)
       expect(headerArquivo.controle_banco.error).toBeFalsy()
       expect(headerArquivo.cedente_nome.error).toBeFalsy()
       expect(headerArquivo.arquivo_data_de_geracao.error).toBeFalsy()
 
-      // Segmentos P e Q sÃ£o localizados pelo conteÃºdo (pos 8 = '3', pos 14 = letra do
-      // segmento), nÃ£o por Ã­ndice fixo, jÃ¡ que o arquivo tambÃ©m tem Header de Lote e
-      // Segmentos R/S entre os tÃ­tulos.
+      // Segmentos P e Q são localizados pelo conteúdo (pos 8 = '3', pos 14 = letra do
+      // segmento), não por índice fixo, já que o arquivo também tem Header de Lote e
+      // Segmentos R/S entre os títulos.
       const segPLines = findSegmentLines(lines, 'P')
       const segQLines = findSegmentLines(lines, 'Q')
 
@@ -64,17 +65,17 @@ describe('Schema Bradesco CNAB 240 - IntegraÃ§Ã£o (Parsing Completo)', () => {
   })
 
   describe('Contagem de registros', () => {
-    test('deve parsear quantidade correta de tÃ­tulos (do JSON)', () => {
-      // Contagem de segmentos P (cada tÃ­tulo tem um segmento P), identificados pelo
-      // conteÃºdo da linha (pos 8 = '3', pos 14 = 'P')
+    test('deve parsear quantidade correta de títulos (do JSON)', () => {
+      // Contagem de segmentos P (cada título tem um segmento P), identificados pelo
+      // conteúdo da linha (pos 8 = '3', pos 14 = 'P')
       const segmentosP = findSegmentLines(lines, 'P')
 
       expect(segmentosP.length).toBe(metadata.records.length)
     })
   })
 
-  describe('ExtraÃ§Ã£o de todos os campos principais', () => {
-    test('deve extrair todos os campos principais de todos os tÃ­tulos', () => {
+  describe('Extração de todos os campos principais', () => {
+    test('deve extrair todos os campos principais de todos os títulos', () => {
       expect(metadata.records.length).toBeGreaterThan(0)
 
       const segPLines = findSegmentLines(lines, 'P')
@@ -84,13 +85,13 @@ describe('Schema Bradesco CNAB 240 - IntegraÃ§Ã£o (Parsing Completo)', () => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
 
-        // Verificar que campos principais foram extraÃ­dos sem erro
+        // Verificar que campos principais foram extraídos sem erro
         expect(segP.valor_titulo.error).toBeFalsy()
         expect(segP.vencimento_titulo.error).toBeFalsy()
         expect(segQ.sacado_nome.error).toBeFalsy()
         expect(segQ.sacado_inscricao_numero.error).toBeFalsy()
 
-        // Verificar valores extraÃ­dos
+        // Verificar valores extraídos
         expect(segP.valor_titulo.value).toBe(expected.amount)
         expect(segP.vencimento_titulo.raw).toBe(expected.dueDateRaw)
         expect(segQ.sacado_nome.value).toMatch(new RegExp(expected.name))

@@ -2,31 +2,32 @@
  * Testes para o validador estrutural de CNAB 400
  */
 
-import { validateCnab400Structure } from '../../src/validators/cnab400-structure-validator'
-import { getBankSchema } from '../../src/schemas'
-import { BankSchema } from '../../src/types'
+import { validateCnab400Structure } from '@validators/cnab400-structure-validator'
+import { getBankSchema } from '@schemas/index'
+import { BankSchema } from '@tp-types/index'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { CNABFormatCode, FieldType } from '@tp-types/index'
 
 describe('validateCnab400Structure', () => {
   describe('Guards iniciais', () => {
     test('deve rejeitar arquivo com menos de 3 linhas', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = ['X'.repeat(400)]
 
       const result = validateCnab400Structure(lines, bradesco)
 
       expect(result.errors.length).toBeGreaterThan(0)
-      expect(result.errors[0].message).toContain('no mÃ­nimo 3 registros')
+      expect(result.errors[0].message).toContain('no mínimo 3 registros')
       expect(result.detailCount).toBe(0)
     })
 
-    test('deve rejeitar quando schema nÃ£o define header', () => {
+    test('deve rejeitar quando schema não define header', () => {
       const incompleteSchema: BankSchema = {
         bankCode: '999',
         bankName: 'Teste',
-        detail: { tipo_registro: { pos: [1, 1], type: 'num', size: 1, decimals: 0, required: true, dateFormat: null, pattern: '1', description: 'Tipo', canonical: null } },
-        trailer: { tipo_registro: { pos: [1, 1], type: 'num', size: 1, decimals: 0, required: true, dateFormat: null, pattern: '9', description: 'Tipo', canonical: null } },
+        detail: { tipo_registro: { pos: [1, 1], type: FieldType.NUM, size: 1, decimals: 0, required: true, dateFormat: null, pattern: '1', description: 'Tipo', canonical: null } },
+        trailer: { tipo_registro: { pos: [1, 1], type: FieldType.NUM, size: 1, decimals: 0, required: true, dateFormat: null, pattern: '9', description: 'Tipo', canonical: null } },
       }
 
       const lines = ['0'.repeat(400), '1'.repeat(400), '9'.repeat(400)]
@@ -37,17 +38,17 @@ describe('validateCnab400Structure', () => {
         expect.objectContaining({
           line: 1,
           column: 'Schema',
-          message: 'Schema do banco nÃ£o define header para CNAB 400',
+          message: 'Schema do banco não define header para CNAB 400',
         })
       )
     })
 
-    test('deve rejeitar quando schema nÃ£o define detail', () => {
+    test('deve rejeitar quando schema não define detail', () => {
       const incompleteSchema: BankSchema = {
         bankCode: '999',
         bankName: 'Teste',
-        header: { tipo_registro: { pos: [1, 1], type: 'num', size: 1, decimals: 0, required: true, dateFormat: null, pattern: '0', description: 'Tipo', canonical: null } },
-        trailer: { tipo_registro: { pos: [1, 1], type: 'num', size: 1, decimals: 0, required: true, dateFormat: null, pattern: '9', description: 'Tipo', canonical: null } },
+        header: { tipo_registro: { pos: [1, 1], type: FieldType.NUM, size: 1, decimals: 0, required: true, dateFormat: null, pattern: '0', description: 'Tipo', canonical: null } },
+        trailer: { tipo_registro: { pos: [1, 1], type: FieldType.NUM, size: 1, decimals: 0, required: true, dateFormat: null, pattern: '9', description: 'Tipo', canonical: null } },
       }
 
       const lines = ['0'.repeat(400), '1'.repeat(400), '9'.repeat(400)]
@@ -58,17 +59,17 @@ describe('validateCnab400Structure', () => {
         expect.objectContaining({
           line: 1,
           column: 'Schema',
-          message: 'Schema do banco nÃ£o define detail para CNAB 400',
+          message: 'Schema do banco não define detail para CNAB 400',
         })
       )
     })
 
-    test('deve rejeitar quando schema nÃ£o define trailer', () => {
+    test('deve rejeitar quando schema não define trailer', () => {
       const incompleteSchema: BankSchema = {
         bankCode: '999',
         bankName: 'Teste',
-        header: { tipo_registro: { pos: [1, 1], type: 'num', size: 1, decimals: 0, required: true, dateFormat: null, pattern: '0', description: 'Tipo', canonical: null } },
-        detail: { tipo_registro: { pos: [1, 1], type: 'num', size: 1, decimals: 0, required: true, dateFormat: null, pattern: '1', description: 'Tipo', canonical: null } },
+        header: { tipo_registro: { pos: [1, 1], type: FieldType.NUM, size: 1, decimals: 0, required: true, dateFormat: null, pattern: '0', description: 'Tipo', canonical: null } },
+        detail: { tipo_registro: { pos: [1, 1], type: FieldType.NUM, size: 1, decimals: 0, required: true, dateFormat: null, pattern: '1', description: 'Tipo', canonical: null } },
       }
 
       const lines = ['0'.repeat(400), '1'.repeat(400), '9'.repeat(400)]
@@ -79,15 +80,15 @@ describe('validateCnab400Structure', () => {
         expect.objectContaining({
           line: 1,
           column: 'Schema',
-          message: 'Schema do banco nÃ£o define trailer para CNAB 400',
+          message: 'Schema do banco não define trailer para CNAB 400',
         })
       )
     })
   })
 
-  describe('ValidaÃ§Ã£o de tamanho de linha', () => {
+  describe('Validação de tamanho de linha', () => {
     test('deve rejeitar linha com tamanho incorreto', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400), // Header
         '1'.repeat(250), // LINHA INCORRETA - 250 chars
@@ -105,8 +106,8 @@ describe('validateCnab400Structure', () => {
       )
     })
 
-    test('deve rejeitar mÃºltiplas linhas com tamanho incorreto', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+    test('deve rejeitar múltiplas linhas com tamanho incorreto', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(350), // Header incorreto
         '1'.repeat(400),
@@ -135,7 +136,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Posicionamento de Header', () => {
     test('deve aceitar Header na primeira linha', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400), // Header na primeira linha
         '1'.repeat(400),
@@ -144,14 +145,14 @@ describe('validateCnab400Structure', () => {
 
       const result = validateCnab400Structure(lines, bradesco)
 
-      const headerErrors = result.errors.filter(e => e.column === 'Header')
+      const headerErrors = result.errors.filter(e => e.field === 'Header')
       expect(headerErrors).toHaveLength(0)
     })
 
     test('deve rejeitar Header com tipo incorreto na primeira linha', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
-        '1'.repeat(400), // Tipo errado (1 ao invÃ©s de 0)
+        '1'.repeat(400), // Tipo errado (1 ao invés de 0)
         '1'.repeat(400),
         '9'.repeat(400),
       ]
@@ -168,7 +169,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar Header no meio do arquivo', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -190,26 +191,26 @@ describe('validateCnab400Structure', () => {
   })
 
   describe('Posicionamento de Trailer', () => {
-    test('deve aceitar Trailer na Ãºltima linha', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+    test('deve aceitar Trailer na última linha', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
-        '9'.repeat(400), // Trailer na Ãºltima linha
+        '9'.repeat(400), // Trailer na última linha
       ]
 
       const result = validateCnab400Structure(lines, bradesco)
 
-      const trailerErrors = result.errors.filter(e => e.column === 'Trailer' && e.line === 3)
+      const trailerErrors = result.errors.filter(e => e.field === 'Trailer' && e.line === 3)
       expect(trailerErrors).toHaveLength(0)
     })
 
-    test('deve rejeitar Trailer com tipo incorreto na Ãºltima linha', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+    test('deve rejeitar Trailer com tipo incorreto na última linha', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
-        '1'.repeat(400), // Tipo errado (1 ao invÃ©s de 9)
+        '1'.repeat(400), // Tipo errado (1 ao invés de 9)
       ]
 
       const result = validateCnab400Structure(lines, bradesco)
@@ -224,7 +225,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar Trailer no meio do arquivo', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '9'.repeat(400), // Trailer no meio
@@ -238,7 +239,7 @@ describe('validateCnab400Structure', () => {
         expect.objectContaining({
           line: 2,
           column: 'Trailer',
-          message: 'Trailer encontrado no meio do arquivo (deve estar apenas na Ãºltima linha)',
+          message: 'Trailer encontrado no meio do arquivo (deve estar apenas na última linha)',
         })
       )
     })
@@ -246,7 +247,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Registros de Detalhe', () => {
     test('deve contar detalhes corretamente', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -261,10 +262,10 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar arquivo sem detalhes', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
-        '5'.repeat(400), // Tipo desconhecido - nÃ£o conta como detail
+        '5'.repeat(400), // Tipo desconhecido - não conta como detail
         '9'.repeat(400),
       ]
 
@@ -281,7 +282,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve aceitar arquivo com apenas 1 detalhe', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400), // Apenas 1 detalhe
@@ -291,12 +292,12 @@ describe('validateCnab400Structure', () => {
       const result = validateCnab400Structure(lines, bradesco)
 
       expect(result.detailCount).toBe(1)
-      const detailErrors = result.errors.filter(e => e.column === 'Detalhe')
+      const detailErrors = result.errors.filter(e => e.field === 'Detalhe')
       expect(detailErrors).toHaveLength(0)
     })
 
     test('deve rejeitar tipo de registro desconhecido no meio', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -311,16 +312,16 @@ describe('validateCnab400Structure', () => {
         expect.objectContaining({
           line: 3,
           column: 'Tipo de registro',
-          message: expect.stringContaining('nÃ£o corresponde a nenhum tipo reconhecido'),
+          message: expect.stringContaining('não corresponde a nenhum tipo reconhecido'),
         })
       )
-      expect(result.detailCount).toBe(2) // Apenas os detalhes vÃ¡lidos
+      expect(result.detailCount).toBe(2) // Apenas os detalhes válidos
     })
   })
 
   describe('Leitura de tipo_registro.pattern do schema', () => {
     test('deve ler tipo de detail do Banco do Brasil (tipo 7)', () => {
-      const bb = getBankSchema('001', 'cnab400')!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '7'.repeat(400), // BB usa tipo 7 para detail
@@ -336,7 +337,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar tipo 1 quando banco usa tipo 7 (Banco do Brasil)', () => {
-      const bb = getBankSchema('001', 'cnab400')!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400), // Tipo errado para BB
@@ -350,17 +351,17 @@ describe('validateCnab400Structure', () => {
         expect.objectContaining({
           line: 2,
           column: 'Tipo de registro',
-          message: expect.stringContaining('nÃ£o corresponde a nenhum tipo reconhecido'),
+          message: expect.stringContaining('não corresponde a nenhum tipo reconhecido'),
         })
       )
     })
   })
 
-  describe('ValidaÃ§Ã£o de quantidade de documentos no trailer', () => {
+  describe('Validação de quantidade de documentos no trailer', () => {
     test('deve aceitar quando quantidade no trailer bate com detailCount', () => {
-      const santander = getBankSchema('033', 'cnab400')!
+      const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
       
-      // Criar trailer com quantidade = 3 na posiÃ§Ã£o correta do Santander (2-7, 6 dÃ­gitos)
+      // Criar trailer com quantidade = 3 na posição correta do Santander (2-7, 6 dígitos)
       const trailerLine = '9' + '000003' + '0'.repeat(393)
       
       const lines = [
@@ -373,15 +374,15 @@ describe('validateCnab400Structure', () => {
 
       const result = validateCnab400Structure(lines, santander)
 
-      const quantityErrors = result.errors.filter(e => e.column === 'Quantidade no Trailer')
+      const quantityErrors = result.errors.filter(e => e.field === 'Quantidade no Trailer')
       expect(quantityErrors).toHaveLength(0)
       expect(result.detailCount).toBe(3)
     })
 
-    test('deve rejeitar quando quantidade no trailer nÃ£o bate', () => {
-      const santander = getBankSchema('033', 'cnab400')!
+    test('deve rejeitar quando quantidade no trailer não bate', () => {
+      const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
       
-      // Trailer declara 5, mas arquivo tem apenas 3 detalhes (posiÃ§Ã£o 2-7, 6 dÃ­gitos)
+      // Trailer declara 5, mas arquivo tem apenas 3 detalhes (posição 2-7, 6 dígitos)
       const trailerLine = '9' + '000005' + '0'.repeat(393)
       
       const lines = [
@@ -398,13 +399,13 @@ describe('validateCnab400Structure', () => {
         expect.objectContaining({
           line: 5,
           column: 'Quantidade no Trailer',
-          message: 'Trailer declara 5 tÃ­tulos, mas o arquivo contÃ©m 3',
+          message: 'Trailer declara 5 títulos, mas o arquivo contém 3',
         })
       )
     })
 
-    test('deve ignorar validaÃ§Ã£o quando banco nÃ£o define qtd_documentos', () => {
-      const itau = getBankSchema('341', 'cnab400')!
+    test('deve ignorar validação quando banco não define qtd_documentos', () => {
+      const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
       
       const lines = [
         '0'.repeat(400),
@@ -415,30 +416,30 @@ describe('validateCnab400Structure', () => {
 
       const result = validateCnab400Structure(lines, itau)
 
-      // NÃ£o deve ter erro de quantidade (ItaÃº nÃ£o define qtd_documentos)
-      const quantityErrors = result.errors.filter(e => e.column === 'Quantidade no Trailer')
+      // Não deve ter erro de quantidade (Itaú não define qtd_documentos)
+      const quantityErrors = result.errors.filter(e => e.field === 'Quantidade no Trailer')
       expect(quantityErrors).toHaveLength(0)
       expect(result.detailCount).toBe(2)
     })
   })
 
-  describe('ValidaÃ§Ã£o com fixtures reais', () => {
+  describe('Validação com fixtures reais', () => {
     test('deve validar fixture real do Bradesco CNAB 400', () => {
       const fixturePath = join(__dirname, '../fixtures/cnab400/bradesco/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
 
       const result = validateCnab400Structure(lines, bradesco)
 
       expect(result.detailCount).toBeGreaterThan(0)
       
-      // NÃ£o deve ter erros estruturais crÃ­ticos
+      // Não deve ter erros estruturais críticos
       const criticalErrors = result.errors.filter(e => 
         e.message.includes('Tamanho do registro') ||
         e.message.includes('deve ser Header') ||
         e.message.includes('deve ser Trailer') ||
-        e.message.includes('no mÃ­nimo 3 registros')
+        e.message.includes('no mínimo 3 registros')
       )
       expect(criticalErrors).toHaveLength(0)
     })
@@ -447,7 +448,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../fixtures/cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const bb = getBankSchema('001', 'cnab400')!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
 
       const result = validateCnab400Structure(lines, bb)
 
@@ -462,32 +463,32 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve validar fixture real do BB sem falsos positivos em registros opcionais tipo 5', () => {
-      // TESTE DE REGRESSÃƒO: Bug original - validador gerava 113 falsos positivos
-      // para registros tipo 5 (multa/descontos/negativador) por nÃ£o reconhecÃª-los
-      // como registros opcionais vÃ¡lidos.
+      // TESTE DE REGRESSÃO: Bug original - validador gerava 113 falsos positivos
+      // para registros tipo 5 (multa/descontos/negativador) por não reconhecê-los
+      // como registros opcionais válidos.
       //
-      // O arquivo BANCOBRASIL_cnab_400.REM contÃ©m:
-      // - 113 linhas tipo 5 com tipo_servico '99' (multa) - registros opcionais vÃ¡lidos
-      // - Antes da correÃ§Ã£o: 113 erros "Tipo de registro '5' nÃ£o reconhecido"
-      // - Depois da correÃ§Ã£o: 0 erros desse tipo (registros reconhecidos via optionalRecords)
+      // O arquivo BANCOBRASIL_cnab_400.REM contém:
+      // - 113 linhas tipo 5 com tipo_servico '99' (multa) - registros opcionais válidos
+      // - Antes da correção: 113 erros "Tipo de registro '5' não reconhecido"
+      // - Depois da correção: 0 erros desse tipo (registros reconhecidos via optionalRecords)
       
       const fixturePath = join(__dirname, '../fixtures/cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const bb = getBankSchema('001', 'cnab400')!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
 
       const result = validateCnab400Structure(lines, bb)
 
-      // NÃ£o deve haver nenhum erro de "tipo de registro nÃ£o reconhecido"
+      // Não deve haver nenhum erro de "tipo de registro não reconhecido"
       const recordTypeErrors = result.errors.filter(e => 
-        e.column === 'Tipo de registro' ||
-        e.message.includes('nÃ£o reconhecido') ||
-        e.message.includes('nÃ£o corresponde a nenhum tipo')
+        e.field === 'Tipo de registro' ||
+        e.message.includes('não reconhecido') ||
+        e.message.includes('não corresponde a nenhum tipo')
       )
       
       expect(recordTypeErrors).toHaveLength(0)
       
-      // ConfirmaÃ§Ã£o adicional: o arquivo deve ter exatamente 113 registros tipo 5
+      // Confirmação adicional: o arquivo deve ter exatamente 113 registros tipo 5
       const type5Lines = lines.filter(line => line.charAt(0) === '5')
       expect(type5Lines).toHaveLength(113)
       
@@ -496,11 +497,11 @@ describe('validateCnab400Structure', () => {
       expect(type5Service99).toHaveLength(113)
     })
 
-    test('deve validar fixture real do ItaÃº CNAB 400', () => {
+    test('deve validar fixture real do Itaú CNAB 400', () => {
       const fixturePath = join(__dirname, '../fixtures/cnab400/itau/ITAU_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const itau = getBankSchema('341', 'cnab400')!
+      const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
 
       const result = validateCnab400Structure(lines, itau)
 
@@ -513,12 +514,12 @@ describe('validateCnab400Structure', () => {
       )
       expect(criticalErrors).toHaveLength(0)
       
-      // NÃ£o deve haver erros de tipo de registro nÃ£o reconhecido
-      // (mascara o mesmo bug que motivou a refatoraÃ§Ã£o)
+      // Não deve haver erros de tipo de registro não reconhecido
+      // (mascara o mesmo bug que motivou a refatoração)
       const recordTypeErrors = result.errors.filter(e => 
-        e.column === 'Tipo de registro' ||
-        e.message.includes('nÃ£o reconhecido') ||
-        e.message.includes('nÃ£o corresponde a nenhum tipo')
+        e.field === 'Tipo de registro' ||
+        e.message.includes('não reconhecido') ||
+        e.message.includes('não corresponde a nenhum tipo')
       )
       expect(recordTypeErrors).toHaveLength(0)
     })
@@ -527,7 +528,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../fixtures/cnab400/santander/SANTANDER_cnab_400_140.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const santander = getBankSchema('033', 'cnab400')!
+      const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
 
       const result = validateCnab400Structure(lines, santander)
 
@@ -545,7 +546,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../fixtures/cnab400/sicredi/SICREDI_cnab_400.CRM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const sicredi = getBankSchema('748', 'cnab400')!
+      const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
 
       const result = validateCnab400Structure(lines, sicredi)
 
@@ -563,55 +564,55 @@ describe('validateCnab400Structure', () => {
   describe('Cobertura de registros opcionais CNAB 400', () => {
     describe('Banco do Brasil - registros tipo 5', () => {
       test('deve reconhecer tipo 5 com tipo_servico 99 (multa)', () => {
-        const bb = getBankSchema('001', 'cnab400')!
+        const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400), // Header
-          '7'.repeat(400), // Detalhe tipo 7 (BB usa 7, nÃ£o 1)
-          '5' + '99' + '0'.repeat(397), // Tipo 5, serviÃ§o 99 (multa)
+          '7'.repeat(400), // Detalhe tipo 7 (BB usa 7, não 1)
+          '5' + '99' + '0'.repeat(397), // Tipo 5, serviço 99 (multa)
           '9'.repeat(400), // Trailer
         ]
 
         const result = validateCnab400Structure(lines, bb)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 5 com tipo_servico 07 (descontos 2 e 3)', () => {
-        const bb = getBankSchema('001', 'cnab400')!
+        const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '7'.repeat(400),
-          '5' + '07' + '0'.repeat(397), // Tipo 5, serviÃ§o 07 (descontos)
+          '5' + '07' + '0'.repeat(397), // Tipo 5, serviço 07 (descontos)
           '9'.repeat(400),
         ]
 
         const result = validateCnab400Structure(lines, bb)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 5 com tipo_servico 08 (agente negativador)', () => {
-        const bb = getBankSchema('001', 'cnab400')!
+        const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '7'.repeat(400),
-          '5' + '08' + '0'.repeat(397), // Tipo 5, serviÃ§o 08 (negativador)
+          '5' + '08' + '0'.repeat(397), // Tipo 5, serviço 08 (negativador)
           '9'.repeat(400),
         ]
 
         const result = validateCnab400Structure(lines, bb)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
@@ -619,7 +620,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Bradesco - registros tipo 2 e 6', () => {
       test('deve reconhecer tipo 2 (mensagens e descontos)', () => {
-        const bradesco = getBankSchema('237', 'cnab400')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -630,34 +631,34 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, bradesco)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
-      test('deve reconhecer tipo 6 (transferÃªncia de carteira)', () => {
-        const bradesco = getBankSchema('237', 'cnab400')!
+      test('deve reconhecer tipo 6 (transferência de carteira)', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
-          '6'.repeat(400), // Tipo 6 (transferÃªncia)
+          '6'.repeat(400), // Tipo 6 (transferência)
           '9'.repeat(400),
         ]
 
         const result = validateCnab400Structure(lines, bradesco)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
     })
 
-    describe('ItaÃº - registros tipo 2, 4, 5 e 6 (variantes)', () => {
+    describe('Itaú - registros tipo 2, 4, 5 e 6 (variantes)', () => {
       test('deve reconhecer tipo 2 (multa)', () => {
-        const itau = getBankSchema('341', 'cnab400')!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -668,14 +669,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, itau)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
-      test('deve reconhecer tipo 4 (rateio de crÃ©dito)', () => {
-        const itau = getBankSchema('341', 'cnab400')!
+      test('deve reconhecer tipo 4 (rateio de crédito)', () => {
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -686,14 +687,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, itau)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 5 (e-mail sacador/avalista)', () => {
-        const itau = getBankSchema('341', 'cnab400')!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -704,14 +705,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, itau)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
-      test('deve reconhecer tipo 6 com codigo_layout 1 (dados do tÃ­tulo)', () => {
-        const itau = getBankSchema('341', 'cnab400')!
+      test('deve reconhecer tipo 6 com codigo_layout 1 (dados do título)', () => {
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -722,14 +723,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, itau)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
-      test('deve reconhecer tipo 6 com codigo_layout 2 (instruÃ§Ãµes 1-5)', () => {
-        const itau = getBankSchema('341', 'cnab400')!
+      test('deve reconhecer tipo 6 com codigo_layout 2 (instruções 1-5)', () => {
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -740,14 +741,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, itau)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
-      test('deve reconhecer tipo 6 com codigo_layout 3 (instruÃ§Ãµes 6-9)', () => {
-        const itau = getBankSchema('341', 'cnab400')!
+      test('deve reconhecer tipo 6 com codigo_layout 3 (instruções 6-9)', () => {
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -758,14 +759,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, itau)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 6 com codigo_layout 4 (sacador/avalista)', () => {
-        const itau = getBankSchema('341', 'cnab400')!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -776,8 +777,8 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, itau)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
@@ -785,7 +786,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Sicredi - registros tipo 2, 5, 6, 7, 8', () => {
       test('deve reconhecer tipo 2 (mensagem)', () => {
-        const sicredi = getBankSchema('748', 'cnab400')!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -796,14 +797,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, sicredi)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 5 (informativo)', () => {
-        const sicredi = getBankSchema('748', 'cnab400')!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -814,32 +815,32 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, sicredi)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
-      test('deve reconhecer tipo 6 (beneficiÃ¡rio final)', () => {
-        const sicredi = getBankSchema('748', 'cnab400')!
+      test('deve reconhecer tipo 6 (beneficiário final)', () => {
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
-          '6'.repeat(400), // Tipo 6 (beneficiÃ¡rio final)
+          '6'.repeat(400), // Tipo 6 (beneficiário final)
           '9'.repeat(400),
         ]
 
         const result = validateCnab400Structure(lines, sicredi)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 7 (descontos 2 e 3)', () => {
-        const sicredi = getBankSchema('748', 'cnab400')!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -850,34 +851,34 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, sicredi)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
-      test('deve reconhecer tipo 8 (hÃ­brido/QR Code)', () => {
-        const sicredi = getBankSchema('748', 'cnab400')!
+      test('deve reconhecer tipo 8 (híbrido/QR Code)', () => {
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
-          '8'.repeat(400), // Tipo 8 (hÃ­brido)
+          '8'.repeat(400), // Tipo 8 (híbrido)
           '9'.repeat(400),
         ]
 
         const result = validateCnab400Structure(lines, sicredi)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
     })
 
     describe('Caixa - registros tipo 2, 3, 4', () => {
-      test('deve reconhecer tipo 2 (mensagens do tÃ­tulo)', () => {
-        const caixa = getBankSchema('104', 'cnab400')!
+      test('deve reconhecer tipo 2 (mensagens do título)', () => {
+        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -888,14 +889,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, caixa)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 3 (e-mail/SMS)', () => {
-        const caixa = getBankSchema('104', 'cnab400')!
+        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -906,14 +907,14 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, caixa)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
 
       test('deve reconhecer tipo 4 (tipo de pagamento e rateio)', () => {
-        const caixa = getBankSchema('104', 'cnab400')!
+        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -924,8 +925,8 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, caixa)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
@@ -933,7 +934,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Santander - registro tipo 8', () => {
       test('deve reconhecer tipo 8 (PIX)', () => {
-        const santander = getBankSchema('033', 'cnab400')!
+        const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -944,8 +945,8 @@ describe('validateCnab400Structure', () => {
         const result = validateCnab400Structure(lines, santander)
 
         const recordTypeErrors = result.errors.filter(e => 
-          e.column === 'Tipo de registro' ||
-          e.message.includes('nÃ£o reconhecido')
+          e.field === 'Tipo de registro' ||
+          e.message.includes('não reconhecido')
         )
         expect(recordTypeErrors).toHaveLength(0)
       })
@@ -954,7 +955,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Casos de borda', () => {
     test('deve processar arquivo grande (muitos detalhes) sem problemas', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '0'.repeat(400),
         ...Array(1000).fill('1'.repeat(400)), // 1000 detalhes
@@ -967,15 +968,15 @@ describe('validateCnab400Structure', () => {
       expect(result.errors).toHaveLength(0)
     })
 
-    test('deve acumular mÃºltiplos erros em arquivo mal-formado', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+    test('deve acumular múltiplos erros em arquivo mal-formado', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = [
         '1'.repeat(400), // Erro: deveria ser Header
         '0'.repeat(400), // Erro: Header no meio
         '5'.repeat(400), // Erro: tipo desconhecido
         '1'.repeat(400), // OK
-        '9'.repeat(400), // Erro: Trailer com tipo errado (na penÃºltima)
-        '1'.repeat(400), // Erro: Ãºltima linha deveria ser Trailer
+        '9'.repeat(400), // Erro: Trailer com tipo errado (na penúltima)
+        '1'.repeat(400), // Erro: última linha deveria ser Trailer
       ]
 
       const result = validateCnab400Structure(lines, bradesco)
@@ -984,13 +985,13 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve retornar sem processar linhas quando guard inicial falha', () => {
-      const bradesco = getBankSchema('237', 'cnab400')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
       const lines = ['X'] // Menos de 3 linhas
 
       const result = validateCnab400Structure(lines, bradesco)
 
       expect(result.errors).toHaveLength(1)
-      expect(result.errors[0].message).toContain('no mÃ­nimo 3 registros')
+      expect(result.errors[0].message).toContain('no mínimo 3 registros')
       expect(result.detailCount).toBe(0)
     })
 

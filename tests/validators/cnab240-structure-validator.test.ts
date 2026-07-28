@@ -2,25 +2,26 @@
  * Testes para o validador estrutural de CNAB 240
  */
 
-import { validateCnab240Structure } from '../../src/validators/cnab240-structure-validator'
-import { getBankSchema } from '../../src/schemas'
+import { validateCnab240Structure } from '@validators/cnab240-structure-validator'
+import { getBankSchema } from '@schemas/index'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('validateCnab240Structure', () => {
-  describe('ValidaÃ§Ã£o bÃ¡sica de tamanho', () => {
+  describe('Validação básica de tamanho', () => {
     test('deve rejeitar arquivo com menos de 4 linhas', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const lines = ['X'.repeat(240), 'Y'.repeat(240)]
 
       const result = validateCnab240Structure(lines, bradesco)
 
       expect(result.errors.length).toBeGreaterThan(0)
-      expect(result.errors[0].message).toContain('mÃ­nimo 4 registros')
+      expect(result.errors[0].message).toContain('mínimo 4 registros')
     })
 
     test('deve rejeitar linha com tamanho incorreto', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const lines = [
         '0'.repeat(240), // Header Arquivo
         '1'.repeat(240), // Header Lote
@@ -40,12 +41,12 @@ describe('validateCnab240Structure', () => {
     })
   })
 
-  describe('IdentificaÃ§Ã£o de tipo de registro', () => {
+  describe('Identificação de tipo de registro', () => {
     test('deve rejeitar tipo de registro desconhecido', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
-      // Linha com tipo '7' na posiÃ§Ã£o 8 (inexistente no CNAB 240)
+      // Linha com tipo '7' na posição 8 (inexistente no CNAB 240)
       const invalidLine = '0'.repeat(7) + '7' + '0'.repeat(232)
       const trailerLote = '0'.repeat(7) + '5' + '0'.repeat(232)
       const trailerArquivo = '0'.repeat(7) + '9' + '0'.repeat(232)
@@ -64,13 +65,13 @@ describe('validateCnab240Structure', () => {
         expect.objectContaining({
           line: 3,
           column: 'Tipo de registro',
-          message: expect.stringContaining('nÃ£o reconhecido'),
+          message: expect.stringContaining('não reconhecido'),
         })
       )
     })
 
     test('deve identificar corretamente Header de Arquivo (tipo 0)', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -82,15 +83,15 @@ describe('validateCnab240Structure', () => {
 
       const result = validateCnab240Structure(lines, bradesco)
 
-      // Estrutura bÃ¡sica deve ser reconhecida
+      // Estrutura básica deve ser reconhecida
       expect(result.batchCount).toBe(1)
       expect(result.billCount).toBe(1)
     })
   })
 
-  describe('SequÃªncia de Header e Trailer de Arquivo', () => {
+  describe('Sequência de Header e Trailer de Arquivo', () => {
     test('deve exigir Header de Arquivo na primeira linha', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
 
@@ -107,7 +108,7 @@ describe('validateCnab240Structure', () => {
     })
 
     test('deve rejeitar Header de Arquivo duplicado', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
 
       const lines = [headerArquivo, headerArquivo, '0'.repeat(240), '0'.repeat(240)]
@@ -122,8 +123,8 @@ describe('validateCnab240Structure', () => {
       )
     })
 
-    test('deve exigir Trailer de Arquivo na Ãºltima linha', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+    test('deve exigir Trailer de Arquivo na última linha', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const trailerArquivo = '0'.repeat(7) + '9' + '0'.repeat(232)
       const extra = '0'.repeat(240)
@@ -135,13 +136,13 @@ describe('validateCnab240Structure', () => {
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           column: 'Trailer de Arquivo',
-          message: expect.stringContaining('Ãºltima linha'),
+          message: expect.stringContaining('última linha'),
         })
       )
     })
 
     test('deve detectar arquivo sem Trailer de Arquivo', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
 
@@ -160,7 +161,7 @@ describe('validateCnab240Structure', () => {
 
   describe('Estrutura de Lotes', () => {
     test('deve contar lotes corretamente', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -188,7 +189,7 @@ describe('validateCnab240Structure', () => {
     })
 
     test('deve rejeitar Header de Lote sem Trailer de Lote anterior', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
 
@@ -203,12 +204,12 @@ describe('validateCnab240Structure', () => {
           message: expect.stringContaining('sem Trailer de Lote correspondente'),
         })
       )
-      // 4i - ReforÃ§o: dois lotes foram abertos
+      // 4i - Reforço: dois lotes foram abertos
       expect(result.batchCount).toBe(2)
     })
 
-    test('deve rejeitar lote vazio (sem tÃ­tulos)', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+    test('deve rejeitar lote vazio (sem títulos)', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const trailerLote = '0'.repeat(7) + '5' + '0'.repeat(232)
@@ -221,15 +222,15 @@ describe('validateCnab240Structure', () => {
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           column: 'Trailer de Lote',
-          message: expect.stringContaining('sem nenhum tÃ­tulo'),
+          message: expect.stringContaining('sem nenhum título'),
         })
       )
     })
   })
 
-  describe('Pares P+Q obrigatÃ³rios', () => {
+  describe('Pares P+Q obrigatórios', () => {
     test('deve contar boletos corretamente', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -257,7 +258,7 @@ describe('validateCnab240Structure', () => {
     })
 
     test('deve rejeitar Segmento Q sem Segmento P', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segQ = '0'.repeat(7) + '3' + '0'.repeat(5) + 'Q' + '0'.repeat(226)
@@ -274,12 +275,12 @@ describe('validateCnab240Structure', () => {
           message: expect.stringContaining('sem Segmento P correspondente'),
         })
       )
-      // 4h - ReforÃ§o: boleto count deve ser zero
+      // 4h - Reforço: boleto count deve ser zero
       expect(result.billCount).toBe(0)
     })
 
     test('deve rejeitar Segmento P sem Segmento Q (seguido por outro P)', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -309,7 +310,7 @@ describe('validateCnab240Structure', () => {
     })
 
     test('deve rejeitar Trailer de Lote com Segmento P pendente', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -330,8 +331,8 @@ describe('validateCnab240Structure', () => {
   })
 
   describe('Segmentos opcionais (R, S, Y*)', () => {
-    test('deve aceitar Segmento R apÃ³s par P+Q completo', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+    test('deve aceitar Segmento R após par P+Q completo', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -345,12 +346,12 @@ describe('validateCnab240Structure', () => {
       const result = validateCnab240Structure(lines, bradesco)
 
       // Deve aceitar sem erros estruturais
-      const structuralErrors = result.errors.filter(e => !e.message.includes('nÃ£o estÃ¡ definido'))
+      const structuralErrors = result.errors.filter(e => !e.message.includes('não está definido'))
       expect(structuralErrors).toHaveLength(0)
     })
 
     test('deve rejeitar Segmento R sem par P+Q antes', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segR = '0'.repeat(7) + '3' + '0'.repeat(5) + 'R' + '0'.repeat(226)
@@ -371,8 +372,8 @@ describe('validateCnab240Structure', () => {
       )
     })
 
-    test('deve aceitar mÃºltiplos segmentos opcionais em sequÃªncia', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+    test('deve aceitar múltiplos segmentos opcionais em sequência', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
       const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
       const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
       const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -386,26 +387,26 @@ describe('validateCnab240Structure', () => {
 
       const result = validateCnab240Structure(lines, bradesco)
 
-      // MÃºltiplos opcionais devem ser aceitos
-      const structuralErrors = result.errors.filter(e => !e.message.includes('nÃ£o estÃ¡ definido'))
+      // Múltiplos opcionais devem ser aceitos
+      const structuralErrors = result.errors.filter(e => !e.message.includes('não está definido'))
       expect(structuralErrors).toHaveLength(0)
     })
   })
 
-  describe('ValidaÃ§Ã£o com arquivo real', () => {
+  describe('Validação com arquivo real', () => {
     test('deve validar arquivo CNAB 240 real do Bradesco', () => {
       const fixturePath = join(__dirname, '../fixtures/cnab240/bradesco/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const bradesco = getBankSchema('237', 'cnab240')!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
 
       const result = validateCnab240Structure(lines, bradesco)
 
-      // Arquivo fixture deve ter estrutura vÃ¡lida
+      // Arquivo fixture deve ter estrutura válida
       expect(result.batchCount).toBeGreaterThan(0)
       expect(result.billCount).toBeGreaterThan(0)
       
-      // NÃ£o deve ter erros estruturais graves
+      // Não deve ter erros estruturais graves
       const criticalErrors = result.errors.filter(e => 
         e.message.includes('sem Header') ||
         e.message.includes('sem Trailer') ||
@@ -415,10 +416,10 @@ describe('validateCnab240Structure', () => {
     })
   })
 
-  describe('Casos de borda e regressÃµes', () => {
-    describe('a) Segmento P/Q fora de qualquer lote (regressÃ£o bug)', () => {
+  describe('Casos de borda e regressões', () => {
+    describe('a) Segmento P/Q fora de qualquer lote (regressão bug)', () => {
       test('deve rejeitar Segmento P/Q antes do primeiro Header de Lote', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -448,14 +449,14 @@ describe('validateCnab240Structure', () => {
           })
         )
 
-        // Apenas o par dentro do lote deve contar como boleto vÃ¡lido
+        // Apenas o par dentro do lote deve contar como boleto válido
         expect(result.billCount).toBe(1)
       })
     })
 
-    describe('2. Header de Arquivo fora de posiÃ§Ã£o dessincroniza estado', () => {
+    describe('2. Header de Arquivo fora de posição dessincroniza estado', () => {
       test('deve resetar loteAberto/boletoEmAberto quando Header de Arquivo aparece no meio', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -510,9 +511,9 @@ describe('validateCnab240Structure', () => {
       })
     })
 
-    describe('3a. Segmento Q solto apÃ³s Header de Arquivo', () => {
+    describe('3a. Segmento Q solto após Header de Arquivo', () => {
       test('deve rejeitar Segmento Q sem P e sem lote aberto', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -537,7 +538,7 @@ describe('validateCnab240Structure', () => {
 
     describe('3b. Segmento Q duplicado', () => {
       test('deve rejeitar segundo Q consecutivo', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -560,9 +561,9 @@ describe('validateCnab240Structure', () => {
       })
     })
 
-    describe('3c. Segmento opcional apÃ³s Header de Arquivo sem lote', () => {
-      test('deve rejeitar Segmento R direto apÃ³s Header de Arquivo', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+    describe('3c. Segmento opcional após Header de Arquivo sem lote', () => {
+      test('deve rejeitar Segmento R direto após Header de Arquivo', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -587,7 +588,7 @@ describe('validateCnab240Structure', () => {
 
     describe('3d. Letra de segmento desconhecida', () => {
       test('deve rejeitar segmento com letra desconhecida (tipo 3, segmento X)', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segX = '0'.repeat(7) + '3' + '0'.repeat(5) + 'X' + '0'.repeat(226)
@@ -603,15 +604,15 @@ describe('validateCnab240Structure', () => {
           expect.objectContaining({
             line: 3,
             column: 'Tipo de registro',
-            message: expect.stringContaining('nÃ£o reconhecido'),
+            message: expect.stringContaining('não reconhecido'),
           })
         )
 
-        // Lote sem tÃ­tulo
+        // Lote sem título
         expect(result.errors).toContainEqual(
           expect.objectContaining({
             column: 'Trailer de Lote',
-            message: expect.stringContaining('sem nenhum tÃ­tulo'),
+            message: expect.stringContaining('sem nenhum título'),
           })
         )
       })
@@ -619,7 +620,7 @@ describe('validateCnab240Structure', () => {
 
     describe('3e. Trailer de Lote solto', () => {
       test('deve rejeitar segundo Trailer de Lote sem novo Header de Lote', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -649,9 +650,9 @@ describe('validateCnab240Structure', () => {
       })
     })
 
-    describe('3f. Header de Lote apÃ³s arquivo fechado', () => {
-      test('deve rejeitar Header de Lote apÃ³s Trailer de Arquivo', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+    describe('3f. Header de Lote após arquivo fechado', () => {
+      test('deve rejeitar Header de Lote após Trailer de Arquivo', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const trailerArquivo = '0'.repeat(7) + '9' + '0'.repeat(232)
@@ -664,15 +665,15 @@ describe('validateCnab240Structure', () => {
           expect.objectContaining({
             line: 3,
             column: 'Header de Lote',
-            message: expect.stringContaining('apÃ³s Trailer de Arquivo'),
+            message: expect.stringContaining('após Trailer de Arquivo'),
           })
         )
       })
     })
 
-    describe('3g. Header de Arquivo apÃ³s arquivo fechado (sem lote aberto)', () => {
-      test('deve rejeitar Header de Arquivo apÃ³s Trailer de Arquivo', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+    describe('3g. Header de Arquivo após arquivo fechado (sem lote aberto)', () => {
+      test('deve rejeitar Header de Arquivo após Trailer de Arquivo', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const trailerArquivo = '0'.repeat(7) + '9' + '0'.repeat(232)
 
@@ -685,19 +686,19 @@ describe('validateCnab240Structure', () => {
           expect.objectContaining({
             line: 3,
             column: 'Header de Arquivo',
-            message: expect.stringContaining('apÃ³s Trailer de Arquivo'),
+            message: expect.stringContaining('após Trailer de Arquivo'),
           })
         )
       })
     })
 
     describe('b) Segmento opcional entre P e Q', () => {
-      test('deve rejeitar Segmento S entre P e Q do mesmo tÃ­tulo', () => {
-        // MODO ESTRITO (mudanÃ§a intencional de semÃ¢ntica):
-        // Um S entre P e Q interrompe o pareamento. O Q seguinte NÃƒO conta como par vÃ¡lido.
-        // Antes (modo leniente): billCount === 1 (S era ignorado, Pâ†’Q pareava).
-        // Agora (modo estrito): billCount === 0 (S interrompe, Q fica Ã³rfÃ£o com mensagem enriquecida).
-        const bradesco = getBankSchema('237', 'cnab240')!
+      test('deve rejeitar Segmento S entre P e Q do mesmo título', () => {
+        // MODO ESTRITO (mudança intencional de semântica):
+        // Um S entre P e Q interrompe o pareamento. O Q seguinte NÃO conta como par válido.
+        // Antes (modo leniente): billCount === 1 (S era ignorado, P?Q pareava).
+        // Agora (modo estrito): billCount === 0 (S interrompe, Q fica órfão com mensagem enriquecida).
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -739,13 +740,13 @@ describe('validateCnab240Structure', () => {
           })
         )
 
-        // Modo estrito: billCount NÃƒO incrementa quando hÃ¡ interrupÃ§Ã£o
+        // Modo estrito: billCount NÃO incrementa quando há interrupção
         expect(result.billCount).toBe(0)
       })
     })
 
-    describe('c) Modo estrito - 5 pontos de interrupÃ§Ã£o de pareamento', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+    describe('c) Modo estrito - 5 pontos de interrupção de pareamento', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
 
       test('Ponto 1: linha com tamanho incorreto entre P e Q interrompe pareamento', () => {
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
@@ -759,7 +760,7 @@ describe('validateCnab240Structure', () => {
         const lines = [headerArquivo, headerLote, segP, linhaInvalida, segQ, trailerLote, trailerArquivo]
         const result = validateCnab240Structure(lines, bradesco)
 
-        // Q deve reportar interrupÃ§Ã£o
+        // Q deve reportar interrupção
         expect(result.errors).toContainEqual(
           expect.objectContaining({
             line: 5,
@@ -774,7 +775,7 @@ describe('validateCnab240Structure', () => {
           })
         )
 
-        // billCount nÃ£o incrementa
+        // billCount não incrementa
         expect(result.billCount).toBe(0)
       })
 
@@ -790,7 +791,7 @@ describe('validateCnab240Structure', () => {
         const lines = [headerArquivo, headerLote, segP, tipoDesconhecido, segQ, trailerLote, trailerArquivo]
         const result = validateCnab240Structure(lines, bradesco)
 
-        // Q deve reportar interrupÃ§Ã£o
+        // Q deve reportar interrupção
         expect(result.errors).toContainEqual(
           expect.objectContaining({
             line: 5,
@@ -809,8 +810,8 @@ describe('validateCnab240Structure', () => {
       })
 
       test('Ponto 5: segmento opcional fora de ordem entre P e Q interrompe pareamento', () => {
-        // Este Ã© o teste que jÃ¡ foi reescrito acima - referenciado aqui para completude
-        // Pâ†’S (fora de ordem)â†’Q: billCount === 0
+        // Este é o teste que já foi reescrito acima - referenciado aqui para completude
+        // P?S (fora de ordem)?Q: billCount === 0
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -839,10 +840,10 @@ describe('validateCnab240Structure', () => {
       })
     })
 
-    describe('d) RegressÃµes do modo estrito', () => {
-      const bradesco = getBankSchema('237', 'cnab240')!
+    describe('d) Regressões do modo estrito', () => {
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
 
-      test('Caminho feliz: Pâ†’Qâ†’Râ†’S deve parear normalmente', () => {
+      test('Caminho feliz: P?Q?R?S deve parear normalmente', () => {
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -855,7 +856,7 @@ describe('validateCnab240Structure', () => {
         const lines = [headerArquivo, headerLote, segP, segQ, segR, segS, trailerLote, trailerArquivo]
         const result = validateCnab240Structure(lines, bradesco)
 
-        // NÃ£o deve ter erro de pareamento
+        // Não deve ter erro de pareamento
         const pairingErrors = result.errors.filter(e => e.message.includes('pareamento'))
         expect(pairingErrors).toHaveLength(0)
 
@@ -863,9 +864,9 @@ describe('validateCnab240Structure', () => {
         expect(result.billCount).toBe(1)
       })
 
-      test('Lote com par vÃ¡lido antes de interrupÃ§Ã£o posterior: P1â†’Q1â†’P2â†’Râ†’Q2', () => {
-        // O primeiro par (P1â†’Q1) conta. O segundo par Ã© interrompido por R fora de ordem.
-        // Importante: nÃ£o deve gerar falso positivo "Lote sem nenhum tÃ­tulo"
+      test('Lote com par válido antes de interrupção posterior: P1?Q1?P2?R?Q2', () => {
+        // O primeiro par (P1?Q1) conta. O segundo par é interrompido por R fora de ordem.
+        // Importante: não deve gerar falso positivo "Lote sem nenhum título"
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP1 = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -882,7 +883,7 @@ describe('validateCnab240Structure', () => {
         // Primeiro par conta
         expect(result.billCount).toBe(1)
 
-        // Q2 deve reportar interrupÃ§Ã£o
+        // Q2 deve reportar interrupção
         expect(result.errors).toContainEqual(
           expect.objectContaining({
             line: 7,
@@ -890,13 +891,13 @@ describe('validateCnab240Structure', () => {
           })
         )
 
-        // NÃƒO deve ter erro "Lote sem nenhum tÃ­tulo" (falso positivo que motivou estado separado)
-        const loteVazioErrors = result.errors.filter(e => e.message.includes('Lote sem nenhum tÃ­tulo'))
+        // NÃO deve ter erro "Lote sem nenhum título" (falso positivo que motivou estado separado)
+        const loteVazioErrors = result.errors.filter(e => e.message.includes('Lote sem nenhum título'))
         expect(loteVazioErrors).toHaveLength(0)
       })
 
-      test('Novo P apÃ³s interrupÃ§Ã£o pareja normalmente: P1â†’Xâ†’Q1[erro]â†’P2â†’Q2', () => {
-        // P1 Ã© interrompido por X. P2 inicia novo pareamento limpo.
+      test('Novo P após interrupção pareja normalmente: P1?X?Q1[erro]?P2?Q2', () => {
+        // P1 é interrompido por X. P2 inicia novo pareamento limpo.
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP1 = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -910,7 +911,7 @@ describe('validateCnab240Structure', () => {
         const lines = [headerArquivo, headerLote, segP1, linhaInvalida, segQ1, segP2, segQ2, trailerLote, trailerArquivo]
         const result = validateCnab240Structure(lines, bradesco)
 
-        // Q1 deve ter erro de interrupÃ§Ã£o
+        // Q1 deve ter erro de interrupção
         expect(result.errors).toContainEqual(
           expect.objectContaining({
             line: 5,
@@ -918,18 +919,18 @@ describe('validateCnab240Structure', () => {
           })
         )
 
-        // P2â†’Q2 deve parear normalmente (sem contaminaÃ§Ã£o de P1)
-        const q2Errors = result.errors.filter(e => e.line === 7 && e.column === 'Segmento Q')
+        // P2?Q2 deve parear normalmente (sem contaminação de P1)
+        const q2Errors = result.errors.filter(e => e.line === 7 && e.field === 'Segmento Q')
         expect(q2Errors).toHaveLength(0)
 
-        // billCount deve ser 1 (apenas P2â†’Q2)
+        // billCount deve ser 1 (apenas P2?Q2)
         expect(result.billCount).toBe(1)
       })
     })
 
     describe('e) Lote aberto nunca fechado', () => {
       test('deve rejeitar Trailer de Arquivo com lote ainda aberto', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -951,8 +952,8 @@ describe('validateCnab240Structure', () => {
     })
 
     describe('d) Arquivo sem Header de Arquivo', () => {
-      test('deve detectar ausÃªncia de Header de Arquivo', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+      test('deve detectar ausência de Header de Arquivo', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
         const segQ = '0'.repeat(7) + '3' + '0'.repeat(5) + 'Q' + '0'.repeat(226)
@@ -975,7 +976,7 @@ describe('validateCnab240Structure', () => {
 
     describe('e) Trailer de Arquivo duplicado', () => {
       test('deve rejeitar Trailer de Arquivo duplicado', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -1005,14 +1006,14 @@ describe('validateCnab240Structure', () => {
       })
     })
 
-    describe('f) Segmento Y com subcÃ³digo vÃ¡lido', () => {
+    describe('f) Segmento Y com subcódigo válido', () => {
       test('deve reconhecer Segmento Y01 corretamente', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
         const segQ = '0'.repeat(7) + '3' + '0'.repeat(5) + 'Q' + '0'.repeat(226)
-        // Segmento Y01: tipo='3' pos 8, segmento='Y' pos 14, subcÃ³digo='01' pos 18-19
+        // Segmento Y01: tipo='3' pos 8, segmento='Y' pos 14, subcódigo='01' pos 18-19
         const segY01 = '0'.repeat(7) + '3' + '0'.repeat(5) + 'Y' + '000' + '01' + '0'.repeat(221)
         const trailerLote = '0'.repeat(7) + '5' + '0'.repeat(232)
         const trailerArquivo = '0'.repeat(7) + '9' + '0'.repeat(232)
@@ -1021,22 +1022,22 @@ describe('validateCnab240Structure', () => {
 
         const result = validateCnab240Structure(lines, bradesco)
 
-        // NÃ£o deve ter erros estruturais (filtrar erros de schema nÃ£o definido)
+        // Não deve ter erros estruturais (filtrar erros de schema não definido)
         const structuralErrors = result.errors.filter(
-          e => !e.message.includes('nÃ£o estÃ¡ definido')
+          e => !e.message.includes('não está definido')
         )
         expect(structuralErrors).toHaveLength(0)
       })
     })
 
-    describe('g) Segmento Y com subcÃ³digo desconhecido', () => {
-      test('deve rejeitar Segmento Y com subcÃ³digo invÃ¡lido', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+    describe('g) Segmento Y com subcódigo desconhecido', () => {
+      test('deve rejeitar Segmento Y com subcódigo inválido', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
         const segQ = '0'.repeat(7) + '3' + '0'.repeat(5) + 'Q' + '0'.repeat(226)
-        // Segmento Y com subcÃ³digo invÃ¡lido '99'
+        // Segmento Y com subcódigo inválido '99'
         const segYInvalid = '0'.repeat(7) + '3' + '0'.repeat(5) + 'Y' + '000' + '99' + '0'.repeat(221)
         const trailerLote = '0'.repeat(7) + '5' + '0'.repeat(232)
         const trailerArquivo = '0'.repeat(7) + '9' + '0'.repeat(232)
@@ -1045,20 +1046,20 @@ describe('validateCnab240Structure', () => {
 
         const result = validateCnab240Structure(lines, bradesco)
 
-        // SubcÃ³digo desconhecido deve gerar erro (agora Y99 nÃ£o estÃ¡ no schema)
+        // Subcódigo desconhecido deve gerar erro (agora Y99 não está no schema)
         expect(result.errors).toContainEqual(
           expect.objectContaining({
             line: 5,
             column: 'Segmento Y99',
-            message: expect.stringContaining('nÃ£o estÃ¡ definido no schema do banco'),
+            message: expect.stringContaining('não está definido no schema do banco'),
           })
         )
       })
     })
 
-    describe('h) Registro vÃ¡lido FEBRABAN mas nÃ£o definido no schema do banco', () => {
-      test('deve rejeitar Segmento R quando banco nÃ£o o define', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+    describe('h) Registro válido FEBRABAN mas não definido no schema do banco', () => {
+      test('deve rejeitar Segmento R quando banco não o define', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         // Criar schema sem segmentoR removendo-o de optionalRecords
         const bradescoSemSegmentoR = {
           ...bradesco,
@@ -1077,18 +1078,18 @@ describe('validateCnab240Structure', () => {
 
         const result = validateCnab240Structure(lines, bradescoSemSegmentoR)
 
-        // Segmento R nÃ£o definido no schema deve gerar erro
+        // Segmento R não definido no schema deve gerar erro
         expect(result.errors).toContainEqual(
           expect.objectContaining({
             line: 5,
             column: 'Segmento R',
-            message: expect.stringContaining('nÃ£o estÃ¡ definido no schema do banco'),
+            message: expect.stringContaining('não está definido no schema do banco'),
           })
         )
       })
 
-      test('deve rejeitar headerLote quando banco nÃ£o o define', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+      test('deve rejeitar headerLote quando banco não o define', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const bradescoSemHeaderLote = {
           ...bradesco,
           headerLote: undefined,
@@ -1109,13 +1110,13 @@ describe('validateCnab240Structure', () => {
           expect.objectContaining({
             line: 2,
             column: 'Tipo de registro',
-            message: expect.stringContaining('nÃ£o estÃ¡ definido no schema do banco'),
+            message: expect.stringContaining('não está definido no schema do banco'),
           })
         )
       })
 
-      test('deve rejeitar segmentoY01 quando banco nÃ£o o define', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+      test('deve rejeitar segmentoY01 quando banco não o define', () => {
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const bradescoSemY01 = {
           ...bradesco,
           optionalRecords: bradesco.optionalRecords?.filter(r => r.identifier !== 'Y01'),
@@ -1137,7 +1138,7 @@ describe('validateCnab240Structure', () => {
           expect.objectContaining({
             line: 5,
             column: 'Segmento Y01',
-            message: expect.stringContaining('nÃ£o estÃ¡ definido no schema do banco'),
+            message: expect.stringContaining('não está definido no schema do banco'),
           })
         )
       })
@@ -1147,7 +1148,7 @@ describe('validateCnab240Structure', () => {
   describe('Cobertura de variantes de Segmento Y', () => {
     describe('5j. Segmento Y03 e Y53 (Santander)', () => {
       test('deve reconhecer Segmento Y03 do Santander', () => {
-        const santander = getBankSchema('033', 'cnab240')!
+        const santander = getBankSchema('033', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -1161,13 +1162,13 @@ describe('validateCnab240Structure', () => {
         const result = validateCnab240Structure(lines, santander)
 
         const structuralErrors = result.errors.filter(
-          e => !e.message.includes('nÃ£o estÃ¡ definido')
+          e => !e.message.includes('não está definido')
         )
         expect(structuralErrors).toHaveLength(0)
       })
 
       test('deve reconhecer Segmento Y53 do Santander', () => {
-        const santander = getBankSchema('033', 'cnab240')!
+        const santander = getBankSchema('033', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -1181,7 +1182,7 @@ describe('validateCnab240Structure', () => {
         const result = validateCnab240Structure(lines, santander)
 
         const structuralErrors = result.errors.filter(
-          e => !e.message.includes('nÃ£o estÃ¡ definido')
+          e => !e.message.includes('não está definido')
         )
         expect(structuralErrors).toHaveLength(0)
       })
@@ -1189,7 +1190,7 @@ describe('validateCnab240Structure', () => {
 
     describe('5k. Segmento Y04 e Y50 (Bradesco)', () => {
       test('deve reconhecer Segmento Y04 do Bradesco', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -1203,13 +1204,13 @@ describe('validateCnab240Structure', () => {
         const result = validateCnab240Structure(lines, bradesco)
 
         const structuralErrors = result.errors.filter(
-          e => !e.message.includes('nÃ£o estÃ¡ definido')
+          e => !e.message.includes('não está definido')
         )
         expect(structuralErrors).toHaveLength(0)
       })
 
       test('deve reconhecer Segmento Y50 do Bradesco', () => {
-        const bradesco = getBankSchema('237', 'cnab240')!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB240)!
         const headerArquivo = '0'.repeat(7) + '0' + '0'.repeat(232)
         const headerLote = '0'.repeat(7) + '1' + '0'.repeat(232)
         const segP = '0'.repeat(7) + '3' + '0'.repeat(5) + 'P' + '0'.repeat(226)
@@ -1223,7 +1224,7 @@ describe('validateCnab240Structure', () => {
         const result = validateCnab240Structure(lines, bradesco)
 
         const structuralErrors = result.errors.filter(
-          e => !e.message.includes('nÃ£o estÃ¡ definido')
+          e => !e.message.includes('não está definido')
         )
         expect(structuralErrors).toHaveLength(0)
       })

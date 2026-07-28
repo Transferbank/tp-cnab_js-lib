@@ -2,20 +2,22 @@
  * Testes para format-detector
  */
 
-import { detectFormat, detectBank } from '../../src/parser/format-detector'
+import { detectFormat, detectBank } from '@parser/format-detector'
+import { CNABFormatCode } from '@tp-types/index'
+import { CNABNoLinesProvidedError, CNABInvalidHeaderError } from '@tp-types/errors'
 
 describe('detectFormat', () => {
-  describe('Detecção de CNAB 240', () => {
+  describe('Detec��o de CNAB 240', () => {
     test('deve detectar formato CNAB 240 pelo tamanho da linha', () => {
       const line240 = 'A'.repeat(240)
       const lines = [line240]
 
       const format = detectFormat(lines)
 
-      expect(format).toBe('cnab240')
+      expect(format).toBe(CNABFormatCode.CNAB240)
     })
 
-    test('deve detectar CNAB 240 mesmo com múltiplas linhas', () => {
+    test('deve detectar CNAB 240 mesmo com m�ltiplas linhas', () => {
       const lines = [
         'A'.repeat(240),
         'B'.repeat(240),
@@ -24,21 +26,21 @@ describe('detectFormat', () => {
 
       const format = detectFormat(lines)
 
-      expect(format).toBe('cnab240')
+      expect(format).toBe(CNABFormatCode.CNAB240)
     })
   })
 
-  describe('Detecção de CNAB 400', () => {
+  describe('Detec��o de CNAB 400', () => {
     test('deve detectar formato CNAB 400 pelo tamanho da linha', () => {
       const line400 = 'B'.repeat(400)
       const lines = [line400]
 
       const format = detectFormat(lines)
 
-      expect(format).toBe('cnab400')
+      expect(format).toBe(CNABFormatCode.CNAB400)
     })
 
-    test('deve detectar CNAB 400 mesmo com múltiplas linhas', () => {
+    test('deve detectar CNAB 400 mesmo com m�ltiplas linhas', () => {
       const lines = [
         'A'.repeat(400),
         'B'.repeat(400),
@@ -47,15 +49,14 @@ describe('detectFormat', () => {
 
       const format = detectFormat(lines)
 
-      expect(format).toBe('cnab400')
+      expect(format).toBe(CNABFormatCode.CNAB400)
     })
   })
 
-  describe('Casos inválidos', () => {
+  describe('Casos inv�lidos', () => {
     test('deve retornar null para array vazio', () => {
-      const format = detectFormat([])
-
-      expect(format).toBeNull()
+      expect(() => detectFormat([])).toThrow(CNABNoLinesProvidedError)
+      expect(() => detectFormat([])).toThrow('Nenhuma linha fornecida para detecção de formato')
     })
 
     test('deve retornar null para linha com tamanho incorreto', () => {
@@ -98,10 +99,9 @@ describe('detectFormat', () => {
       expect(format).toBeNull()
     })
 
-    test('deve retornar null quando não há linhas', () => {
-      const format = detectFormat(null as any)
-
-      expect(format).toBeNull()
+    test('deve retornar null quando n�o h� linhas', () => {
+      expect(() => detectFormat(null as any)).toThrow(CNABNoLinesProvidedError)
+      expect(() => detectFormat(null as any)).toThrow('Nenhuma linha fornecida para detecção de formato')
     })
   })
 
@@ -113,7 +113,7 @@ describe('detectFormat', () => {
       expect(headerReal.length).toBe(240)
       const format = detectFormat(lines)
 
-      expect(format).toBe('cnab240')
+      expect(format).toBe(CNABFormatCode.CNAB240)
     })
 
     test('deve detectar CNAB 400 de arquivo real', () => {
@@ -123,135 +123,132 @@ describe('detectFormat', () => {
       expect(headerReal.length).toBe(400)
       const format = detectFormat(lines)
 
-      expect(format).toBe('cnab400')
+      expect(format).toBe(CNABFormatCode.CNAB400)
     })
   })
 })
 
 describe('detectBank', () => {
-  describe('Detecção de banco em CNAB 400', () => {
-    test('deve extrair código do banco da posição 77-79', () => {
-      // Posições 1-76: outros dados, 77-79: código do banco (033), 80-400: resto
+  describe('Detec��o de banco em CNAB 400', () => {
+    test('deve extrair c�digo do banco da posi��o 77-79', () => {
+      // Posi��es 1-76: outros dados, 77-79: c�digo do banco (033), 80-400: resto
       const header = 'X'.repeat(76) + '033' + 'Y'.repeat(321)
 
-      const bankCode = detectBank(header, 'cnab400')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB400)
 
       expect(bankCode).toBe('033')
     })
 
-    test('deve retornar código de banco Santander (033)', () => {
+    test('deve retornar c�digo de banco Santander (033)', () => {
       const header = ' '.repeat(76) + '033' + ' '.repeat(321)
 
-      const bankCode = detectBank(header, 'cnab400')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB400)
 
       expect(bankCode).toBe('033')
     })
 
-    test('deve retornar código de banco Bradesco (237)', () => {
+    test('deve retornar c�digo de banco Bradesco (237)', () => {
       const header = 'X'.repeat(76) + '237' + 'Y'.repeat(321)
 
-      const bankCode = detectBank(header, 'cnab400')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB400)
 
       expect(bankCode).toBe('237')
     })
 
-    test('deve fazer trim em espaços no código do banco', () => {
+    test('deve fazer trim em espa�os no c�digo do banco', () => {
       const header = 'X'.repeat(76) + ' 33' + 'Y'.repeat(321)
 
-      const bankCode = detectBank(header, 'cnab400')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB400)
 
       expect(bankCode).toBe('33')
     })
 
-    test('deve retornar null quando código do banco está vazio', () => {
+    test('deve retornar null quando c�digo do banco est� vazio', () => {
       const header = 'X'.repeat(76) + '   ' + 'Y'.repeat(321)
 
-      const bankCode = detectBank(header, 'cnab400')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB400)
 
       expect(bankCode).toBeNull()
     })
   })
 
-  describe('Detecção de banco em CNAB 240', () => {
-    test('deve extrair código do banco da posição 1-3', () => {
+  describe('Detec��o de banco em CNAB 240', () => {
+    test('deve extrair c�digo do banco da posi��o 1-3', () => {
       const header = '033' + 'Y'.repeat(237)
 
-      const bankCode = detectBank(header, 'cnab240')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB240)
 
       expect(bankCode).toBe('033')
     })
 
-    test('deve retornar código de banco Santander (033)', () => {
+    test('deve retornar c�digo de banco Santander (033)', () => {
       const header = '03300000         200000001234567890123456789Nome da Empresa' + ' '.repeat(180)
 
-      const bankCode = detectBank(header, 'cnab240')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB240)
 
       expect(bankCode).toBe('033')
     })
 
-    test('deve retornar código de banco Bradesco (237)', () => {
+    test('deve retornar c�digo de banco Bradesco (237)', () => {
       const header = '237' + 'X'.repeat(237)
 
-      const bankCode = detectBank(header, 'cnab240')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB240)
 
       expect(bankCode).toBe('237')
     })
 
-    test('deve retornar código de banco Itaú (341)', () => {
+    test('deve retornar c�digo de banco Ita� (341)', () => {
       const header = '341' + 'X'.repeat(237)
 
-      const bankCode = detectBank(header, 'cnab240')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB240)
 
       expect(bankCode).toBe('341')
     })
 
-    test('deve fazer trim em espaços no código do banco', () => {
+    test('deve fazer trim em espa�os no c�digo do banco', () => {
       const header = ' 33' + 'X'.repeat(237)
 
-      const bankCode = detectBank(header, 'cnab240')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB240)
 
       expect(bankCode).toBe('33')
     })
 
-    test('deve retornar null quando código do banco está vazio', () => {
+    test('deve retornar null quando c�digo do banco est� vazio', () => {
       const header = '   ' + 'X'.repeat(237)
 
-      const bankCode = detectBank(header, 'cnab240')
+      const bankCode = detectBank(header, CNABFormatCode.CNAB240)
 
       expect(bankCode).toBeNull()
     })
   })
 
-  describe('Casos inválidos', () => {
+  describe('Casos inv�lidos', () => {
     test('deve retornar null para header vazio', () => {
-      const bankCode = detectBank('', 'cnab240')
-
-      expect(bankCode).toBeNull()
+      expect(() => detectBank('', CNABFormatCode.CNAB240)).toThrow(CNABInvalidHeaderError)
+      expect(() => detectBank('', CNABFormatCode.CNAB240)).toThrow('Header vazio')
     })
 
     test('deve retornar null para header null', () => {
-      const bankCode = detectBank(null as any, 'cnab240')
-
-      expect(bankCode).toBeNull()
+      expect(() => detectBank(null as any, CNABFormatCode.CNAB240)).toThrow(CNABInvalidHeaderError)
+      expect(() => detectBank(null as any, CNABFormatCode.CNAB240)).toThrow('Header fornecido é null')
     })
 
     test('deve retornar null para header undefined', () => {
-      const bankCode = detectBank(undefined as any, 'cnab400')
-
-      expect(bankCode).toBeNull()
+      expect(() => detectBank(undefined as any, CNABFormatCode.CNAB400)).toThrow(CNABInvalidHeaderError)
+      expect(() => detectBank(undefined as any, CNABFormatCode.CNAB400)).toThrow('Header não fornecido (undefined)')
     })
   })
 
-  describe('Comparação entre formatos', () => {
-    test('deve extrair de posições diferentes dependendo do formato', () => {
-      // Linha com códigos diferentes nas posições CNAB 240 e CNAB 400
+  describe('Compara��o entre formatos', () => {
+    test('deve extrair de posi��es diferentes dependendo do formato', () => {
+      // Linha com c�digos diferentes nas posi��es CNAB 240 e CNAB 400
       const header = '123' + 'X'.repeat(73) + '456' + 'Y'.repeat(321)
 
-      const code240 = detectBank(header, 'cnab240')
-      const code400 = detectBank(header, 'cnab400')
+      const code240 = detectBank(header, CNABFormatCode.CNAB240)
+      const code400 = detectBank(header, CNABFormatCode.CNAB400)
 
-      expect(code240).toBe('123') // Posições 1-3
-      expect(code400).toBe('456') // Posições 77-79
+      expect(code240).toBe('123') // Posi��es 1-3
+      expect(code400).toBe('456') // Posi��es 77-79
     })
   })
 
@@ -259,22 +256,22 @@ describe('detectBank', () => {
     const bancosConhecidos = [
       { codigo: '001', nome: 'Banco do Brasil' },
       { codigo: '033', nome: 'Santander' },
-      { codigo: '104', nome: 'Caixa Econômica Federal' },
+      { codigo: '104', nome: 'Caixa Econ�mica Federal' },
       { codigo: '237', nome: 'Bradesco' },
-      { codigo: '341', nome: 'Itaú' },
+      { codigo: '341', nome: 'Ita�' },
       { codigo: '748', nome: 'Sicredi' },
     ]
 
     bancosConhecidos.forEach(({ codigo, nome }) => {
-      test(`deve detectar código do ${nome} (${codigo}) em CNAB 240`, () => {
+      test(`deve detectar c�digo do ${nome} (${codigo}) em CNAB 240`, () => {
         const header = codigo + 'X'.repeat(237)
-        const bankCode = detectBank(header, 'cnab240')
+        const bankCode = detectBank(header, CNABFormatCode.CNAB240)
         expect(bankCode).toBe(codigo)
       })
 
-      test(`deve detectar código do ${nome} (${codigo}) em CNAB 400`, () => {
+      test(`deve detectar c�digo do ${nome} (${codigo}) em CNAB 400`, () => {
         const header = 'X'.repeat(76) + codigo + 'Y'.repeat(321)
-        const bankCode = detectBank(header, 'cnab400')
+        const bankCode = detectBank(header, CNABFormatCode.CNAB400)
         expect(bankCode).toBe(codigo)
       })
     })

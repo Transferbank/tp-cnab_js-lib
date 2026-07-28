@@ -5,7 +5,8 @@ import { getBankSchema } from '../../../../src/schemas'
 import { validateCnabFile } from '../../../../src'
 import { loadFixtureMetadata } from '../../../helpers/fixture-metadata'
 import { validateFixtureIntegrity } from '../../../helpers/fixture-validator'
-import { BANK_CODES } from '../../../../src/types'
+import { BANK_CODES } from '@tp-types/index'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('Metadados: remessa-multipla.json', () => {
   const fixtureDir = path.join(__dirname)
@@ -16,15 +17,15 @@ describe('Metadados: remessa-multipla.json', () => {
   let metadata: ReturnType<typeof loadFixtureMetadata>
 
   beforeAll(() => {
-    metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab400')
+    metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB400)
   })
 
   describe('Campos principais', () => {
-    test('deve ter descriÃ§Ã£o correta', () => {
+    test('deve ter descrição correta', () => {
       expect(metadata.description).toContain('remessa')
     })
 
-    test('deve ter cÃ³digo do banco Bradesco (237)', () => {
+    test('deve ter código do banco Bradesco (237)', () => {
       expect(metadata.bankCode).toBe(BANK_CODES.BRADESCO)
     })
 
@@ -33,7 +34,7 @@ describe('Metadados: remessa-multipla.json', () => {
     })
 
     test('deve ser formato CNAB400', () => {
-      expect(metadata.format).toBe('CNAB400')
+      expect(metadata.format).toBe(CNABFormatCode.CNAB400)
     })
   })
 
@@ -54,9 +55,9 @@ describe('Metadados: remessa-multipla.json', () => {
       expect(metadata.structure.trailerLines).toBe(1)
     })
 
-    test('estrutura deve estar consistente (header + detalhe + trailer â‰¤ total)', () => {
+    test('estrutura deve estar consistente (header + detalhe + trailer = total)', () => {
       const { headerLines, detailLines, trailerLines, totalLines } = metadata.structure
-      // CNAB 400 pode ter linhas tipo 2 (mensagens), entÃ£o soma pode ser menor que total
+      // CNAB 400 pode ter linhas tipo 2 (mensagens), então soma pode ser menor que total
       expect(headerLines + detailLines + trailerLines).toBeLessThanOrEqual(totalLines)
     })
 
@@ -76,52 +77,52 @@ describe('Metadados: remessa-multipla.json', () => {
       expect(metadata.header?.cedenteNome?.length).toBeGreaterThan(0)
     })
 
-    test('deve ter data de geraÃ§Ã£o formatada', () => {
+    test('deve ter data de geração formatada', () => {
       expect(metadata.header?.dataGeracao).toMatch(/\d{2}\/\d{2}\/\d{4}/)
     })
 
-    test('deve ter data de geraÃ§Ã£o raw', () => {
+    test('deve ter data de geração raw', () => {
       expect(metadata.header?.dataGeracaoRaw).toHaveLength(6)
     })
 
-    test('deve ser arquivo de remessa (cÃ³digo "1")', () => {
+    test('deve ser arquivo de remessa (código "1")', () => {
       expect(metadata.header?.tipoArquivo).toBe('1')
     })
   })
 
-  describe('Registros/TÃ­tulos', () => {
-    test('deve ter pelo menos um tÃ­tulo', () => {
+  describe('Registros/Títulos', () => {
+    test('deve ter pelo menos um título', () => {
       expect(metadata.records.length).toBeGreaterThan(0)
     })
 
-    test('cada tÃ­tulo deve ter Ã­ndice sequencial', () => {
+    test('cada título deve ter índice sequencial', () => {
       metadata.records.forEach((record, idx) => {
         expect(record.index).toBe(idx + 1)
       })
     })
 
-    test('todos os tÃ­tulos devem ter nome preenchido', () => {
+    test('todos os títulos devem ter nome preenchido', () => {
       metadata.records.forEach((record) => {
         expect(record.name).toBeTruthy()
         expect(record.name.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os tÃ­tulos devem ter documento vÃ¡lido', () => {
+    test('todos os títulos devem ter documento válido', () => {
       metadata.records.forEach((record) => {
         expect(record.document).toBeTruthy()
         expect(record.document).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter documento raw', () => {
+    test('todos os títulos devem ter documento raw', () => {
       metadata.records.forEach((record) => {
         expect(record.documentRaw).toBeTruthy()
         expect(record.documentRaw).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter tipo de documento vÃ¡lido', () => {
+    test('todos os títulos devem ter tipo de documento válido', () => {
       metadata.records.forEach((record) => {
         expect(['CPF', 'CNPJ']).toContain(record.documentType)
         if (record.documentType === 'CPF') {
@@ -134,42 +135,42 @@ describe('Metadados: remessa-multipla.json', () => {
       })
     })
 
-    test('todos os tÃ­tulos devem ter valor maior que zero', () => {
+    test('todos os títulos devem ter valor maior que zero', () => {
       metadata.records.forEach((record) => {
         expect(record.amount).toBeGreaterThan(0)
       })
     })
 
-    test('todos os tÃ­tulos devem ter valor raw com formato numÃ©rico', () => {
+    test('todos os títulos devem ter valor raw com formato numérico', () => {
       metadata.records.forEach((record) => {
         expect(record.amountRaw).toMatch(/^\d+$/)
         expect(record.amountRaw?.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os tÃ­tulos devem ter vencimento no formato DD/MM/YYYY', () => {
+    test('todos os títulos devem ter vencimento no formato DD/MM/YYYY', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDate).toMatch(/\d{2}\/\d{2}\/\d{4}/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter vencimento raw com 6 dÃ­gitos', () => {
+    test('todos os títulos devem ter vencimento raw com 6 dígitos', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDateRaw).toHaveLength(6)
         expect(record.dueDateRaw).toMatch(/^\d{6}$/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter endereÃ§o', () => {
+    test('todos os títulos devem ter endereço', () => {
       metadata.records.forEach((record) => {
         expect(record.address).toBeDefined()
       })
     })
 
-    test('todos os tÃ­tulos devem ter CEP formatado (se presente)', () => {
+    test('todos os títulos devem ter CEP formatado (se presente)', () => {
       metadata.records.forEach((record) => {
         if (record.zipCode) {
-          // Pode ter ou nÃ£o hÃ­fen
+          // Pode ter ou não hífen
           expect(record.zipCode).toMatch(/^\d{5}-?\d{3}$/)
         }
       })
@@ -195,29 +196,29 @@ describe('Metadados: remessa-multipla.json', () => {
     })
   })
 
-  describe('ValidaÃ§Ãµes cruzadas', () => {
-    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha por tÃ­tulo)', () => {
+  describe('Validações cruzadas', () => {
+    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha por título)', () => {
       expect(metadata.structure.detailLines).toBe(metadata.totals.recordCount)
     })
 
     test('todos os campos raw devem ter tamanho correto', () => {
       metadata.records.forEach((record) => {
-        // Data de vencimento raw = 6 dÃ­gitos (DDMMAA)
+        // Data de vencimento raw = 6 dígitos (DDMMAA)
         expect(record.dueDateRaw).toHaveLength(6)
-        // Valor raw = string numÃ©rica
+        // Valor raw = string numérica
         expect(record.amountRaw).toMatch(/^\d+$/)
-        // Documento raw = string numÃ©rica
+        // Documento raw = string numérica
         expect(record.documentRaw).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os documentos devem ter tamanho vÃ¡lido', () => {
+    test('todos os documentos devem ter tamanho válido', () => {
       metadata.records.forEach((record) => {
         if (record.documentType === 'CPF') {
-          // CPF sem formataÃ§Ã£o = 11 dÃ­gitos
+          // CPF sem formatação = 11 dígitos
           expect(record.document.length).toBe(11)
         } else {
-          // CNPJ sem formataÃ§Ã£o = 14 dÃ­gitos
+          // CNPJ sem formatação = 14 dígitos
           expect(record.document.length).toBe(14)
         }
       })
@@ -236,11 +237,11 @@ describe('Metadados: remessa-multipla.json', () => {
     })
   })
 
-  describe('Integridade TXT â†” JSON', () => {
+  describe('Integridade TXT ? JSON', () => {
     test('deve validar integridade entre arquivo TXT e metadados JSON', () => {
-      // Linhas tipo 2 (mensagens) nÃ£o entram em `result.records` â€” o parser de detalhe do
-      // CNAB 400 sÃ³ processa linhas tipo 1, entÃ£o nÃ£o afetam esta comparaÃ§Ã£o registro a registro.
-      const schema = getBankSchema(BANK_CODES.BRADESCO, 'cnab400')
+      // Linhas tipo 2 (mensagens) não entram em `result.records` — o parser de detalhe do
+      // CNAB 400 só processa linhas tipo 1, então não afetam esta comparação registro a registro.
+      const schema = getBankSchema(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
       expect(schema).toBeDefined()
 
       if (schema) {
@@ -265,8 +266,8 @@ describe('Metadados: remessa-multipla.json', () => {
       })
     })
 
-    test('header deve ter cÃ³digo do banco correto', () => {
-      const schema = getBankSchema(BANK_CODES.BRADESCO, 'cnab400')
+    test('header deve ter código do banco correto', () => {
+      const schema = getBankSchema(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
       if (schema) {
         const headerParsed = extractLineFields(lines[0], schema.header || {})
         const bankCode = headerParsed.codigo_banco?.value
@@ -274,8 +275,8 @@ describe('Metadados: remessa-multipla.json', () => {
       }
     })
 
-    test('todos os registros tipo 1 devem ser parseÃ¡veis', () => {
-      const schema = getBankSchema(BANK_CODES.BRADESCO, 'cnab400')
+    test('todos os registros tipo 1 devem ser parseáveis', () => {
+      const schema = getBankSchema(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')
 
@@ -293,10 +294,10 @@ describe('Metadados: remessa-multipla.json', () => {
     })
   })
 
-  describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta', () => {
-    // Usa o caminho que um consumidor real da lib usa: conteÃºdo bruto do arquivo,
-    // sem prÃ©-separar linhas nem escolher schema manualmente (detecÃ§Ã£o de formato/banco
-    // incluÃ­da). Diferente dos blocos acima, que testam parsing campo a campo isolado.
+  describe('validateCnabFile — pipeline público de ponta a ponta', () => {
+    // Usa o caminho que um consumidor real da lib usa: conteúdo bruto do arquivo,
+    // sem pré-separar linhas nem escolher schema manualmente (detecção de formato/banco
+    // incluída). Diferente dos blocos acima, que testam parsing campo a campo isolado.
     const result = validateCnabFile(txtContent)
 
     test('deve detectar formato CNAB 400 e banco Bradesco (237)', () => {
@@ -304,23 +305,23 @@ describe('Metadados: remessa-multipla.json', () => {
       expect(result.bank).toEqual({ code: '237', name: 'Bradesco' })
     })
 
-    test('deve extrair um registro por tÃ­tulo (37)', () => {
+    test('deve extrair um registro por título (37)', () => {
       expect(result.totalRecords).toBe(metadata.totals.recordCount)
     })
 
-    test('nÃ£o deve ter erros de parsing/schema (vencimento no passado Ã© regra de negÃ³cio, nÃ£o Ã© validado aqui)', () => {
-      // Este arquivo real tem tÃ­tulos com vencimento anterior Ã  data atual â€” isso Ã©
-      // esperado e nÃ£o Ã© responsabilidade do schema/parser (Ã© tratado em outra camada).
-      // Qualquer outro erro (posiÃ§Ã£o errada, campo obrigatÃ³rio vazio, tipo invÃ¡lido etc.)
+    test('não deve ter erros de parsing/schema (vencimento no passado é regra de negócio, não é validado aqui)', () => {
+      // Este arquivo real tem títulos com vencimento anterior à data atual — isso é
+      // esperado e não é responsabilidade do schema/parser (é tratado em outra camada).
+      // Qualquer outro erro (posição errada, campo obrigatório vazio, tipo inválido etc.)
       // ainda deve zerar aqui.
       const errosDeParsing = result.errors.filter(
-        (error) => !(error.column === 'Data de vencimento' && error.message.includes('anterior Ã  data atual'))
+        (error) => !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual'))
       )
 
       expect(errosDeParsing).toEqual([])
     })
 
-    test('deve extrair os dados do primeiro tÃ­tulo batendo com os metadados', () => {
+    test('deve extrair os dados do primeiro título batendo com os metadados', () => {
       const primeiro = result.records[0]
       const esperado = metadata.records[0]
 

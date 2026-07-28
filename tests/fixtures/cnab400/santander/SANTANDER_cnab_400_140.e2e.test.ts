@@ -1,10 +1,10 @@
 /**
- * Pipeline pÃºblico de ponta a ponta para SANTANDER_cnab_400_140.REM: exercita
- * `validateCnabFile()`, o caminho que um consumidor real da lib usa â€” conteÃºdo
- * bruto do arquivo, sem prÃ©-separar linhas nem escolher schema manualmente
- * (detecÃ§Ã£o de formato/banco incluÃ­da).
+ * Pipeline público de ponta a ponta para SANTANDER_cnab_400_140.REM: exercita
+ * `validateCnabFile()`, o caminho que um consumidor real da lib usa — conteúdo
+ * bruto do arquivo, sem pré-separar linhas nem escolher schema manualmente
+ * (detecção de formato/banco incluída).
  *
- * ValidaÃ§Ã£o do conteÃºdo do metadata.json em si fica em `.test.ts`.
+ * Validação do conteúdo do metadata.json em si fica em `.test.ts`.
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
  */
 
@@ -12,8 +12,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { validateCnabFile } from '../../../../src'
 import { loadFixtureMetadata } from '../../../helpers/fixture-metadata'
+import { CNABFormatCode } from '@tp-types/index'
 
-describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: SANTANDER_cnab_400_140.REM', () => {
+describe('validateCnabFile — pipeline público de ponta a ponta: SANTANDER_cnab_400_140.REM', () => {
   const fixtureDir = path.join(__dirname)
   const txtPath = path.join(fixtureDir, 'SANTANDER_cnab_400_140.REM')
   const txtContent = fs.readFileSync(txtPath, 'latin1')
@@ -22,7 +23,7 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: SANTANDER_cna
   let result: ReturnType<typeof validateCnabFile>
 
   beforeAll(() => {
-    metadata = loadFixtureMetadata('santander', 'SANTANDER_cnab_400_140', 'cnab400')
+    metadata = loadFixtureMetadata('santander', 'SANTANDER_cnab_400_140', CNABFormatCode.CNAB400)
     result = validateCnabFile(txtContent)
   })
 
@@ -36,14 +37,14 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: SANTANDER_cna
     expect(result.totalRecords).toBe(metadata.totals.recordCount)
   })
 
-  test('nÃ£o deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
-    // Este arquivo real tem tÃ­tulos com vencimento anterior Ã  data atual (arquivo
-    // gerado em 25/05/2026, mas estamos em 09/07/2026) â€” isso Ã© esperado e nÃ£o Ã©
-    // responsabilidade do schema/parser. Qualquer outro erro (posiÃ§Ã£o errada, campo
-    // obrigatÃ³rio vazio, tipo invÃ¡lido) ainda deve ser zero aqui.
+  test('não deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
+    // Este arquivo real tem títulos com vencimento anterior à data atual (arquivo
+    // gerado em 25/05/2026, mas estamos em 09/07/2026) — isso é esperado e não é
+    // responsabilidade do schema/parser. Qualquer outro erro (posição errada, campo
+    // obrigatório vazio, tipo inválido) ainda deve ser zero aqui.
     const errosDeParsing = result.errors.filter(
       (error) =>
-        !(error.column === 'Data de vencimento' && error.message.includes('anterior Ã  data atual')),
+        !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual')),
     )
 
     if (errosDeParsing.length > 0) {
@@ -56,7 +57,7 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: SANTANDER_cna
     expect(errosDeParsing).toEqual([])
   })
 
-  test('deve extrair os dados do primeiro tÃ­tulo batendo com os metadados', () => {
+  test('deve extrair os dados do primeiro título batendo com os metadados', () => {
     const primeiro = result.records[0]
     const esperado = metadata.records[0]
 
@@ -66,7 +67,7 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: SANTANDER_cna
     expect(primeiro.document).toBe(esperado.document.replace(/^0+/, ''))
   })
 
-  test('deve extrair os dados de todos os tÃ­tulos batendo com os metadados', () => {
+  test('deve extrair os dados de todos os títulos batendo com os metadados', () => {
     expect(result.records.length).toBe(metadata.records.length)
 
     result.records.forEach((record, index) => {
@@ -75,7 +76,7 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: SANTANDER_cna
       expect(record.name.trim()).toBe(esperado.name)
       expect(record.amount).toBeCloseTo(esperado.amount, 2)
       expect(record.dueDate).toBe(esperado.dueDate)
-      // Documento: o parser remove zeros Ã  esquerda, mas o metadata pode tÃª-los
+      // Documento: o parser remove zeros à esquerda, mas o metadata pode tê-los
       expect(record.document).toBe(esperado.document.replace(/^0+/, ''))
     })
   })

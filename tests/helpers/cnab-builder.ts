@@ -5,7 +5,7 @@
  * facilitando a criação de arquivos de teste.
  */
 
-import { RecordSchema } from '../../src/types'
+import { RecordSchema } from '@tp-types/index'
 
 /**
  * Função genérica para construir uma linha CNAB com tamanho especificado

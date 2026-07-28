@@ -1,18 +1,18 @@
 /**
- * Testes de validaÃ§Ã£o CNAB 240 â€” Santander (033)
+ * Testes de validação CNAB 240 — Santander (033)
  * 
- * Testa a validaÃ§Ã£o completa de arquivos CNAB 240 do Santander incluindo:
+ * Testa a validação completa de arquivos CNAB 240 do Santander incluindo:
  * - Segmentos P e Q
- * - ValidaÃ§Ã£o de campos (valor, vencimento, documento, CPF/CNPJ)
- * - MÃºltiplos tÃ­tulos (pares de Segmentos P + Q)
+ * - Validação de campos (valor, vencimento, documento, CPF/CNPJ)
+ * - Múltiplos títulos (pares de Segmentos P + Q)
  */
 
-import { validateCnab240Business } from '../../../src/validators/cnab240-business-validator'
+import { validateCnab240Content } from '../../../src/validators/cnab240-content-validator'
 import { santanderCnab240 } from '../../../src/banks/santander/schemas/cnab240'
 import { buildLine240 } from '../../helpers/cnab-builder'
 
-describe('validateCnab240Business â€” Santander (033)', () => {
-  describe('ValidaÃ§Ã£o bÃ¡sica', () => {
+describe('validateCnab240Content — Santander (033)', () => {
+  describe('Validação básica', () => {
     test('deve validar arquivo completo sem erros', () => {
       const header = buildLine240(santanderCnab240.headerArquivo!, {
         codigo_transmissao: '12340000001234567890',
@@ -30,14 +30,14 @@ describe('validateCnab240Business â€” Santander (033)', () => {
       })
       
       const segQ = buildLine240(santanderCnab240.segmentoQ!, {
-        sacado_inscricao_numero: '000012345678909', // CPF vÃ¡lido com padding
+        sacado_inscricao_numero: '000012345678909', // CPF válido com padding
         sacado_nome: 'JOAO DA SILVA',
         sacado_endereco: 'RUA EXEMPLO, 123'
       })
       
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], santanderCnab240)
+      const result = validateCnab240Content([header, segP, segQ, trailer], santanderCnab240)
       
       expect(result.errors).toEqual([])
       expect(result.records).toHaveLength(1)
@@ -49,8 +49,8 @@ describe('validateCnab240Business â€” Santander (033)', () => {
     })
   })
 
-  describe('ValidaÃ§Ã£o de erros', () => {
-    test('deve detectar CPF/CNPJ invÃ¡lido no Segmento Q', () => {
+  describe('Validação de erros', () => {
+    test('deve detectar CPF/CNPJ inválido no Segmento Q', () => {
       const header = buildLine240(santanderCnab240.headerArquivo!, {
         cedente_nome: 'EMPRESA TESTE',
         arquivo_data_de_geracao: '01072026'
@@ -60,18 +60,18 @@ describe('validateCnab240Business â€” Santander (033)', () => {
         vencimento_titulo: '31122099'
       })
       const segQ = buildLine240(santanderCnab240.segmentoQ!, {
-        sacado_inscricao_numero: '000012345678900', // CPF invÃ¡lido (dÃ­gito errado)
+        sacado_inscricao_numero: '000012345678900', // CPF inválido (dígito errado)
         sacado_nome: 'JOAO DA SILVA',
         sacado_endereco: 'RUA EXEMPLO'
       })
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], santanderCnab240)
+      const result = validateCnab240Content([header, segP, segQ, trailer], santanderCnab240)
       
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           column: 'CPF/CNPJ',
-          message: expect.stringContaining('invÃ¡lido')
+          message: expect.stringContaining('inválido')
         })
       )
     })
@@ -92,12 +92,12 @@ describe('validateCnab240Business â€” Santander (033)', () => {
       })
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], santanderCnab240)
+      const result = validateCnab240Content([header, segP, segQ, trailer], santanderCnab240)
       
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           column: 'Nome do pagador',
-          message: expect.stringContaining('obrigatÃ³rio')
+          message: expect.stringContaining('obrigatório')
         })
       )
     })
@@ -118,17 +118,17 @@ describe('validateCnab240Business â€” Santander (033)', () => {
       })
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], santanderCnab240)
+      const result = validateCnab240Content([header, segP, segQ, trailer], santanderCnab240)
       
       expect(result.errors).toContainEqual(
         expect.objectContaining({
-          column: 'Valor da cobranÃ§a',
+          column: 'Valor da cobrança',
           message: expect.stringContaining('maior que R$ 0,00')
         })
       )
     })
 
-    test('deve detectar data de vencimento invÃ¡lida', () => {
+    test('deve detectar data de vencimento inválida', () => {
       const header = buildLine240(santanderCnab240.headerArquivo!, {
         cedente_nome: 'EMPRESA TESTE',
         arquivo_data_de_geracao: '01072026'
@@ -144,12 +144,12 @@ describe('validateCnab240Business â€” Santander (033)', () => {
       })
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], santanderCnab240)
+      const result = validateCnab240Content([header, segP, segQ, trailer], santanderCnab240)
       
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           column: 'Data de vencimento',
-          message: expect.stringContaining('invÃ¡lida')
+          message: expect.stringContaining('inválida')
         })
       )
     })
@@ -170,26 +170,26 @@ describe('validateCnab240Business â€” Santander (033)', () => {
       })
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], santanderCnab240)
+      const result = validateCnab240Content([header, segP, segQ, trailer], santanderCnab240)
       
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           column: 'Data de vencimento',
-          message: expect.stringContaining('anterior Ã  data atual')
+          message: expect.stringContaining('anterior à data atual')
         })
       )
     })
   })
 
-  describe('MÃºltiplos tÃ­tulos (pares de Segmentos P + Q)', () => {
-    test('deve validar arquivo com 2 tÃ­tulos', () => {
+  describe('Múltiplos títulos (pares de Segmentos P + Q)', () => {
+    test('deve validar arquivo com 2 títulos', () => {
       const header = buildLine240(santanderCnab240.headerArquivo!, {
         codigo_transmissao: '12340000001234567890',
         cedente_nome: 'EMPRESA TESTE',
         arquivo_data_de_geracao: '01072026'
       })
       
-      // TÃ­tulo 1
+      // Título 1
       const segP1 = buildLine240(santanderCnab240.segmentoP!, {
         cedente_conta_dv: '1',
         numero_documento: 'DOC0000001',
@@ -204,7 +204,7 @@ describe('validateCnab240Business â€” Santander (033)', () => {
         sacado_endereco: 'RUA EXEMPLO, 123'
       })
       
-      // TÃ­tulo 2
+      // Título 2
       const segP2 = buildLine240(santanderCnab240.segmentoP!, {
         cedente_conta_dv: '1',
         numero_documento: 'DOC0000002',
@@ -221,7 +221,7 @@ describe('validateCnab240Business â€” Santander (033)', () => {
       
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business(
+      const result = validateCnab240Content(
         [header, segP1, segQ1, segP2, segQ2, trailer],
         santanderCnab240
       )
@@ -262,7 +262,7 @@ describe('validateCnab240Business â€” Santander (033)', () => {
       
       const trailer = buildLine240(santanderCnab240.trailerArquivo!, {})
       
-      const result = validateCnab240Business(
+      const result = validateCnab240Content(
         [header, segP1, segQ1, segP2, segQ2, trailer],
         santanderCnab240
       )

@@ -1,19 +1,20 @@
 /**
- * Testes de registro dos schemas de banco (cobertura de regressÃ£o pro port JS â†’ TS)
+ * Testes de registro dos schemas de banco (cobertura de regressão pro port JS ? TS)
  */
 
 import { getBankSchema, cnab400Banks } from '../src/schemas'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('cnab400Banks', () => {
   test.each([
     ['001', 'Banco do Brasil'],
     ['033', 'Santander'],
-    ['104', 'Caixa EconÃ´mica'],
+    ['104', 'Caixa Econômica'],
     ['237', 'Bradesco'],
-    ['341', 'ItaÃº'],
+    ['341', 'Itaú'],
     ['756', 'Sicoob'],
   ])('registra o banco %s (%s) com header/detail/trailer', (bankCode, bankName) => {
-    const schema = getBankSchema(bankCode, 'cnab400')
+    const schema = getBankSchema(bankCode, CNABFormatCode.CNAB400)
     expect(schema).not.toBeNull()
     expect(schema?.bankCode).toBe(bankCode)
     expect(schema?.bankName).toBe(bankName)
@@ -37,7 +38,7 @@ describe('cnab240Banks', () => {
     ['237', 'Bradesco'],
     ['748', 'Sicredi'],
   ])('registra o banco %s (%s) com headerArquivo/segmentoP/segmentoQ/trailerArquivo', (bankCode, bankName) => {
-    const schema = getBankSchema(bankCode, 'cnab240')
+    const schema = getBankSchema(bankCode, CNABFormatCode.CNAB240)
     expect(schema).not.toBeNull()
     expect(schema?.bankCode).toBe(bankCode)
     expect(schema?.bankName).toBe(bankName)
@@ -49,8 +50,8 @@ describe('cnab240Banks', () => {
 })
 
 describe('getBankSchema', () => {
-  test('retorna null para banco nÃ£o cadastrado', () => {
-    expect(getBankSchema('999', 'cnab400')).toBeNull()
-    expect(getBankSchema('999', 'cnab240')).toBeNull()
+  test('retorna null para banco não cadastrado', () => {
+    expect(getBankSchema('999', CNABFormatCode.CNAB400)).toBeNull()
+    expect(getBankSchema('999', CNABFormatCode.CNAB240)).toBeNull()
   })
 })

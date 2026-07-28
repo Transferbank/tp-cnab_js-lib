@@ -1,15 +1,16 @@
 /**
- * Valida√ß√£o do conte√∫do de SANTANDER_cnab_400_140.json: forma e valores do metadata.json
- * em si (autoconsist√™ncia + valores "golden" conferidos manualmente contra o .REM real).
+ * ValidaÁ„o do conte˙do de SANTANDER_cnab_400_140.json: forma e valores do metadata.json
+ * em si (autoconsistÍncia + valores "golden" conferidos manualmente contra o .REM real).
  *
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
- * Pipeline p√∫blico (`validateCnabFile`) fica em `.e2e.test.ts`.
+ * Pipeline p˙blico (`validateCnabFile`) fica em `.e2e.test.ts`.
  */
 
 import * as fs from 'fs'
 import * as path from 'path'
 import { loadFixtureMetadata } from '../../../helpers/fixture-metadata'
-import { BANK_CODES } from '../../../../src/types'
+import { BANK_CODES } from '@tp-types/index'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('Metadados: SANTANDER_cnab_400_140.json', () => {
   const fixtureDir = path.join(__dirname)
@@ -20,15 +21,15 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
   let metadata: ReturnType<typeof loadFixtureMetadata>
 
   beforeAll(() => {
-    metadata = loadFixtureMetadata('santander', 'SANTANDER_cnab_400_140', 'cnab400')
+    metadata = loadFixtureMetadata('santander', 'SANTANDER_cnab_400_140', CNABFormatCode.CNAB400)
   })
 
   describe('Campos principais', () => {
-    test('deve ter descri√ß√£o correta', () => {
+    test('deve ter descriÁ„o correta', () => {
       expect(metadata.description).toContain('Santander')
     })
 
-    test('deve ter c√≥digo do banco Santander (033)', () => {
+    test('deve ter cÛdigo do banco Santander (033)', () => {
       expect(metadata.bankCode).toBe(BANK_CODES.SANTANDER)
     })
 
@@ -37,7 +38,7 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
     })
 
     test('deve ser formato CNAB400', () => {
-      expect(metadata.format).toBe('CNAB400')
+      expect(metadata.format).toBe(CNABFormatCode.CNAB400)
     })
   })
 
@@ -62,7 +63,7 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
 
     test('estrutura deve estar consistente (header + detalhe + trailer = total)', () => {
       const { headerLines, detailLines, trailerLines, totalLines, messageLines } = metadata.structure
-      // Santander CNAB 400 n√£o usa linhas tipo 2 (mensagens) neste fixture
+      // Santander CNAB 400 n„o usa linhas tipo 2 (mensagens) neste fixture
       expect(messageLines).toBe(0)
       expect(headerLines + detailLines + trailerLines).toBe(totalLines)
     })
@@ -76,63 +77,63 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
     test('deve ter nome do cedente', () => {
       expect(metadata.header?.cedenteNome).toBeTruthy()
       expect(metadata.header?.cedenteNome?.length).toBeGreaterThan(0)
-      // Valor confirmado no arquivo (fixture com dados fict√≠cios)
+      // Valor confirmado no arquivo (fixture com dados fictÌcios)
       expect(metadata.header?.cedenteNome?.trim()).toBe('COMERCIO EXEMPLO LTDA')
     })
 
-    test('deve ter data de gera√ß√£o formatada', () => {
+    test('deve ter data de geraÁ„o formatada', () => {
       expect(metadata.header?.dataGeracao).toMatch(/\d{2}\/\d{2}\/\d{4}/)
       // Valor confirmado: 25/05/2026
       expect(metadata.header?.dataGeracao).toBe('25/05/2026')
     })
 
-    test('deve ter data de gera√ß√£o raw', () => {
+    test('deve ter data de geraÁ„o raw', () => {
       expect(metadata.header?.dataGeracaoRaw).toHaveLength(6)
       // Valor confirmado: 250526 (DDMMAA)
       expect(metadata.header?.dataGeracaoRaw).toBe('250526')
     })
 
-    test('deve ser arquivo de remessa (c√≥digo "1")', () => {
+    test('deve ser arquivo de remessa (cÛdigo "1")', () => {
       expect(metadata.header?.tipoArquivo).toBe('1')
     })
 
-    // Nota: codigoTransmissao n√£o est√° no tipo FixtureHeader padr√£o (√© espec√≠fico do Santander)
-    // mas pode ser validado diretamente contra o arquivo TXT na se√ß√£o de integridade
+    // Nota: codigoTransmissao n„o est· no tipo FixtureHeader padr„o (È especÌfico do Santander)
+    // mas pode ser validado diretamente contra o arquivo TXT na seÁ„o de integridade
   })
 
-  describe('Registros/T√≠tulos', () => {
-    test('deve ter exatamente 128 t√≠tulos', () => {
+  describe('Registros/TÌtulos', () => {
+    test('deve ter exatamente 128 tÌtulos', () => {
       expect(metadata.records.length).toBe(128)
     })
 
-    test('cada t√≠tulo deve ter √≠ndice sequencial', () => {
+    test('cada tÌtulo deve ter Ìndice sequencial', () => {
       metadata.records.forEach((record, idx) => {
         expect(record.index).toBe(idx + 1)
       })
     })
 
-    test('todos os t√≠tulos devem ter nome preenchido', () => {
+    test('todos os tÌtulos devem ter nome preenchido', () => {
       metadata.records.forEach((record) => {
         expect(record.name).toBeTruthy()
         expect(record.name.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os t√≠tulos devem ter documento v√°lido', () => {
+    test('todos os tÌtulos devem ter documento v·lido', () => {
       metadata.records.forEach((record) => {
         expect(record.document).toBeTruthy()
         expect(record.document).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os t√≠tulos devem ter documento raw', () => {
+    test('todos os tÌtulos devem ter documento raw', () => {
       metadata.records.forEach((record) => {
         expect(record.documentRaw).toBeTruthy()
-        expect(record.documentRaw).toMatch(/^\d{14}$/) // 14 d√≠gitos com padding
+        expect(record.documentRaw).toMatch(/^\d{14}$/) // 14 dÌgitos com padding
       })
     })
 
-    test('todos os t√≠tulos devem ter tipo de documento v√°lido', () => {
+    test('todos os tÌtulos devem ter tipo de documento v·lido', () => {
       metadata.records.forEach((record) => {
         expect(['CPF', 'CNPJ']).toContain(record.documentType)
         if (record.documentType === 'CPF') {
@@ -145,43 +146,43 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
       })
     })
 
-    test('todos os t√≠tulos devem ter valor maior que zero', () => {
+    test('todos os tÌtulos devem ter valor maior que zero', () => {
       metadata.records.forEach((record) => {
         expect(record.amount).toBeGreaterThan(0)
       })
     })
 
-    test('todos os t√≠tulos devem ter valor raw com formato num√©rico', () => {
+    test('todos os tÌtulos devem ter valor raw com formato numÈrico', () => {
       metadata.records.forEach((record) => {
         expect(record.amountRaw).toMatch(/^\d+$/)
-        expect(record.amountRaw?.length).toBe(13) // Santander: 13 posi√ß√µes com 2 decimais
+        expect(record.amountRaw?.length).toBe(13) // Santander: 13 posiÁıes com 2 decimais
       })
     })
 
-    test('todos os t√≠tulos devem ter vencimento no formato DD/MM/YYYY', () => {
+    test('todos os tÌtulos devem ter vencimento no formato DD/MM/YYYY', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDate).toMatch(/\d{2}\/\d{2}\/\d{4}/)
       })
     })
 
-    test('todos os t√≠tulos devem ter vencimento raw com 6 d√≠gitos', () => {
+    test('todos os tÌtulos devem ter vencimento raw com 6 dÌgitos', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDateRaw).toHaveLength(6)
         expect(record.dueDateRaw).toMatch(/^\d{6}$/)
       })
     })
 
-    test('todos os t√≠tulos devem ter endere√ßo', () => {
+    test('todos os tÌtulos devem ter endereÁo', () => {
       metadata.records.forEach((record) => {
         expect(record.address).toBeDefined()
-        // Endere√ßos podem estar vazios no Santander, ent√£o apenas verifica que o campo existe
+        // EndereÁos podem estar vazios no Santander, ent„o apenas verifica que o campo existe
       })
     })
 
-    test('todos os t√≠tulos devem ter CEP formatado (se presente)', () => {
+    test('todos os tÌtulos devem ter CEP formatado (se presente)', () => {
       metadata.records.forEach((record) => {
         if (record.zipCode && record.zipCode.trim().length > 0) {
-          // Pode ter ou n√£o h√≠fen
+          // Pode ter ou n„o hÌfen
           expect(record.zipCode).toMatch(/^\d{5}-?\d{3}$/)
         }
       })
@@ -208,31 +209,31 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
     })
   })
 
-  describe('Valida√ß√µes cruzadas', () => {
-    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha por t√≠tulo)', () => {
+  describe('ValidaÁıes cruzadas', () => {
+    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha por tÌtulo)', () => {
       expect(metadata.structure.detailLines).toBe(metadata.totals.recordCount)
     })
 
     test('todos os campos raw devem ter tamanho correto', () => {
       metadata.records.forEach((record) => {
-        // Data de vencimento raw = 6 d√≠gitos (DDMMAA)
+        // Data de vencimento raw = 6 dÌgitos (DDMMAA)
         expect(record.dueDateRaw).toHaveLength(6)
-        // Valor raw = 13 d√≠gitos (Santander: posi√ß√µes 127-139)
+        // Valor raw = 13 dÌgitos (Santander: posiÁıes 127-139)
         expect(record.amountRaw).toHaveLength(13)
         expect(record.amountRaw).toMatch(/^\d+$/)
-        // Documento raw = 14 d√≠gitos (Santander: posi√ß√µes 221-234)
+        // Documento raw = 14 dÌgitos (Santander: posiÁıes 221-234)
         expect(record.documentRaw).toHaveLength(14)
         expect(record.documentRaw).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os documentos devem ter tamanho v√°lido', () => {
+    test('todos os documentos devem ter tamanho v·lido', () => {
       metadata.records.forEach((record) => {
         if (record.documentType === 'CPF') {
-          // CPF sem formata√ß√£o = 11 d√≠gitos
+          // CPF sem formataÁ„o = 11 dÌgitos
           expect(record.document.length).toBe(11)
         } else {
-          // CNPJ sem formata√ß√£o = 14 d√≠gitos
+          // CNPJ sem formataÁ„o = 14 dÌgitos
           expect(record.document.length).toBe(14)
         }
       })
@@ -250,12 +251,12 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
       })
     })
 
-    test('todos os documentos devem ter checksum CPF/CNPJ v√°lido', () => {
-      // Import do helper de valida√ß√£o
+    test('todos os documentos devem ter checksum CPF/CNPJ v·lido', () => {
+      // Import do helper de validaÁ„o
       const { isValidCpfCnpj } = require('../../../../src/utils/string-utils')
 
       metadata.records.forEach((record) => {
-        // Valida√ß√£o externa - prova que os documentos est√£o corretos
+        // ValidaÁ„o externa - prova que os documentos est„o corretos
         expect(isValidCpfCnpj(record.documentRaw)).toBe(true)
       })
     })

@@ -3,6 +3,7 @@
  */
 
 import {
+import { DateFormat } from '@tp-types/index'
   parseDateDDMMAA,
   parseDateDDMMAAAA,
   parseDate,
@@ -11,7 +12,7 @@ import {
 } from '../src/utils/date-parser'
 
 describe('parseDateDDMMAA', () => {
-  test('deve parsear data vÃ¡lida no formato DDMMAA', () => {
+  test('deve parsear data válida no formato DDMMAA', () => {
     const date = parseDateDDMMAA('010726')
     expect(date).toBeInstanceOf(Date)
     expect(date?.getDate()).toBe(1)
@@ -19,7 +20,7 @@ describe('parseDateDDMMAA', () => {
     expect(date?.getFullYear()).toBe(2026)
   })
 
-  test('deve retornar null para formato invÃ¡lido', () => {
+  test('deve retornar null para formato inválido', () => {
     expect(parseDateDDMMAA('invalid')).toBeNull()
     expect(parseDateDDMMAA('32012')).toBeNull()
     expect(parseDateDDMMAA('311399')).toBeNull()
@@ -31,7 +32,7 @@ describe('parseDateDDMMAA', () => {
 })
 
 describe('parseDateDDMMAAAA', () => {
-  test('deve parsear data vÃ¡lida no formato DDMMAAAA', () => {
+  test('deve parsear data válida no formato DDMMAAAA', () => {
     const date = parseDateDDMMAAAA('01072026')
     expect(date).toBeInstanceOf(Date)
     expect(date?.getDate()).toBe(1)
@@ -39,7 +40,7 @@ describe('parseDateDDMMAAAA', () => {
     expect(date?.getFullYear()).toBe(2026)
   })
 
-  test('deve retornar null para data invÃ¡lida', () => {
+  test('deve retornar null para data inválida', () => {
     expect(parseDateDDMMAAAA('32012026')).toBeNull()
     expect(parseDateDDMMAAAA('31132026')).toBeNull()
   })
@@ -47,10 +48,10 @@ describe('parseDateDDMMAAAA', () => {
 
 describe('parseDate', () => {
   test('deve usar o formato correto', () => {
-    const date6 = parseDate('010726', 'DDMMAA')
+    const date6 = parseDate('010726', DateFormat.DDMMAA)
     expect(date6?.getFullYear()).toBe(2026)
 
-    const date8 = parseDate('01072026', 'DDMMAAAA')
+    const date8 = parseDate('01072026', DateFormat.DDMMAAAA)
     expect(date8?.getFullYear()).toBe(2026)
   })
 
@@ -72,7 +73,7 @@ describe('isDateInPast', () => {
 })
 
 describe('formatDateBR', () => {
-  test('deve formatar data no padrÃ£o brasileiro', () => {
+  test('deve formatar data no padrão brasileiro', () => {
     const date = new Date(2026, 6, 1)
     expect(formatDateBR(date)).toBe('01/07/2026')
   })

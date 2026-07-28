@@ -1,15 +1,16 @@
 /**
- * ValidaÃ§Ã£o do conteÃºdo de ITAU_cnab_400.json: forma e valores do metadata.json
- * em si (autoconsistÃªncia + valores "golden" conferidos manualmente contra o .REM real).
+ * Validação do conteúdo de ITAU_cnab_400.json: forma e valores do metadata.json
+ * em si (autoconsistência + valores "golden" conferidos manualmente contra o .REM real).
  *
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
- * Pipeline pÃºblico (`validateCnabFile`) fica em `.e2e.test.ts`.
+ * Pipeline público (`validateCnabFile`) fica em `.e2e.test.ts`.
  */
 
 import * as fs from 'fs'
 import * as path from 'path'
 import { loadFixtureMetadata } from '../../../helpers/fixture-metadata'
-import { BANK_CODES } from '../../../../src/types'
+import { BANK_CODES } from '@tp-types/index'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('Metadados: ITAU_cnab_400.json', () => {
   const fixtureDir = path.join(__dirname)
@@ -20,24 +21,24 @@ describe('Metadados: ITAU_cnab_400.json', () => {
   let metadata: ReturnType<typeof loadFixtureMetadata>
 
   beforeAll(() => {
-    metadata = loadFixtureMetadata('itau', 'ITAU_cnab_400', 'cnab400')
+    metadata = loadFixtureMetadata('itau', 'ITAU_cnab_400', CNABFormatCode.CNAB400)
   })
 
   describe('Campos principais', () => {
-    test('deve ter descriÃ§Ã£o correta', () => {
+    test('deve ter descrição correta', () => {
       expect(metadata.description).toBeTruthy()
     })
 
-    test('deve ter cÃ³digo do banco ItaÃº (341)', () => {
+    test('deve ter código do banco Itaú (341)', () => {
       expect(metadata.bankCode).toBe(BANK_CODES.ITAU)
     })
 
     test('deve ter nome do banco correto', () => {
-      expect(metadata.bankName).toBe('ItaÃº')
+      expect(metadata.bankName).toBe('Itaú')
     })
 
     test('deve ser formato CNAB400', () => {
-      expect(metadata.format).toBe('CNAB400')
+      expect(metadata.format).toBe(CNABFormatCode.CNAB400)
     })
   })
 
@@ -61,7 +62,7 @@ describe('Metadados: ITAU_cnab_400.json', () => {
     })
 
     test('deve ter 319 linhas de mensagem/multa (tipo 2)', () => {
-      // ItaÃº: cada tÃ­tulo tem um registro tipo 2 (complemento de multa)
+      // Itaú: cada título tem um registro tipo 2 (complemento de multa)
       expect(metadata.structure.messageLines).toBe(319)
     })
 
@@ -82,54 +83,54 @@ describe('Metadados: ITAU_cnab_400.json', () => {
       expect(metadata.header?.cedenteNome?.length).toBeGreaterThan(0)
     })
 
-    test('deve ter data de geraÃ§Ã£o formatada', () => {
+    test('deve ter data de geração formatada', () => {
       expect(metadata.header?.dataGeracao).toMatch(/\d{2}\/\d{2}\/\d{4}/)
     })
 
-    test('deve ter data de geraÃ§Ã£o raw com 6 dÃ­gitos', () => {
+    test('deve ter data de geração raw com 6 dígitos', () => {
       expect(metadata.header?.dataGeracaoRaw).toHaveLength(6)
       expect(metadata.header?.dataGeracaoRaw).toMatch(/^\d{6}$/)
     })
 
-    test('deve ser arquivo de remessa (cÃ³digo "1")', () => {
+    test('deve ser arquivo de remessa (código "1")', () => {
       expect(metadata.header?.tipoArquivo).toBe('1')
     })
   })
 
-  describe('Registros/TÃ­tulos', () => {
-    test('deve ter exatamente 319 tÃ­tulos', () => {
+  describe('Registros/Títulos', () => {
+    test('deve ter exatamente 319 títulos', () => {
       expect(metadata.records.length).toBe(319)
       expect(metadata.totals.recordCount).toBe(319)
     })
 
-    test('cada tÃ­tulo deve ter Ã­ndice sequencial', () => {
+    test('cada título deve ter índice sequencial', () => {
       metadata.records.forEach((record, idx) => {
         expect(record.index).toBe(idx + 1)
       })
     })
 
-    test('todos os tÃ­tulos devem ter nome preenchido', () => {
+    test('todos os títulos devem ter nome preenchido', () => {
       metadata.records.forEach((record) => {
         expect(record.name).toBeTruthy()
         expect(record.name.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os tÃ­tulos devem ter documento vÃ¡lido', () => {
+    test('todos os títulos devem ter documento válido', () => {
       metadata.records.forEach((record) => {
         expect(record.document).toBeTruthy()
         expect(record.document).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter documento raw', () => {
+    test('todos os títulos devem ter documento raw', () => {
       metadata.records.forEach((record) => {
         expect(record.documentRaw).toBeTruthy()
         expect(record.documentRaw).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter tipo de documento vÃ¡lido', () => {
+    test('todos os títulos devem ter tipo de documento válido', () => {
       metadata.records.forEach((record) => {
         expect(['CPF', 'CNPJ']).toContain(record.documentType)
         if (record.documentType === 'CPF') {
@@ -137,55 +138,55 @@ describe('Metadados: ITAU_cnab_400.json', () => {
           expect(record.document.length).toBe(11)
         } else {
           expect(record.documentTypeCode).toBe('02')
-          // CNPJ pode ter 13 ou 14 dÃ­gitos apÃ³s remover zeros Ã  esquerda
+          // CNPJ pode ter 13 ou 14 dígitos após remover zeros à esquerda
           expect(record.document.length).toBeGreaterThanOrEqual(13)
           expect(record.document.length).toBeLessThanOrEqual(14)
         }
       })
     })
 
-    test('todos os tÃ­tulos devem ter valor maior que zero', () => {
+    test('todos os títulos devem ter valor maior que zero', () => {
       metadata.records.forEach((record) => {
         expect(record.amount).toBeGreaterThan(0)
       })
     })
 
-    test('todos os tÃ­tulos devem ter valor raw com formato numÃ©rico', () => {
+    test('todos os títulos devem ter valor raw com formato numérico', () => {
       metadata.records.forEach((record) => {
         expect(record.amountRaw).toMatch(/^\d+$/)
         expect(record.amountRaw?.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os tÃ­tulos devem ter vencimento no formato DD/MM/YYYY', () => {
+    test('todos os títulos devem ter vencimento no formato DD/MM/YYYY', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDate).toMatch(/\d{2}\/\d{2}\/\d{4}/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter vencimento raw com 6 dÃ­gitos', () => {
+    test('todos os títulos devem ter vencimento raw com 6 dígitos', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDateRaw).toHaveLength(6)
         expect(record.dueDateRaw).toMatch(/^\d{6}$/)
       })
     })
 
-    test('todos os tÃ­tulos devem ter endereÃ§o', () => {
+    test('todos os títulos devem ter endereço', () => {
       metadata.records.forEach((record) => {
         expect(record.address).toBeDefined()
       })
     })
 
-    test('todos os tÃ­tulos devem ter CEP formatado (se presente)', () => {
+    test('todos os títulos devem ter CEP formatado (se presente)', () => {
       metadata.records.forEach((record) => {
         if (record.zipCode) {
-          // Pode ter ou nÃ£o hÃ­fen
+          // Pode ter ou não hífen
           expect(record.zipCode).toMatch(/^\d{5}-?\d{3}$/)
         }
       })
     })
 
-    test('deve ter tÃ­tulos de diversos estados brasileiros', () => {
+    test('deve ter títulos de diversos estados brasileiros', () => {
       // Metadados mencionam 14 estados diferentes
       const estados = new Set(metadata.records.map((r) => r.state).filter(Boolean))
       expect(estados.size).toBeGreaterThanOrEqual(10) // Pelo menos 10 estados diferentes
@@ -212,33 +213,33 @@ describe('Metadados: ITAU_cnab_400.json', () => {
     })
   })
 
-  describe('ValidaÃ§Ãµes cruzadas', () => {
-    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha tipo 1 por tÃ­tulo)', () => {
+  describe('Validações cruzadas', () => {
+    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha tipo 1 por título)', () => {
       expect(metadata.structure.detailLines).toBe(metadata.totals.recordCount)
     })
 
-    test('messageLines deve ser igual ao recordCount (cada tÃ­tulo tem 1 registro tipo 2 de multa)', () => {
+    test('messageLines deve ser igual ao recordCount (cada título tem 1 registro tipo 2 de multa)', () => {
       expect(metadata.structure.messageLines).toBe(metadata.totals.recordCount)
     })
 
     test('todos os campos raw devem ter tamanho correto', () => {
       metadata.records.forEach((record) => {
-        // Data de vencimento raw = 6 dÃ­gitos (DDMMAA)
+        // Data de vencimento raw = 6 dígitos (DDMMAA)
         expect(record.dueDateRaw).toHaveLength(6)
-        // Valor raw = string numÃ©rica
+        // Valor raw = string numérica
         expect(record.amountRaw).toMatch(/^\d+$/)
-        // Documento raw = string numÃ©rica
+        // Documento raw = string numérica
         expect(record.documentRaw).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os documentos devem ter tamanho vÃ¡lido', () => {
+    test('todos os documentos devem ter tamanho válido', () => {
       metadata.records.forEach((record) => {
         if (record.documentType === 'CPF') {
-          // CPF sem formataÃ§Ã£o = 11 dÃ­gitos
+          // CPF sem formatação = 11 dígitos
           expect(record.document.length).toBe(11)
         } else {
-          // CNPJ sem formataÃ§Ã£o = 13 ou 14 dÃ­gitos (apÃ³s remover zeros Ã  esquerda)
+          // CNPJ sem formatação = 13 ou 14 dígitos (após remover zeros à esquerda)
           expect(record.document.length).toBeGreaterThanOrEqual(13)
           expect(record.document.length).toBeLessThanOrEqual(14)
         }
@@ -259,10 +260,10 @@ describe('Metadados: ITAU_cnab_400.json', () => {
   })
 
   describe('Amostra de registros', () => {
-    test('primeiros 3 registros devem estar acessÃ­veis', () => {
+    test('primeiros 3 registros devem estar acessíveis', () => {
       expect(metadata.records.length).toBeGreaterThanOrEqual(3)
       
-      // Verificar que os primeiros 3 registros tÃªm dados vÃ¡lidos
+      // Verificar que os primeiros 3 registros têm dados válidos
       const primeiros3 = metadata.records.slice(0, 3)
       primeiros3.forEach((record) => {
         expect(record.name).toBeTruthy()

@@ -48,7 +48,7 @@ Valida o Detalhe (tipo registro 1).
 
 Nomes de campo seguem a mesma convenção genérica usada pelos demais bancos
 (`nome`, `logradouro`, `cep`, `sacado_codigo_inscricao`) porque
-`src/validators/cnab400-business-validator.ts` lê esses nomes diretamente do schema —
+`src/validators/cnab400-content-validator.ts` lê esses nomes diretamente do schema —
 usar um prefixo `sacado_*` diferente faria o validador cair no fallback de
 offset fixo em vez de usar o schema.
 

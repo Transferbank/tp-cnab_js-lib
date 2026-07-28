@@ -1,23 +1,24 @@
 /**
- * Testes do validador de negÃ³cio CNAB 400
+ * Testes do validador de negócio CNAB 400
  * 
- * Testa comportamentos especÃ­ficos do validateCnab400Business que nÃ£o sÃ£o
- * cobertos pelos testes de bancos especÃ­ficos.
+ * Testa comportamentos específicos do validateCnab400Content que não são
+ * cobertos pelos testes de bancos específicos.
  */
 
-import { validateCnab400Business } from '../../src/validators/cnab400-business-validator'
-import { BankSchema } from '../../src/types'
+import { validateCnab400Content } from '@validators/cnab400-content-validator'
+import { BankSchema } from '@tp-types/index'
+import { FieldType, DateFormat } from '@tp-types/index'
 
-describe('validateCnab400Business', () => {
-  describe('DeduplicaÃ§Ã£o de erro de tipo de header', () => {
-    test('deve reportar erro de header com tipo errado usando coluna Header (nÃ£o tipo_registro)', () => {
+describe('validateCnab400Content', () => {
+  describe('Deduplicação de erro de tipo de header', () => {
+    test('deve reportar erro de header com tipo errado usando coluna Header (não tipo_registro)', () => {
       const customSchema: BankSchema = {
         bankCode: '999',
         bankName: 'Banco Teste',
         header: {
           tipo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
@@ -28,7 +29,7 @@ describe('validateCnab400Business', () => {
         detail: {
           tipo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
@@ -37,7 +38,7 @@ describe('validateCnab400Business', () => {
             description: 'Tipo de registro', canonical: null },
           nome: {
             pos: [235, 274],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 40,
             decimals: 0,
             required: true,
@@ -46,36 +47,36 @@ describe('validateCnab400Business', () => {
             description: 'Nome do sacado', canonical: null },
           sacado_numero_inscricao: {
             pos: [221, 234],
-            type: 'num',
+            type: FieldType.NUM,
             size: 14,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'NÃºmero de inscriÃ§Ã£o do sacado', canonical: null },
+            description: 'Número de inscrição do sacado', canonical: null },
           valor_titulo: {
             pos: [127, 139],
-            type: 'num',
+            type: FieldType.NUM,
             size: 13,
             decimals: 2,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'Valor do tÃ­tulo', canonical: null },
+            description: 'Valor do título', canonical: null },
           vencimento: {
             pos: [121, 126],
-            type: 'data',
+            type: FieldType.DATA,
             size: 6,
             decimals: 0,
             required: true,
-            dateFormat: 'DDMMAA',
+            dateFormat: DateFormat.DDMMAA,
             pattern: null,
             description: 'Data de vencimento', canonical: null },
         },
         trailer: {
           tipo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
@@ -90,7 +91,7 @@ describe('validateCnab400Business', () => {
       const detail = '1' + ' '.repeat(234 - 1) + '00012345678909' + ' '.repeat(385)
       const trailer = '9' + ' '.repeat(399)
 
-      const result = validateCnab400Business([header, detail, trailer], customSchema)
+      const result = validateCnab400Content([header, detail, trailer], customSchema)
 
       // Deve ter exatamente 1 erro para o header com coluna 'Header'
       const headerErrors = result.errors.filter(e => e.line === 1)
@@ -103,8 +104,8 @@ describe('validateCnab400Business', () => {
         })
       )
 
-      // NÃƒO deve ter erro duplicado com coluna 'Tipo de registro'
-      const typeErrors = result.errors.filter(e => e.line === 1 && e.column === 'Tipo de registro')
+      // NÃO deve ter erro duplicado com coluna 'Tipo de registro'
+      const typeErrors = result.errors.filter(e => e.line === 1 && e.field === 'Tipo de registro')
       expect(typeErrors).toHaveLength(0)
     })
 
@@ -115,7 +116,7 @@ describe('validateCnab400Business', () => {
         header: {
           tipo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
@@ -124,18 +125,18 @@ describe('validateCnab400Business', () => {
             description: 'Tipo de registro', canonical: null },
           literal_remessa: {
             pos: [2, 8],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 7,
             decimals: 0,
             required: true,
             dateFormat: null,
-            pattern: 'REMESSA', // PadrÃ£o fixo esperado
+            pattern: 'REMESSA', // Padrão fixo esperado
             description: 'Literal REMESSA', canonical: null },
         },
         detail: {
           tipo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
@@ -144,7 +145,7 @@ describe('validateCnab400Business', () => {
             description: 'Tipo de registro', canonical: null },
           nome: {
             pos: [235, 274],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 40,
             decimals: 0,
             required: true,
@@ -153,36 +154,36 @@ describe('validateCnab400Business', () => {
             description: 'Nome do sacado', canonical: null },
           sacado_numero_inscricao: {
             pos: [221, 234],
-            type: 'num',
+            type: FieldType.NUM,
             size: 14,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'NÃºmero de inscriÃ§Ã£o do sacado', canonical: null },
+            description: 'Número de inscrição do sacado', canonical: null },
           valor_titulo: {
             pos: [127, 139],
-            type: 'num',
+            type: FieldType.NUM,
             size: 13,
             decimals: 2,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'Valor do tÃ­tulo', canonical: null },
+            description: 'Valor do título', canonical: null },
           vencimento: {
             pos: [121, 126],
-            type: 'data',
+            type: FieldType.DATA,
             size: 6,
             decimals: 0,
             required: true,
-            dateFormat: 'DDMMAA',
+            dateFormat: DateFormat.DDMMAA,
             pattern: null,
             description: 'Data de vencimento', canonical: null },
         },
         trailer: {
           tipo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
@@ -197,7 +198,7 @@ describe('validateCnab400Business', () => {
       const detail = '1' + ' '.repeat(234 - 1) + '00012345678909' + ' '.repeat(385)
       const trailer = '9' + ' '.repeat(399)
 
-      const result = validateCnab400Business([header, detail, trailer], customSchema)
+      const result = validateCnab400Content([header, detail, trailer], customSchema)
 
       // Deve ter exatamente 2 erros no header
       const headerErrors = result.errors.filter(e => e.line === 1)
@@ -212,9 +213,9 @@ describe('validateCnab400Business', () => {
         })
       )
 
-      // Um erro para o literal com coluna do campo (literal_remessa ou descriÃ§Ã£o)
+      // Um erro para o literal com coluna do campo (literal_remessa ou descrição)
       const literalError = headerErrors.find(e => 
-        e.column === 'Literal REMESSA' || e.column === 'literal_remessa'
+        e.field === 'Literal REMESSA' || e.field === 'literal_remessa'
       )
       expect(literalError).toBeDefined()
       expect(literalError).toEqual(
@@ -224,42 +225,42 @@ describe('validateCnab400Business', () => {
         })
       )
 
-      // NÃƒO deve ter erro duplicado de tipo_registro (3Âº erro)
-      expect(headerErrors.filter(e => e.column === 'Tipo de registro')).toHaveLength(0)
+      // NÃO deve ter erro duplicado de tipo_registro (3º erro)
+      expect(headerErrors.filter(e => e.field === 'Tipo de registro')).toHaveLength(0)
     })
   })
 
-  describe('Leitura de tipo de registro por posiÃ§Ã£o (nÃ£o por nome) - Header', () => {
+  describe('Leitura de tipo de registro por posição (não por nome) - Header', () => {
     test('deve aceitar header com campo codigo_registro em vez de tipo_registro', () => {
-      // Caso real: Caixa CNAB 400 usa codigo_registro, nÃ£o tipo_registro
-      // Este teste prova que a leitura agora Ã© por posiÃ§Ã£o (1), nÃ£o por nome do campo
+      // Caso real: Caixa CNAB 400 usa codigo_registro, não tipo_registro
+      // Este teste prova que a leitura agora é por posição (1), não por nome do campo
       const customSchema: BankSchema = {
         bankCode: '104',
         bankName: 'Caixa',
         header: {
           codigo_registro: {  // Nome diferente!
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: '0',
-            description: 'CÃ³digo de registro', canonical: null },
+            description: 'Código de registro', canonical: null },
         },
         detail: {
           codigo_registro: {  // Nome diferente!
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: '1',
-            description: 'CÃ³digo de registro', canonical: null },
+            description: 'Código de registro', canonical: null },
           nome: {
             pos: [235, 274],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 40,
             decimals: 0,
             required: true,
@@ -268,42 +269,42 @@ describe('validateCnab400Business', () => {
             description: 'Nome do sacado', canonical: null },
           sacado_numero_inscricao: {
             pos: [221, 234],
-            type: 'num',
+            type: FieldType.NUM,
             size: 14,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'NÃºmero de inscriÃ§Ã£o do sacado', canonical: null },
+            description: 'Número de inscrição do sacado', canonical: null },
           valor_titulo: {
             pos: [127, 139],
-            type: 'num',
+            type: FieldType.NUM,
             size: 13,
             decimals: 2,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'Valor do tÃ­tulo', canonical: null },
+            description: 'Valor do título', canonical: null },
           vencimento: {
             pos: [121, 126],
-            type: 'data',
+            type: FieldType.DATA,
             size: 6,
             decimals: 0,
             required: true,
-            dateFormat: 'DDMMAA',
+            dateFormat: DateFormat.DDMMAA,
             pattern: null,
             description: 'Data de vencimento', canonical: null },
         },
         trailer: {
           codigo_registro: {  // Nome diferente!
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: '9',
-            description: 'CÃ³digo de registro', canonical: null },
+            description: 'Código de registro', canonical: null },
         },
       }
 
@@ -311,41 +312,41 @@ describe('validateCnab400Business', () => {
       const detail = '1' + ' '.repeat(234 - 1) + '00012345678909' + ' '.repeat(385)
       const trailer = '9' + ' '.repeat(399)
 
-      const result = validateCnab400Business([header, detail, trailer], customSchema)
+      const result = validateCnab400Content([header, detail, trailer], customSchema)
 
-      // NÃ£o deve ter erro de tipo de header
-      const headerErrors = result.errors.filter(e => e.line === 1 && e.column === 'Header')
+      // Não deve ter erro de tipo de header
+      const headerErrors = result.errors.filter(e => e.line === 1 && e.field === 'Header')
       expect(headerErrors).toHaveLength(0)
     })
 
-    test('deve rejeitar header com tipo errado mesmo quando campo tem nome nÃ£o-padrÃ£o', () => {
+    test('deve rejeitar header com tipo errado mesmo quando campo tem nome não-padrão', () => {
       const customSchema: BankSchema = {
         bankCode: '104',
         bankName: 'Caixa',
         header: {
           codigo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: '0',
-            description: 'CÃ³digo de registro', canonical: null },
+            description: 'Código de registro', canonical: null },
         },
         detail: {
           codigo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: '1',
-            description: 'CÃ³digo de registro', canonical: null },
+            description: 'Código de registro', canonical: null },
           nome: {
             pos: [235, 274],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 40,
             decimals: 0,
             required: true,
@@ -354,42 +355,42 @@ describe('validateCnab400Business', () => {
             description: 'Nome do sacado', canonical: null },
           sacado_numero_inscricao: {
             pos: [221, 234],
-            type: 'num',
+            type: FieldType.NUM,
             size: 14,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'NÃºmero de inscriÃ§Ã£o do sacado', canonical: null },
+            description: 'Número de inscrição do sacado', canonical: null },
           valor_titulo: {
             pos: [127, 139],
-            type: 'num',
+            type: FieldType.NUM,
             size: 13,
             decimals: 2,
             required: true,
             dateFormat: null,
             pattern: null,
-            description: 'Valor do tÃ­tulo', canonical: null },
+            description: 'Valor do título', canonical: null },
           vencimento: {
             pos: [121, 126],
-            type: 'data',
+            type: FieldType.DATA,
             size: 6,
             decimals: 0,
             required: true,
-            dateFormat: 'DDMMAA',
+            dateFormat: DateFormat.DDMMAA,
             pattern: null,
             description: 'Data de vencimento', canonical: null },
         },
         trailer: {
           codigo_registro: {
             pos: [1, 1],
-            type: 'alfa',
+            type: FieldType.ALFA,
             size: 1,
             decimals: 0,
             required: true,
             dateFormat: null,
             pattern: '9',
-            description: 'CÃ³digo de registro', canonical: null },
+            description: 'Código de registro', canonical: null },
         },
       }
 
@@ -397,7 +398,7 @@ describe('validateCnab400Business', () => {
       const detail = '1' + ' '.repeat(234 - 1) + '00012345678909' + ' '.repeat(385)
       const trailer = '9' + ' '.repeat(399)
 
-      const result = validateCnab400Business([header, detail, trailer], customSchema)
+      const result = validateCnab400Content([header, detail, trailer], customSchema)
 
       // Deve ter erro de tipo de header
       expect(result.errors).toContainEqual(

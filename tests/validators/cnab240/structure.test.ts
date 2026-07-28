@@ -1,21 +1,21 @@
 /**
- * Testes de validaÃ§Ã£o de negÃ³cio CNAB 240 (genÃ©ricos)
+ * Testes de validação de negócio CNAB 240 (genéricos)
  * 
- * Testa a lÃ³gica de negÃ³cio do validador CNAB 240:
+ * Testa a lógica de negócio do validador CNAB 240:
  * - Pareamento robusto de Segmentos P+Q
- * - Fallback para posiÃ§Ãµes fixas FEBRABAN quando nÃ£o hÃ¡ schema
- * - ValidaÃ§Ã£o de dados de negÃ³cio (valor, vencimento, documento, nome)
+ * - Fallback para posições fixas FEBRABAN quando não há schema
+ * - Validação de dados de negócio (valor, vencimento, documento, nome)
  * 
- * Nota: ValidaÃ§Ãµes estruturais (tamanho de linha, tipo de registro, etc.)
- * sÃ£o exclusivas do validador estrutural (cnab240-structure-validator.ts).
+ * Nota: Validações estruturais (tamanho de linha, tipo de registro, etc.)
+ * são exclusivas do validador estrutural (cnab240-structure-validator.ts).
  */
 
-import { validateCnab240Business } from '../../../src/validators/cnab240-business-validator'
+import { validateCnab240Content } from '../../../src/validators/cnab240-content-validator'
 
-describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
-  describe('ValidaÃ§Ã£o sem schema (fallback de posiÃ§Ãµes fixas FEBRABAN)', () => {
-    test('deve extrair dados usando offsets FEBRABAN quando nÃ£o hÃ¡ schema', () => {
-      // Linha construÃ­da manualmente com offsets FEBRABAN padrÃ£o
+describe('validateCnab240Content — Validação de Negócio', () => {
+  describe('Validação sem schema (fallback de posições fixas FEBRABAN)', () => {
+    test('deve extrair dados usando offsets FEBRABAN quando não há schema', () => {
+      // Linha construída manualmente com offsets FEBRABAN padrão
       // Header: pos 8 = '0' (tipo header de arquivo)
       const header = ' '.repeat(7) + '0' + ' '.repeat(232)
       
@@ -26,18 +26,18 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
                    '000000000010000' + // Pos 86-100 (valor) - 15 caracteres
                    ' '.repeat(140) // Pos 101-240
       
-      // Segmento Q: tipo 3 (pos 8), segmento 'Q' (pos 14), documento (pos 19-33), nome (pos 34-73), endereÃ§o (pos 74-113)
+      // Segmento Q: tipo 3 (pos 8), segmento 'Q' (pos 14), documento (pos 19-33), nome (pos 34-73), endereço (pos 74-113)
       // Pos: 1-7 (7), 8 (1), 9-13 (5), 14 (1), 15-18 (4), 19-33 (15), 34-73 (40), 74-113 (40), 114-240 (127) = 240
       const segQ = ' '.repeat(7) + '3' + ' '.repeat(5) + 'Q' +
                    ' '.repeat(4) + '000012345678909' + // Pos 19-33 (documento) - 15 caracteres
                    'JOAO DA SILVA                           ' + // Pos 34-73 (nome) - 40 caracteres
-                   'RUA EXEMPLO                             ' + // Pos 74-113 (endereÃ§o) - 40 caracteres
+                   'RUA EXEMPLO                             ' + // Pos 74-113 (endereço) - 40 caracteres
                    ' '.repeat(127) // Pos 114-240
       
       // Trailer: pos 8 = '9' (tipo trailer de arquivo)
       const trailer = ' '.repeat(7) + '9' + ' '.repeat(232)
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], null)
+      const result = validateCnab240Content([header, segP, segQ, trailer], null)
       
       expect(result.errors).toEqual([])
       expect(result.records[0]).toMatchObject({
@@ -49,29 +49,29 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
   })
 
   describe('Pareamento P/Q robusto', () => {
-    test('deve gerar erro quando Segmento P tem tamanho incorreto seguido de Q vÃ¡lido', () => {
+    test('deve gerar erro quando Segmento P tem tamanho incorreto seguido de Q válido', () => {
       // Bug original: linha P ruim fazia continue antes de incrementar detailCount,
       // causando Q seguinte parear com P anterior (stale data).
-      // CorreÃ§Ã£o: pendingP Ã© zerado em linhas ruins, Q sem P pendente gera erro explÃ­cito.
+      // Correção: pendingP é zerado em linhas ruins, Q sem P pendente gera erro explícito.
 
       const header = ' '.repeat(7) + '0' + ' '.repeat(232)
       
-      // Segmento P vÃ¡lido (tÃ­tulo 1)
+      // Segmento P válido (título 1)
       const segP1 = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + 
                     ' '.repeat(63) + '31122099' + '000000000050000' + ' '.repeat(140)
       
-      // Segmento Q do tÃ­tulo 1
+      // Segmento Q do título 1
       const segQ1 = ' '.repeat(7) + '3' + ' '.repeat(5) + 'Q' +
                     ' '.repeat(4) + '000011111111111' +
                     'TITULO 1 CORRETO                        ' +
                     'RUA A                                   ' +
                     ' '.repeat(127)
       
-      // Segmento P com tamanho ERRADO (tÃ­tulo 2)
+      // Segmento P com tamanho ERRADO (título 2)
       const segP2Broken = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + 
                           ' '.repeat(63) + '31122099' + '000000000099999' // faltam 140 chars
       
-      // Segmento Q vÃ¡lido (tÃ­tulo 2) - deve detectar que nÃ£o tem P vÃ¡lido imediatamente antes
+      // Segmento Q válido (título 2) - deve detectar que não tem P válido imediatamente antes
       const segQ2 = ' '.repeat(7) + '3' + ' '.repeat(5) + 'Q' +
                     ' '.repeat(4) + '000022222222222' +
                     'TITULO 2 ORFAO                          ' +
@@ -80,42 +80,42 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
       
       const trailer = ' '.repeat(7) + '9' + ' '.repeat(232)
       
-      const result = validateCnab240Business([header, segP1, segQ1, segP2Broken, segQ2, trailer], null)
+      const result = validateCnab240Content([header, segP1, segQ1, segP2Broken, segQ2, trailer], null)
       
-      // Validador de negÃ³cio nÃ£o checa tamanho de linha (isso Ã© validaÃ§Ã£o estrutural).
-      // O importante aqui Ã© que o pareamento P/Q seja robusto: Q sem P vÃ¡lido gera erro.
+      // Validador de negócio não checa tamanho de linha (isso é validação estrutural).
+      // O importante aqui é que o pareamento P/Q seja robusto: Q sem P válido gera erro.
       
-      // Deve ter erro de pareamento na linha 5 (segQ2 sem P vÃ¡lido correspondente)
+      // Deve ter erro de pareamento na linha 5 (segQ2 sem P válido correspondente)
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           line: 5,
           column: 'Segmento Q',
-          message: 'Segmento Q sem Segmento P vÃ¡lido correspondente â€” valor/vencimento indisponÃ­veis'
+          message: 'Segmento Q sem Segmento P válido correspondente — valor/vencimento indisponíveis'
         })
       )
       
-      // Deve ter gerado 2 registros: tÃ­tulo 1 correto, tÃ­tulo 2 com valor/vencimento zerados
+      // Deve ter gerado 2 registros: título 1 correto, título 2 com valor/vencimento zerados
       expect(result.records).toHaveLength(2)
       
-      // TÃ­tulo 1 deve ter dados corretos
+      // Título 1 deve ter dados corretos
       expect(result.records[0]).toMatchObject({
         name: 'TITULO 1 CORRETO',
         amount: 500.00,
         dueDate: '31/12/2099'
       })
       
-      // TÃ­tulo 2 deve ter fallback (amount: 0, dueDate: 'â€”') por causa do P quebrado
+      // Título 2 deve ter fallback (amount: 0, dueDate: '—') por causa do P quebrado
       expect(result.records[1]).toMatchObject({
         name: 'TITULO 2 ORFAO',
         amount: 0,
-        dueDate: 'â€”'
+        dueDate: '—'
       })
     })
 
     test('deve gerar erro quando Segmento Q aparece sem nenhum P antes', () => {
       const header = ' '.repeat(7) + '0' + ' '.repeat(232)
       
-      // Linha adicional (tipo 1 - header de lote) para passar do mÃ­nimo de 4 linhas
+      // Linha adicional (tipo 1 - header de lote) para passar do mínimo de 4 linhas
       const headerLote = ' '.repeat(7) + '1' + ' '.repeat(232)
       
       // Segmento Q sem P antes
@@ -127,14 +127,14 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
       
       const trailer = ' '.repeat(7) + '9' + ' '.repeat(232)
       
-      const result = validateCnab240Business([header, headerLote, segQ, trailer], null)
+      const result = validateCnab240Content([header, headerLote, segQ, trailer], null)
       
       // Deve gerar erro de pareamento
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           line: 3,
           column: 'Segmento Q',
-          message: 'Segmento Q sem Segmento P vÃ¡lido correspondente â€” valor/vencimento indisponÃ­veis'
+          message: 'Segmento Q sem Segmento P válido correspondente — valor/vencimento indisponíveis'
         })
       )
       
@@ -142,11 +142,11 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
       expect(result.records).toHaveLength(1)
       expect(result.records[0]).toMatchObject({
         amount: 0,
-        dueDate: 'â€”'
+        dueDate: '—'
       })
     })
 
-    test('caso feliz: P vÃ¡lido â†’ Q vÃ¡lido continua funcionando', () => {
+    test('caso feliz: P válido ? Q válido continua funcionando', () => {
       const header = ' '.repeat(7) + '0' + ' '.repeat(232)
       
       const segP = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + 
@@ -160,10 +160,10 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
       
       const trailer = ' '.repeat(7) + '9' + ' '.repeat(232)
       
-      const result = validateCnab240Business([header, segP, segQ, trailer], null)
+      const result = validateCnab240Content([header, segP, segQ, trailer], null)
       
-      // NÃ£o deve ter erros de pareamento
-      const pairingErrors = result.errors.filter(e => e.column === 'Segmento Q')
+      // Não deve ter erros de pareamento
+      const pairingErrors = result.errors.filter(e => e.field === 'Segmento Q')
       expect(pairingErrors).toHaveLength(0)
       
       // Deve ter 1 registro completo
@@ -179,15 +179,15 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
     test('dois P seguidos sem Q entre eles, depois um Q: deve parear com o P mais recente', () => {
       const header = ' '.repeat(7) + '0' + ' '.repeat(232)
       
-      // P do tÃ­tulo 1 (serÃ¡ descartado - sem Q correspondente)
+      // P do título 1 (será descartado - sem Q correspondente)
       const segP1 = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + 
                     ' '.repeat(63) + '31122099' + '000000000010000' + ' '.repeat(140)
       
-      // P do tÃ­tulo 2 (serÃ¡ pareado com o Q seguinte)
+      // P do título 2 (será pareado com o Q seguinte)
       const segP2 = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + 
                     ' '.repeat(63) + '15012025' + '000000000020000' + ' '.repeat(140)
       
-      // Q Ãºnico - deve parear com P2 (mais recente), nÃ£o com P1
+      // Q único - deve parear com P2 (mais recente), não com P1
       const segQ = ' '.repeat(7) + '3' + ' '.repeat(5) + 'Q' +
                    ' '.repeat(4) + '000012345678909' +
                    'SEGUNDO TITULO                          ' +
@@ -196,29 +196,29 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
       
       const trailer = ' '.repeat(7) + '9' + ' '.repeat(232)
       
-      const result = validateCnab240Business([header, segP1, segP2, segQ, trailer], null)
+      const result = validateCnab240Content([header, segP1, segP2, segQ, trailer], null)
       
       // Deve ter 1 registro (apenas o par P2+Q)
       expect(result.records).toHaveLength(1)
       
-      // Registro deve ter dados do P2 (mais recente), nÃ£o do P1
+      // Registro deve ter dados do P2 (mais recente), não do P1
       expect(result.records[0]).toMatchObject({
         name: 'SEGUNDO TITULO',
-        amount: 200.00,  // Do P2, nÃ£o do P1 (100.00)
-        dueDate: '15/01/2025'  // Do P2, nÃ£o do P1 (31/12/2099)
+        amount: 200.00,  // Do P2, não do P1 (100.00)
+        dueDate: '15/01/2025'  // Do P2, não do P1 (31/12/2099)
       })
     })
 
     test('segmento opcional entre P e Q invalida o pareamento', () => {
-      // Pela spec FEBRABAN, segmentos opcionais (R/S/Y) sÃ³ vÃªm DEPOIS de um par P+Q completo,
-      // nunca entre eles. Se aparecer algo que nÃ£o seja Q apÃ³s um P, o pareamento Ã© quebrado.
+      // Pela spec FEBRABAN, segmentos opcionais (R/S/Y) só vêm DEPOIS de um par P+Q completo,
+      // nunca entre eles. Se aparecer algo que não seja Q após um P, o pareamento é quebrado.
 
       const header = ' '.repeat(7) + '0' + ' '.repeat(232)
       
       const segP = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + 
                    ' '.repeat(63) + '31122099' + '000000000050000' + ' '.repeat(140)
       
-      // Segmento R entre P e Q (estrutura invÃ¡lida pela spec)
+      // Segmento R entre P e Q (estrutura inválida pela spec)
       const segR = ' '.repeat(7) + '3' + ' '.repeat(5) + 'R' + ' '.repeat(227)
       
       const segQ = ' '.repeat(7) + '3' + ' '.repeat(5) + 'Q' +
@@ -229,21 +229,21 @@ describe('validateCnab240Business â€” ValidaÃ§Ã£o de NegÃ³cio', () => {
       
       const trailer = ' '.repeat(7) + '9' + ' '.repeat(232)
       
-      const result = validateCnab240Business([header, segP, segR, segQ, trailer], null)
+      const result = validateCnab240Content([header, segP, segR, segQ, trailer], null)
       
-      // Q sem P vÃ¡lido imediatamente antes deve gerar erro
+      // Q sem P válido imediatamente antes deve gerar erro
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           line: 4,
           column: 'Segmento Q',
-          message: 'Segmento Q sem Segmento P vÃ¡lido correspondente â€” valor/vencimento indisponÃ­veis'
+          message: 'Segmento Q sem Segmento P válido correspondente — valor/vencimento indisponíveis'
         })
       )
       
       // Registro deve ter fallback (pendingP foi zerado pelo segR)
       expect(result.records[0]).toMatchObject({
         amount: 0,
-        dueDate: 'â€”'
+        dueDate: '—'
       })
     })
   })

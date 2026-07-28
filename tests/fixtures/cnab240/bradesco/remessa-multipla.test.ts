@@ -1,11 +1,12 @@
 /**
- * Teste de validaÃ§Ã£o do arquivo JSON de metadados
+ * Teste de validação do arquivo JSON de metadados
  * 
- * Garante que o arquivo remessa-multipla.json Ã© vÃ¡lido e pode ser carregado
+ * Garante que o arquivo remessa-multipla.json é válido e pode ser carregado
  */
 
 import { loadFixtureMetadata } from '../../../helpers/fixture-metadata'
-import { BANK_CODES } from '../../../../src/types'
+import { BANK_CODES } from '@tp-types/index'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('Metadados: remessa-multipla.json', () => {
   let metadata: ReturnType<typeof loadFixtureMetadata>
@@ -16,12 +17,12 @@ describe('Metadados: remessa-multipla.json', () => {
   })
 
   describe('Campos principais', () => {
-    test('deve ter descriÃ§Ã£o correta', () => {
+    test('deve ter descrição correta', () => {
       expect(metadata.description).toContain('Bradesco')
       expect(metadata.description).toContain('CNAB 240')
     })
 
-    test('deve ter cÃ³digo do banco Bradesco (237)', () => {
+    test('deve ter código do banco Bradesco (237)', () => {
       expect(metadata.bankCode).toBe(BANK_CODES.BRADESCO)
     })
 
@@ -30,7 +31,7 @@ describe('Metadados: remessa-multipla.json', () => {
     })
 
     test('deve ser formato CNAB240', () => {
-      expect(metadata.format).toBe('CNAB240')
+      expect(metadata.format).toBe(CNABFormatCode.CNAB240)
     })
   })
 
@@ -48,7 +49,7 @@ describe('Metadados: remessa-multipla.json', () => {
       expect(metadata.structure.headerLines).toBe(2)
     })
 
-    test('deve ter linhas de detalhe corretas (recordCount Ã— 4 segmentos: P+Q+R+S)', () => {
+    test('deve ter linhas de detalhe corretas (recordCount × 4 segmentos: P+Q+R+S)', () => {
       expect(metadata.structure.detailLines).toBe(metadata.totals.recordCount * 4)
     })
 
@@ -75,36 +76,36 @@ describe('Metadados: remessa-multipla.json', () => {
       expect(metadata.header!.cedenteNome).toBe('EMPRESA EXEMPLO LTDA')
     })
 
-    test('deve ter data de geraÃ§Ã£o formatada', () => {
+    test('deve ter data de geração formatada', () => {
       expect(metadata.header!.dataGeracao).toBe('01/07/2026')
     })
 
-    test('deve ter data de geraÃ§Ã£o raw', () => {
+    test('deve ter data de geração raw', () => {
       expect(metadata.header!.dataGeracaoRaw).toBe('01072026')
     })
 
-    test('deve ser arquivo de remessa (cÃ³digo "1")', () => {
+    test('deve ser arquivo de remessa (código "1")', () => {
       expect(metadata.header!.tipoArquivo).toBe('1')
     })
   })
 
-  describe('Registros/TÃ­tulos', () => {
-    test('deve ter pelo menos um tÃ­tulo', () => {
+  describe('Registros/Títulos', () => {
+    test('deve ter pelo menos um título', () => {
       expect(metadata.records.length).toBeGreaterThan(0)
     })
 
-    test('cada tÃ­tulo deve ter Ã­ndice sequencial', () => {
+    test('cada título deve ter índice sequencial', () => {
       expect(metadata.records[0].index).toBe(0)
       expect(metadata.records[1].index).toBe(1)
       expect(metadata.records[2].index).toBe(2)
     })
 
-    describe('TÃ­tulo 1 - JOAO EXEMPLO SILVA', () => {
+    describe('Título 1 - JOAO EXEMPLO SILVA', () => {
       test('deve ter nome correto', () => {
         expect(metadata.records[0].name).toBe('JOAO EXEMPLO SILVA')
       })
 
-      test('deve ter CPF sem formataÃ§Ã£o', () => {
+      test('deve ter CPF sem formatação', () => {
         expect(metadata.records[0].document).toBe('10000791989')
         expect(metadata.records[0].documentType).toBe('CPF')
         expect(metadata.records[0].documentTypeCode).toBe('1')
@@ -130,7 +131,7 @@ describe('Metadados: remessa-multipla.json', () => {
         expect(metadata.records[0].dueDateRaw).toBe('15122026')
       })
 
-      test('deve ter endereÃ§o completo', () => {
+      test('deve ter endereço completo', () => {
         expect(metadata.records[0].address).toBe('RUA EXEMPLO 123')
         expect(metadata.records[0].city).toBe('SAO PAULO')
         expect(metadata.records[0].state).toBe('SP')
@@ -138,7 +139,7 @@ describe('Metadados: remessa-multipla.json', () => {
       })
     })
 
-    describe('TÃ­tulo 2 - MARIA EXEMPLO SILVA', () => {
+    describe('Título 2 - MARIA EXEMPLO SILVA', () => {
       test('deve ter nome correto', () => {
         expect(metadata.records[1].name).toBe('MARIA EXEMPLO SILVA')
       })
@@ -159,13 +160,13 @@ describe('Metadados: remessa-multipla.json', () => {
         expect(metadata.records[1].dueDateRaw).toBe('20122026')
       })
 
-      test('deve ter endereÃ§o correto', () => {
+      test('deve ter endereço correto', () => {
         expect(metadata.records[1].address).toBe('AV PAULISTA 1000')
         expect(metadata.records[1].zipCode).toBe('01311-000')
       })
     })
 
-    describe('TÃ­tulo 3 - COMERCIAL EXEMPLO LTDA', () => {
+    describe('Título 3 - COMERCIAL EXEMPLO LTDA', () => {
       test('deve ter nome correto', () => {
         expect(metadata.records[2].name).toBe('COMERCIAL EXEMPLO LTDA')
       })
@@ -187,7 +188,7 @@ describe('Metadados: remessa-multipla.json', () => {
         expect(metadata.records[2].dueDateRaw).toBe('31122026')
       })
 
-      test('deve ter endereÃ§o correto', () => {
+      test('deve ter endereço correto', () => {
         expect(metadata.records[2].address).toBe('RUA COMERCIAL EXEMPLO 500')
         expect(metadata.records[2].zipCode).toBe('04567-890')
       })
@@ -214,8 +215,8 @@ describe('Metadados: remessa-multipla.json', () => {
     })
   })
 
-  describe('ValidaÃ§Ãµes cruzadas', () => {
-    test('detailLines deve ser 4x recordCount (P+Q+R+S por tÃ­tulo)', () => {
+  describe('Validações cruzadas', () => {
+    test('detailLines deve ser 4x recordCount (P+Q+R+S por título)', () => {
       expect(metadata.structure.detailLines).toBe(metadata.totals.recordCount * 4)
     })
 
@@ -236,8 +237,8 @@ describe('Metadados: remessa-multipla.json', () => {
       })
     })
 
-    test('todos os documentos devem ser vÃ¡lidos', () => {
-      // Verificar que documentos tÃªm apenas nÃºmeros
+    test('todos os documentos devem ser válidos', () => {
+      // Verificar que documentos têm apenas números
       metadata.records.forEach(record => {
         expect(record.document).toMatch(/^\d+$/)
         expect(record.documentRaw).toMatch(/^\d+$/)

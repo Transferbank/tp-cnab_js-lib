@@ -2,8 +2,8 @@
  * Testes para mergeValidationErrors
  */
 
-import { mergeValidationErrors } from '../../src/validators/merge-validation-errors'
-import { ValidationError } from '../../src/types'
+import { mergeValidationErrors } from '@validators/merge-validation-errors'
+import { ValidationError } from '@tp-types/index'
 
 describe('mergeValidationErrors', () => {
   test('deve retornar array vazio quando ambas as entradas são vazias', () => {

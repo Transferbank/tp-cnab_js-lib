@@ -1,15 +1,15 @@
 /**
- * Testes do validador de negÃ³cio CNAB 240
+ * Testes do validador de negócio CNAB 240
  * 
- * Testa comportamentos especÃ­ficos do validateCnab240Business que nÃ£o sÃ£o
- * cobertos pelos testes de bancos especÃ­ficos.
+ * Testa comportamentos específicos do validateCnab240Content que não são
+ * cobertos pelos testes de bancos específicos.
  * 
- * Nota: Testes de tipo de trailer foram removidos porque essa validaÃ§Ã£o
- * agora Ã© exclusiva do validador estrutural (estrutura jÃ¡ cobre isso).
+ * Nota: Testes de tipo de trailer foram removidos porque essa validação
+ * agora é exclusiva do validador estrutural (estrutura já cobre isso).
  */
 
-describe('validateCnab240Business', () => {
-  // Placeholder - testes futuros de lÃ³gica de negÃ³cio especÃ­fica virÃ£o aqui
+describe('validateCnab240Content', () => {
+  // Placeholder - testes futuros de lógica de negócio específica virão aqui
   test('placeholder', () => {
     expect(true).toBe(true)
   })

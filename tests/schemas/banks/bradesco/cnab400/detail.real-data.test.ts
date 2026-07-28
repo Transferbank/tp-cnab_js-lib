@@ -3,32 +3,33 @@
  *
  * Valida o PARSING contra arquivo fixture real (remessa-multipla.txt).
  *
- * Separado de detail.test.ts (definiÃ§Ã£o do schema) para:
- * - Manter detail.test.ts rÃ¡pido e focado (nÃ£o toca fixture)
- * - Organizar testes por forÃ§a de evidÃªncia (independente vs. snapshot vs. pontual)
+ * Separado de detail.test.ts (definição do schema) para:
+ * - Manter detail.test.ts rápido e focado (não toca fixture)
+ * - Organizar testes por força de evidência (independente vs. snapshot vs. pontual)
  *
- * TrÃªs nÃ­veis de evidÃªncia:
- * 1. VerificaÃ§Ã£o independente: regex em texto livre ou checksum recomputÃ¡vel
- * 2. ComparaÃ§Ã£o contra snapshot: metadata.json (regressÃ£o, nÃ£o prova correÃ§Ã£o)
- * 3. Casos pontuais: valores especÃ­ficos sem evidÃªncia independente
+ * Três níveis de evidência:
+ * 1. Verificação independente: regex em texto livre ou checksum recomputável
+ * 2. Comparação contra snapshot: metadata.json (regressão, não prova correção)
+ * 3. Casos pontuais: valores específicos sem evidência independente
  */
 
 import { bradescoCnab400 } from '../../../../../src/banks/bradesco/schemas/cnab400'
 import { extractLineFields } from '../../../../../src/parser/field-extractor'
 import { loadFixtureMetadata } from '../../../../helpers/fixture-metadata'
 import { readFixture, calcularDvNossoNumero, parseReais } from './shared'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
-  describe('VerificaÃ§Ã£o independente (evidÃªncia dentro do prÃ³prio arquivo real)', () => {
+  describe('Verificação independente (evidência dentro do próprio arquivo real)', () => {
     /*
-     * Estes testes extraem evidÃªncia diretamente do arquivo fixture em tempo de execuÃ§Ã£o,
-     * seja via regex no texto livre (campo sacador_avalista ou o prÃ³prio campo testado),
-     * seja via algoritmo recomputÃ¡vel (dÃ­gito verificador mÃ³dulo-11).
+     * Estes testes extraem evidência diretamente do arquivo fixture em tempo de execução,
+     * seja via regex no texto livre (campo sacador_avalista ou o próprio campo testado),
+     * seja via algoritmo recomputável (dígito verificador módulo-11).
      *
      * Diferem dos testes que comparam contra metadata.json porque:
-     * 1. metadata.json Ã© gerado pelo mesmo parser sendo testado (nÃ£o prova correÃ§Ã£o, sÃ³ regressÃ£o)
-     * 2. Estas evidÃªncias sÃ£o INDEPENDENTES: texto impresso para humanos ou checksum matemÃ¡tico
-     * 3. Qualquer mudanÃ§a no fixture Ã© automaticamente refletida (nÃ£o hardcoded)
+     * 1. metadata.json é gerado pelo mesmo parser sendo testado (não prova correção, só regressão)
+     * 2. Estas evidências são INDEPENDENTES: texto impresso para humanos ou checksum matemático
+     * 3. Qualquer mudança no fixture é automaticamente refletida (não hardcoded)
      *
      * Contexto: https://github.com/usuario/tp-cnab-lib/discussions/ISSUE
      */
@@ -41,29 +42,29 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
     })
 
     test('multa_percentual deve bater com o percentual impresso no sacador_avalista', () => {
-      // PadrÃ£o: "MULTA (2,00%)" ou "MULTA (2,50%)" etc.
+      // Padrão: "MULTA (2,00%)" ou "MULTA (2,50%)" etc.
       const regex = /MULTA \((\d+,\d{2})%\)/
       const linhasComMulta = detailLines.filter(line => regex.test(line))
 
-      expect(linhasComMulta.length).toBeGreaterThan(0) // Garante que o teste nÃ£o fica vazio
+      expect(linhasComMulta.length).toBeGreaterThan(0) // Garante que o teste não fica vazio
 
       linhasComMulta.forEach(line => {
         const detail = extractLineFields(line, bradescoCnab400.detail!)
         const match = line.match(regex)
 
         if (match) {
-          const percentualImpresso = parseReais(match[1]) // "2,00" â†’ 2.0
+          const percentualImpresso = parseReais(match[1]) // "2,00" ? 2.0
           const percentualCampo = detail.multa_percentual.value as number
 
-          // Campo armazena o percentual jÃ¡ com 2 casas decimais (ex: 2.0 para 2,00%)
+          // Campo armazena o percentual já com 2 casas decimais (ex: 2.0 para 2,00%)
           expect(percentualCampo).toBeCloseTo(percentualImpresso, 2)
           expect(detail.multa_percentual.error).toBeFalsy()
         }
       })
     })
 
-    test('valor_titulo * multa_percentual deve ficar perto do valor impresso apÃ³s "MULTA (...%) DE R$"', () => {
-      // PadrÃ£o: "MULTA (2,00%) DE R$ R$ 173,13"
+    test('valor_titulo * multa_percentual deve ficar perto do valor impresso após "MULTA (...%) DE R$"', () => {
+      // Padrão: "MULTA (2,00%) DE R$ R$ 173,13"
       const regex = /MULTA \((\d+,\d{2})%\) DE R\$ R\$ ([\d.,]+)/
       const linhasComValorMulta = detailLines.filter(line => regex.test(line))
 
@@ -74,20 +75,20 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
         const match = line.match(regex)
 
         if (match) {
-          const percentualImpresso = parseReais(match[1]) // "2,00" â†’ 2.0
-          const valorMultaImpresso = parseReais(match[2]) // "173,13" â†’ 173.13
+          const percentualImpresso = parseReais(match[1]) // "2,00" ? 2.0
+          const valorMultaImpresso = parseReais(match[2]) // "173,13" ? 173.13
           const valorTitulo = detail.valor_titulo.value as number
 
           const valorMultaCalculado = (valorTitulo * percentualImpresso) / 100
 
-          // TolerÃ¢ncia de 2 casas decimais (arredondamento)
+          // Tolerância de 2 casas decimais (arredondamento)
           expect(valorMultaCalculado).toBeCloseTo(valorMultaImpresso, 2)
         }
       })
     })
 
-    test('numero_documento deve conter o nÃºmero da NF impresso no sacador_avalista', () => {
-      // PadrÃ£o: "REF NF(S): 082760" ou "REF NF(S): 066183"
+    test('numero_documento deve conter o número da NF impresso no sacador_avalista', () => {
+      // Padrão: "REF NF(S): 082760" ou "REF NF(S): 066183"
       const regex = /REF NF\(S\): (\d+)/
       const linhasComNF = detailLines.filter(line => regex.test(line))
 
@@ -101,8 +102,8 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
           const nfImpresso = match[1] // "082760"
           const numeroDocumento = (detail.numero_documento.value as string).trim()
 
-          // Campo numero_documento contÃ©m o nÃºmero (ex: "NF82760-03" contÃ©m "82760")
-          // Pode ter zero Ã  esquerda removido no campo, mas deve aparecer
+          // Campo numero_documento contém o número (ex: "NF82760-03" contém "82760")
+          // Pode ter zero à esquerda removido no campo, mas deve aparecer
           expect(numeroDocumento).toContain(nfImpresso.replace(/^0+/, ''))
           expect(detail.numero_documento.error).toBeFalsy()
         }
@@ -110,7 +111,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
     })
 
     test('juros_mora deve bater com o valor impresso "COBRAR JUROS DE R$ ... POR DIA"', () => {
-      // PadrÃ£o: "COBRAR JUROS DE R$ 2,84 POR DIA DE ATRASO"
+      // Padrão: "COBRAR JUROS DE R$ 2,84 POR DIA DE ATRASO"
       const regex = /COBRAR JUROS DE R\$ ([\d,]+) POR DIA/
       const linhasComJuros = detailLines.filter(line => regex.test(line))
 
@@ -121,7 +122,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
         const match = line.match(regex)
 
         if (match) {
-          const jurosImpresso = parseReais(match[1]) // "2,84" â†’ 2.84
+          const jurosImpresso = parseReais(match[1]) // "2,84" ? 2.84
           const jurosCampo = detail.juros_mora.value as number
 
           expect(jurosCampo).toBeCloseTo(jurosImpresso, 2)
@@ -131,7 +132,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
     })
 
     test('abatimento_valor e desconto_data_limite devem bater com "CONCEDER ABATIMENTO DE R$ ... PARA PAGAMENTO ATE DD/MM"', () => {
-      // PadrÃ£o: "CONCEDER ABATIMENTO DE R$ 72,88 PARA PAGAMENTO ATE 09/06/2026"
+      // Padrão: "CONCEDER ABATIMENTO DE R$ 72,88 PARA PAGAMENTO ATE 09/06/2026"
       const regex = /CONCEDER ABATIMENTO DE R\$ ([\d.,]+) PARA PAGAMENTO ATE (\d{2})\/(\d{2})/
       const linhasComAbatimento = detailLines.filter(line => regex.test(line))
 
@@ -142,7 +143,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
         const match = line.match(regex)
 
         if (match) {
-          const abatimentoImpresso = parseReais(match[1]) // "72,88" â†’ 72.88
+          const abatimentoImpresso = parseReais(match[1]) // "72,88" ? 72.88
           const diaImpresso = match[2] // "09"
           const mesImpresso = match[3] // "06"
 
@@ -163,14 +164,14 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       })
     })
 
-    test('nosso_numero_dv deve bater com o cÃ¡lculo mÃ³dulo-11 (carteira + nosso_numero) em todas as 37 linhas', () => {
+    test('nosso_numero_dv deve bater com o cálculo módulo-11 (carteira + nosso_numero) em todas as 37 linhas', () => {
       expect(detailLines.length).toBe(37) // Fixture tem 37 detalhes
 
       detailLines.forEach(line => {
         const detail = extractLineFields(line, bradescoCnab400.detail!)
 
-        const carteiraRaw = detail.carteira_codigo.raw // 3 dÃ­gitos, ex: "009"
-        const nossoNumeroRaw = detail.nosso_numero.raw // 11 dÃ­gitos, ex: "00069062637"
+        const carteiraRaw = detail.carteira_codigo.raw // 3 dígitos, ex: "009"
+        const nossoNumeroRaw = detail.nosso_numero.raw // 11 dígitos, ex: "00069062637"
         const dvRaw = detail.nosso_numero_dv.raw // 1 caractere, ex: "0" ou "P"
 
         const dvCalculado = calcularDvNossoNumero(carteiraRaw + nossoNumeroRaw)
@@ -178,14 +179,14 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
         expect(dvRaw).toBe(dvCalculado)
         expect(detail.nosso_numero_dv.error).toBeFalsy()
 
-        // De quebra, confirma que carteira_codigo e nosso_numero tambÃ©m estÃ£o corretos
-        // (se qualquer uma dessas posiÃ§Ãµes estivesse errada, o DV nÃ£o bateria)
+        // De quebra, confirma que carteira_codigo e nosso_numero também estão corretos
+        // (se qualquer uma dessas posições estivesse errada, o DV não bateria)
         expect(detail.carteira_codigo.error).toBeFalsy()
         expect(detail.nosso_numero.error).toBeFalsy()
       })
     })
 
-    test('numero_sequencial deve ser a posiÃ§Ã£o 1-based da linha no arquivo (para todas as linhas)', () => {
+    test('numero_sequencial deve ser a posição 1-based da linha no arquivo (para todas as linhas)', () => {
       lines.forEach((line, index) => {
         const tipoRegistro = line[0]
         let schema
@@ -200,7 +201,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
 
         if (schema && 'numero_sequencial' in schema) {
           const parsed = extractLineFields(line, schema)
-          const sequencialEsperado = index + 1 // PosiÃ§Ã£o 1-based
+          const sequencialEsperado = index + 1 // Posição 1-based
 
           expect(parsed.numero_sequencial.value).toBe(sequencialEsperado)
 
@@ -210,31 +211,31 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
     })
   })
 
-  describe('ComparaÃ§Ã£o contra snapshot gerado (metadata.json) - testes de regressÃ£o', () => {
+  describe('Comparação contra snapshot gerado (metadata.json) - testes de regressão', () => {
     /*
-     * IMPORTANTE: Estes testes comparam valores extraÃ­dos contra metadata.json,
-     * que Ã© gerado pelo MESMO parser (extractLineFields + schema) sendo testado.
+     * IMPORTANTE: Estes testes comparam valores extraídos contra metadata.json,
+     * que é gerado pelo MESMO parser (extractLineFields + schema) sendo testado.
      *
-     * Isso NÃƒO prova que as posiÃ§Ãµes estÃ£o corretas â€” apenas que o comportamento
-     * nÃ£o mudou desde a geraÃ§Ã£o do metadata (snapshot/regressÃ£o).
+     * Isso NÃO prova que as posições estão corretas — apenas que o comportamento
+     * não mudou desde a geração do metadata (snapshot/regressão).
      *
-     * Prova de correÃ§Ã£o estÃ¡ no describe "VerificaÃ§Ã£o independente" acima,
-     * que usa evidÃªncia do arquivo (regex em texto livre ou checksum recomputÃ¡vel).
+     * Prova de correção está no describe "Verificação independente" acima,
+     * que usa evidência do arquivo (regex em texto livre ou checksum recomputável).
      *
-     * Estes testes ainda sÃ£o Ãºteis para:
+     * Estes testes ainda são úteis para:
      * 1. Cobrir 100% das linhas do arquivo (37 detalhes)
-     * 2. Detectar mudanÃ§as acidentais de comportamento (regressÃ£o)
-     * 3. Validar campos sem evidÃªncia independente disponÃ­vel
+     * 2. Detectar mudanças acidentais de comportamento (regressão)
+     * 3. Validar campos sem evidência independente disponível
      */
     let lines: string[]
     let metadata: ReturnType<typeof loadFixtureMetadata>
 
     beforeAll(() => {
       lines = readFixture('remessa-multipla.txt')
-      metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', 'cnab400')
+      metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB400)
     })
 
-    test('vencimento bate com o snapshot gerado (metadata.json) â€” regressÃ£o, nÃ£o confirma a posiÃ§Ã£o em si', () => {
+    test('vencimento bate com o snapshot gerado (metadata.json) — regressão, não confirma a posição em si', () => {
       const record = metadata.records[0]
       const detailLine = lines.find(line => line[0] === '1')
 
@@ -246,7 +247,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('sacado_codigo_inscricao bate com metadata.json (regressÃ£o)', () => {
+    test('sacado_codigo_inscricao bate com metadata.json (regressão)', () => {
       const record = metadata.records[0]
       const detailLine = lines.find(line => line[0] === '1')
 
@@ -258,7 +259,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('sacado_numero_inscricao bate com metadata.json (regressÃ£o)', () => {
+    test('sacado_numero_inscricao bate com metadata.json (regressão)', () => {
       const record = metadata.records[0]
       const detailLine = lines.find(line => line[0] === '1')
 
@@ -270,7 +271,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('nome bate com metadata.json (regressÃ£o)', () => {
+    test('nome bate com metadata.json (regressão)', () => {
       const record = metadata.records[0]
       const detailLine = lines.find(line => line[0] === '1')
 
@@ -284,7 +285,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('logradouro bate com metadata.json (regressÃ£o)', () => {
+    test('logradouro bate com metadata.json (regressão)', () => {
       const record = metadata.records[0]
       const detailLine = lines.find(line => line[0] === '1')
 
@@ -298,7 +299,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('todos os campos principais de todos os tÃ­tulos batem com metadata.json (regressÃ£o em loop)', () => {
+    test('todos os campos principais de todos os títulos batem com metadata.json (regressão em loop)', () => {
       const detailLines = lines.filter(line => line[0] === '1')
 
       expect(detailLines.length).toBe(metadata.records.length)
@@ -306,13 +307,13 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       metadata.records.forEach((expected, index: number) => {
         const detail = extractLineFields(detailLines[index], bradescoCnab400.detail!)
 
-        // Verificar que campos principais foram extraÃ­dos sem erro
+        // Verificar que campos principais foram extraídos sem erro
         expect(detail.nome.error).toBeFalsy()
         expect(detail.valor_titulo.error).toBeFalsy()
         expect(detail.sacado_numero_inscricao.error).toBeFalsy()
         expect(detail.vencimento.error).toBeFalsy()
 
-        // Verificar valores extraÃ­dos batem com o snapshot
+        // Verificar valores extraídos batem com o snapshot
         expect(detail.nome.value).toBeTruthy()
         expect(detail.valor_titulo.value).toBe(expected.amount)
         expect(detail.sacado_numero_inscricao.raw).toBe(expected.documentRaw)
@@ -321,7 +322,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
     })
   })
 
-  describe('Parsing de arquivo real - casos pontuais (nÃ£o cobertos por verificaÃ§Ã£o independente)', () => {
+  describe('Parsing de arquivo real - casos pontuais (não cobertos por verificação independente)', () => {
     let lines: string[]
 
     beforeAll(() => {
@@ -340,7 +341,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('deve extrair cÃ³digo do banco (dÃ©bito automÃ¡tico) "000"', () => {
+    test('deve extrair código do banco (débito automático) "000"', () => {
       const detailLine = lines.find(line => line[0] === '1')
 
       if (detailLine) {
@@ -352,7 +353,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('deve extrair cÃ³digo de ocorrÃªncia "01" (nÃ£o deve conter letras)', () => {
+    test('deve extrair código de ocorrência "01" (não deve conter letras)', () => {
       const detailLine = lines.find(line => line[0] === '1')
 
       if (detailLine) {

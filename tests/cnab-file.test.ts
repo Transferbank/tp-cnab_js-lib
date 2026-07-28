@@ -12,10 +12,11 @@ import {
 } from '../src'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('openCnab', () => {
-  describe('ValidaÃ§Ã£o de entrada', () => {
-    test('deve lanÃ§ar erro para arquivo vazio', () => {
+  describe('Validação de entrada', () => {
+    test('deve lançar erro para arquivo vazio', () => {
       expect(() => openCnab('')).toThrow('Arquivo CNAB vazio')
       
       // Verificar tipo da exception
@@ -27,11 +28,11 @@ describe('openCnab', () => {
       }
     })
 
-    test('deve lanÃ§ar erro para arquivo sÃ³ com espaÃ§os', () => {
-      expect(() => openCnab('   \n   \n   ')).toThrow(/Arquivo CNAB vazio|Formato CNAB nÃ£o reconhecido/)
+    test('deve lançar erro para arquivo só com espaços', () => {
+      expect(() => openCnab('   \n   \n   ')).toThrow(/Arquivo CNAB vazio|Formato CNAB não reconhecido/)
     })
 
-    test('deve lanÃ§ar erro para arquivo sÃ³ com linhas vazias', () => {
+    test('deve lançar erro para arquivo só com linhas vazias', () => {
       expect(() => openCnab('\n\n\n')).toThrow('Arquivo CNAB vazio')
       
       // Verificar tipo da exception
@@ -43,9 +44,9 @@ describe('openCnab', () => {
       }
     })
 
-    test('deve lanÃ§ar erro para formato nÃ£o reconhecido', () => {
+    test('deve lançar erro para formato não reconhecido', () => {
       const invalidFile = 'X'.repeat(300) // 300 caracteres - nem 240 nem 400
-      expect(() => openCnab(invalidFile)).toThrow(/Formato CNAB nÃ£o reconhecido/)
+      expect(() => openCnab(invalidFile)).toThrow(/Formato CNAB não reconhecido/)
       expect(() => openCnab(invalidFile)).toThrow(/300 caracteres/)
       
       // Verificar tipo da exception e campo lineLength
@@ -58,10 +59,10 @@ describe('openCnab', () => {
       }
     })
 
-    test('deve lanÃ§ar erro quando cÃ³digo do banco nÃ£o Ã© encontrado', () => {
-      // CNAB 400 com cÃ³digo do banco vazio nas posiÃ§Ãµes 77-79
+    test('deve lançar erro quando código do banco não é encontrado', () => {
+      // CNAB 400 com código do banco vazio nas posições 77-79
       const line = 'X'.repeat(76) + '   ' + 'X'.repeat(321) // Total 400 chars
-      expect(() => openCnab(line)).toThrow(/CÃ³digo do banco nÃ£o encontrado/)
+      expect(() => openCnab(line)).toThrow(/Código do banco não encontrado/)
       
       // Verificar tipo da exception e campo format
       try {
@@ -69,19 +70,19 @@ describe('openCnab', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(CNABBankNotFoundError)
         expect((error as CNABBankNotFoundError).code).toBe('BANK_NOT_FOUND')
-        expect((error as CNABBankNotFoundError).format).toBe('cnab400')
+        expect((error as CNABBankNotFoundError).format).toBe(CNABFormatCode.CNAB400)
       }
     })
   })
 
-  describe('DetecÃ§Ã£o de formato e banco - CNAB 400', () => {
+  describe('Detecção de formato e banco - CNAB 400', () => {
     test('deve detectar CNAB 400 do Bradesco', () => {
       const fixturePath = join(__dirname, 'fixtures/cnab400/bradesco/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
 
       const cnabFile = openCnab(fileContent)
 
-      expect(cnabFile.type).toBe('cnab400')
+      expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('237')
       expect(cnabFile.bankName).toBe('Bradesco')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
@@ -93,21 +94,21 @@ describe('openCnab', () => {
 
       const cnabFile = openCnab(fileContent)
 
-      expect(cnabFile.type).toBe('cnab400')
+      expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('001')
       expect(cnabFile.bankName).toBe('Banco do Brasil')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
     })
 
-    test('deve detectar CNAB 400 do ItaÃº', () => {
+    test('deve detectar CNAB 400 do Itaú', () => {
       const fixturePath = join(__dirname, 'fixtures/cnab400/itau/ITAU_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
 
       const cnabFile = openCnab(fileContent)
 
-      expect(cnabFile.type).toBe('cnab400')
+      expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('341')
-      expect(cnabFile.bankName).toBe('ItaÃº')
+      expect(cnabFile.bankName).toBe('Itaú')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
     })
 
@@ -117,7 +118,7 @@ describe('openCnab', () => {
 
       const cnabFile = openCnab(fileContent)
 
-      expect(cnabFile.type).toBe('cnab400')
+      expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('033')
       expect(cnabFile.bankName).toBe('Santander')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
@@ -129,21 +130,21 @@ describe('openCnab', () => {
 
       const cnabFile = openCnab(fileContent)
 
-      expect(cnabFile.type).toBe('cnab400')
+      expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('748')
       expect(cnabFile.bankName).toBe('Sicredi')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
     })
   })
 
-  describe('DetecÃ§Ã£o de formato e banco - CNAB 240', () => {
+  describe('Detecção de formato e banco - CNAB 240', () => {
     test('deve detectar CNAB 240 do Bradesco', () => {
       const fixturePath = join(__dirname, 'fixtures/cnab240/bradesco/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
 
       const cnabFile = openCnab(fileContent)
 
-      expect(cnabFile.type).toBe('cnab240')
+      expect(cnabFile.type).toBe(CNABFormatCode.CNAB240)
       expect(cnabFile.bankCode).toBe('237')
       expect(cnabFile.bankName).toBe('Bradesco')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
@@ -157,7 +158,7 @@ describe('openCnab', () => {
 
       const cnabFile = openCnab(fileContent)
 
-      // Contar manualmente as linhas nÃ£o-vazias
+      // Contar manualmente as linhas não-vazias
       const manualCount = fileContent.split(/\r?\n/).filter(l => l.length > 0).length
 
       expect(cnabFile.lineCount).toBe(manualCount)
@@ -169,7 +170,7 @@ describe('openCnab', () => {
       const detail = '1'.padEnd(400, ' ')
       const trailer = '9'.padEnd(400, ' ')
 
-      // Adicionar cÃ³digo do banco no header (posiÃ§Ãµes 77-79)
+      // Adicionar código do banco no header (posições 77-79)
       const headerWithBank = header.substring(0, 76) + '237' + header.substring(79)
 
       const fileWithEmptyLines = headerWithBank + '\n\n' + detail + '\n' + trailer + '\n\n'
@@ -180,12 +181,12 @@ describe('openCnab', () => {
     })
   })
 
-  describe('Banco nÃ£o cadastrado', () => {
-    test('deve lanÃ§ar erro para banco nÃ£o cadastrado', () => {
-      // CNAB 400 com cÃ³digo de banco nÃ£o cadastrado (999)
+  describe('Banco não cadastrado', () => {
+    test('deve lançar erro para banco não cadastrado', () => {
+      // CNAB 400 com código de banco não cadastrado (999)
       const header = '0'.repeat(76) + '999' + '0'.repeat(321)
 
-      expect(() => openCnab(header)).toThrow(/nÃ£o possui schema cadastrado/)
+      expect(() => openCnab(header)).toThrow(/não possui schema cadastrado/)
       expect(() => openCnab(header)).toThrow(/Banco 999/)
       
       // Verificar tipo da exception e campos bankCode e format
@@ -195,12 +196,12 @@ describe('openCnab', () => {
         expect(error).toBeInstanceOf(CNABSchemaNotFoundError)
         expect((error as CNABSchemaNotFoundError).code).toBe('SCHEMA_NOT_FOUND')
         expect((error as CNABSchemaNotFoundError).bankCode).toBe('999')
-        expect((error as CNABSchemaNotFoundError).format).toBe('cnab400')
+        expect((error as CNABSchemaNotFoundError).format).toBe(CNABFormatCode.CNAB400)
       }
     })
   })
 
-  describe('Propriedades e mÃ©todos do CNABFile', () => {
+  describe('Propriedades e métodos do CNABFile', () => {
     let cnabFile: CNABFile
 
     beforeAll(() => {
@@ -212,9 +213,9 @@ describe('openCnab', () => {
     test('deve ter propriedade type readonly', () => {
       expect(cnabFile.type).toBeDefined()
       
-      // TypeScript impede modificaÃ§Ã£o em tempo de compilaÃ§Ã£o
-      // Em runtime, podemos verificar que o tipo estÃ¡ correto
-      expect(cnabFile.type).toBe('cnab400')
+      // TypeScript impede modificação em tempo de compilação
+      // Em runtime, podemos verificar que o tipo está correto
+      expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(typeof cnabFile.type).toBe('string')
     })
 
@@ -235,19 +236,19 @@ describe('openCnab', () => {
       expect(typeof cnabFile.lineCount).toBe('number')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
       
-      // TypeScript impede modificaÃ§Ã£o em tempo de compilaÃ§Ã£o
+      // TypeScript impede modificação em tempo de compilação
     })
 
-    test('deve ter mÃ©todo toString()', () => {
+    test('deve ter método toString()', () => {
       const str = cnabFile.toString()
 
       expect(str).toContain('CNABFile')
-      expect(str).toContain('400') // Verifica se contÃ©m '400' (formato)
+      expect(str).toContain('400') // Verifica se contém '400' (formato)
       expect(str).toContain('Bradesco')
       expect(str).toContain('237')
     })
 
-    test('deve ter mÃ©todo getLines() retornando array readonly', () => {
+    test('deve ter método getLines() retornando array readonly', () => {
       const lines = cnabFile.getLines()
 
       expect(Array.isArray(lines)).toBe(true)
@@ -282,7 +283,7 @@ describe('openCnab', () => {
 })
 
 describe('CNABFile.validate()', () => {
-  describe('ValidaÃ§Ã£o bÃ¡sica', () => {
+  describe('Validação básica', () => {
     test('deve validar arquivo CNAB 400 do Bradesco sem erros estruturais', () => {
       const fixturePath = join(__dirname, 'fixtures/cnab400/bradesco/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
@@ -292,8 +293,8 @@ describe('CNABFile.validate()', () => {
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Bradesco')
-      // Fixture Ã© um arquivo real com datas de vencimento fixas, que naturalmente ficam
-      // "vencidas" com o passar do tempo â€” isso nÃ£o Ã© um erro estrutural do arquivo.
+      // Fixture é um arquivo real com datas de vencimento fixas, que naturalmente ficam
+      // "vencidas" com o passar do tempo — isso não é um erro estrutural do arquivo.
       const nonDateErrors = result.feedback.lines.filter(e => e.column !== 'Data de vencimento')
       expect(nonDateErrors).toHaveLength(0)
     })
@@ -320,13 +321,13 @@ describe('CNABFile.validate()', () => {
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Banco do Brasil')
-      // Fixture Ã© um arquivo real com datas de vencimento fixas, que naturalmente ficam
-      // "vencidas" com o passar do tempo â€” isso nÃ£o Ã© um erro estrutural do arquivo.
+      // Fixture é um arquivo real com datas de vencimento fixas, que naturalmente ficam
+      // "vencidas" com o passar do tempo — isso não é um erro estrutural do arquivo.
       const nonDateErrors = result.feedback.lines.filter(e => e.column !== 'Data de vencimento')
       expect(nonDateErrors).toHaveLength(0)
     })
 
-    test('deve validar arquivo CNAB 400 do ItaÃº sem erros estruturais', () => {
+    test('deve validar arquivo CNAB 400 do Itaú sem erros estruturais', () => {
       const fixturePath = join(__dirname, 'fixtures/cnab400/itau/ITAU_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
@@ -334,9 +335,9 @@ describe('CNABFile.validate()', () => {
       const result = cnabFile.validate()
 
       expect(result.feedback.type).toBe('CNAB 400')
-      expect(result.feedback.bank).toBe('ItaÃº')
-      // Fixture Ã© um arquivo real com datas de vencimento fixas, que naturalmente ficam
-      // "vencidas" com o passar do tempo â€” isso nÃ£o Ã© um erro estrutural do arquivo.
+      expect(result.feedback.bank).toBe('Itaú')
+      // Fixture é um arquivo real com datas de vencimento fixas, que naturalmente ficam
+      // "vencidas" com o passar do tempo — isso não é um erro estrutural do arquivo.
       const nonDateErrors = result.feedback.lines.filter(e => e.column !== 'Data de vencimento')
       expect(nonDateErrors).toHaveLength(0)
     })
@@ -350,8 +351,8 @@ describe('CNABFile.validate()', () => {
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Santander')
-      // Fixture Ã© um arquivo real com datas de vencimento fixas, que naturalmente ficam
-      // "vencidas" com o passar do tempo â€” isso nÃ£o Ã© um erro estrutural do arquivo.
+      // Fixture é um arquivo real com datas de vencimento fixas, que naturalmente ficam
+      // "vencidas" com o passar do tempo — isso não é um erro estrutural do arquivo.
       const nonDateErrors = result.feedback.lines.filter(e => e.column !== 'Data de vencimento')
       expect(nonDateErrors).toHaveLength(0)
     })
@@ -365,14 +366,14 @@ describe('CNABFile.validate()', () => {
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Sicredi')
-      // Fixture Ã© um arquivo real com datas de vencimento fixas, que naturalmente ficam
-      // "vencidas" com o passar do tempo â€” isso nÃ£o Ã© um erro estrutural do arquivo.
+      // Fixture é um arquivo real com datas de vencimento fixas, que naturalmente ficam
+      // "vencidas" com o passar do tempo — isso não é um erro estrutural do arquivo.
       const nonDateErrors = result.feedback.lines.filter(e => e.column !== 'Data de vencimento')
       expect(nonDateErrors).toHaveLength(0)
     })
   })
 
-  describe('DetecÃ§Ã£o de erros', () => {
+  describe('Detecção de erros', () => {
     test('deve detectar erro de tamanho de linha em CNAB 400', () => {
       // Criar arquivo com linha de tamanho incorreto
       const header = '0'.repeat(76) + '237' + '0'.repeat(321) // 400 chars - correto
@@ -391,8 +392,8 @@ describe('CNABFile.validate()', () => {
       expect(result.feedback.lines[0]).toHaveProperty('message')
     })
 
-    test('deve detectar erro de campo obrigatÃ³rio vazio em CNAB 400', () => {
-      // CNAB 400 com tipo de registro invÃ¡lido (campo obrigatÃ³rio com padrÃ£o fixo)
+    test('deve detectar erro de campo obrigatório vazio em CNAB 400', () => {
+      // CNAB 400 com tipo de registro inválido (campo obrigatório com padrão fixo)
       const header = '0'.repeat(76) + '237' + '0'.repeat(321)
       const invalidDetail = ' '.repeat(400) // Linha toda em branco - tipo de registro vazio
       const trailer = '9'.repeat(400)
@@ -465,8 +466,8 @@ describe('CNABFile.validate()', () => {
     })
   })
 
-  describe('OpÃ§Ãµes de validaÃ§Ã£o', () => {
-    test('deve funcionar sem opÃ§Ãµes (modo padrÃ£o)', () => {
+  describe('Opções de validação', () => {
+    test('deve funcionar sem opções (modo padrão)', () => {
       const fixturePath = join(__dirname, 'fixtures/cnab400/bradesco/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
@@ -482,20 +483,20 @@ describe('CNABFile.validate()', () => {
       expect(() => cnabFile.validate({ withFeedback: false })).not.toThrow()
     })
 
-    test('deve lanÃ§ar erro para withFeedback: true (nÃ£o implementado)', () => {
+    test('deve lançar erro para withFeedback: true (não implementado)', () => {
       const fixturePath = join(__dirname, 'fixtures/cnab400/bradesco/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
       expect(() => cnabFile.validate({ withFeedback: true }))
-        .toThrow('validate({ withFeedback: true }) ainda nÃ£o implementado')
+        .toThrow('validate({ withFeedback: true }) ainda não implementado')
     })
   })
 
-  describe('ConsistÃªncia com validateCnabFile', () => {
-    test('validate() e validateCnabFile() concordam sobre validade em arquivo estruturalmente sÃ£o', () => {
-      // Este teste usa uma fixture conhecidamente limpa em estrutura E negÃ³cio,
-      // onde nÃ£o hÃ¡ nada para a validaÃ§Ã£o estrutural adicionar â€” ambas as camadas
+  describe('Consistência com validateCnabFile', () => {
+    test('validate() e validateCnabFile() concordam sobre validade em arquivo estruturalmente são', () => {
+      // Este teste usa uma fixture conhecidamente limpa em estrutura E negócio,
+      // onde não há nada para a validação estrutural adicionar — ambas as camadas
       // concordam no resultado final.
       const { validateCnabFile } = require('../src')
       
@@ -509,12 +510,12 @@ describe('CNABFile.validate()', () => {
       // Ambos devem concordar sobre a validade do arquivo
       expect(resultNew.isValid).toBe(resultOld.valid)
       
-      // Em arquivo estruturalmente sÃ£o, validate() pode ter contagem igual ou maior
+      // Em arquivo estruturalmente são, validate() pode ter contagem igual ou maior
       // (detecta mais categorias de erro), mas nunca menor
       expect(resultNew.feedback.lines.length).toBeGreaterThanOrEqual(resultOld.errors.length)
     })
 
-    test('validate() e validateCnabFile() concordam que arquivo invÃ¡lido Ã© invÃ¡lido', () => {
+    test('validate() e validateCnabFile() concordam que arquivo inválido é inválido', () => {
       const { validateCnabFile } = require('../src')
       
       // Arquivo com erro conhecido (tamanho incorreto)
@@ -527,7 +528,7 @@ describe('CNABFile.validate()', () => {
       const resultNew = cnabFile.validate()
       const resultOld = validateCnabFile(fileContent)
 
-      // Ambos devem concordar que o arquivo Ã© invÃ¡lido
+      // Ambos devem concordar que o arquivo é inválido
       expect(resultNew.isValid).toBe(false)
       expect(resultOld.valid).toBe(false)
       
@@ -537,9 +538,9 @@ describe('CNABFile.validate()', () => {
     })
   })
 
-  describe('ValidaÃ§Ã£o estrutural integrada', () => {
+  describe('Validação estrutural integrada', () => {
     test('deve detectar erro puramente estrutural em CNAB 400 (header no meio do arquivo)', () => {
-      // Problema estrutural que o validador de negÃ³cio nunca detectaria sozinho
+      // Problema estrutural que o validador de negócio nunca detectaria sozinho
       const header = '0'.repeat(76) + '237' + '0'.repeat(321)
       const detail = '1'.padEnd(400, '0')
       const headerInMiddle = '0'.repeat(76) + '237' + '0'.repeat(321) // Header no meio - ERRO ESTRUTURAL
@@ -553,17 +554,17 @@ describe('CNABFile.validate()', () => {
       // Deve detectar o erro estrutural
       expect(result.isValid).toBe(false)
       const structuralErrors = result.feedback.lines.filter(e => 
-        e.column === 'Header' || e.message.includes('Header')
+        e.field === 'Header' || e.message.includes('Header')
       )
       expect(structuralErrors.length).toBeGreaterThan(0)
     })
 
     test('deve detectar erro puramente estrutural em CNAB 240 (segmento P sem Q correspondente)', () => {
       // Problema estrutural: Segmento P sem Q seguinte (par incompleto)
-      // A mensagem real gerada Ã© "Trailer de Lote com Segmento P pendente (sem Segmento Q correspondente)"
-      // na coluna "Trailer de Lote" â€” nÃ£o um erro genÃ©rico de "arquivo sem detalhe".
+      // A mensagem real gerada é "Trailer de Lote com Segmento P pendente (sem Segmento Q correspondente)"
+      // na coluna "Trailer de Lote" — não um erro genérico de "arquivo sem detalhe".
       // 
-      // CÃ³digo do banco '237' (Bradesco) nas posiÃ§Ãµes 1-3
+      // Código do banco '237' (Bradesco) nas posições 1-3
       const headerArquivo = '237' + ' '.repeat(4) + '0' + ' '.repeat(232) // Tipo 0 - Header de arquivo
       const headerLote = '237' + ' '.repeat(4) + '1' + ' '.repeat(232) // Tipo 1 - Header de lote
       const segP2OrfaoSemQ = '237' + ' '.repeat(4) + '3' + ' '.repeat(5) + 'P' + 
@@ -571,7 +572,7 @@ describe('CNABFile.validate()', () => {
       const trailerLote = '237' + ' '.repeat(4) + '5' + ' '.repeat(232) // Tipo 5 - Trailer de lote
       const trailerArquivo = '237' + ' '.repeat(4) + '9' + ' '.repeat(232) // Tipo 9 - Trailer de arquivo
 
-      // Arquivo sÃ³ com P, sem Q algum - deve gerar erro estrutural
+      // Arquivo só com P, sem Q algum - deve gerar erro estrutural
       const fileOnlyP = [headerArquivo, headerLote, segP2OrfaoSemQ, trailerLote, trailerArquivo].join('\n')
       const cnabFileOnlyP = openCnab(fileOnlyP)
       const resultOnlyP = cnabFileOnlyP.validate()
@@ -579,8 +580,8 @@ describe('CNABFile.validate()', () => {
       // Deve detectar erro estrutural: P pendente sem Q
       expect(resultOnlyP.isValid).toBe(false)
       const structuralErrors = resultOnlyP.feedback.lines.filter(e =>
-        e.column === 'Detalhe' ||
-        e.column === 'Trailer de Lote' ||
+        e.field === 'Detalhe' ||
+        e.field === 'Trailer de Lote' ||
         e.message.includes('par') ||
         e.message.includes('P+Q') ||
         e.message.includes('pendente')
@@ -589,16 +590,16 @@ describe('CNABFile.validate()', () => {
     })
 
     test('deve validar linhas boas mesmo quando uma linha tem erro estrutural', () => {
-      // Uma linha ruim no meio nÃ£o deve impedir validaÃ§Ã£o das demais
+      // Uma linha ruim no meio não deve impedir validação das demais
       const header = '0'.repeat(76) + '237' + '0'.repeat(321)
       
-      // Detalhe com CPF invÃ¡lido (erro de negÃ³cio)
-      const detailBadCPF = '1' + '12345678900' + '0'.repeat(388) // CPF invÃ¡lido na posiÃ§Ã£o esperada
+      // Detalhe com CPF inválido (erro de negócio)
+      const detailBadCPF = '1' + '12345678900' + '0'.repeat(388) // CPF inválido na posição esperada
       
       // Linha com tamanho errado (erro estrutural)
       const detailBadSize = '1'.repeat(350)
       
-      // Detalhe com nome muito curto (erro de negÃ³cio)
+      // Detalhe com nome muito curto (erro de negócio)
       const detailBadName = '1'.padEnd(400, '0') // Nome vazio/muito curto
       
       const trailer = '9'.repeat(400)
@@ -608,21 +609,21 @@ describe('CNABFile.validate()', () => {
 
       const result = cnabFile.validate()
 
-      // Deve ter mÃºltiplos erros (estrutural + negÃ³cio)
+      // Deve ter múltiplos erros (estrutural + negócio)
       expect(result.isValid).toBe(false)
       expect(result.feedback.lines.length).toBeGreaterThan(1)
       
       // Deve ter erro estrutural (tamanho)
-      const sizeErrors = result.feedback.lines.filter(e => e.column === 'Tamanho do registro')
+      const sizeErrors = result.feedback.lines.filter(e => e.field === 'Tamanho do registro')
       expect(sizeErrors.length).toBeGreaterThan(0)
       
-      // Linha com tamanho errado nÃ£o deve impedir validaÃ§Ã£o de negÃ³cio das demais linhas
-      // (nÃ£o vamos testar CPF/nome aqui porque o validador de negÃ³cio CNAB 400 nÃ£o valida
-      // campos de detail - ele sÃ³ existe no CNAB 240)
+      // Linha com tamanho errado não deve impedir validação de negócio das demais linhas
+      // (não vamos testar CPF/nome aqui porque o validador de negócio CNAB 400 não valida
+      // campos de detail - ele só existe no CNAB 240)
     })
 
     test('deve dedupinar erros quando ambas as camadas reportam mesma (linha, coluna)', () => {
-      // Criar cenÃ¡rio onde estrutural e negÃ³cio reportam o mesmo erro
+      // Criar cenário onde estrutural e negócio reportam o mesmo erro
       const header = '0'.repeat(76) + '237' + '0'.repeat(321)
       const detail = '1'.padEnd(400, '0')
       // Trailer com tipo ERRADO - ambos validadores detectam isso
@@ -635,26 +636,26 @@ describe('CNABFile.validate()', () => {
 
       // Deve ter erro de trailer
       const trailerErrors = result.feedback.lines.filter(e => 
-        e.line === 3 && (e.column === 'Trailer' || e.column === 'Trailer de Arquivo')
+        e.line === 3 && (e.field === 'Trailer' || e.field === 'Trailer de Arquivo')
       )
       
-      // Deve haver exatamente 1 erro de trailer (nÃ£o duplicado)
+      // Deve haver exatamente 1 erro de trailer (não duplicado)
       // Nota: pode haver outros erros na linha 3, mas de outras colunas
       expect(trailerErrors.length).toBe(1)
     })
 
-    test('deve combinar erros estruturais e de negÃ³cio em CNAB 240', () => {
-      // CÃ³digo do banco '237' (Bradesco) nas posiÃ§Ãµes 1-3
+    test('deve combinar erros estruturais e de negócio em CNAB 240', () => {
+      // Código do banco '237' (Bradesco) nas posições 1-3
       const headerArquivo = '237' + ' '.repeat(4) + '0' + ' '.repeat(232)
       const headerLote = '237' + ' '.repeat(4) + '1' + ' '.repeat(232)
       
-      // Segmento P vÃ¡lido
+      // Segmento P válido
       const segP = '237' + ' '.repeat(4) + '3' + ' '.repeat(5) + 'P' + 
                    ' '.repeat(63) + '31122099' + '000000000050000' + ' '.repeat(140)
       
-      // Segmento Q com documento invÃ¡lido (erro de negÃ³cio)
+      // Segmento Q com documento inválido (erro de negócio)
       const segQBadDoc = '237' + ' '.repeat(4) + '3' + ' '.repeat(5) + 'Q' +
-                         ' '.repeat(4) + '000000000000000' + // CPF zerado - invÃ¡lido
+                         ' '.repeat(4) + '000000000000000' + // CPF zerado - inválido
                          'JOAO DA SILVA                           ' +
                          'RUA EXEMPLO                             ' +
                          ' '.repeat(127)
@@ -667,16 +668,16 @@ describe('CNABFile.validate()', () => {
 
       const result = cnabFile.validate()
 
-      // Deve ter erro de negÃ³cio (CPF invÃ¡lido)
+      // Deve ter erro de negócio (CPF inválido)
       expect(result.isValid).toBe(false)
-      const businessErrors = result.feedback.lines.filter(e => e.column === 'CPF/CNPJ')
+      const businessErrors = result.feedback.lines.filter(e => e.field === 'CPF/CNPJ')
       expect(businessErrors.length).toBeGreaterThan(0)
     })
   })
 })
 
 
-describe('CNABFile.read() e readAsync() â€” modo FULL', () => {
+describe('CNABFile.read() e readAsync() — modo FULL', () => {
   const fixturePath = join(__dirname, 'fixtures/cnab400/bradesco/remessa-multipla.txt')
   const fileContent = readFileSync(fixturePath, 'latin1')
 
@@ -690,13 +691,13 @@ describe('CNABFile.read() e readAsync() â€” modo FULL', () => {
 
     expect(fullKeys.length).toBeGreaterThan(simpleKeys.length)
 
-    // Campo do schema do Bradesco que nÃ£o tem canonical mapeado
+    // Campo do schema do Bradesco que não tem canonical mapeado
     // (confirmado em src/banks/bradesco/schemas/cnab400/detail.ts)
     expect(full.bills[0]).toHaveProperty('carteira_codigo')
     expect(simple.bills[0]).not.toHaveProperty('carteira_codigo')
   })
 
-  test('header e trailer continuam canÃ´nicos em modo FULL (decisÃ£o de escopo)', () => {
+  test('header e trailer continuam canônicos em modo FULL (decisão de escopo)', () => {
     const cnabFile = openCnab(fileContent)
     const simple = cnabFile.read()
     const full = cnabFile.read({ mode: 'FULL' })
@@ -705,7 +706,7 @@ describe('CNABFile.read() e readAsync() â€” modo FULL', () => {
     expect(full.trailer).toEqual(simple.trailer)
   })
 
-  test('readAsync FULL produz resultado idÃªntico a read FULL', async () => {
+  test('readAsync FULL produz resultado idêntico a read FULL', async () => {
     const cnabFile = openCnab(fileContent)
     const sync = cnabFile.read({ mode: 'FULL' })
     const async = await cnabFile.readAsync({ mode: 'FULL' })
@@ -713,29 +714,29 @@ describe('CNABFile.read() e readAsync() â€” modo FULL', () => {
     expect(async).toEqual(sync)
   })
 
-  test('read() sem options Ã© equivalente a read({ mode: "SIMPLE" })', () => {
+  test('read() sem options é equivalente a read({ mode: "SIMPLE" })', () => {
     const cnabFile = openCnab(fileContent)
     expect(cnabFile.read()).toEqual(cnabFile.read({ mode: 'SIMPLE' }))
   })
 
-  test('LIMITAÃ‡ÃƒO CONHECIDA v1: campos identificadores numÃ©ricos perdem zero Ã  esquerda em modo FULL', () => {
+  test('LIMITAÇÃO CONHECIDA v1: campos identificadores numéricos perdem zero à esquerda em modo FULL', () => {
     const cnabFile = openCnab(fileContent)
     const full = cnabFile.read({ mode: 'FULL' })
 
-    // sacado_numero_inscricao sai como number (nÃ£o string) â€” zero Ã  esquerda
+    // sacado_numero_inscricao sai como number (não string) — zero à esquerda
     // seria perdido se o documento real tivesse. Ver extract-full.ts para o
-    // gap documentado; nÃ£o "consertar" isso aqui sem atualizar aquele comentÃ¡rio
-    // e o critÃ©rio de aceite do modo FULL v1.
+    // gap documentado; não "consertar" isso aqui sem atualizar aquele comentário
+    // e o critério de aceite do modo FULL v1.
     expect(typeof full.bills[0].sacado_numero_inscricao).toBe('number')
   })
 })
 
 
-describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
+describe('CNABFile.read() e readAsync() — modo lazy: true', () => {
   const fixturePath = join(__dirname, 'fixtures/cnab400/bradesco/remessa-multipla.txt')
   const fileContent = readFileSync(fixturePath, 'latin1')
 
-  test('lazy: true nÃ£o chama extractBill atÃ© resolve() ser chamado', () => {
+  test('lazy: true não chama extractBill até resolve() ser chamado', () => {
     const cnabFile = openCnab(fileContent)
     const result = cnabFile.read({ lazy: true })
 
@@ -810,20 +811,20 @@ describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
     expect(asyncResolved).toEqual(syncResolved)
   })
 
-  test('LazyBillItem.startLine aponta para linha fÃ­sica correta', () => {
+  test('LazyBillItem.startLine aponta para linha física correta', () => {
     const cnabFile = openCnab(fileContent)
     const lazy = cnabFile.read({ lazy: true })
 
-    // Primeiro boleto deve comeÃ§ar na linha 2 (apÃ³s o header na linha 1)
+    // Primeiro boleto deve começar na linha 2 (após o header na linha 1)
     expect(lazy.bills[0].startLine).toBeGreaterThan(0)
     
-    // startLine deve ser crescente (cada boleto comeÃ§a depois do anterior)
+    // startLine deve ser crescente (cada boleto começa depois do anterior)
     if (lazy.bills.length > 1) {
       expect(lazy.bills[1].startLine).toBeGreaterThan(lazy.bills[0].startLine)
     }
   })
 
-  test('chamar resolve() mÃºltiplas vezes reprocessa (sem cache)', async () => {
+  test('chamar resolve() múltiplas vezes reprocessa (sem cache)', async () => {
     const cnabFile = openCnab(fileContent)
     const lazy = cnabFile.read({ lazy: true })
 
@@ -833,7 +834,7 @@ describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
     // Ambas as chamadas devem produzir resultado equivalente
     expect(secondCall).toEqual(firstCall)
     
-    // Confirmar que sÃ£o instÃ¢ncias diferentes (nÃ£o cacheadas)
+    // Confirmar que são instâncias diferentes (não cacheadas)
     expect(secondCall).not.toBe(firstCall)
   })
 
@@ -869,7 +870,7 @@ describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
       
       try {
         await lazy.bills[0].resolve()
-        fail('Deveria ter lanÃ§ado CNABLazyResolveError')
+        fail('Deveria ter lançado CNABLazyResolveError')
       } catch (error: any) {
         expect(error.name).toBe('CNABLazyResolveError')
         expect(error.code).toBe('LAZY_RESOLVE_FAILED')
@@ -914,7 +915,7 @@ describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
       
       try {
         await lazy.bills[0].resolve()
-        fail('Deveria ter lanÃ§ado CNABLazyResolveError')
+        fail('Deveria ter lançado CNABLazyResolveError')
       } catch (error: any) {
         expect(error.name).toBe('CNABLazyResolveError')
         expect(error.code).toBe('LAZY_RESOLVE_FAILED')
@@ -959,7 +960,7 @@ describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
       
       try {
         await lazy.bills[0].resolve()
-        fail('Deveria ter lanÃ§ado CNABLazyResolveError')
+        fail('Deveria ter lançado CNABLazyResolveError')
       } catch (error: any) {
         expect(error.name).toBe('CNABLazyResolveError')
         expect(error.code).toBe('LAZY_RESOLVE_FAILED')
@@ -1004,7 +1005,7 @@ describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
       
       try {
         await lazy.bills[0].resolve()
-        fail('Deveria ter lanÃ§ado CNABLazyResolveError')
+        fail('Deveria ter lançado CNABLazyResolveError')
       } catch (error: any) {
         expect(error.name).toBe('CNABLazyResolveError')
         expect(error.code).toBe('LAZY_RESOLVE_FAILED')
@@ -1018,15 +1019,15 @@ describe('CNABFile.read() e readAsync() â€” modo lazy: true', () => {
   })
 })
 
-describe('CNABFile.read() e readAsync() â€” modo lazy nÃ£o embrulha CNABError', () => {
-  test('CNABError nÃ£o Ã© embrulhado em CNABLazyResolveError em read({ lazy: true })', async () => {
+describe('CNABFile.read() e readAsync() — modo lazy não embrulha CNABError', () => {
+  test('CNABError não é embrulhado em CNABLazyResolveError em read({ lazy: true })', async () => {
     const { CNABUnknownFieldCodeError } = require('../src')
     const mockCNABError = new CNABUnknownFieldCodeError('juros.tipo', 7)
     const catalog = require('../src/provider/catalog')
     const originalGetProvider = catalog.getProvider
 
     try {
-      // Mock extractBill para lanÃ§ar CNABUnknownFieldCodeError
+      // Mock extractBill para lançar CNABUnknownFieldCodeError
       catalog.getProvider = jest.fn((bankCode: string, format: string, mode: string) => {
         const original = originalGetProvider(bankCode, format, mode)
         return {
@@ -1043,14 +1044,14 @@ describe('CNABFile.read() e readAsync() â€” modo lazy nÃ£o embrulha CNABError', 
 
       const lazy = cnabFile.read({ lazy: true })
 
-      // resolve() deve rejeitar com a MESMA instÃ¢ncia de CNABUnknownFieldCodeError, sem embrulho
-      await expect(lazy.bills[0].resolve()).rejects.toThrow('CÃ³digo nÃ£o reconhecido para o campo "juros.tipo": 7')
+      // resolve() deve rejeitar com a MESMA instância de CNABUnknownFieldCodeError, sem embrulho
+      await expect(lazy.bills[0].resolve()).rejects.toThrow('Código não reconhecido para o campo "juros.tipo": 7')
 
       try {
         await lazy.bills[0].resolve()
-        fail('Deveria ter lanÃ§ado CNABUnknownFieldCodeError')
+        fail('Deveria ter lançado CNABUnknownFieldCodeError')
       } catch (error: any) {
-        // Deve ser a mesma instÃ¢ncia, nÃ£o embrulhada
+        // Deve ser a mesma instância, não embrulhada
         expect(error).toBe(mockCNABError)
         expect(error.name).toBe('CNABUnknownFieldCodeError')
         expect(error.code).toBe('UNKNOWN_FIELD_CODE')
@@ -1062,14 +1063,14 @@ describe('CNABFile.read() e readAsync() â€” modo lazy nÃ£o embrulha CNABError', 
     }
   })
 
-  test('CNABError nÃ£o Ã© embrulhado em CNABLazyResolveError em readAsync({ lazy: true })', async () => {
+  test('CNABError não é embrulhado em CNABLazyResolveError em readAsync({ lazy: true })', async () => {
     const { CNABUnknownFieldCodeError } = require('../src')
     const mockCNABError = new CNABUnknownFieldCodeError('multa.tipo', 9)
     const catalog = require('../src/provider/catalog')
     const originalGetProvider = catalog.getProvider
 
     try {
-      // Mock extractBill para lanÃ§ar CNABUnknownFieldCodeError
+      // Mock extractBill para lançar CNABUnknownFieldCodeError
       catalog.getProvider = jest.fn((bankCode: string, format: string, mode: string) => {
         const original = originalGetProvider(bankCode, format, mode)
         return {
@@ -1086,14 +1087,14 @@ describe('CNABFile.read() e readAsync() â€” modo lazy nÃ£o embrulha CNABError', 
 
       const lazy = await cnabFile.readAsync({ lazy: true })
 
-      // resolve() deve rejeitar com a MESMA instÃ¢ncia de CNABUnknownFieldCodeError, sem embrulho
-      await expect(lazy.bills[0].resolve()).rejects.toThrow('CÃ³digo nÃ£o reconhecido para o campo "multa.tipo": 9')
+      // resolve() deve rejeitar com a MESMA instância de CNABUnknownFieldCodeError, sem embrulho
+      await expect(lazy.bills[0].resolve()).rejects.toThrow('Código não reconhecido para o campo "multa.tipo": 9')
 
       try {
         await lazy.bills[0].resolve()
-        fail('Deveria ter lanÃ§ado CNABUnknownFieldCodeError')
+        fail('Deveria ter lançado CNABUnknownFieldCodeError')
       } catch (error: any) {
-        // Deve ser a mesma instÃ¢ncia, nÃ£o embrulhada
+        // Deve ser a mesma instância, não embrulhada
         expect(error).toBe(mockCNABError)
         expect(error.name).toBe('CNABUnknownFieldCodeError')
         expect(error.code).toBe('UNKNOWN_FIELD_CODE')
@@ -1105,13 +1106,13 @@ describe('CNABFile.read() e readAsync() â€” modo lazy nÃ£o embrulha CNABError', 
     }
   })
 
-  test('Erro genÃ©rico (nÃ£o-CNABError) continua sendo embrulhado em CNABLazyResolveError', async () => {
+  test('Erro genérico (não-CNABError) continua sendo embrulhado em CNABLazyResolveError', async () => {
     const mockGenericError = new Error('Generic error')
     const catalog = require('../src/provider/catalog')
     const originalGetProvider = catalog.getProvider
 
     try {
-      // Mock extractBill para lanÃ§ar erro genÃ©rico
+      // Mock extractBill para lançar erro genérico
       catalog.getProvider = jest.fn((bankCode: string, format: string, mode: string) => {
         const original = originalGetProvider(bankCode, format, mode)
         return {
@@ -1128,12 +1129,12 @@ describe('CNABFile.read() e readAsync() â€” modo lazy nÃ£o embrulha CNABError', 
 
       const lazy = cnabFile.read({ lazy: true })
 
-      // resolve() deve embrulhar erro genÃ©rico em CNABLazyResolveError
+      // resolve() deve embrulhar erro genérico em CNABLazyResolveError
       await expect(lazy.bills[0].resolve()).rejects.toThrow('Falha ao resolver boleto lazy')
 
       try {
         await lazy.bills[0].resolve()
-        fail('Deveria ter lanÃ§ado CNABLazyResolveError')
+        fail('Deveria ter lançado CNABLazyResolveError')
       } catch (error: any) {
         expect(error.name).toBe('CNABLazyResolveError')
         expect(error.code).toBe('LAZY_RESOLVE_FAILED')

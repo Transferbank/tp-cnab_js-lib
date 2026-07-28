@@ -1,29 +1,30 @@
 /**
- * Testes para extra√ß√£o de campos can√¥nicos.
+ * Testes para extraÁ„o de campos canÙnicos.
  * 
- * FASE 6: Testa se campos mapeados s√£o extra√≠dos corretamente dos schemas.
- * Usa fixtures reais do projeto para garantir que a extra√ß√£o funciona com dados reais.
+ * FASE 6: Testa se campos mapeados s„o extraÌdos corretamente dos schemas.
+ * Usa fixtures reais do projeto para garantir que a extraÁ„o funciona com dados reais.
  * 
  * Cobertura completa:
- * - CNAB 400: Banco do Brasil, Bradesco, Ita√∫, Santander, Sicredi
+ * - CNAB 400: Banco do Brasil, Bradesco, Ita˙, Santander, Sicredi
  * - CNAB 240: Bradesco
- * - Campos obrigat√≥rios: valor, vencimento, numeroDocumento, nossoNumero, sacado.*
+ * - Campos obrigatÛrios: valor, vencimento, numeroDocumento, nossoNumero, sacado.*
  * - Campos opcionais: multa.*, juros.*, desconto.*, abatimento.*, cedente.*
  * - Header e Trailer
- * - Pagina√ß√£o
+ * - PaginaÁ„o
  * - Modo estrito de agrupamento
  */
 
 import * as fs from 'fs'
 import * as path from 'path'
 import { openCnab } from '../../src'
+import { CNABFormatCode } from '@tp-types/index'
 
 function loadFixture(relativePath: string): string {
   const fixturePath = path.join(__dirname, '../fixtures', relativePath)
   return fs.readFileSync(fixturePath, 'latin1')
 }
 
-describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
+describe('ExtraÁ„o de campos canÙnicos - Cobertura completa', () => {
   // ========== CNAB 400 - TODOS OS BANCOS ==========
   
   describe('CNAB 400 - Banco do Brasil', () => {
@@ -62,17 +63,17 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(result.header.dataGeracao).toBeDefined()
     })
     
-    test('deve ter trailer sem totalizadores (BB s√≥ tem campos estruturais)', () => {
+    test('deve ter trailer sem totalizadores (BB sÛ tem campos estruturais)', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
       expect(result.trailer).toBeDefined()
-      // BB n√£o exp√µe quantidadeRegistros/valorTotal no trailer
+      // BB n„o expıe quantidadeRegistros/valorTotal no trailer
       expect(result.trailer.quantidadeRegistros).toBeUndefined()
       expect(result.trailer.valorTotal).toBeUndefined()
     })
     
-    test('deve extrair endere√ßo do sacado', () => {
+    test('deve extrair endereÁo do sacado', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
@@ -110,7 +111,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
     })
   })
   
-  describe('CNAB 400 - Ita√∫', () => {
+  describe('CNAB 400 - Ita˙', () => {
     const fixture = () => loadFixture('cnab400/itau/ITAU_cnab_400.REM')
     
     test('deve extrair campos de ouro dos boletos', () => {
@@ -138,7 +139,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(result.header.dataGeracao).toBeDefined()
     })
     
-    test('deve ter trailer sem totalizadores (Ita√∫ s√≥ tem campos estruturais)', () => {
+    test('deve ter trailer sem totalizadores (Ita˙ sÛ tem campos estruturais)', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
@@ -147,7 +148,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(result.trailer.valorTotal).toBeUndefined()
     })
     
-    test('deve extrair endere√ßo completo do sacado', () => {
+    test('deve extrair endereÁo completo do sacado', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
@@ -200,11 +201,11 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(typeof result.trailer.quantidadeRegistros).toBe('number')
       expect(result.trailer.quantidadeRegistros).toBe(result.bills.length)
       
-      // Santander exp√µe valorTotal no trailer
+      // Santander expıe valorTotal no trailer
       expect(result.trailer.valorTotal).toBeDefined()
     })
     
-    test('deve extrair endere√ßo completo do sacado', () => {
+    test('deve extrair endereÁo completo do sacado', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
@@ -244,14 +245,14 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
-      // Sicredi CNAB 400 n√£o tem cedente.nome no header (s√≥ documento e data)
+      // Sicredi CNAB 400 n„o tem cedente.nome no header (sÛ documento e data)
       expect(result.header.dataGeracao).toBeDefined()
       
-      // Sicredi CNAB 400 √© o √∫nico que exp√µe cedente.documento no header
+      // Sicredi CNAB 400 È o ˙nico que expıe cedente.documento no header
       expect(result.header.cedente.documento).toBeDefined()
     })
     
-    test('deve ter trailer sem totalizadores (Sicredi s√≥ tem campos estruturais)', () => {
+    test('deve ter trailer sem totalizadores (Sicredi sÛ tem campos estruturais)', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
@@ -260,7 +261,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(result.trailer.valorTotal).toBeUndefined()
     })
     
-    test('deve extrair endere√ßo parcial do sacado (Sicredi n√£o tem bairro/cidade/estado)', () => {
+    test('deve extrair endereÁo parcial do sacado (Sicredi n„o tem bairro/cidade/estado)', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
@@ -269,7 +270,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(firstBill.sacado.endereco.logradouro).toBeDefined()
         expect(firstBill.sacado.endereco.cep).toBeDefined()
         
-        // Sicredi n√£o tem bairro/cidade/estado
+        // Sicredi n„o tem bairro/cidade/estado
         expect(firstBill.sacado.endereco.bairro).toBeUndefined()
         expect(firstBill.sacado.endereco.cidade).toBeUndefined()
         expect(firstBill.sacado.endereco.estado).toBeUndefined()
@@ -299,7 +300,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       
       expect(firstBill.dataEmissao).toBeDefined()
       expect(firstBill.numeroDocumento).toBeDefined()
-      expect(firstBill.nossoNumero).toBeUndefined() // Bradesco n√£o exp√µe nosso_numero separado
+      expect(firstBill.nossoNumero).toBeUndefined() // Bradesco n„o expıe nosso_numero separado
     })
     
     test('deve extrair campos do sacado (Segmento Q)', () => {
@@ -328,7 +329,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(result.header.cedente.nome).toBeDefined()
       expect(typeof result.header.cedente.nome).toBe('string')
       
-      // CNAB 240 exp√µe cedente.documento no header
+      // CNAB 240 expıe cedente.documento no header
       expect(result.header.cedente.documento).toBeDefined()
     })
     
@@ -363,7 +364,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         }
       }
       
-      // Multa (Segmento R com interpretar) - pode n√£o existir se fixture n√£o tem segmento R
+      // Multa (Segmento R com interpretar) - pode n„o existir se fixture n„o tem segmento R
       if (firstBill.multa) {
         expect(['valor', 'percentual', 'dispensado']).toContain(firstBill.multa.tipo)
         if (firstBill.multa.tipo !== 'dispensado') {
@@ -376,18 +377,18 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
   
   // ========== TESTES DE INTEGRIDADE ==========
   
-  describe('Integridade - Campos obrigat√≥rios n√£o-nulos', () => {
+  describe('Integridade - Campos obrigatÛrios n„o-nulos', () => {
     const fixtures = [
       { nome: 'Banco do Brasil CNAB 400', path: 'cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM' },
       { nome: 'Bradesco CNAB 400', path: 'cnab400/bradesco/remessa-multipla.txt' },
-      { nome: 'Ita√∫ CNAB 400', path: 'cnab400/itau/ITAU_cnab_400.REM' },
+      { nome: 'Ita˙ CNAB 400', path: 'cnab400/itau/ITAU_cnab_400.REM' },
       { nome: 'Santander CNAB 400', path: 'cnab400/santander/SANTANDER_cnab_400_140.REM' },
       { nome: 'Sicredi CNAB 400', path: 'cnab400/sicredi/SICREDI_cnab_400.CRM' },
       { nome: 'Bradesco CNAB 240', path: 'cnab240/bradesco/remessa-multipla.txt' },
     ]
     
     fixtures.forEach(({ nome, path: fixturePath }) => {
-      test(`${nome}: campos obrigat√≥rios devem ser n√£o-nulos`, () => {
+      test(`${nome}: campos obrigatÛrios devem ser n„o-nulos`, () => {
         const fixture = loadFixture(fixturePath)
         const cnabFile = openCnab(fixture)
         const result = cnabFile.read()
@@ -395,7 +396,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(result.bills.length).toBeGreaterThan(0)
         
         for (const bill of result.bills) {
-          // Campos obrigat√≥rios que devem estar sempre presentes
+          // Campos obrigatÛrios que devem estar sempre presentes
           expect(bill.valor).toBeDefined()
           expect(bill.valor).not.toBeNull()
           expect(typeof bill.valor).toBe('number')
@@ -418,7 +419,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
           expect(typeof bill.sacado?.nome).toBe('string')
         }
         
-        // Header deve ter dataGeracao (cedente.nome n√£o est√° presente em Sicredi)
+        // Header deve ter dataGeracao (cedente.nome n„o est· presente em Sicredi)
         expect(result.header.dataGeracao).toBeDefined()
         if (fixturePath !== 'cnab400/sicredi/SICREDI_cnab_400.CRM') {
           expect(result.header.cedente.nome).toBeDefined()
@@ -428,14 +429,14 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
     })
   })
   
-  // ========== TESTES DE PAGINA√á√ÉO ==========
+  // ========== TESTES DE PAGINA«√O ==========
   
-  describe('Pagina√ß√£o', () => {
-    test('deve retornar apenas boletos da p√°gina solicitada', () => {
+  describe('PaginaÁ„o', () => {
+    test('deve retornar apenas boletos da p·gina solicitada', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
       const cnabFile = openCnab(fixture)
       
-      // L√™ tudo para saber quantos boletos h√°
+      // LÍ tudo para saber quantos boletos h·
       const todos = cnabFile.read()
       const totalBills = todos.bills.length
       
@@ -443,17 +444,17 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         return // Fixture com menos de 2 boletos, pula o teste
       }
       
-      // P√°gina 1: primeiros 2 boletos
+      // P·gina 1: primeiros 2 boletos
       const pagina1 = cnabFile.read({ page: { start: 0, size: 2 } })
       expect(pagina1.bills).toHaveLength(Math.min(2, totalBills))
       
-      // P√°gina 2: pr√≥ximos boletos
+      // P·gina 2: prÛximos boletos
       const pagina2 = cnabFile.read({ page: { start: 2, size: 2 } })
       expect(pagina2.bills.length).toBeLessThanOrEqual(2)
       expect(pagina2.bills.length).toBe(Math.min(2, Math.max(0, totalBills - 2)))
     })
     
-    test('deve retornar header e trailer em todas as p√°ginas', () => {
+    test('deve retornar header e trailer em todas as p·ginas', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
       const cnabFile = openCnab(fixture)
       
@@ -467,7 +468,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       const pagina1 = cnabFile.read({ page: { start: 0, size: 1 } })
       const pagina2 = cnabFile.read({ page: { start: 1, size: 1 } })
       
-      // Header e trailer devem ser os mesmos em todas as p√°ginas
+      // Header e trailer devem ser os mesmos em todas as p·ginas
       expect(pagina1.header).toEqual(pagina2.header)
       expect(pagina1.trailer).toEqual(pagina2.trailer)
     })
@@ -476,10 +477,10 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
   // ========== TESTES DE MODO ESTRITO ==========
   
   describe('Modo estrito - Agrupamento', () => {
-    test('P‚ÜíR‚ÜíQ deve ser rejeitado sem gerar grupo (Bradesco CNAB 240)', () => {
-      // Pela spec FEBRABAN, segmentos opcionais (R/S/Y) s√≥ v√™m DEPOIS de um par P+Q completo,
-      // nunca entre eles. Modo estrito: se R aparece antes de Q, o n√∫cleo P √© abandonado
-      // e o Q subsequente n√£o deve complet√°-lo silenciosamente.
+    test('P?R?Q deve ser rejeitado sem gerar grupo (Bradesco CNAB 240)', () => {
+      // Pela spec FEBRABAN, segmentos opcionais (R/S/Y) sÛ vÍm DEPOIS de um par P+Q completo,
+      // nunca entre eles. Modo estrito: se R aparece antes de Q, o n˙cleo P È abandonado
+      // e o Q subsequente n„o deve complet·-lo silenciosamente.
       
       const header = '23700000         2' + '0'.repeat(222) // 240 chars
       const headerLote = '23700011R01  040' + ' '.repeat(225) // 240 chars
@@ -495,13 +496,13 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       
       const cnabFile = openCnab(fixture)
       
-      // Deve lan√ßar erro (modo estrito no read())
+      // Deve lanÁar erro (modo estrito no read())
       expect(() => cnabFile.read()).toThrow(/Erro de agrupamento/)
       
-      // Verificar que √© CNABGroupingError com campos corretos
+      // Verificar que È CNABGroupingError com campos corretos
       try {
         cnabFile.read()
-        fail('Deveria ter lan√ßado CNABGroupingError')
+        fail('Deveria ter lanÁado CNABGroupingError')
       } catch (error: any) {
         expect(error.name).toBe('CNABGroupingError')
         expect(error.code).toBe('GROUPING_ERROR')
@@ -512,16 +513,16 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       }
     })
     
-    test('P‚ÜíR‚ÜíQ deve gerar 3 erros distintos (teste unit√°rio de agrupamento)', () => {
-      // Teste direto da fun√ß√£o groupLines para verificar os 3 erros esperados:
-      // 1. "Sat√©lite antes do n√∫cleo estar completo" (linha do R)
-      // 2. "N√∫cleo abandonado: interrompido por sat√©lite" (linha do P)
-      // 3. "Esperado registro tipo 'P', encontrado 'Q'" (linha do Q √≥rf√£o)
+    test('P?R?Q deve gerar 3 erros distintos (teste unit·rio de agrupamento)', () => {
+      // Teste direto da funÁ„o groupLines para verificar os 3 erros esperados:
+      // 1. "SatÈlite antes do n˙cleo estar completo" (linha do R)
+      // 2. "N˙cleo abandonado: interrompido por satÈlite" (linha do P)
+      // 3. "Esperado registro tipo 'P', encontrado 'Q'" (linha do Q Ûrf„o)
       
       const { groupLines } = require('../../src/grouping/group-lines')
       const { CNAB240_GROUPING_RULES } = require('../../src/grouping/grouping-rules')
       
-      // Mock de linhas parseadas P‚ÜíR‚ÜíQ com pos[] para getFieldByPosition
+      // Mock de linhas parseadas P?R?Q com pos[] para getFieldByPosition
       const lineP = {
         controle_registro: { value: '3', pos: [8, 8] },
         servico_segmento: { value: 'P', pos: [14, 14] },
@@ -536,37 +537,37 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       }
       
       const rule = CNAB240_GROUPING_RULES['237'] // Bradesco
-      const result = groupLines([lineP, lineR, lineQ], rule, 'CNAB240', 3)
+      const result = groupLines([lineP, lineR, lineQ], rule, CNABFormatCode.CNAB240, 3)
       
-      // Nenhum grupo v√°lido gerado
+      // Nenhum grupo v·lido gerado
       expect(result.groups).toHaveLength(0)
       
-      // Tr√™s erros distintos
+      // TrÍs erros distintos
       expect(result.errors).toHaveLength(3)
       
-      // Erro 1: Sat√©lite antes do n√∫cleo estar completo (linha do R)
+      // Erro 1: SatÈlite antes do n˙cleo estar completo (linha do R)
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           line: 4, // linha 3 (P) + 1
-          column: 'Sat√©lite',
-          message: expect.stringContaining('antes do n√∫cleo estar completo'),
+          column: 'SatÈlite',
+          message: expect.stringContaining('antes do n˙cleo estar completo'),
         })
       )
       
-      // Erro 2: N√∫cleo abandonado (linha do P)
+      // Erro 2: N˙cleo abandonado (linha do P)
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           line: 3,
-          column: 'N√∫cleo',
+          column: 'N˙cleo',
           message: expect.stringContaining('abandonado'),
         })
       )
       
-      // Erro 3: Q √≥rf√£o (esperava P, encontrou Q)
+      // Erro 3: Q Ûrf„o (esperava P, encontrou Q)
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           line: 5, // linha 3 (P) + 2
-          column: 'N√∫cleo',
+          column: 'N˙cleo',
           message: expect.stringMatching(/Esperado.*'P'.*encontrado.*'Q'/),
         })
       )
@@ -598,7 +599,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         const cnabFile = openCnab(loadFixture(fixturePath))
         const result = cnabFile.read()
         
-        // Nem todos os boletos t√™m juros.vigenciaAPartirDe, mas se tiver deve ser string
+        // Nem todos os boletos tÍm juros.vigenciaAPartirDe, mas se tiver deve ser string
         const billsWithInterestDate = result.bills.filter(b => b.juros?.vigenciaAPartirDe !== undefined)
         if (billsWithInterestDate.length > 0) {
           const first = billsWithInterestDate[0]
@@ -612,9 +613,9 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
     })
   })
   
-  // ========== TESTES DE COBERTURA DE ENDERE√áO ==========
+  // ========== TESTES DE COBERTURA DE ENDERE«O ==========
   
-  describe('Cobertura de endere√ßo do sacado', () => {
+  describe('Cobertura de endereÁo do sacado', () => {
     test('BB CNAB 400: deve ter logradouro, bairro, cep, cidade, estado', () => {
       const fixture = loadFixture('cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
       const cnabFile = openCnab(fixture)
@@ -624,7 +625,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       if (firstBill.sacado?.endereco) {
         expect(firstBill.sacado.endereco.logradouro).toBeDefined()
         expect(firstBill.sacado.endereco.cep).toBeDefined()
-        // BB pode ter ou n√£o os campos adicionais dependendo da fixture
+        // BB pode ter ou n„o os campos adicionais dependendo da fixture
       }
     })
     
@@ -638,7 +639,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(firstBill.sacado.endereco.logradouro).toBeDefined()
         expect(firstBill.sacado.endereco.cep).toBeDefined()
         
-        // Sicredi CNAB 400 n√£o tem esses campos
+        // Sicredi CNAB 400 n„o tem esses campos
         expect(firstBill.sacado.endereco.bairro).toBeUndefined()
         expect(firstBill.sacado.endereco.cidade).toBeUndefined()
         expect(firstBill.sacado.endereco.estado).toBeUndefined()
@@ -654,7 +655,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       const cnabFile = openCnab(fixture)
       const result = cnabFile.read()
       
-      // Nem todos os boletos t√™m desconto, mas deve estar mapeado quando presente
+      // Nem todos os boletos tÍm desconto, mas deve estar mapeado quando presente
       const billsWithDiscount = result.bills.filter(b => b.desconto?.valor !== undefined)
       if (billsWithDiscount.length > 0) {
         expect(billsWithDiscount[0].desconto?.valor).toBeDefined()
@@ -667,7 +668,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       const cnabFile = openCnab(fixture)
       const result = cnabFile.read()
       
-      // Nem todos os boletos t√™m abatimento, mas deve estar mapeado quando presente
+      // Nem todos os boletos tÍm abatimento, mas deve estar mapeado quando presente
       const billsWithRebate = result.bills.filter(b => b.abatimento?.valor !== undefined)
       if (billsWithRebate.length > 0) {
         expect(billsWithRebate[0].abatimento?.valor).toBeDefined()
@@ -685,7 +686,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       const result = cnabFile.read()
       
       expect(result.header.cedente.documento).toBeDefined()
-      // Campo deve ser string para preservar zeros √† esquerda (CPF/CNPJ)
+      // Campo deve ser string para preservar zeros ‡ esquerda (CPF/CNPJ)
       expect(typeof result.header.cedente.documento).toBe('string')
     })
     
@@ -697,7 +698,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(result.header.cedente.documento).toBeDefined()
     })
     
-    test('cedente.documento n√£o deve estar presente em outros CNAB 400', () => {
+    test('cedente.documento n„o deve estar presente em outros CNAB 400', () => {
       const fixtures = [
         'cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM',
         'cnab400/bradesco/remessa-multipla.txt',
@@ -709,7 +710,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         const cnabFile = openCnab(loadFixture(fixturePath))
         const result = cnabFile.read()
         
-        // Outros bancos CNAB 400 n√£o exp√µem cedente.documento
+        // Outros bancos CNAB 400 n„o expıem cedente.documento
         expect(result.header.cedente.documento).toBeUndefined()
       })
     })
@@ -757,7 +758,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       }
     })
     
-    test('sacado.nome deve ser string n√£o-vazia', () => {
+    test('sacado.nome deve ser string n„o-vazia', () => {
       const fixture = loadFixture('cnab400/itau/ITAU_cnab_400.REM')
       const cnabFile = openCnab(fixture)
       const result = cnabFile.read()
@@ -775,7 +776,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
   
   describe('Edge cases', () => {
     test('deve lidar com arquivo vazio de boletos graciosamente', () => {
-      // Criar fixture sint√©tico com apenas header e trailer
+      // Criar fixture sintÈtico com apenas header e trailer
       const header = '23700000         2' + '0'.repeat(222)
       const trailer = '23799999' + ' '.repeat(232)
       
@@ -789,14 +790,14 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       expect(result.trailer).toBeDefined()
     })
     
-    test('deve retornar array vazio para p√°gina al√©m do total', () => {
+    test('deve retornar array vazio para p·gina alÈm do total', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
       const cnabFile = openCnab(fixture)
       
       const todos = cnabFile.read()
       const totalBills = todos.bills.length
       
-      // Pedir p√°gina muito al√©m do total
+      // Pedir p·gina muito alÈm do total
       const paginaAlem = cnabFile.read({ page: { start: totalBills + 100, size: 10 } })
       
       expect(paginaAlem.bills).toHaveLength(0)
@@ -812,7 +813,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       const primeiroBoleto = result.bills[0]
       
       // Campos opcionais podem ser undefined
-      // N√£o deve lan√ßar erro ao acess√°-los
+      // N„o deve lanÁar erro ao acess·-los
       expect(() => {
         void primeiroBoleto.multa?.tipo
         void primeiroBoleto.juros?.valor
@@ -827,7 +828,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
     describe('Bradesco CNAB 240 - juros com fixture real', () => {
       const fixture = () => loadFixture('cnab240/bradesco/remessa-multipla.txt')
       
-      test('deve extrair juros.tipo corretamente (c√≥digo 3 = percentual na fixture)', () => {
+      test('deve extrair juros.tipo corretamente (cÛdigo 3 = percentual na fixture)', () => {
         const cnabFile = openCnab(fixture())
         const result = cnabFile.read()
         
@@ -840,7 +841,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(typeof firstBoleto.juros?.tipo).toBe('string')
       })
       
-      test('deve extrair juros.valor quando juros.tipo n√£o √© dispensado', () => {
+      test('deve extrair juros.valor quando juros.tipo n„o È dispensado', () => {
         const cnabFile = openCnab(fixture())
         const result = cnabFile.read()
         
@@ -865,8 +866,8 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       })
     })
     
-    describe('Santander CNAB 240 - juros com fixture sint√©tica', () => {
-      test('deve interpretar c√≥digo 0 como dispensado', () => {
+    describe('Santander CNAB 240 - juros com fixture sintÈtica', () => {
+      test('deve interpretar cÛdigo 0 como dispensado', () => {
         const header = '03300000         2' + '0'.repeat(222)
         const headerLote = '03300011R01  040' + ' '.repeat(225)
         
@@ -907,7 +908,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         }
       })
       
-      test('deve interpretar c√≥digo 1 como valor', () => {
+      test('deve interpretar cÛdigo 1 como valor', () => {
         const header = '03300000         2' + '0'.repeat(222)
         const headerLote = '03300011R01  040' + ' '.repeat(225)
         
@@ -944,7 +945,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(bill.juros?.vigenciaAPartirDe).toMatch(/^(15\/12\/2026|15122026)$/)
       })
       
-      test('deve interpretar c√≥digo 2 como percentual', () => {
+      test('deve interpretar cÛdigo 2 como percentual', () => {
         const header = '03300000         2' + '0'.repeat(222)
         const headerLote = '03300011R01  040' + ' '.repeat(225)
         
@@ -982,8 +983,8 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       })
     })
     
-    describe('Sicredi CNAB 240 - juros com fixture sint√©tica', () => {
-      test('deve interpretar c√≥digo 3 como dispensado (Sicredi usa 3, n√£o 0)', () => {
+    describe('Sicredi CNAB 240 - juros com fixture sintÈtica', () => {
+      test('deve interpretar cÛdigo 3 como dispensado (Sicredi usa 3, n„o 0)', () => {
         const header = '74800000         2' + '0'.repeat(222)
         const headerLote = '74800011R01  040' + ' '.repeat(225)
         
@@ -1018,7 +1019,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(bill.juros?.tipo).toBe('dispensado')
       })
       
-      test('deve interpretar c√≥digo 1 como valor', () => {
+      test('deve interpretar cÛdigo 1 como valor', () => {
         const header = '74800000         2' + '0'.repeat(222)
         const headerLote = '74800011R01  040' + ' '.repeat(225)
         
@@ -1055,7 +1056,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(bill.juros?.vigenciaAPartirDe).toMatch(/^(10\/12\/2026|10122026)$/)
       })
       
-      test('deve interpretar c√≥digo 2 como percentual', () => {
+      test('deve interpretar cÛdigo 2 como percentual', () => {
         const header = '74800000         2' + '0'.repeat(222)
         const headerLote = '74800011R01  040' + ' '.repeat(225)
         
@@ -1093,8 +1094,8 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       })
     })
     
-    describe('Resumo - Diferen√ßas entre bancos CNAB 240', () => {
-      test('c√≥digos de dispensado diferem: Bradesco/Santander=0, Sicredi=3', () => {
+    describe('Resumo - DiferenÁas entre bancos CNAB 240', () => {
+      test('cÛdigos de dispensado diferem: Bradesco/Santander=0, Sicredi=3', () => {
         // Bradesco uses code 0 for waived interest
         const fixtureBradesco = '23700000         2' + '0'.repeat(222) + '\n' +
           '23700011R01  040' + ' '.repeat(225) + '\n' +
@@ -1120,11 +1121,11 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
     })
   })
   
-  // ========== TESTES DE FORMATA√á√ÉO E IDENTIFICADORES ==========
+  // ========== TESTES DE FORMATA«√O E IDENTIFICADORES ==========
   
-  describe('Formata√ß√£o de datas e preserva√ß√£o de identificadores', () => {
-    test('datas devem ser formatadas em DD/MM/AAAA, n√£o cruas', () => {
-      // Teste com m√∫ltiplas fixtures para garantir formata√ß√£o consistente
+  describe('FormataÁ„o de datas e preservaÁ„o de identificadores', () => {
+    test('datas devem ser formatadas em DD/MM/AAAA, n„o cruas', () => {
+      // Teste com m˙ltiplas fixtures para garantir formataÁ„o consistente
       const fixtures = [
         { name: 'Banco do Brasil', path: 'cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM' },
         { name: 'Santander', path: 'cnab400/santander/SANTANDER_cnab_400_140.REM' },
@@ -1138,12 +1139,12 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         if (result.bills.length > 0) {
           const bill = result.bills[0]
           
-          // Vencimento deve estar formatado DD/MM/AAAA, n√£o no formato cru DDMMAA
+          // Vencimento deve estar formatado DD/MM/AAAA, n„o no formato cru DDMMAA
           expect(bill.vencimento).toBeDefined()
           expect(bill.vencimento).toMatch(/^\d{2}\/\d{2}\/\d{4}$/)
-          expect(bill.vencimento).not.toMatch(/^\d{6}$/) // N√£o deve ser DDMMAA cru
+          expect(bill.vencimento).not.toMatch(/^\d{6}$/) // N„o deve ser DDMMAA cru
           
-          // DataGeracao no header tamb√©m
+          // DataGeracao no header tambÈm
           if (result.header.dataGeracao) {
             expect(result.header.dataGeracao).toMatch(/^\d{2}\/\d{2}\/\d{4}$/)
           }
@@ -1151,8 +1152,8 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       })
     })
     
-    test('datas zeradas devem retornar undefined, n√£o "00000000"', () => {
-      // Criar fixture sint√©tica com data zerada em multa
+    test('datas zeradas devem retornar undefined, n„o "00000000"', () => {
+      // Criar fixture sintÈtica com data zerada em multa
       const header = '23700000         2' + '0'.repeat(222)
       const headerLote = '23700011R01  040' + ' '.repeat(225)
       const segP = '237' + '0001' + '3' + '00001' + 'P' + ' ' + '01' + ' '.repeat(100) + '2' + '26072026' + '000000000100000' + ' '.repeat(99)
@@ -1168,12 +1169,12 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       
       // Multa com data zerada deve ter vigenciaAPartirDe === undefined
       expect(result.bills[0].multa?.vigenciaAPartirDe).toBeUndefined()
-      // N√£o deve ser a string literal "00000000"
+      // N„o deve ser a string literal "00000000"
       expect(result.bills[0].multa?.vigenciaAPartirDe).not.toBe('00000000')
     })
     
-    test('nossoNumero deve preservar precis√£o (string, n√£o number)', () => {
-      // BB tem casos com 17 d√≠gitos que excedem Number.MAX_SAFE_INTEGER
+    test('nossoNumero deve preservar precis„o (string, n„o number)', () => {
+      // BB tem casos com 17 dÌgitos que excedem Number.MAX_SAFE_INTEGER
       const fixture = loadFixture('cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
       const cnabFile = openCnab(fixture)
       const result = cnabFile.read()
@@ -1181,23 +1182,23 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       if (result.bills.length > 0) {
         const bill = result.bills[0]
         
-        // nossoNumero deve ser string para preservar precis√£o
+        // nossoNumero deve ser string para preservar precis„o
         expect(typeof bill.nossoNumero).toBe('string')
         
-        // Se tiver mais de 16 d√≠gitos, Number n√£o seria seguro
+        // Se tiver mais de 16 dÌgitos, Number n„o seria seguro
         if (bill.nossoNumero && bill.nossoNumero.length > 16) {
           const asNumber = Number(bill.nossoNumero)
-          // Verificar que se fosse number, perderia precis√£o
+          // Verificar que se fosse number, perderia precis„o
           expect(Number.isSafeInteger(asNumber)).toBe(false)
         }
       }
     })
     
-    test('CEP deve preservar formato quando poss√≠vel', () => {
+    test('CEP deve preservar formato quando possÌvel', () => {
       // CEP no CNAB pode vir em diferentes formatos dependendo do banco
-      // Alguns bancos dividem em prefixo+sufixo (num√©ricos), outros como texto completo
+      // Alguns bancos dividem em prefixo+sufixo (numÈricos), outros como texto completo
       
-      // Teste com Santander que tem CEP como campo √∫nico
+      // Teste com Santander que tem CEP como campo ˙nico
       const fixtureSantander = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
       const cnabFileSantander = openCnab(fixtureSantander)
       const resultSantander = cnabFileSantander.read()
@@ -1207,8 +1208,8 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
         expect(typeof resultSantander.bills[0].sacado.endereco.cep).toBe('string')
       }
       
-      // Nota: Bradesco CNAB 240 divide CEP em duas partes num√©ricas (prefixo 5 d√≠gitos + sufixo 3),
-      // ent√£o pode perder zero √† esquerda no prefixo. Isso √© uma limita√ß√£o do schema atual.
+      // Nota: Bradesco CNAB 240 divide CEP em duas partes numÈricas (prefixo 5 dÌgitos + sufixo 3),
+      // ent„o pode perder zero ‡ esquerda no prefixo. Isso È uma limitaÁ„o do schema atual.
     })
     
     test('numeroDocumento deve ser string para preservar formato', () => {
@@ -1231,31 +1232,31 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       })
     })
     
-    test('documento (CPF/CNPJ) deve remover zeros √† esquerda (consist√™ncia com CNABRecord)', () => {
+    test('documento (CPF/CNPJ) deve remover zeros ‡ esquerda (consistÍncia com CNABRecord)', () => {
       // Sicredi tem cedente.documento no header
       const fixture = loadFixture('cnab400/sicredi/SICREDI_cnab_400.CRM')
       const cnabFile = openCnab(fixture)
       const result = cnabFile.read()
       
-      // Documento deve ser string sem zeros √† esquerda
+      // Documento deve ser string sem zeros ‡ esquerda
       expect(typeof result.header.cedente.documento).toBe('string')
       expect(result.header.cedente.documento).toBeDefined()
       
-      // N√£o deve come√ßar com zero (zeros √† esquerda removidos)
+      // N„o deve comeÁar com zero (zeros ‡ esquerda removidos)
       if (result.header.cedente.documento && result.header.cedente.documento.length > 0) {
         expect(result.header.cedente.documento).not.toMatch(/^0/)
       }
     })
   })
   
-  // ========== TESTES DE REGRESS√ÉO - BUG identifyRecordType ==========
+  // ========== TESTES DE REGRESS√O - BUG identifyRecordType ==========
   
-  describe('CNAB 400 - Caixa (regress√£o: bug identifyRecordType)', () => {
+  describe('CNAB 400 - Caixa (regress„o: bug identifyRecordType)', () => {
     const fixture = () => loadFixture('cnab400/caixa/CAIXA_cnab_400.REM')
     
-    test('deve reconhecer tipo de registro por posi√ß√£o, n√£o por nome de campo', () => {
-      // Bug: Caixa usa "codigo_registro", n√£o "tipo_registro"
-      // identifyRecordType buscava por lista fixa de nomes, n√£o por posi√ß√£o
+    test('deve reconhecer tipo de registro por posiÁ„o, n„o por nome de campo', () => {
+      // Bug: Caixa usa "codigo_registro", n„o "tipo_registro"
+      // identifyRecordType buscava por lista fixa de nomes, n„o por posiÁ„o
       // Resultado: agrupamento falhava silenciosamente, retornando 0 boletos
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
@@ -1285,12 +1286,12 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       
       const firstBill = result.bills[0]
       
-      // Caixa tem juros mapeados com interpret() rec√©m-adicionado
+      // Caixa tem juros mapeados com interpret() recÈm-adicionado
       if (firstBill.juros) {
         if (firstBill.juros.tipo) {
           expect(['valor', 'percentual', 'dispensado']).toContain(firstBill.juros.tipo)
         }
-        // juros.valor tamb√©m foi mapeado
+        // juros.valor tambÈm foi mapeado
         if (firstBill.juros.valor) {
           expect(typeof firstBill.juros.valor).toBe('number')
         }
@@ -1298,12 +1299,12 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
     })
   })
   
-  describe('CNAB 400 - Sicoob (regress√£o: n√£o deve quebrar)', () => {
+  describe('CNAB 400 - Sicoob (regress„o: n„o deve quebrar)', () => {
     const fixture = () => loadFixture('cnab400/sicoob/SICOOB_cnab_400.REM')
     
-    test('deve continuar funcionando ap√≥s corre√ß√£o de identifyRecordType', () => {
-      // Sicoob j√° funcionava (usa "tipo_registro"), mas serve como regress√£o
-      // pra garantir que a corre√ß√£o n√£o quebrou bancos que j√° funcionavam
+    test('deve continuar funcionando apÛs correÁ„o de identifyRecordType', () => {
+      // Sicoob j· funcionava (usa "tipo_registro"), mas serve como regress„o
+      // pra garantir que a correÁ„o n„o quebrou bancos que j· funcionavam
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
 
@@ -1330,7 +1331,7 @@ describe('Extra√ß√£o de campos can√¥nicos - Cobertura completa', () => {
       const cnabFile = openCnab(fixture())
       const result = cnabFile.read()
       
-      // Gap de mapeamento fechado: Sicoob agora exp√µe cedente.nome
+      // Gap de mapeamento fechado: Sicoob agora expıe cedente.nome
       expect(result.header.cedente.nome).toBeDefined()
       expect(typeof result.header.cedente.nome).toBe('string')
     })

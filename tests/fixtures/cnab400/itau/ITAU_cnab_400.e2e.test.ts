@@ -1,10 +1,10 @@
 /**
- * Pipeline pÃºblico de ponta a ponta para ITAU_cnab_400.REM: exercita
- * `validateCnabFile()`, o caminho que um consumidor real da lib usa â€” conteÃºdo
- * bruto do arquivo, sem prÃ©-separar linhas nem escolher schema manualmente
- * (detecÃ§Ã£o de formato/banco incluÃ­da).
+ * Pipeline público de ponta a ponta para ITAU_cnab_400.REM: exercita
+ * `validateCnabFile()`, o caminho que um consumidor real da lib usa — conteúdo
+ * bruto do arquivo, sem pré-separar linhas nem escolher schema manualmente
+ * (detecção de formato/banco incluída).
  *
- * ValidaÃ§Ã£o do conteÃºdo do metadata.json em si fica em `.test.ts`.
+ * Validação do conteúdo do metadata.json em si fica em `.test.ts`.
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
  */
 
@@ -12,8 +12,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { validateCnabFile } from '../../../../src'
 import { loadFixtureMetadata } from '../../../helpers/fixture-metadata'
+import { CNABFormatCode } from '@tp-types/index'
 
-describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: ITAU_cnab_400.REM', () => {
+describe('validateCnabFile — pipeline público de ponta a ponta: ITAU_cnab_400.REM', () => {
   const fixtureDir = path.join(__dirname)
   const txtPath = path.join(fixtureDir, 'ITAU_cnab_400.REM')
   const txtContent = fs.readFileSync(txtPath, 'utf-8')
@@ -22,28 +23,28 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: ITAU_cnab_400
   let result: ReturnType<typeof validateCnabFile>
 
   beforeAll(() => {
-    metadata = loadFixtureMetadata('itau', 'ITAU_cnab_400', 'cnab400')
+    metadata = loadFixtureMetadata('itau', 'ITAU_cnab_400', CNABFormatCode.CNAB400)
     result = validateCnabFile(txtContent)
   })
 
-  test('deve detectar formato CNAB 400 e banco ItaÃº (341)', () => {
+  test('deve detectar formato CNAB 400 e banco Itaú (341)', () => {
     expect(result.format).toBe('CNAB 400')
-    expect(result.bank).toEqual({ code: '341', name: 'ItaÃº' })
+    expect(result.bank).toEqual({ code: '341', name: 'Itaú' })
   })
 
-  test('deve extrair um registro por tÃ­tulo (319)', () => {
+  test('deve extrair um registro por título (319)', () => {
     expect(result.totalRecords).toBe(metadata.totals.recordCount)
     expect(result.totalRecords).toBe(319)
   })
 
-  test('nÃ£o deve ter erros crÃ­ticos de parsing/schema', () => {
-    // Filtra apenas erros crÃ­ticos (nÃ£o avisos de vencimento no passado que sÃ£o regras de negÃ³cio)
+  test('não deve ter erros críticos de parsing/schema', () => {
+    // Filtra apenas erros críticos (não avisos de vencimento no passado que são regras de negócio)
     const errosCriticos = result.errors.filter(
-      (error) => !(error.column === 'Data de vencimento' && error.message.includes('anterior Ã  data atual'))
+      (error) => !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual'))
     )
 
     if (errosCriticos.length > 0) {
-      console.log('Erros crÃ­ticos encontrados:')
+      console.log('Erros críticos encontrados:')
       errosCriticos.forEach((error) => {
         console.log(`  Linha ${error.line}, ${error.column}: ${error.message}`)
       })
@@ -52,7 +53,7 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: ITAU_cnab_400
     expect(errosCriticos).toEqual([])
   })
 
-  test('deve extrair os dados do primeiro tÃ­tulo batendo com os metadados', () => {
+  test('deve extrair os dados do primeiro título batendo com os metadados', () => {
     const primeiro = result.records[0]
     const esperado = metadata.records[0]
 
@@ -62,7 +63,7 @@ describe('validateCnabFile â€” pipeline pÃºblico de ponta a ponta: ITAU_cnab_400
     expect(primeiro.document).toBe(esperado.document)
   })
 
-  test('deve extrair os dados do Ãºltimo tÃ­tulo batendo com os metadados', () => {
+  test('deve extrair os dados do último título batendo com os metadados', () => {
     const ultimo = result.records[result.records.length - 1]
     const esperado = metadata.records[metadata.records.length - 1]
 

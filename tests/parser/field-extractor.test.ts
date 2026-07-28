@@ -1,19 +1,19 @@
 /**
  * Testes do field-extractor
  * 
- * Testa funÃ§Ãµes auxiliares de extraÃ§Ã£o de campos CNAB.
+ * Testa funções auxiliares de extração de campos CNAB.
  */
 
-import { getRecordTypePattern } from '../../src/parser/field-extractor'
-import { RecordSchema } from '../../src/types'
+import { getRecordTypePattern } from '@parser/field-extractor'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 describe('getRecordTypePattern', () => {
-  describe('CNAB 400 (posiÃ§Ã£o 1)', () => {
+  describe('CNAB 400 (posição 1)', () => {
     test('deve encontrar pattern quando campo se chama tipo_registro', () => {
       const schema: RecordSchema = {
         tipo_registro: {
           pos: [1, 1],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 1,
           decimals: 0,
           required: true,
@@ -22,7 +22,7 @@ describe('getRecordTypePattern', () => {
           description: 'Tipo de registro', canonical: null },
         outro_campo: {
           pos: [2, 10],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 9,
           decimals: 0,
           required: false,
@@ -39,16 +39,16 @@ describe('getRecordTypePattern', () => {
       const schema: RecordSchema = {
         codigo_registro: {
           pos: [1, 1],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 1,
           decimals: 0,
           required: true,
           dateFormat: null,
           pattern: '1',
-          description: 'CÃ³digo de registro', canonical: null },
+          description: 'Código de registro', canonical: null },
         outro_campo: {
           pos: [2, 10],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 9,
           decimals: 0,
           required: false,
@@ -61,16 +61,16 @@ describe('getRecordTypePattern', () => {
       expect(result).toBe('1')
     })
 
-    test('deve retornar null quando schema Ã© undefined', () => {
+    test('deve retornar null quando schema é undefined', () => {
       const result = getRecordTypePattern(undefined, 1)
       expect(result).toBeNull()
     })
 
-    test('deve retornar null quando nenhum campo estÃ¡ na posiÃ§Ã£o 1', () => {
+    test('deve retornar null quando nenhum campo está na posição 1', () => {
       const schema: RecordSchema = {
         campo_qualquer: {
           pos: [2, 10],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 9,
           decimals: 0,
           required: false,
@@ -83,11 +83,11 @@ describe('getRecordTypePattern', () => {
       expect(result).toBeNull()
     })
 
-    test('deve retornar null quando campo na posiÃ§Ã£o 1 nÃ£o tem pattern', () => {
+    test('deve retornar null quando campo na posição 1 não tem pattern', () => {
       const schema: RecordSchema = {
         tipo_registro: {
           pos: [1, 1],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 1,
           decimals: 0,
           required: false,
@@ -101,12 +101,12 @@ describe('getRecordTypePattern', () => {
     })
   })
 
-  describe('CNAB 240 (posiÃ§Ã£o 8)', () => {
-    test('deve encontrar pattern quando campo se chama controle_registro (padrÃ£o CNAB 240)', () => {
+  describe('CNAB 240 (posição 8)', () => {
+    test('deve encontrar pattern quando campo se chama controle_registro (padrão CNAB 240)', () => {
       const schema: RecordSchema = {
         outros_campos: {
           pos: [1, 7],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 7,
           decimals: 0,
           required: false,
@@ -115,7 +115,7 @@ describe('getRecordTypePattern', () => {
           description: 'Outros campos', canonical: null },
         controle_registro: {
           pos: [8, 8],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 1,
           decimals: 0,
           required: true,
@@ -132,7 +132,7 @@ describe('getRecordTypePattern', () => {
       const schema: RecordSchema = {
         campo_x: {
           pos: [1, 7],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 7,
           decimals: 0,
           required: false,
@@ -141,24 +141,24 @@ describe('getRecordTypePattern', () => {
           description: 'Campo X', canonical: null },
         nome_customizado: {
           pos: [8, 8],
-          type: 'num',
+          type: FieldType.NUM,
           size: 1,
           decimals: 0,
           required: true,
           dateFormat: null,
           pattern: 3,
-          description: 'Campo com nome customizado na posiÃ§Ã£o 8', canonical: null },
+          description: 'Campo com nome customizado na posição 8', canonical: null },
       }
 
       const result = getRecordTypePattern(schema, 8)
       expect(result).toBe(3)
     })
 
-    test('deve retornar null quando nenhum campo estÃ¡ na posiÃ§Ã£o 8', () => {
+    test('deve retornar null quando nenhum campo está na posição 8', () => {
       const schema: RecordSchema = {
         campo_qualquer: {
           pos: [1, 7],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 7,
           decimals: 0,
           required: false,
@@ -177,7 +177,7 @@ describe('getRecordTypePattern', () => {
       const schema: RecordSchema = {
         tipo: {
           pos: [1, 1],
-          type: 'alfa',
+          type: FieldType.ALFA,
           size: 1,
           decimals: 0,
           required: true,
@@ -194,7 +194,7 @@ describe('getRecordTypePattern', () => {
       const schema: RecordSchema = {
         tipo: {
           pos: [8, 8],
-          type: 'num',
+          type: FieldType.NUM,
           size: 1,
           decimals: 0,
           required: true,

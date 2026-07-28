@@ -3,47 +3,48 @@
  */
 
 import { SANTANDER_CNAB240_FILE_TRAILER } from '../../../../../src/banks/santander/schemas/cnab240'
+import { FieldType } from '@tp-types/index'
 
 describe('Schema Santander CNAB 240 - Trailer de Arquivo', () => {
-  describe('DefiniÃ§Ã£o dos campos - Manual 2023', () => {
-    it('deve ter cÃ³digo do banco na posiÃ§Ã£o 1-3 com padrÃ£o "033"', () => {
+  describe('Definição dos campos - Manual 2023', () => {
+    it('deve ter código do banco na posição 1-3 com padrão "033"', () => {
       expect(SANTANDER_CNAB240_FILE_TRAILER.controle_banco).toMatchObject({
         pos: [1, 3],
         pattern: '033',
       })
     })
 
-    it('deve ter lote "9999" na posiÃ§Ã£o 4-7', () => {
+    it('deve ter lote "9999" na posição 4-7', () => {
       expect(SANTANDER_CNAB240_FILE_TRAILER.controle_lote).toMatchObject({
         pos: [4, 7],
         pattern: '9999',
       })
     })
 
-    it('deve ter tipo de registro "9" (trailer) na posiÃ§Ã£o 8', () => {
+    it('deve ter tipo de registro "9" (trailer) na posição 8', () => {
       expect(SANTANDER_CNAB240_FILE_TRAILER.controle_registro).toMatchObject({
         pos: [8, 8],
         pattern: '9',
       })
     })
 
-    it('deve ter quantidade de lotes na posiÃ§Ã£o 18-23', () => {
+    it('deve ter quantidade de lotes na posição 18-23', () => {
       expect(SANTANDER_CNAB240_FILE_TRAILER.totais_quantidade_lotes).toMatchObject({
         pos: [18, 23],
-        type: 'num',
+        type: FieldType.NUM,
         size: 6,
       })
     })
 
-    it('deve ter quantidade de registros na posiÃ§Ã£o 24-29', () => {
+    it('deve ter quantidade de registros na posição 24-29', () => {
       expect(SANTANDER_CNAB240_FILE_TRAILER.totais_quantidade_registros).toMatchObject({
         pos: [24, 29],
-        type: 'num',
+        type: FieldType.NUM,
         size: 6,
       })
     })
 
-    it('deve ter campo CNAB exclusivo nas posiÃ§Ãµes restantes', () => {
+    it('deve ter campo CNAB exclusivo nas posições restantes', () => {
       // Campo reservado ou CNAB exclusivo cobrindo o resto
       const campos = Object.values(SANTANDER_CNAB240_FILE_TRAILER)
       const temCampoReservado = campos.some(
@@ -59,8 +60,8 @@ describe('Schema Santander CNAB 240 - Trailer de Arquivo', () => {
     })
   })
 
-  describe('ValidaÃ§Ã£o de estrutura', () => {
-    it('todos os campos devem ter posiÃ§Ã£o, tipo e tamanho definidos', () => {
+  describe('Validação de estrutura', () => {
+    it('todos os campos devem ter posição, tipo e tamanho definidos', () => {
       Object.entries(SANTANDER_CNAB240_FILE_TRAILER).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -72,7 +73,7 @@ describe('Schema Santander CNAB 240 - Trailer de Arquivo', () => {
       )
     })
 
-    it('tamanhos declarados devem bater com as posiÃ§Ãµes', () => {
+    it('tamanhos declarados devem bater com as posições', () => {
       Object.entries(SANTANDER_CNAB240_FILE_TRAILER).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           const tamanhoCalculado = fieldDef.pos[1] - fieldDef.pos[0] + 1
@@ -81,7 +82,7 @@ describe('Schema Santander CNAB 240 - Trailer de Arquivo', () => {
       )
     })
 
-    it('nÃ£o deve haver sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    it('não deve haver sobreposição de posições', () => {
       const campos = Object.entries(SANTANDER_CNAB240_FILE_TRAILER).map(
         ([name, def]: [string, any]) => ({
           name,
@@ -99,7 +100,7 @@ describe('Schema Santander CNAB 240 - Trailer de Arquivo', () => {
       }
     })
 
-    it('deve cobrir todas as 240 posiÃ§Ãµes', () => {
+    it('deve cobrir todas as 240 posições', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SANTANDER_CNAB240_FILE_TRAILER).forEach((fieldDef: any) => {

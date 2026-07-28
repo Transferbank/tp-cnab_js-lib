@@ -1,15 +1,16 @@
 /**
- * Valida√ß√£o do conte√∫do de SICREDI_cnab_400.json: forma e valores do metadata.json
- * em si (autoconsist√™ncia + valores "golden" conferidos manualmente contra o .CRM real).
+ * ValidaÁ„o do conte˙do de SICREDI_cnab_400.json: forma e valores do metadata.json
+ * em si (autoconsistÍncia + valores "golden" conferidos manualmente contra o .CRM real).
  *
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
- * Pipeline p√∫blico (`validateCnabFile`) fica em `.e2e.test.ts`.
+ * Pipeline p˙blico (`validateCnabFile`) fica em `.e2e.test.ts`.
  */
 
 import * as fs from 'fs'
 import * as path from 'path'
 import { loadFixtureMetadata } from '../../../helpers/fixture-metadata'
-import { BANK_CODES } from '../../../../src/types'
+import { BANK_CODES } from '@tp-types/index'
+import { CNABFormatCode } from '@tp-types/index'
 
 describe('Metadados: SICREDI_cnab_400.json', () => {
   const fixtureDir = path.join(__dirname)
@@ -20,15 +21,15 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
   let metadata: ReturnType<typeof loadFixtureMetadata>
 
   beforeAll(() => {
-    metadata = loadFixtureMetadata('sicredi', 'SICREDI_cnab_400', 'cnab400')
+    metadata = loadFixtureMetadata('sicredi', 'SICREDI_cnab_400', CNABFormatCode.CNAB400)
   })
 
   describe('Campos principais', () => {
-    test('deve ter descri√ß√£o correta', () => {
+    test('deve ter descriÁ„o correta', () => {
       expect(metadata.description).toContain('Sicredi')
     })
 
-    test('deve ter c√≥digo do banco Sicredi (748)', () => {
+    test('deve ter cÛdigo do banco Sicredi (748)', () => {
       expect(metadata.bankCode).toBe(BANK_CODES.SICREDI)
     })
 
@@ -37,7 +38,7 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
     })
 
     test('deve ser formato CNAB400', () => {
-      expect(metadata.format).toBe('CNAB400')
+      expect(metadata.format).toBe(CNABFormatCode.CNAB400)
     })
   })
 
@@ -60,8 +61,8 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       expect(metadata.structure.trailerLines).toBe(1)
     })
 
-    test('n√£o deve ter registros opcionais neste arquivo', () => {
-      // Esta fixture n√£o tem registros tipo 2/5/6/7/8
+    test('n„o deve ter registros opcionais neste arquivo', () => {
+      // Esta fixture n„o tem registros tipo 2/5/6/7/8
       expect(metadata.structure.messageLines).toBeUndefined()
     })
 
@@ -77,26 +78,26 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       expect(metadata.header).toBeDefined()
     })
 
-    test('deve ter c√≥digo do cliente (5 d√≠gitos)', () => {
-      // Sicredi usa "c√≥digo do cliente" em vez de ag√™ncia+conta separados
+    test('deve ter cÛdigo do cliente (5 dÌgitos)', () => {
+      // Sicredi usa "cÛdigo do cliente" em vez de agÍncia+conta separados
       expect(metadata.header?.codigoCliente).toHaveLength(5)
-      // Valor confirmado no arquivo (fixture com dados fict√≠cios)
+      // Valor confirmado no arquivo (fixture com dados fictÌcios)
       expect(metadata.header?.codigoCliente).toBe('81234')
     })
 
-    test('deve ter n√∫mero de inscri√ß√£o do cedente', () => {
+    test('deve ter n˙mero de inscriÁ„o do cedente', () => {
       expect(metadata.header?.numeroInscricaoCedente).toHaveLength(14)
-      // Valor confirmado no arquivo (fixture com dados fict√≠cios)
+      // Valor confirmado no arquivo (fixture com dados fictÌcios)
       expect(metadata.header?.numeroInscricaoCedente).toBe('50008976697350')
     })
 
-    test('deve ter data de gera√ß√£o formatada', () => {
+    test('deve ter data de geraÁ„o formatada', () => {
       expect(metadata.header?.dataGeracao).toMatch(/\d{2}\/\d{2}\/\d{4}/)
       // Valor confirmado: 27/06/2026
       expect(metadata.header?.dataGeracao).toBe('27/06/2026')
     })
 
-    test('deve ter data de gera√ß√£o raw em formato AAAAMMDD (8 d√≠gitos)', () => {
+    test('deve ter data de geraÁ„o raw em formato AAAAMMDD (8 dÌgitos)', () => {
       expect(metadata.header?.dataGeracaoRaw).toHaveLength(8)
       // Valor confirmado: 20260627 (AAAAMMDD)
       expect(metadata.header?.dataGeracaoRaw).toBe('20260627')
@@ -108,50 +109,50 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       expect(metadata.header?.sequencialRemessa).toBe('0000196')
     })
 
-    test('deve ter vers√£o do sistema', () => {
+    test('deve ter vers„o do sistema', () => {
       // Valor confirmado no arquivo real
       expect(metadata.header?.versaoSistema).toBe('2.00')
     })
 
-    test('deve ser arquivo de remessa (c√≥digo "1")', () => {
+    test('deve ser arquivo de remessa (cÛdigo "1")', () => {
       expect(metadata.header?.tipoArquivo).toBe('1')
     })
   })
 
-  describe('Registros/T√≠tulos', () => {
-    test('deve ter exatamente 43 t√≠tulos', () => {
+  describe('Registros/TÌtulos', () => {
+    test('deve ter exatamente 43 tÌtulos', () => {
       expect(metadata.records.length).toBe(43)
     })
 
-    test('cada t√≠tulo deve ter √≠ndice sequencial', () => {
+    test('cada tÌtulo deve ter Ìndice sequencial', () => {
       metadata.records.forEach((record, idx) => {
         expect(record.index).toBe(idx + 1)
       })
     })
 
-    test('todos os t√≠tulos devem ter nome preenchido', () => {
+    test('todos os tÌtulos devem ter nome preenchido', () => {
       metadata.records.forEach((record) => {
         expect(record.name).toBeTruthy()
         expect(record.name.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os t√≠tulos devem ter documento v√°lido', () => {
+    test('todos os tÌtulos devem ter documento v·lido', () => {
       metadata.records.forEach((record) => {
         expect(record.document).toBeTruthy()
         expect(record.document).toMatch(/^\d+$/)
       })
     })
 
-    test('todos os t√≠tulos devem ter documento raw', () => {
+    test('todos os tÌtulos devem ter documento raw', () => {
       metadata.records.forEach((record) => {
         expect(record.documentRaw).toBeTruthy()
-        expect(record.documentRaw).toMatch(/^\d{14}$/) // 14 d√≠gitos com padding
+        expect(record.documentRaw).toMatch(/^\d{14}$/) // 14 dÌgitos com padding
       })
     })
 
-    test('todos os t√≠tulos devem ter tipo de documento CNPJ', () => {
-      // Esta fixture s√≥ tem CNPJs
+    test('todos os tÌtulos devem ter tipo de documento CNPJ', () => {
+      // Esta fixture sÛ tem CNPJs
       metadata.records.forEach((record) => {
         expect(record.documentType).toBe('CNPJ')
         expect(record.documentTypeCode).toBe('2')
@@ -159,69 +160,69 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       })
     })
 
-    test('todos os t√≠tulos devem ter valor maior que zero', () => {
+    test('todos os tÌtulos devem ter valor maior que zero', () => {
       metadata.records.forEach((record) => {
         expect(record.amount).toBeGreaterThan(0)
       })
     })
 
-    test('todos os t√≠tulos devem ter valor raw com formato num√©rico', () => {
+    test('todos os tÌtulos devem ter valor raw com formato numÈrico', () => {
       metadata.records.forEach((record) => {
         expect(record.amountRaw).toMatch(/^\d+$/)
-        expect(record.amountRaw?.length).toBe(13) // Sicredi: 13 posi√ß√µes com 2 decimais
+        expect(record.amountRaw?.length).toBe(13) // Sicredi: 13 posiÁıes com 2 decimais
       })
     })
 
-    test('todos os t√≠tulos devem ter vencimento no formato DD/MM/YYYY', () => {
+    test('todos os tÌtulos devem ter vencimento no formato DD/MM/YYYY', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDate).toMatch(/\d{2}\/\d{2}\/\d{4}/)
       })
     })
 
-    test('todos os t√≠tulos devem ter vencimento raw com 6 d√≠gitos (DDMMAA)', () => {
+    test('todos os tÌtulos devem ter vencimento raw com 6 dÌgitos (DDMMAA)', () => {
       metadata.records.forEach((record) => {
         expect(record.dueDateRaw).toHaveLength(6)
         expect(record.dueDateRaw).toMatch(/^\d{6}$/)
       })
     })
 
-    test('todos os t√≠tulos devem ter endere√ßo', () => {
+    test('todos os tÌtulos devem ter endereÁo', () => {
       metadata.records.forEach((record) => {
         expect(record.address).toBeDefined()
       })
     })
 
-    test('todos os t√≠tulos devem ter CEP formatado', () => {
+    test('todos os tÌtulos devem ter CEP formatado', () => {
       metadata.records.forEach((record) => {
         if (record.zipCode && record.zipCode.trim().length > 0) {
-          // Pode ter ou n√£o h√≠fen
+          // Pode ter ou n„o hÌfen
           expect(record.zipCode).toMatch(/^\d{5}-?\d{3}$/)
         }
       })
     })
 
-    test('todos os t√≠tulos devem ter nosso n√∫mero', () => {
+    test('todos os tÌtulos devem ter nosso n˙mero', () => {
       metadata.records.forEach((record) => {
         expect(record.nossoNumero).toBeTruthy()
         expect(record.nossoNumero?.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os t√≠tulos devem ter n√∫mero do documento', () => {
+    test('todos os tÌtulos devem ter n˙mero do documento', () => {
       metadata.records.forEach((record) => {
         expect(record.numeroDocumento).toBeTruthy()
         expect(record.numeroDocumento?.length).toBeGreaterThan(0)
       })
     })
 
-    test('todos os t√≠tulos devem ter instru√ß√£o', () => {
+    test('todos os tÌtulos devem ter instruÁ„o', () => {
       metadata.records.forEach((record) => {
         expect(record.instrucao).toBeTruthy()
         expect(record.instrucao).toMatch(/^\d{2}$/)
       })
     })
 
-    test('todos os t√≠tulos devem ter esp√©cie', () => {
+    test('todos os tÌtulos devem ter espÈcie', () => {
       metadata.records.forEach((record) => {
         expect(record.especie).toBeTruthy()
         expect(record.especie).toMatch(/^[A-Z]$/)
@@ -251,19 +252,19 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
     })
   })
 
-  describe('Valida√ß√µes cruzadas', () => {
-    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha tipo 1 por t√≠tulo)', () => {
+  describe('ValidaÁıes cruzadas', () => {
+    test('detailLines deve ser igual ao recordCount (CNAB 400 = 1 linha tipo 1 por tÌtulo)', () => {
       expect(metadata.structure.detailLines).toBe(metadata.totals.recordCount)
     })
 
     test('todos os campos raw devem ter tamanho correto', () => {
       metadata.records.forEach((record) => {
-        // Data de vencimento raw = 6 d√≠gitos (DDMMAA)
+        // Data de vencimento raw = 6 dÌgitos (DDMMAA)
         expect(record.dueDateRaw).toHaveLength(6)
-        // Valor raw = 13 d√≠gitos (Sicredi: posi√ß√µes 127-139)
+        // Valor raw = 13 dÌgitos (Sicredi: posiÁıes 127-139)
         expect(record.amountRaw).toHaveLength(13)
         expect(record.amountRaw).toMatch(/^\d+$/)
-        // Documento raw = 14 d√≠gitos
+        // Documento raw = 14 dÌgitos
         expect(record.documentRaw).toHaveLength(14)
         expect(record.documentRaw).toMatch(/^\d+$/)
       })
@@ -271,7 +272,7 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
 
     test('todos os documentos devem ter tamanho de CNPJ', () => {
       metadata.records.forEach((record) => {
-        // Todos s√£o CNPJs nesta fixture
+        // Todos s„o CNPJs nesta fixture
         expect(record.document.length).toBe(14)
       })
     })
@@ -288,14 +289,14 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       })
     })
 
-    test('todas as instru√ß√µes devem ser "01"', () => {
+    test('todas as instruÁıes devem ser "01"', () => {
       // Valor confirmado no arquivo real
       metadata.records.forEach((record) => {
         expect(record.instrucao).toBe('01')
       })
     })
 
-    test('todas as esp√©cies devem ser "A"', () => {
+    test('todas as espÈcies devem ser "A"', () => {
       // Valor confirmado no arquivo real
       metadata.records.forEach((record) => {
         expect(record.especie).toBe('A')
@@ -304,10 +305,10 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
   })
 
   describe('Amostra de registros', () => {
-    test('primeiros 3 registros devem estar acess√≠veis', () => {
+    test('primeiros 3 registros devem estar acessÌveis', () => {
       expect(metadata.records.length).toBeGreaterThanOrEqual(3)
 
-      // Verificar que os primeiros 3 registros t√™m dados v√°lidos
+      // Verificar que os primeiros 3 registros tÍm dados v·lidos
       const primeiros3 = metadata.records.slice(0, 3)
       primeiros3.forEach((record) => {
         expect(record.name).toBeTruthy()
@@ -323,7 +324,7 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       expect(primeiro.document).toBe('50000997300038')
       expect(primeiro.amount).toBeCloseTo(660.14, 2)
       expect(primeiro.dueDate).toBe('29/03/2026')
-      // Campos nossoNumero, numeroDocumento, instrucao, especie n√£o est√£o no tipo padr√£o
+      // Campos nossoNumero, numeroDocumento, instrucao, especie n„o est„o no tipo padr„o
     })
 
     test('segundo registro: COMERCIAL ALFA LTDA', () => {
@@ -332,7 +333,7 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       expect(segundo.document).toBe('50000997300038')
       expect(segundo.amount).toBeCloseTo(659.93, 2)
       expect(segundo.dueDate).toBe('28/04/2026')
-      // Campos nossoNumero, numeroDocumento n√£o est√£o no tipo padr√£o
+      // Campos nossoNumero, numeroDocumento n„o est„o no tipo padr„o
     })
 
     test('terceiro registro: COMERCIAL ALFA LTDA', () => {
@@ -341,7 +342,7 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       expect(terceiro.document).toBe('50000997300038')
       expect(terceiro.amount).toBeCloseTo(659.93, 2)
       expect(terceiro.dueDate).toBe('28/05/2026')
-      // Campos nossoNumero, numeroDocumento n√£o est√£o no tipo padr√£o
+      // Campos nossoNumero, numeroDocumento n„o est„o no tipo padr„o
     })
 
     test('quarto registro: DISTRIBUIDORA ALFA LTDA', () => {
@@ -350,7 +351,7 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
       expect(quarto.document).toBe('50000998297359')
       expect(quarto.amount).toBeCloseTo(232.47, 2)
       expect(quarto.dueDate).toBe('29/03/2026')
-      // Campos nossoNumero, numeroDocumento n√£o est√£o no tipo padr√£o
+      // Campos nossoNumero, numeroDocumento n„o est„o no tipo padr„o
     })
   })
 })
