@@ -8,15 +8,15 @@
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
-import { BankSchema, BANK_CODES } from '../../../../types'
+import { BankSchema, BANK_CODES } from '@tp-types/index'
 import { SANTANDER_CNAB240_FILE_HEADER } from './header'
 import { SANTANDER_CNAB240_BATCH_HEADER } from './batch-header'
 import { SANTANDER_CNAB240_SEGMENT_P } from './segment-p'
 import { SANTANDER_CNAB240_SEGMENT_Q } from './segment-q'
-import { SANTANDER_CNAB240_SEGMENT_R } from './segment-r'
-import { SANTANDER_CNAB240_SEGMENT_S } from './segment-s'
-import { SANTANDER_CNAB240_SEGMENT_Y03 } from './segment-y03'
-import { SANTANDER_CNAB240_SEGMENT_Y53 } from './segment-y53'
+import { SANTANDER_CNAB240_SEGMENT_R } from './segmentos-opcionais/segment-r'
+import { SANTANDER_CNAB240_SEGMENT_S } from './segmentos-opcionais/segment-s'
+import { SANTANDER_CNAB240_SEGMENT_Y03 } from './segmentos-opcionais/segment-y03'
+import { SANTANDER_CNAB240_SEGMENT_Y53 } from './segmentos-opcionais/segment-y53'
 import { SANTANDER_CNAB240_BATCH_TRAILER } from './batch-trailer'
 import { SANTANDER_CNAB240_FILE_TRAILER } from './trailer'
 
@@ -24,15 +24,15 @@ export { SANTANDER_CNAB240_FILE_HEADER } from './header'
 export { SANTANDER_CNAB240_BATCH_HEADER } from './batch-header'
 export { SANTANDER_CNAB240_SEGMENT_P } from './segment-p'
 export { SANTANDER_CNAB240_SEGMENT_Q } from './segment-q'
-export { SANTANDER_CNAB240_SEGMENT_R } from './segment-r'
+export { SANTANDER_CNAB240_SEGMENT_R } from './segmentos-opcionais/segment-r'
 export {
   SANTANDER_CNAB240_SEGMENT_S,
   SANTANDER_CNAB240_SEGMENT_S_FORM,
   SANTANDER_CNAB240_SEGMENT_S_MESSAGES,
-} from './segment-s'
-export { SANTANDER_CNAB240_SEGMENT_Y03 } from './segment-y03'
-export { SANTANDER_CNAB240_SEGMENT_Y53 } from './segment-y53'
-export { resolveMaxAmount, resolveMinAmount, resolveY53Amount } from './segment-y53-helper'
+} from './segmentos-opcionais/segment-s'
+export { SANTANDER_CNAB240_SEGMENT_Y03 } from './segmentos-opcionais/segment-y03'
+export { SANTANDER_CNAB240_SEGMENT_Y53 } from './segmentos-opcionais/segment-y53'
+export { resolveMaxAmount, resolveMinAmount, resolveY53Amount } from './segmentos-opcionais/segment-y53-helper'
 export { SANTANDER_CNAB240_BATCH_TRAILER } from './batch-trailer'
 export { SANTANDER_CNAB240_FILE_TRAILER } from './trailer'
 

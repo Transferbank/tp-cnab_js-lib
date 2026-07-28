@@ -1,45 +1,41 @@
-/**
- * Santander CNAB 240 - Segmento S (Mensagens/Formulário Especial)
- * 
- * Registro opcional para mensagens de impressão no boleto.
+﻿/**
+ * Santander CNAB 240 - Segmento S (Mensagens/Formul�rio Especial)
+ * Registro opcional para mensagens de impress�o no boleto.
  * Possui duas variantes mutuamente exclusivas identificadas pelo campo pos 18:
- * - Variante 1 (pos 18 = '1'): Formulário Especial
+ * - Variante 1 (pos 18 = '1'): Formul�rio Especial
  * - Variante 2 (pos 18 = '2'): Mensagens fixas (blocos de 40 caracteres)
- * 
  * Segmento S (pos 8 = '3', pos 14 = 'S')
  * 
- * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRANÇA", código H7815, Versão 6, Fevereiro/2023
+ * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRAN�A", c�digo H7815, Vers�o 6, Fevereiro/2023
  */
 
-import { RecordSchema } from '../../../../types'
-
-// ========== SCHEMA BASE (campos comuns posições 1-17) ==========
+import { RecordSchema, FieldType } from '@tp-types/index'
 export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'Código FEBRABAN do Santander',
+    description: 'C�digo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número do lote',
+    description: 'N�mero do lote',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -50,29 +46,29 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
   },
   servico_numero_registro: {
     pos: [9, 13],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do registro no lote',
+    description: 'N�mero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
     pos: [14, 14],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: 'S',
-    description: 'Segmento S = mensagens/formulário',
+    description: 'Segmento S = mensagens/formul�rio',
     canonical: null,
   },
   cnab_exclusivo_1: {
     pos: [15, 15],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -83,45 +79,43 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
   },
   servico_codigo_movimento: {
     pos: [16, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código de movimento Remessa',
+    description: 'C�digo de movimento Remessa',
     canonical: null,
   },
   identificacao_impressao: {
     pos: [18, 18],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identificação da impressão: 1=Formulário Especial, 2=Mensagens fixas',
+    description: 'Identifica��o da impress�o: 1=Formul�rio Especial, 2=Mensagens fixas',
     canonical: null,
   },
 }
-
-// ========== VARIANTE 1 - FORMULÁRIO ESPECIAL (pos 18 = '1') ==========
 export const SANTANDER_CNAB240_SEGMENT_S_FORM: RecordSchema = {
   ...SANTANDER_CNAB240_SEGMENT_S,
   numero_linha: {
     pos: [19, 20],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Número da linha a ser impressa (01 a 22)',
+    description: 'N�mero da linha a ser impressa (01 a 22)',
     canonical: null,
   },
   mensagem_recibo: {
     pos: [21, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -132,7 +126,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_FORM: RecordSchema = {
   },
   mensagem_impressa: {
     pos: [22, 121],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 100,
     decimals: 0,
     required: false,
@@ -143,7 +137,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_FORM: RecordSchema = {
   },
   cnab_exclusivo_2: {
     pos: [122, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 119,
     decimals: 0,
     required: false,
@@ -153,13 +147,11 @@ export const SANTANDER_CNAB240_SEGMENT_S_FORM: RecordSchema = {
     canonical: null,
   },
 }
-
-// ========== VARIANTE 2 - MENSAGENS FIXAS (pos 18 = '2') ==========
 export const SANTANDER_CNAB240_SEGMENT_S_MESSAGES: RecordSchema = {
   ...SANTANDER_CNAB240_SEGMENT_S,
   mensagem_5: {
     pos: [19, 58],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -170,7 +162,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_MESSAGES: RecordSchema = {
   },
   mensagem_6: {
     pos: [59, 98],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -181,7 +173,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_MESSAGES: RecordSchema = {
   },
   mensagem_7: {
     pos: [99, 138],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -192,7 +184,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_MESSAGES: RecordSchema = {
   },
   mensagem_8: {
     pos: [139, 178],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -203,7 +195,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_MESSAGES: RecordSchema = {
   },
   mensagem_9: {
     pos: [179, 218],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -214,7 +206,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_MESSAGES: RecordSchema = {
   },
   cnab_exclusivo_2: {
     pos: [219, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 22,
     decimals: 0,
     required: false,

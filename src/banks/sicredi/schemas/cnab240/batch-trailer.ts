@@ -1,47 +1,41 @@
-/**
- * Schema do Trailer de Lote - Sicredi CNAB 240
- * 
- * Registro de encerramento do lote (tipo 5).
- * 
- * Tipo de registro: 5 (trailer de lote)
- * 
+﻿/* *
+ * Registro de encerramento do lote (tipo 5). *
  * IMPORTANTE: Diferente do Santander, o Sicredi usa a estrutura rica de
- * totalizadores mesmo em remessa (não simplifica). Os campos de totalização
- * são preenchidos com zeros na remessa e usados apenas no retorno.
- * 
+ * totalizadores mesmo em remessa (n�o simplifica). Os campos de totaliza��o
+ * s�o preenchidos com zeros na remessa e usados apenas no retorno.
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, versão 29 (seção 8 - Arquivo de Remessa)
- * - Layout CNAB 240 versão 081
+ * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 vers�o 081
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'Código FEBRABAN do Sicredi',
+    description: 'C�digo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número do lote',
+    description: 'N�mero do lote',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -52,7 +46,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
   },
   cnab_exclusivo_1: {
     pos: [9, 17],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
@@ -63,7 +57,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
   },
   quantidade_registros: {
     pos: [18, 23],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
@@ -74,106 +68,106 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
   },
   totais_quantidade_titulos_simples: {
     pos: [24, 29],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade Títulos Cobrança Simples (usado só no retorno; na remessa 000000)',
+    description: 'Quantidade T�tulos Cobran�a Simples (usado s� no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_simples: {
     pos: [30, 46],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total Títulos Cobrança Simples (usado só no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total T�tulos Cobran�a Simples (usado s� no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   totais_quantidade_titulos_vinculados: {
     pos: [47, 52],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade Títulos Cobrança Vinculada (usado só no retorno; na remessa 000000)',
+    description: 'Quantidade T�tulos Cobran�a Vinculada (usado s� no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_vinculados: {
     pos: [53, 69],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total Cobrança Vinculada (usado só no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total Cobran�a Vinculada (usado s� no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   totais_quantidade_titulos_caucionados: {
     pos: [70, 75],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade Títulos Cobrança Caucionada (usado só no retorno; na remessa 000000)',
+    description: 'Quantidade T�tulos Cobran�a Caucionada (usado s� no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_caucionados: {
     pos: [76, 92],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total Cobrança Caucionada (usado só no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total Cobran�a Caucionada (usado s� no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   totais_quantidade_titulos_descontados: {
     pos: [93, 98],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade Títulos Cobrança Descontada (usado só no retorno; na remessa 000000)',
+    description: 'Quantidade T�tulos Cobran�a Descontada (usado s� no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_descontados: {
     pos: [99, 115],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total Cobrança Descontada (usado só no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total Cobran�a Descontada (usado s� no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   numero_aviso: {
     pos: [116, 123],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 8,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Número do Aviso (não utilizado, sem preenchimento)',
+    description: 'N�mero do Aviso (n�o utilizado, sem preenchimento)',
     canonical: null,
   },
   cnab_exclusivo_2: {
     pos: [124, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 117,
     decimals: 0,
     required: false,

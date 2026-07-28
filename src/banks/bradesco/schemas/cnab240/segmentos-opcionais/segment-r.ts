@@ -1,187 +1,173 @@
-/**
- * Schema do Segmento R - Sicredi CNAB 240
- * 
- * Registro opcional para descontos adicionais (2 e 3) e multa.
- * 
- * IMPORTANTE: A maioria dos campos deste segmento (posições 090-240)
- * é marcada como "não utilizado pelo Sicredi" no manual oficial.
- * Apenas os campos de desconto 2/3 e multa (018-089) são funcionais.
- * 
- * Tipo de registro: 3 (detalhe)
- * Segmento: R
- * 
- * Baseado em:
- * - Manual oficial Sicredi CNAB 240, versão 29 (seção 8 - Arquivo de Remessa)
- * - Layout CNAB 240 versão 081
+﻿/**
+ * Bradesco CNAB 240 - Segmento R
+ * Segmento R (pos 8 = '3', pos 14 = 'R')
+ * Descontos adicionais (2� e 3� descontos), multa, informa��es ao sacado
+ * e dados de d�bito autom�tico em conta corrente.
+ * Este segmento � opcional e aparece quando h� descontos adicionais al�m do primeiro,
+ * multa configurada, ou quando o t�tulo est� vinculado a d�bito autom�tico.
+ * Fonte do layout: pycnab240 + laravel-boleto + manual oficial Bradesco
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
 
-export const SICREDI_CNAB240_SEGMENT_R: RecordSchema = {
-  // ========== CONTROLE (1-17) ==========
+export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
-    pattern: '748',
-    description: 'Código FEBRABAN do Sicredi',
+    pattern: '237',
+    description: 'C�digo FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número do lote',
+    description: 'Lote de servi�o',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '3',
-    description: 'Tipo registro: 3=Detalhe',
+    description: 'Tipo: 3=Detalhe',
     canonical: null,
   },
   servico_numero_registro: {
     pos: [9, 13],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do registro no lote',
+    description: 'N�mero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
     pos: [14, 14],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: 'R',
-    description: 'Segmento R = descontos adicionais e multa',
+    description: 'Segmento R = descontos/multa/d�bito autom�tico',
     canonical: null,
   },
   cnab_exclusivo_1: {
     pos: [15, 15],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
-    pattern: null,
-    description: 'Uso exclusivo CNAB/FEBRABAN',
+    pattern: '',
+    description: 'Uso exclusivo FEBRABAN/CNAB',
     canonical: null,
   },
   servico_codigo_movimento: {
     pos: [16, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código de movimento (variável: 01,02,04,05,06,07,08,09,10,11,12,13,16,17,31,45,75,76)',
+    description: 'C�digo de movimento da remessa',
     canonical: null,
   },
-
-  // ========== DESCONTO 2 (18-41) ==========
   desconto2_codigo: {
     pos: [18, 18],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Código desconto 2: 0=Sem, 1=Valor fixo, 2=Percentual, 3=Antecipação, 7=Cancelamento',
+    description: 'C�digo do segundo desconto: 0=Sem, 1=Valor fixo, 2=Percentual',
     canonical: null,
   },
   desconto2_data: {
     pos: [19, 26],
-    type: 'data',
+    type: FieldType.DATA,
     size: 8,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAAAA',
+    dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data desconto 2 (DDMMAAAA ou zeros)',
+    description: 'Data limite para segundo desconto',
     canonical: null,
   },
   desconto2_valor: {
     pos: [27, 41],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor desconto 2',
+    description: 'Valor ou percentual do segundo desconto',
     canonical: null,
   },
-
-  // ========== DESCONTO 3 (42-65) ==========
   desconto3_codigo: {
     pos: [42, 42],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Código desconto 3: 0=Sem, 1=Valor fixo, 2=Percentual, 3=Antecipação, 7=Cancelamento',
+    description: 'C�digo do terceiro desconto: 0=Sem, 1=Valor fixo, 2=Percentual',
     canonical: null,
   },
   desconto3_data: {
     pos: [43, 50],
-    type: 'data',
+    type: FieldType.DATA,
     size: 8,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAAAA',
+    dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data desconto 3 (DDMMAAAA ou zeros)',
+    description: 'Data limite para terceiro desconto',
     canonical: null,
   },
   desconto3_valor: {
     pos: [51, 65],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor desconto 3',
+    description: 'Valor ou percentual do terceiro desconto',
     canonical: null,
   },
-
-  // ========== MULTA (66-89) ==========
   multa_codigo: {
     pos: [66, 66],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Código da Multa: 1=Valor monetário, 2=Percentual',
+    description: 'C�digo da multa: 0=Isento, 1=Valor fixo, 2=Percentual',
     canonical: {
       field: 'multa.tipo',
       interpret: (value: unknown) => {
         const code = Number(value)
-        // Sicredi doesn't document code for "waived" - implementing only 1 and 2
+        if (code === 0) return 'dispensado'
         if (code === 1) return 'valor'
         if (code === 2) return 'percentual'
         return undefined
@@ -190,169 +176,167 @@ export const SICREDI_CNAB240_SEGMENT_R: RecordSchema = {
   },
   multa_data: {
     pos: [67, 74],
-    type: 'data',
+    type: FieldType.DATA,
     size: 8,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAAAA',
+    dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data da Multa (DDMMAAAA ou zeros)',
+    description: 'Data de in�cio da cobran�a de multa',
     canonical: 'multa.vigenciaAPartirDe',
   },
   multa_valor: {
     pos: [75, 89],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou Percentual da Multa',
+    description: 'Valor ou percentual da multa',
     canonical: 'multa.valor',
   },
-
-  // ========== CAMPOS NÃO UTILIZADOS PELO SICREDI (90-240) ==========
-  cnab_exclusivo_2: {
+  informacao_sacado_1: {
     pos: [90, 99],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Informação ao Pagador (não usado pelo Sicredi)',
+    description: 'Informa��o ao sacado (linha 1)',
     canonical: null,
   },
-  cnab_exclusivo_3: {
+  informacao_sacado_2: {
     pos: [100, 139],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CNAB (não usado pelo Sicredi)',
+    description: 'Informa��o ao sacado (linha 2)',
     canonical: null,
   },
-  cnab_exclusivo_4: {
+  informacao_sacado_3: {
     pos: [140, 179],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CNAB (não usado pelo Sicredi)',
+    description: 'Informa��o ao sacado (linha 3)',
     canonical: null,
   },
-  cnab_exclusivo_5: {
+  cnab_exclusivo_2: {
     pos: [180, 199],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 20,
     decimals: 0,
     required: false,
     dateFormat: null,
-    pattern: null,
-    description: 'CNAB (não usado pelo Sicredi)',
+    pattern: '',
+    description: 'Uso exclusivo FEBRABAN/CNAB',
     canonical: null,
   },
-  debito_ocorrencia_codigo: {
+  debito_automatico_codigo_ocorrencia: {
     pos: [200, 207],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Código Ocorrência Pagador (não usado pelo Sicredi, 00000000)',
+    description: 'C�digo de ocorr�ncia do d�bito autom�tico',
     canonical: null,
   },
-  debito_banco: {
+  debito_automatico_banco: {
     pos: [208, 210],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Banco débito automático (não usado pelo Sicredi, 000)',
+    description: 'Banco para d�bito autom�tico',
     canonical: null,
   },
-  debito_agencia: {
+  debito_automatico_agencia: {
     pos: [211, 215],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Agência débito automático (não usado pelo Sicredi, 00000)',
+    description: 'Ag�ncia para d�bito autom�tico',
     canonical: null,
   },
-  debito_agencia_dv: {
+  debito_automatico_agencia_dv: {
     pos: [216, 216],
-    type: 'num',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV agência débito (não usado pelo Sicredi, 0)',
+    description: 'D�gito verificador da ag�ncia',
     canonical: null,
   },
-  debito_conta: {
+  debito_automatico_conta: {
     pos: [217, 228],
-    type: 'num',
+    type: FieldType.NUM,
     size: 12,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Conta Corrente débito automático (não usado pelo Sicredi, 000000000000)',
+    description: 'Conta corrente para d�bito autom�tico',
     canonical: null,
   },
-  debito_conta_dv: {
+  debito_automatico_conta_dv: {
     pos: [229, 229],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV conta débito (não usado pelo Sicredi)',
+    description: 'D�gito verificador da conta',
     canonical: null,
   },
-  debito_agencia_conta_dv: {
+  debito_automatico_agencia_conta_dv: {
     pos: [230, 230],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV agência/conta débito (não usado pelo Sicredi)',
+    description: 'D�gito verificador da ag�ncia/conta',
     canonical: null,
   },
-  debito_aviso_emissao: {
+  aviso_debito_automatico: {
     pos: [231, 231],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identificação Emissão Aviso Débito (não usado pelo Sicredi, 0)',
+    description: 'Aviso para d�bito autom�tico: 0=N�o, 1=Sim',
     canonical: null,
   },
-  cnab_exclusivo_6: {
+  cnab_exclusivo_3: {
     pos: [232, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
     dateFormat: null,
-    pattern: null,
-    description: 'CNAB (não usado pelo Sicredi)',
+    pattern: '',
+    description: 'Uso exclusivo FEBRABAN/CNAB',
     canonical: null,
   },
 }

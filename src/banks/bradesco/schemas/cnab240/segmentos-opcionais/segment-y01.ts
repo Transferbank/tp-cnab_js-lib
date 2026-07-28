@@ -1,52 +1,48 @@
-/**
+﻿/**
  * Bradesco CNAB 240 - Segmento Y-01
+ * Registro Detalhe - Segmento Y-01 (Benefici�rio Final)
  * 
- * Registro Detalhe - Segmento Y-01 (Beneficiário Final)
- * 
- * Registro opcional (Remessa/Retorno) que traz as informações completas do Beneficiário Final,
- * incluindo endereço completo. Este registro é diferente do Segmento Q, que apenas contém
- * tipo/número/nome do sacador/avalista (que pode ser o beneficiário final).
- * 
- * O Segmento Y-01 é usado quando há necessidade de identificar o beneficiário final da transação
- * com dados completos de endereço, conforme exigências regulatórias ou contratuais.
- * 
+ * Registro opcional (Remessa/Retorno) que traz as informa��es completas do Benefici�rio Final,
+ * incluindo endere�o completo. Este registro � diferente do Segmento Q, que apenas cont�m
+ * tipo/n�mero/nome do sacador/avalista (que pode ser o benefici�rio final).
+ * O Segmento Y-01 � usado quando h� necessidade de identificar o benefici�rio final da transa��o
+ * com dados completos de endere�o, conforme exig�ncias regulat�rias ou contratuais.
  * Estrutura:
  *   - Controle: banco (237), lote, registro tipo 3 (detalhe), segmento 'Y'
- *   - Código de registro opcional: '01' (identifica que é o Y-01)
- *   - Dados do beneficiário final: tipo/número inscrição, nome completo, endereço completo
- * 
- * Fonte: Manual oficial Bradesco CNAB 240, versão 04, dez/2024
- * Seção: "Registro Detalhe - Segmento Y-01"
+ *   - C�digo de registro opcional: '01' (identifica que � o Y-01)
+ *   - Dados do benefici�rio final: tipo/n�mero inscri��o, nome completo, endere�o completo
+ * Fonte: Manual oficial Bradesco CNAB 240, vers�o 04, dez/2024
+ * Se��o: "Registro Detalhe - Segmento Y-01"
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'Código FEBRABAN do Bradesco',
+    description: 'C�digo FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de serviço',
+    description: 'Lote de servi�o',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -57,18 +53,18 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
   },
   servico_numero_registro: {
     pos: [9, 13],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do registro no lote',
+    description: 'N�mero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
     pos: [14, 14],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -79,7 +75,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
   },
   cnab_exclusivo_1: {
     pos: [15, 15],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -90,128 +86,128 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
   },
   servico_codigo_movimento: {
     pos: [16, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código de movimento da remessa',
+    description: 'C�digo de movimento da remessa',
     canonical: null,
   },
   codigo_registro_opcional: {
     pos: [18, 19],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Código do registro opcional: 01=Beneficiário Final',
+    description: 'C�digo do registro opcional: 01=Benefici�rio Final',
     canonical: null,
   },
   beneficiario_final_inscricao_tipo: {
     pos: [20, 20],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscrição: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscri��o: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   beneficiario_final_inscricao_numero: {
     pos: [21, 35],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF ou CNPJ do beneficiário final',
+    description: 'CPF ou CNPJ do benefici�rio final',
     canonical: null,
   },
   beneficiario_final_nome: {
     pos: [36, 75],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do beneficiário final',
+    description: 'Nome do benefici�rio final',
     canonical: null,
   },
   beneficiario_final_endereco: {
     pos: [76, 115],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endereço do beneficiário final',
+    description: 'Endere�o do benefici�rio final',
     canonical: null,
   },
   beneficiario_final_bairro: {
     pos: [116, 130],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Bairro do beneficiário final',
+    description: 'Bairro do benefici�rio final',
     canonical: null,
   },
   beneficiario_final_cep: {
     pos: [131, 135],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (5 dígitos)',
+    description: 'CEP (5 d�gitos)',
     canonical: null,
   },
   beneficiario_final_cep_sufixo: {
     pos: [136, 138],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP sufixo (3 dígitos)',
+    description: 'CEP sufixo (3 d�gitos)',
     canonical: null,
   },
   beneficiario_final_cidade: {
     pos: [139, 153],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Cidade do beneficiário final',
+    description: 'Cidade do benefici�rio final',
     canonical: null,
   },
   beneficiario_final_uf: {
     pos: [154, 155],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'UF do beneficiário final',
+    description: 'UF do benefici�rio final',
     canonical: null,
   },
   cnab_exclusivo_2: {
     pos: [156, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 85,
     decimals: 0,
     required: false,

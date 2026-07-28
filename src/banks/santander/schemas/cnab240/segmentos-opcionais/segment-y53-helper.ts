@@ -13,7 +13,7 @@
  * Baseado em: Manual H7815 v6 (Fevereiro/2023), Nota 48
  */
 
-import { ParsedLine } from '../../../../types'
+import { ParsedLine } from '@tp-types/index'
 
 /**
  * Resolve o valor real de um campo condicional do Segmento Y-53.

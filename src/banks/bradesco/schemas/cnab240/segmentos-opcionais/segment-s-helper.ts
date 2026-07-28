@@ -6,8 +6,9 @@
  * o schema correto para parsing das posições 19-240.
  */
 
-import { RecordSchema, ParsedField } from '../../../../types'
-import { extractLineFields } from '../../../../parser/field-extractor'
+import { RecordSchema, ParsedField } from '@tp-types/index'
+import { extractLineFields } from '@parser/field-extractor'
+import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import {
   BRADESCO_CNAB240_SEGMENT_S_MESSAGE,
   BRADESCO_CNAB240_SEGMENT_S_INFO,
@@ -73,8 +74,8 @@ export function isSegmentS(line: string): boolean {
     return false
   }
 
-  const tipoRegistro = line.charAt(7)
-  const segmento = line.charAt(13)
+  const tipoRegistro = getCnab240RecordType(line)
+  const segmento = getCnab240SegmentCode(line)
 
   return tipoRegistro === '3' && segmento === 'S'
 }
@@ -109,8 +110,8 @@ export function identifySegmentSVariant(line: string): SegmentSVariantInfo {
 
   // Verificar se é realmente um Segmento S usando a função dedicada
   if (!isSegmentS(line)) {
-    const tipoRegistro = line.charAt(7)
-    const segmento = line.charAt(13)
+    const tipoRegistro = getCnab240RecordType(line)
+    const segmento = getCnab240SegmentCode(line)
     
     return {
       tipoImpressao: '',

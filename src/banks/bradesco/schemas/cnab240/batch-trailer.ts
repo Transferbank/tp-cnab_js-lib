@@ -1,44 +1,42 @@
-/**
+﻿/**
  * Bradesco CNAB 240 - Trailer de Lote
- * 
  * Trailer de Lote (pos 8 = '5')
- * Última linha de cada lote dentro do arquivo. Contém totalizadores do lote:
- * quantidade de registros, quantidade e valor total de títulos por tipo de cobrança
+ * �ltima linha de cada lote dentro do arquivo. Cont�m totalizadores do lote:
+ * quantidade de registros, quantidade e valor total de t�tulos por tipo de cobran�a
  * (simples, vinculada, caucionada, descontada).
- * 
  * Fonte do layout:
- * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, versão 04, dez/2024)
+ * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, vers�o 04, dez/2024)
  * - pycnab240 (trailer_lote_cobranca.json)
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'Código FEBRABAN do Bradesco',
+    description: 'C�digo FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do lote (mesmo número do Header de Lote correspondente)',
+    description: 'N�mero sequencial do lote (mesmo n�mero do Header de Lote correspondente)',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -49,7 +47,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
   },
   cnab_exclusivo_1: {
     pos: [9, 17],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
@@ -60,7 +58,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
   },
   quantidade_registros: {
     pos: [18, 23],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
@@ -71,106 +69,106 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
   },
   cobranca_simples_qtde_titulos: {
     pos: [24, 29],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de títulos em cobrança simples',
+    description: 'Quantidade de t�tulos em cobran�a simples',
     canonical: null,
   },
   cobranca_simples_valor_total: {
     pos: [30, 46],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos títulos em cobrança simples (2 decimais implícitas)',
+    description: 'Valor total dos t�tulos em cobran�a simples (2 decimais impl�citas)',
     canonical: null,
   },
   cobranca_vinculada_qtde_titulos: {
     pos: [47, 52],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de títulos em cobrança vinculada',
+    description: 'Quantidade de t�tulos em cobran�a vinculada',
     canonical: null,
   },
   cobranca_vinculada_valor_total: {
     pos: [53, 69],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos títulos em cobrança vinculada (2 decimais implícitas)',
+    description: 'Valor total dos t�tulos em cobran�a vinculada (2 decimais impl�citas)',
     canonical: null,
   },
   cobranca_caucionada_qtde_titulos: {
     pos: [70, 75],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de títulos em cobrança caucionada',
+    description: 'Quantidade de t�tulos em cobran�a caucionada',
     canonical: null,
   },
   cobranca_caucionada_valor_total: {
     pos: [76, 92],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos títulos em cobrança caucionada (2 decimais implícitas)',
+    description: 'Valor total dos t�tulos em cobran�a caucionada (2 decimais impl�citas)',
     canonical: null,
   },
   cobranca_descontada_qtde_titulos: {
     pos: [93, 98],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de títulos em cobrança descontada',
+    description: 'Quantidade de t�tulos em cobran�a descontada',
     canonical: null,
   },
   cobranca_descontada_valor_total: {
     pos: [99, 115],
-    type: 'num',
+    type: FieldType.NUM,
     size: 17,
     decimals: 2,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos títulos em cobrança descontada (2 decimais implícitas)',
+    description: 'Valor total dos t�tulos em cobran�a descontada (2 decimais impl�citas)',
     canonical: null,
   },
   numero_aviso_lancamento: {
     pos: [116, 123],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 8,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Número do aviso de lançamento (informado pelo banco)',
+    description: 'N�mero do aviso de lan�amento (informado pelo banco)',
     canonical: null,
   },
   cnab_exclusivo_2: {
     pos: [124, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 117,
     decimals: 0,
     required: false,

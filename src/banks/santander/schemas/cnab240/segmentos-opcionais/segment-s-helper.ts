@@ -1,17 +1,17 @@
 /**
- * Helper para Segmento S - Sicredi CNAB 240
+ * Helper para Segmento S - Santander CNAB 240
  * 
  * Funções auxiliares para identificar e parsear as variantes do Segmento S:
- * - Variante 1 (Frente/Verso do boleto): tipo_impressao = '1' ou '2'
- * - Variante 2 (Corpo de instruções): tipo_impressao = '3'
+ * - Variante 1 (Formulário Especial): identificacao_impressao = '1'
+ * - Variante 2 (Mensagens fixas): identificacao_impressao = '2'
  */
 
-import { extractLineFields } from '../../../../parser/field-extractor'
-import { ParsedLine } from '../../../../types'
+import { extractLineFields } from '@parser/field-extractor'
+import { ParsedLine } from '@tp-types/index'
 import {
-  SICREDI_CNAB240_SEGMENT_S,
-  SICREDI_CNAB240_SEGMENT_S_FRONT_BACK,
-  SICREDI_CNAB240_SEGMENT_S_BODY_INSTRUCTIONS,
+  SANTANDER_CNAB240_SEGMENT_S,
+  SANTANDER_CNAB240_SEGMENT_S_FORM,
+  SANTANDER_CNAB240_SEGMENT_S_MESSAGES,
 } from './segment-s'
 
 /**
@@ -26,11 +26,11 @@ export function isSegmentS(line: string): boolean {
 
 /**
  * Identifica qual variante do Segmento S pela posição 18
- * @returns 'frente_verso' | 'corpo_instrucoes' | { error: string }
+ * @returns 'formulario' | 'mensagens' | { error: string }
  */
 export function identifySegmentSVariant(
   line: string,
-): 'frente_verso' | 'corpo_instrucoes' | { error: string } {
+): 'formulario' | 'mensagens' | { error: string } {
   if (line.length !== 240) {
     return { error: 'Linha não tem 240 caracteres' }
   }
@@ -43,8 +43,8 @@ export function identifySegmentSVariant(
 
   const printType = line[17] // position 18 (index 17)
 
-  if (printType === '1' || printType === '2') return 'frente_verso'
-  if (printType === '3') return 'corpo_instrucoes'
+  if (printType === '1') return 'formulario'
+  if (printType === '2') return 'mensagens'
 
   return { error: `Tipo de impressão inválido: "${printType}"` }
 }
@@ -57,19 +57,19 @@ export function parseSegmentS(line: string): ParsedLine {
 
   if (typeof variant === 'object' && 'error' in variant) {
     // Retorna campos base com erro
-    const baseFields = extractLineFields(line, SICREDI_CNAB240_SEGMENT_S)
+    const baseFields = extractLineFields(line, SANTANDER_CNAB240_SEGMENT_S)
     return {
       ...baseFields,
       _erro_variante: { raw: '', value: '', error: variant.error, canonical: null },
     }
   }
 
-  if (variant === 'frente_verso') {
-    return extractLineFields(line, SICREDI_CNAB240_SEGMENT_S_FRONT_BACK)
+  if (variant === 'formulario') {
+    return extractLineFields(line, SANTANDER_CNAB240_SEGMENT_S_FORM)
   }
 
-  // variant === 'corpo_instrucoes'
-  return extractLineFields(line, SICREDI_CNAB240_SEGMENT_S_BODY_INSTRUCTIONS)
+  // variant === 'mensagens'
+  return extractLineFields(line, SANTANDER_CNAB240_SEGMENT_S_MESSAGES)
 }
 
 /**
@@ -84,15 +84,15 @@ export function extractSegmentSMessages(line: string): string[] {
   const fields = parseSegmentS(line)
   const messages: string[] = []
 
-  if (variant === 'frente_verso') {
-    // Variante 1: apenas uma mensagem (pos 21-100)
-    const msg = fields.mensagem?.value
+  if (variant === 'formulario') {
+    // Variante 1: apenas uma mensagem (pos 22-121)
+    const msg = fields.mensagem_impressa?.value
     if (msg && typeof msg === 'string' && msg.trim()) {
       messages.push(msg.trim())
     }
   } else {
-    // Variante 2: mensagens 1-3 (pos 21-138)
-    for (let i = 1; i <= 3; i++) {
+    // Variante 2: mensagens 5-9 (pos 19-218)
+    for (let i = 5; i <= 9; i++) {
       const msg = fields[`mensagem_${i}`]?.value
       if (msg && typeof msg === 'string' && msg.trim()) {
         messages.push(msg.trim())
