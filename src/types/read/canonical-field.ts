@@ -34,7 +34,7 @@ export type CanonicalField =
   | 'cedente.nome'
   | 'cedente.documento'
   | 'dataGeracao'
-  // CNABTrailer (sem prefixo, mesmo padrão do header)
+  // CNABTrailer
   | 'quantidadeRegistros'
   | 'quantidadeLotes'
   | 'valorTotal'

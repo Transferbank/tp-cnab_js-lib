@@ -5,10 +5,7 @@
 
 import { CNABInputError } from './base'
 
-/**
- * Código não reconhecido para um campo durante extração canônica.
- * Lançado quando interpret() retorna undefined para um valor não-zero/não-vazio.
- */
+
 export class CNABUnknownFieldCodeError extends CNABInputError {
   readonly code = 'UNKNOWN_FIELD_CODE'
   readonly fieldName: string

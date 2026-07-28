@@ -7,10 +7,7 @@
 import { CNABInternalError } from './base'
 import type { CNABFormatCode } from '../core'
 
-/**
- * Inconsistência entre registries internos da lib.
- * Ex: schema cadastrado mas regra de agrupamento não encontrada.
- */
+
 export class CNABInternalInconsistencyError extends CNABInternalError {
   readonly code = 'INTERNAL_INCONSISTENCY'
   readonly bankCode: string
