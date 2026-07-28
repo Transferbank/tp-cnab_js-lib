@@ -22,6 +22,9 @@ npm-debug.log*
 dist/
 docs/
 
+# Scripts temporários
+scripts/
+
 # Local Kiro configuration
 .kiro/
 
