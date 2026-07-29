@@ -10,28 +10,10 @@
  * - Campos obrigat�rios
  */
 
-import * as fs from 'fs'
-import * as path from 'path'
 import { bradescoCnab400 } from '@banks/bradesco/schemas/cnab400'
 import { extractLineFields } from '@parser/field-extractor'
 import { readFixture } from './shared'
-
-interface FixtureHeader {
-  cedenteNome?: string
-  dataGeracao?: string
-  dataGeracaoRaw?: string
-  tipoArquivo?: string
-}
-
-interface FixtureMetadata {
-  header?: FixtureHeader
-}
-
-function loadLocalMetadata(): FixtureMetadata {
-  const jsonPath = path.join(__dirname, '../../__fixtures__/cnab400/remessa-multipla.json')
-  const jsonContent = fs.readFileSync(jsonPath, 'utf8')
-  return JSON.parse(jsonContent)
-}
+import { loadCnab400Metadata } from '../test-helpers'
 
 describe('Schema Bradesco CNAB 400 - Header de Arquivo', () => {
   describe('Defini��o dos campos', () => {
@@ -232,7 +214,7 @@ describe('Schema Bradesco CNAB 400 - Header de Arquivo', () => {
 
     test('deve extrair nome da empresa (do JSON)', () => {
       const header = extractLineFields(lines[0], bradescoCnab400.header!)
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab400Metadata()
       
       if (metadata.header?.cedenteNome) {
         expect(header.nome_empresa.value).toMatch(new RegExp(metadata.header.cedenteNome))
@@ -242,7 +224,7 @@ describe('Schema Bradesco CNAB 400 - Header de Arquivo', () => {
 
     test('deve extrair data de geração (do JSON)', () => {
       const header = extractLineFields(lines[0], bradescoCnab400.header!)
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab400Metadata()
       
       if (metadata.header?.dataGeracaoRaw) {
         expect(header.data_geracao.raw).toBe(metadata.header.dataGeracaoRaw)

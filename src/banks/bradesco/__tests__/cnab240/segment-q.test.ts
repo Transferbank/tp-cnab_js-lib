@@ -14,39 +14,7 @@
 import { bradescoCnab240 } from '@banks/bradesco/schemas/cnab240'
 import { extractLineFields } from '@parser/field-extractor'
 import { readFixture, findSegmentLines } from './shared'
-import * as fs from 'fs'
-import * as path from 'path'
-
-interface FixtureRecord {
-  index: number
-  name: string
-  document: string
-  documentRaw?: string
-  documentType: string
-  documentTypeCode?: string
-  amount: number
-  amountRaw?: string
-  dueDate: string
-  dueDateRaw?: string
-  address?: string
-  city?: string
-  state?: string
-  zipCode?: string
-}
-
-interface FixtureMetadata {
-  records: FixtureRecord[]
-  totals?: {
-    recordCount: number
-    totalAmount: number
-  }
-}
-
-function loadLocalMetadata(): FixtureMetadata {
-  const jsonPath = path.join(__dirname, '../../__fixtures__/cnab240/remessa-multipla.json')
-  const jsonContent = fs.readFileSync(jsonPath, 'utf8')
-  return JSON.parse(jsonContent)
-}
+import { loadCnab240Metadata, type FixtureRecord } from '../test-helpers'
 
 describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
   describe('Defini��o dos campos', () => {
@@ -198,7 +166,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair tipo de documento do primeiro pagador (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -207,7 +175,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair documento do primeiro pagador (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -218,7 +186,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair nome do primeiro pagador (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -229,7 +197,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair endere�o completo do primeiro pagador (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
       const record = metadata.records[0]
       const segQ = extractLineFields(segQLines[0], bradescoCnab240.segmentoQ!)
 
@@ -242,7 +210,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair nomes de todos os pagadores (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
 
       metadata.records.forEach((expected: FixtureRecord, index: number) => {
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
@@ -253,7 +221,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair documentos completos de todos os pagadores (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
 
       metadata.records.forEach((expected: FixtureRecord, index: number) => {
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
@@ -264,7 +232,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair tipo de documento de todos os pagadores (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
 
       metadata.records.forEach((record: FixtureRecord, index: number) => {
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
@@ -275,7 +243,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve extrair documentos raw de todos os pagadores (do JSON)', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
 
       metadata.records.forEach((record: FixtureRecord, index: number) => {
         if (record.documentRaw) {
@@ -288,7 +256,7 @@ describe('Schema Bradesco CNAB 240 - Segmento Q', () => {
     })
 
     test('deve incluir endere�os em todos os registros parseados', () => {
-      const metadata = loadLocalMetadata()
+      const metadata = loadCnab240Metadata()
 
       metadata.records.forEach((expected: FixtureRecord, index: number) => {
         if (expected.address) {

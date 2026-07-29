@@ -13,40 +13,10 @@
  * 3. Casos pontuais: valores espec�ficos sem evid�ncia independente
  */
 
-import * as fs from 'fs'
-import * as path from 'path'
 import { bradescoCnab400 } from '@banks/bradesco/schemas/cnab400'
 import { extractLineFields } from '@parser/field-extractor'
 import { readFixture, calcularDvNossoNumero, parseReais } from './shared'
-
-interface FixtureRecord {
-  index: number
-  name: string
-  document: string
-  documentRaw?: string
-  documentType: string
-  documentTypeCode?: string
-  amount: number
-  amountRaw?: string
-  dueDate: string
-  dueDateRaw?: string
-  address?: string
-  zipCode?: string
-}
-
-interface FixtureMetadata {
-  records: FixtureRecord[]
-  totals: {
-    recordCount: number
-    totalAmount: number
-  }
-}
-
-function loadLocalMetadata(): FixtureMetadata {
-  const jsonPath = path.join(__dirname, '../../__fixtures__/cnab400/remessa-multipla.json')
-  const jsonContent = fs.readFileSync(jsonPath, 'utf8')
-  return JSON.parse(jsonContent)
-}
+import { loadCnab400Metadata, type FixtureMetadata, type FixtureRecord } from '../test-helpers'
 
 describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
   describe('Verifica��o independente (evid�ncia dentro do pr�prio arquivo real)', () => {
@@ -261,7 +231,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
 
     beforeAll(() => {
       lines = readFixture('remessa-multipla.txt')
-      metadata = loadLocalMetadata()
+      metadata = loadCnab400Metadata()
     })
 
     test('vencimento bate com o snapshot gerado (metadata.json) � regress�o, n�o confirma a posi��o em si', () => {
