@@ -12,7 +12,8 @@ export interface Cnab400StructureResult {
 
 export function validateCnab400Structure(
   lines: string[],
-  bankSchema: BankSchema
+  bankSchema: BankSchema,
+  failFast = false
 ): Cnab400StructureResult {
   const errors: ValidationError[] = []
   let detailCount = 0
@@ -26,14 +27,89 @@ export function validateCnab400Structure(
     return { errors, detailCount }
   }
 
-  // Guard: schemas obrigatórios devem estar definidos
+  const schemaErrors = validateRequiredSchemas(bankSchema)
+  if (schemaErrors.length > 0) {
+    return { errors: schemaErrors, detailCount }
+  }
+
+  // Banco do Brasil usa '7' para detail, outros usam '1'
+  const headerType = String(getRecordTypePattern(bankSchema.header!, 1) ?? '0')
+  const detailType = String(getRecordTypePattern(bankSchema.detail!, 1) ?? '1')
+  const trailerType = String(getRecordTypePattern(bankSchema.trailer!, 1) ?? '9')
+
+  const optionalByIdentifier = new Map(
+    (bankSchema.optionalRecords ?? []).map(r => [r.identifier, r])
+  )
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    const lineNumber = i + 1
+
+    if (line.length !== LINE_LENGTH) {
+      errors.push({
+        line: lineNumber,
+        field: 'Tamanho do registro',
+        message: `Esperado ${LINE_LENGTH} caracteres, encontrado ${line.length}`,
+      })
+      if (failFast) return { errors, detailCount }
+      continue
+    }
+
+    const recordType = getCnab400RecordType(line)
+
+    if (i === 0) {
+      const headerError = validateHeaderPosition(recordType, headerType, lineNumber)
+      if (headerError) {
+        errors.push(headerError)
+        if (failFast) return { errors, detailCount }
+      }
+      continue
+    }
+
+    if (i === lines.length - 1) {
+      const trailerError = validateTrailerPosition(recordType, trailerType, lineNumber)
+      if (trailerError) {
+        errors.push(trailerError)
+        if (failFast) return { errors, detailCount }
+      }
+      continue
+    }
+
+    const lineResult = validateMiddleLine(
+      line,
+      recordType,
+      lineNumber,
+      headerType,
+      detailType,
+      trailerType,
+      optionalByIdentifier
+    )
+
+    if (lineResult.error) {
+      errors.push(lineResult.error)
+      if (failFast) return { errors, detailCount }
+    }
+
+    if (lineResult.isDetail) {
+      detailCount++
+    }
+  }
+
+  const finalErrors = validateFinalConstraints(detailCount, bankSchema, lines)
+  errors.push(...finalErrors)
+
+  return { errors, detailCount }
+}
+
+function validateRequiredSchemas(bankSchema: BankSchema): ValidationError[] {
+  const errors: ValidationError[] = []
+
   if (!bankSchema.header) {
     errors.push({
       line: 1,
       field: 'Schema',
       message: 'Schema do banco não define header para CNAB 400',
     })
-    return { errors, detailCount }
   }
 
   if (!bankSchema.detail) {
@@ -42,7 +118,6 @@ export function validateCnab400Structure(
       field: 'Schema',
       message: 'Schema do banco não define detail para CNAB 400',
     })
-    return { errors, detailCount }
   }
 
   if (!bankSchema.trailer) {
@@ -51,103 +126,106 @@ export function validateCnab400Structure(
       field: 'Schema',
       message: 'Schema do banco não define trailer para CNAB 400',
     })
-    return { errors, detailCount }
   }
 
-  // Ler tipos de registro do schema (com fallback para valores padrão)
-  // Banco do Brasil usa '7' para detail, outros usam '1'
-  // Lê pela posição (1 em CNAB 400), não pelo nome do campo (varia: tipo_registro, codigo_registro...)
-  const headerType = String(getRecordTypePattern(bankSchema.header, 1) ?? '0')
-  const detailType = String(getRecordTypePattern(bankSchema.detail, 1) ?? '1')
-  const trailerType = String(getRecordTypePattern(bankSchema.trailer, 1) ?? '9')
+  return errors
+}
 
-  // Pré-computar lookup de registros opcionais (O(1) por linha)
-  const optionalByIdentifier = new Map(
-    (bankSchema.optionalRecords ?? []).map(r => [r.identifier, r])
-  )
-
-  // Validar cada linha
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    const lineNumber = i + 1
-
-    // Checagem de tamanho
-    if (line.length !== LINE_LENGTH) {
-      errors.push({
-        line: lineNumber,
-        field: 'Tamanho do registro',
-        message: `Esperado ${LINE_LENGTH} caracteres, encontrado ${line.length}`,
-      })
-      continue
+function validateHeaderPosition(
+  recordType: string,
+  expectedHeaderType: string,
+  lineNumber: number
+): ValidationError | null {
+  if (recordType !== expectedHeaderType) {
+    return {
+      line: lineNumber,
+      field: 'Header',
+      message: `Primeira linha deve ser Header (tipo ${expectedHeaderType}), encontrado tipo ${recordType}`,
     }
+  }
+  return null
+}
 
-    const recordType = getCnab400RecordType(line)
-
-    if (i === 0) {
-      if (recordType !== headerType) {
-        errors.push({
-          line: lineNumber,
-          field: 'Header',
-          message: `Primeira linha deve ser Header (tipo ${headerType}), encontrado tipo ${recordType}`,
-        })
-      }
-      continue
+function validateTrailerPosition(
+  recordType: string,
+  expectedTrailerType: string,
+  lineNumber: number
+): ValidationError | null {
+  if (recordType !== expectedTrailerType) {
+    return {
+      line: lineNumber,
+      field: 'Trailer',
+      message: `Última linha deve ser Trailer (tipo ${expectedTrailerType}), encontrado tipo ${recordType}`,
     }
+  }
+  return null
+}
 
-    // Última linha deve ser Trailer
-    if (i === lines.length - 1) {
-      if (recordType !== trailerType) {
-        errors.push({
-          line: lineNumber,
-          field: 'Trailer',
-          message: `Última linha deve ser Trailer (tipo ${trailerType}), encontrado tipo ${recordType}`,
-        })
-      }
-      continue
-    }
+function validateMiddleLine(
+  line: string,
+  recordType: string,
+  lineNumber: number,
+  headerType: string,
+  detailType: string,
+  trailerType: string,
+  optionalByIdentifier: Map<string, any>
+): { error: ValidationError | null; isDetail: boolean } {
+  if (recordType === detailType) {
+    return { error: null, isDetail: true }
+  }
 
-    // Linhas do meio devem ser registros de detalhe ou registros opcionais
-    if (recordType === detailType) {
-      detailCount++
-    } else if (recordType === headerType) {
-      errors.push({
+  if (recordType === headerType) {
+    return {
+      error: {
         line: lineNumber,
         field: 'Header',
         message: 'Header encontrado no meio do arquivo (deve estar apenas na primeira linha)',
-      })
-    } else if (recordType === trailerType) {
-      errors.push({
-        line: lineNumber,
-        field: 'Trailer',
-        message: 'Trailer encontrado no meio do arquivo (deve estar apenas na última linha)',
-      })
-    } else {
-      // Tentar casar com registro opcional antes de declarar erro
-      // Ordem de tentativa:
-      // 1. Chave composta com 2 dígitos de sufixo (ex: '5-99' do BB)
-      // 2. Chave composta com 1 dígito de sufixo (ex: '6-1' do Itaú)
-      // 3. Chave simples (ex: '2')
-      const suffix2 = getCnab400OptionalSuffix2(line)
-      const suffix1 = getCnab400OptionalSuffix1(line)
-      
-      const optionalRecord = 
-        optionalByIdentifier.get(`${recordType}-${suffix2}`) ||
-        optionalByIdentifier.get(`${recordType}-${suffix1}`) ||
-        optionalByIdentifier.get(recordType)
-
-      if (!optionalRecord) {
-        // Não é um registro opcional reconhecido
-        errors.push({
-          line: lineNumber,
-          field: 'Tipo de registro',
-          message: `Tipo de registro '${recordType}' não corresponde a nenhum tipo reconhecido (Header=${headerType}, Detalhe=${detailType}, Trailer=${trailerType})`,
-        })
-      }
-      // Se é um registro opcional reconhecido, não gera erro e não conta como detail
+      },
+      isDetail: false,
     }
   }
 
-  // Deve ter pelo menos 1 detalhe
+  if (recordType === trailerType) {
+    return {
+      error: {
+        line: lineNumber,
+        field: 'Trailer',
+        message: 'Trailer encontrado no meio do arquivo (deve estar apenas na última linha)',
+      },
+      isDetail: false,
+    }
+  }
+
+  const suffix2 = getCnab400OptionalSuffix2(line)
+  const suffix1 = getCnab400OptionalSuffix1(line)
+
+  // Ordem de tentativa: '5-99' (BB), '6-1' (Itaú), '2' (simples)
+  const optionalRecord =
+    optionalByIdentifier.get(`${recordType}-${suffix2}`) ||
+    optionalByIdentifier.get(`${recordType}-${suffix1}`) ||
+    optionalByIdentifier.get(recordType)
+
+  if (!optionalRecord) {
+    return {
+      error: {
+        line: lineNumber,
+        field: 'Tipo de registro',
+        message: `Tipo de registro '${recordType}' não corresponde a nenhum tipo reconhecido (Header=${headerType}, Detalhe=${detailType}, Trailer=${trailerType})`,
+      },
+      isDetail: false,
+    }
+  }
+
+  return { error: null, isDetail: false }
+}
+
+function validateFinalConstraints(
+  detailCount: number,
+  bankSchema: BankSchema,
+  lines: string[]
+): ValidationError[] {
+  const errors: ValidationError[] = []
+
   if (detailCount === 0) {
     errors.push({
       line: 2,
@@ -156,16 +234,14 @@ export function validateCnab400Structure(
     })
   }
 
-  // Validar quantidade de documentos no trailer (se o banco define esse campo)
   const trailerSchema = bankSchema.trailer
-  if (trailerSchema.qtd_documentos && lines.length >= 3) {
+  if (trailerSchema?.qtd_documentos && lines.length >= 3) {
     const trailerLine = lines[lines.length - 1]
-    
+
     if (trailerLine.length === LINE_LENGTH) {
-      // Ler o campo manualmente via posição
       const pos = trailerSchema.qtd_documentos.pos
-      const startIdx = pos[0] - 1 // Converter de 1-indexed para 0-indexed
-      const endIdx = pos[1] // pos[1] já é exclusivo em substring
+      const startIdx = pos[0] - 1
+      const endIdx = pos[1]
       const rawValue = trailerLine.substring(startIdx, endIdx).trim()
       const declaredCount = parseInt(rawValue, 10) || 0
 
@@ -179,5 +255,5 @@ export function validateCnab400Structure(
     }
   }
 
-  return { errors, detailCount }
+  return errors
 }
