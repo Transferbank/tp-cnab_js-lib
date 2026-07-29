@@ -304,7 +304,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
 
       expect(detailLines.length).toBe(metadata.records.length)
 
-      metadata.records.forEach((expected, index: number) => {
+      metadata.records.forEach((expected: any, index: number) => {
         const detail = extractLineFields(detailLines[index], bradescoCnab400.detail!)
 
         // Verificar que campos principais foram extra�dos sem erro

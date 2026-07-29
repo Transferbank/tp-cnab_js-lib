@@ -285,7 +285,7 @@ describe('Schema Bradesco CNAB 240 - Segmento P', () => {
     test('deve extrair valores corretos de todos os t�tulos (do JSON)', () => {
       const metadata: any = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
 
-      metadata.records.forEach((expected, index) => {
+      metadata.records.forEach((expected: any, index: any) => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
 
         expect(segP.valor_titulo.value).toBe(expected.amount)
@@ -296,7 +296,7 @@ describe('Schema Bradesco CNAB 240 - Segmento P', () => {
     test('deve extrair vencimentos de todos os t�tulos (do JSON)', () => {
       const metadata: any = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
 
-      metadata.records.forEach((record, index) => {
+      metadata.records.forEach((record: any, index: any) => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
 
         expect(segP.vencimento_titulo.raw).toBe(record.dueDateRaw)

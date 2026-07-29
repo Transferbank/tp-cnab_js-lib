@@ -26,7 +26,7 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
     })
 
     test('deve ter 240 caracteres em cada linha', () => {
-      lines.forEach((line) => {
+      lines.forEach((line: any) => {
         expect(line.length).toBe(240)
       })
     })
@@ -44,14 +44,14 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
       const segPLines = findSegmentLines(lines, 'P')
       const segQLines = findSegmentLines(lines, 'Q')
 
-      segPLines.forEach((line) => {
+      segPLines.forEach((line: any) => {
         const segP = extractLineFields(line, bradescoCnab240.segmentoP!)
         expect(segP.controle_banco.error).toBeFalsy()
         expect(segP.valor_titulo.error).toBeFalsy()
         expect(segP.vencimento_titulo.error).toBeFalsy()
       })
 
-      segQLines.forEach((line) => {
+      segQLines.forEach((line: any) => {
         const segQ = extractLineFields(line, bradescoCnab240.segmentoQ!)
         expect(segQ.sacado_nome.error).toBeFalsy()
         expect(segQ.sacado_inscricao_numero.error).toBeFalsy()
@@ -80,7 +80,7 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
       const segPLines = findSegmentLines(lines, 'P')
       const segQLines = findSegmentLines(lines, 'Q')
 
-      metadata.records.forEach((expected, index) => {
+      metadata.records.forEach((expected: any, index: any) => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
 
