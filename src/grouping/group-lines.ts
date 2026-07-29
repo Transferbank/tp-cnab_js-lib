@@ -1,5 +1,6 @@
 import type { ParsedLine, ParsedField } from '@tp-types/core'
 import { CNABFormatCode } from '@tp-types/core'
+import { Cnab240SegmentCode } from '@tp-types/cnab240-record-types'
 import type {
   GroupingRule,
   BillGroup,
@@ -47,7 +48,7 @@ function identifyRecordType(line: ParsedLine, format: CNABFormatCode): string {
        * Segmento Y: inclui sub-variante (pos 18, 2 dígitos).
        * Ex: Y01, Y04, Y50 (cada um com campos específicos).
        */
-      if (segment === 'Y') {
+      if (segment === Cnab240SegmentCode.Y) {
         const subVariantField = getFieldByPosition(line, 18)
         if (subVariantField) {
           return `Y${subVariantField.value}`
