@@ -13,11 +13,40 @@
  * 3. Casos pontuais: valores espec�ficos sem evid�ncia independente
  */
 
+import * as fs from 'fs'
+import * as path from 'path'
 import { bradescoCnab400 } from '@banks/bradesco/schemas/cnab400'
 import { extractLineFields } from '@parser/field-extractor'
-import { loadFixtureMetadata } from '../../../../../tests/helpers/fixture-metadata'
 import { readFixture, calcularDvNossoNumero, parseReais } from './shared'
-import { CNABFormatCode } from '@tp-types/index'
+
+interface FixtureRecord {
+  index: number
+  name: string
+  document: string
+  documentRaw?: string
+  documentType: string
+  documentTypeCode?: string
+  amount: number
+  amountRaw?: string
+  dueDate: string
+  dueDateRaw?: string
+  address?: string
+  zipCode?: string
+}
+
+interface FixtureMetadata {
+  records: FixtureRecord[]
+  totals: {
+    recordCount: number
+    totalAmount: number
+  }
+}
+
+function loadLocalMetadata(): FixtureMetadata {
+  const jsonPath = path.join(__dirname, '../../__fixtures__/cnab400/remessa-multipla.json')
+  const jsonContent = fs.readFileSync(jsonPath, 'utf8')
+  return JSON.parse(jsonContent)
+}
 
 describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
   describe('Verifica��o independente (evid�ncia dentro do pr�prio arquivo real)', () => {
@@ -228,11 +257,11 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
      * 3. Validar campos sem evid�ncia independente dispon�vel
      */
     let lines: string[]
-    let metadata: any
+    let metadata: FixtureMetadata
 
     beforeAll(() => {
       lines = readFixture('remessa-multipla.txt')
-      metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB400)
+      metadata = loadLocalMetadata()
     })
 
     test('vencimento bate com o snapshot gerado (metadata.json) � regress�o, n�o confirma a posi��o em si', () => {
@@ -304,7 +333,7 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
 
       expect(detailLines.length).toBe(metadata.records.length)
 
-      metadata.records.forEach((expected: any, index: number) => {
+      metadata.records.forEach((expected: FixtureRecord, index: number) => {
         const detail = extractLineFields(detailLines[index], bradescoCnab400.detail!)
 
         // Verificar que campos principais foram extra�dos sem erro

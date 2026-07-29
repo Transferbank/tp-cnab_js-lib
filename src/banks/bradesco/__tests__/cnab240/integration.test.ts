@@ -7,26 +7,60 @@
 
 import { bradescoCnab240 } from '@banks/bradesco/schemas/cnab240'
 import { extractLineFields } from '@parser/field-extractor'
-import { loadFixtureMetadata } from '../../../../../tests/helpers/fixture-metadata'
 import { readFixture, findSegmentLines } from './shared'
-import { CNABFormatCode } from '@tp-types/index'
+import * as fs from 'fs'
+import * as path from 'path'
+
+interface FixtureRecord {
+  index: number
+  name: string
+  document: string
+  documentRaw?: string
+  documentType: string
+  documentTypeCode?: string
+  amount: number
+  amountRaw?: string
+  dueDate: string
+  dueDateRaw?: string
+  address?: string
+  city?: string
+  state?: string
+  zipCode?: string
+}
+
+interface FixtureMetadata {
+  records: FixtureRecord[]
+  totals?: {
+    recordCount: number
+    totalAmount: number
+  }
+  structure?: {
+    totalLines: number
+  }
+}
+
+function loadLocalMetadata(): FixtureMetadata {
+  const jsonPath = path.join(__dirname, '../../__fixtures__/cnab240/remessa-multipla.json')
+  const jsonContent = fs.readFileSync(jsonPath, 'utf8')
+  return JSON.parse(jsonContent)
+}
 
 describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
   let lines: string[]
-  let metadata: any
+  let metadata: FixtureMetadata
 
   beforeAll(() => {
     lines = readFixture('remessa-multipla.txt')
-    metadata = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
+    metadata = loadLocalMetadata()
   })
 
   describe('Estrutura do arquivo', () => {
     test('deve ter n�mero correto de linhas (do JSON)', () => {
-      expect(lines).toHaveLength(metadata.structure.totalLines)
+      expect(lines).toHaveLength(metadata.structure!.totalLines)
     })
 
     test('deve ter 240 caracteres em cada linha', () => {
-      lines.forEach((line: any) => {
+      lines.forEach((line: string) => {
         expect(line.length).toBe(240)
       })
     })
@@ -44,14 +78,14 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
       const segPLines = findSegmentLines(lines, 'P')
       const segQLines = findSegmentLines(lines, 'Q')
 
-      segPLines.forEach((line: any) => {
+      segPLines.forEach((line: string) => {
         const segP = extractLineFields(line, bradescoCnab240.segmentoP!)
         expect(segP.controle_banco.error).toBeFalsy()
         expect(segP.valor_titulo.error).toBeFalsy()
         expect(segP.vencimento_titulo.error).toBeFalsy()
       })
 
-      segQLines.forEach((line: any) => {
+      segQLines.forEach((line: string) => {
         const segQ = extractLineFields(line, bradescoCnab240.segmentoQ!)
         expect(segQ.sacado_nome.error).toBeFalsy()
         expect(segQ.sacado_inscricao_numero.error).toBeFalsy()
@@ -80,7 +114,7 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
       const segPLines = findSegmentLines(lines, 'P')
       const segQLines = findSegmentLines(lines, 'Q')
 
-      metadata.records.forEach((expected: any, index: any) => {
+      metadata.records.forEach((expected: FixtureRecord, index: number) => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
 

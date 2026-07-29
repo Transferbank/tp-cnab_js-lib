@@ -13,9 +13,40 @@
 
 import { bradescoCnab240 } from '@banks/bradesco/schemas/cnab240'
 import { extractLineFields } from '@parser/field-extractor'
-import { loadFixtureMetadata } from '../../../../../tests/helpers/fixture-metadata'
 import { readFixture, findSegmentLines } from './shared'
-import { CNABFormatCode } from '@tp-types/index'
+import * as fs from 'fs'
+import * as path from 'path'
+
+interface FixtureRecord {
+  index: number
+  name: string
+  document: string
+  documentRaw?: string
+  documentType: string
+  documentTypeCode?: string
+  amount: number
+  amountRaw?: string
+  dueDate: string
+  dueDateRaw?: string
+  address?: string
+  city?: string
+  state?: string
+  zipCode?: string
+}
+
+interface FixtureMetadata {
+  records: FixtureRecord[]
+  totals?: {
+    recordCount: number
+    totalAmount: number
+  }
+}
+
+function loadLocalMetadata(): FixtureMetadata {
+  const jsonPath = path.join(__dirname, '../../__fixtures__/cnab240/remessa-multipla.json')
+  const jsonContent = fs.readFileSync(jsonPath, 'utf8')
+  return JSON.parse(jsonContent)
+}
 
 describe('Schema Bradesco CNAB 240 - Segmento P', () => {
   describe('Defini��o dos campos', () => {
@@ -264,7 +295,7 @@ describe('Schema Bradesco CNAB 240 - Segmento P', () => {
     })
 
     test('deve extrair valor correto do primeiro t�tulo (do JSON)', () => {
-      const metadata: any = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
+      const metadata = loadLocalMetadata()
       const record = metadata.records[0]
       const segP = extractLineFields(segPLines[0], bradescoCnab240.segmentoP!)
 
@@ -274,7 +305,7 @@ describe('Schema Bradesco CNAB 240 - Segmento P', () => {
     })
 
     test('deve extrair vencimento correto do primeiro t�tulo (do JSON)', () => {
-      const metadata: any = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
+      const metadata = loadLocalMetadata()
       const record = metadata.records[0]
       const segP = extractLineFields(segPLines[0], bradescoCnab240.segmentoP!)
 
@@ -283,9 +314,9 @@ describe('Schema Bradesco CNAB 240 - Segmento P', () => {
     })
 
     test('deve extrair valores corretos de todos os t�tulos (do JSON)', () => {
-      const metadata: any = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
+      const metadata = loadLocalMetadata()
 
-      metadata.records.forEach((expected: any, index: any) => {
+      metadata.records.forEach((expected: FixtureRecord, index: number) => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
 
         expect(segP.valor_titulo.value).toBe(expected.amount)
@@ -294,9 +325,9 @@ describe('Schema Bradesco CNAB 240 - Segmento P', () => {
     })
 
     test('deve extrair vencimentos de todos os t�tulos (do JSON)', () => {
-      const metadata: any = loadFixtureMetadata('bradesco', 'remessa-multipla', CNABFormatCode.CNAB240)
+      const metadata = loadLocalMetadata()
 
-      metadata.records.forEach((record: any, index: any) => {
+      metadata.records.forEach((record: FixtureRecord, index: number) => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
 
         expect(segP.vencimento_titulo.raw).toBe(record.dueDateRaw)
