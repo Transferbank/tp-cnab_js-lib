@@ -1,9 +1,9 @@
 import type { BankSchema } from './bank-schema'
-import type { GroupingRule, BillGroup, GroupingError } from '../processing'
-import type { ParsedLine } from '../core'
-import type { CNABHeader, CNABTrailer, CNABData } from '../read'
-import type { CNABFormatCode } from '../core'
-import type { ReadModeValue } from '../core'
+import type { GroupingRule, BillGroup, GroupingError } from '@tp-types/processing'
+import type { ParsedLine } from '@tp-types/core'
+import type { CNABHeader, CNABTrailer, CNABData } from '@tp-types/read'
+import type { CNABFormatCode } from '@tp-types/core'
+import type { ReadModeValue } from '@tp-types/core'
 
 export interface CNABProvider {
   bankCode: string
@@ -14,8 +14,8 @@ export interface CNABProvider {
   groupingRule: GroupingRule
 
   group(lines: ParsedLine[]): { groups: BillGroup[]; errors: GroupingError[] }
-  extractHeader(line: ParsedLine): CNABHeader
-  extractTrailer(line: ParsedLine): CNABTrailer
+  extractHeader(line: ParsedLine | undefined): CNABHeader
+  extractTrailer(line: ParsedLine | undefined): CNABTrailer
   extractBill(group: BillGroup): CNABData
   extractBillFull(group: BillGroup): Record<string, unknown>
 }

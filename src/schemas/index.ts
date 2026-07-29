@@ -1,4 +1,4 @@
-import { BankSchema, CNABFormatCode, BANK_CODES } from '@tp-types/index'
+import { BankSchema, CNABFormatCode, BANK_CODES, BankCode } from '@tp-types/index'
 
 import { bancoDoBrasilCnab400 } from '@banks/bancoDoBrasil/schemas/cnab400'
 import { bradescoCnab400 } from '@banks/bradesco/schemas/cnab400'
@@ -12,7 +12,7 @@ import { bradescoCnab240 } from '@banks/bradesco/schemas/cnab240'
 import { santanderCnab240 } from '@banks/santander/schemas/cnab240'
 import { sicrediCnab240 } from '@banks/sicredi/schemas/cnab240'
 
-export const cnab400Banks: Record<string, BankSchema> = {
+export const cnab400Banks: Partial<Record<BankCode, BankSchema>> = {
   [BANK_CODES.BANCO_DO_BRASIL]: bancoDoBrasilCnab400,
   [BANK_CODES.SANTANDER]: santanderCnab400,
   [BANK_CODES.CAIXA]: caixaCnab400,
@@ -22,7 +22,7 @@ export const cnab400Banks: Record<string, BankSchema> = {
   [BANK_CODES.SICOOB]: sicoobCnab400,
 }
 
-export const cnab240Banks: Record<string, BankSchema> = {
+export const cnab240Banks: Partial<Record<BankCode, BankSchema>> = {
   [BANK_CODES.SANTANDER]: santanderCnab240,
   [BANK_CODES.BRADESCO]: bradescoCnab240,
   [BANK_CODES.SICREDI]: sicrediCnab240,
@@ -30,7 +30,7 @@ export const cnab240Banks: Record<string, BankSchema> = {
 
 export function getBankSchema(bankCode: string, format: CNABFormatCode): BankSchema | null {
   if (format === CNABFormatCode.CNAB240) {
-    return cnab240Banks[bankCode] || null
+    return cnab240Banks[bankCode as BankCode] || null
   }
-  return cnab400Banks[bankCode] || null
+  return cnab400Banks[bankCode as BankCode] || null
 }
