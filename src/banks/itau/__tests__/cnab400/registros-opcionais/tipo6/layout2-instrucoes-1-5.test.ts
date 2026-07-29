@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Testes do Schema Itaú CNAB 400 - Registro Tipo 6, Layout 2 (Instruções 1-5)
  *
  * Registro para emissão física de boleto pelo cedente (fluxo paralelo ao tipo 1).
  * Layout 2 contém as linhas de instrução 1 a 5 (5 campos de 69 caracteres cada).
  */
 
-import { TYPE6_LAYOUT2_INSTRUCTIONS_1_5 } from '../../../../../../../src/banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout2-instructions-1-5'
+import { TYPE6_LAYOUT2_INSTRUCTIONS_1_5 } from '@banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout2-instructions-1-5'
 
 describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 2 (Instruções 1-5)', () => {
   describe('Campos de identificação', () => {

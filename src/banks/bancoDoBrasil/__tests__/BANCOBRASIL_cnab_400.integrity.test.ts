@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Validação de integridade: schemas TypeScript conseguem parsear arquivo real do BB
  */
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab } from '../../../index'
-import { CNABFormatCode } from '../../../types'
+import { openCnab } from '@/index'
+import { CNABFormatCode } from '@tp-types/core'
 
 describe('Integridade: Schemas × Fixture BB CNAB 400', () => {
   const fixtureDir = path.join(__dirname, '../__fixtures__')

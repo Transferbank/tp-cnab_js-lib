@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Parsing das linhas brutas de SICREDI_cnab_400.CRM com os schemas TS reais
  * (HEADER, DETAIL, TRAILER) – valida que o schema realmente dá conta
  * do arquivo de produção, independente do que está escrito no metadata.json.
@@ -10,7 +10,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { extractLineFields } from '@parser/field-extractor'
-import { getBankSchema } from '../../../../schemas'
+import { getBankSchema } from '@schemas/index'
 import type { FixtureMetadata } from '@tp-types/testing'
 import { BANK_CODES, CNABFormatCode } from '@tp-types/index'
 

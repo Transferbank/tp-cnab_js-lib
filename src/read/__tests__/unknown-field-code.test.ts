@@ -1,9 +1,9 @@
-/**
+﻿/**
  * Testes para CNABUnknownFieldCodeError
  * Validando o lançamento de exceção para códigos não mapeados em interpret()
  */
 
-import { openCnab, CNABUnknownFieldCodeError } from '../../index'
+import { openCnab, CNABUnknownFieldCodeError } from '@/index'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 

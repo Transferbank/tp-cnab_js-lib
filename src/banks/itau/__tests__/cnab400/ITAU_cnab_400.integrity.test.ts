@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Parsing das linhas brutas de ITAU_cnab_400.REM com os schemas TS reais
  * (HEADER, DETAIL, TRAILER, TYPE2_FINE) – valida que o schema realmente dá conta
  * do arquivo de produção, independente do que está escrito no metadata.json.
@@ -9,7 +9,7 @@
 
 import { readFixture } from './shared'
 import { extractLineFields } from '@parser/field-extractor'
-import { getBankSchema } from '../../../../schemas'
+import { getBankSchema } from '@schemas/index'
 import { BANK_CODES, CNABFormatCode } from '@tp-types/index'
 import type { FixtureMetadata } from '@tp-types/testing'
 import * as fs from 'fs'

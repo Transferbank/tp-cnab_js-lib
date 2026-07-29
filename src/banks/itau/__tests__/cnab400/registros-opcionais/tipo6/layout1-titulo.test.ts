@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Testes do Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Dados do Título)
  *
  * Registro para emissão física de boleto pelo cedente (fluxo paralelo ao tipo 1).
  * Layout 1 contém os dados principais do título.
  */
 
-import { TYPE6_LAYOUT1_TITLE } from '../../../../../../../src/banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout1-title'
+import { TYPE6_LAYOUT1_TITLE } from '@banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout1-title'
 
 describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Título)', () => {
   describe('Campos de identificação', () => {

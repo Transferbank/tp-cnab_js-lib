@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes do Helper Segmento P - Sicredi CNAB 240
  *
  * Valida a função auxiliar que resolve o campo condicional valor_titulo
@@ -6,7 +6,7 @@
  */
 
 import { resolveTitleAmount, resolveTitleAmountSegmentP } from '@banks/sicredi/schemas/cnab240/segment-p-helper'
-import type { ParsedLine } from '../../../../types'
+import type { ParsedLine } from '@tp-types/core'
 
 describe('Helper Sicredi CNAB 240 - Segmento P', () => {
   describe('resolveTitleAmount - função base', () => {

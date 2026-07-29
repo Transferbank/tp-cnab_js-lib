@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes do registro Tipo 2 (Mensagem / Descontos Adicionais) — Bradesco CNAB 400
  *
  * Valida:
@@ -8,7 +8,7 @@
  * - Características específicas do registro
  */
 
-import { TYPE2_MESSAGES_DISCOUNTS } from '../../../../schemas/cnab400/registros-opcionais/type2-messages-discounts/type2-messages-discounts'
+import { TYPE2_MESSAGES_DISCOUNTS } from '@banks/bradesco/schemas/cnab400/registros-opcionais/type2-messages-discounts/type2-messages-discounts'
 
 describe('Schema Bradesco CNAB 400 - Registro Tipo 2 (Mensagem / Descontos Adicionais)', () => {
   describe('Campos de controle', () => {

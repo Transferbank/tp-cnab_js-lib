@@ -10,7 +10,7 @@ import {
   resolveMaxAmount,
   resolveMinAmount,
 } from '@banks/santander/schemas/cnab240/segmentos-opcionais/segment-y53-helper'
-import type { ParsedLine } from '../../../../types'
+import type { ParsedLine } from '@tp-types/core'
 
 describe('Helper Santander CNAB 240 - Segmento Y-53', () => {
   describe('resolveY53Amount - função base', () => {

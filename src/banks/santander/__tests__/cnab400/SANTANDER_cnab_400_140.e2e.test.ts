@@ -10,11 +10,11 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab, CNABFile } from '../../../../index'
-import { CNABFormatCode, ValidationError, CNABRecord } from '../../../../types'
+import { openCnab, CNABFile } from '@/index'
+import { CNABFormatCode, ValidationError, CNABRecord } from '@tp-types/core'
 import type { FixtureMetadata } from '@tp-types/testing'
-import type { CNABReadResult } from '../../../../types/core/read-result'
-import type { CNABData } from '../../../../types/read'
+import type { CNABReadResult } from '@tp-types/core/read-result'
+import type { CNABData } from '@tp-types/read'
 
 describe('openCnab – pipeline público de ponta a ponta: SANTANDER_cnab_400_140.REM', () => {
   const fixtureDir = path.join(__dirname, '../../__fixtures__/cnab400')

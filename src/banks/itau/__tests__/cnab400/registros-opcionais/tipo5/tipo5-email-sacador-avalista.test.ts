@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Testes do Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)
  *
  * Registro opcional que informa e-mail do pagador e/ou complementa dados do sacador/avalista.
  */
 
-import { TYPE5_EMAIL_ENDORSER } from '../../../../../../../src/banks/itau/schemas/cnab400/registros-opcionais/type5-email-endorser/type5-email-endorser'
+import { TYPE5_EMAIL_ENDORSER } from '@banks/itau/schemas/cnab400/registros-opcionais/type5-email-endorser/type5-email-endorser'
 
 describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', () => {
   describe('Campo de controle', () => {

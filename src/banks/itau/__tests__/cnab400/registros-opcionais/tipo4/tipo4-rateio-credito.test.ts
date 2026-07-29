@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes do Schema Itaú CNAB 400 - Registro Tipo 4 (Rateio de Crédito)
  *
  * Registro opcional que permite ratear o crédito do título entre até 14 contas por registro.
@@ -7,7 +7,7 @@
  * Schema baseado no manual oficial Itaú, p.10-11.
  */
 
-import { TYPE4_CREDIT_ALLOCATION } from '../../../../../../../src/banks/itau/schemas/cnab400/registros-opcionais/type4-credit-allocation/type4-credit-allocation'
+import { TYPE4_CREDIT_ALLOCATION } from '@banks/itau/schemas/cnab400/registros-opcionais/type4-credit-allocation/type4-credit-allocation'
 
 describe('Schema Itaú CNAB 400 - Registro Tipo 4 (Rateio de Crédito)', () => {
   describe('Campos de controle (posições 1-43)', () => {

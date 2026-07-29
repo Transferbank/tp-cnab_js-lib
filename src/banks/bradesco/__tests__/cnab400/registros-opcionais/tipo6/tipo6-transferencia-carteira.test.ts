@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes do registro Tipo 6 (Múltiplas Transferências / Débito Automático) — Bradesco CNAB 400
  *
  * Valida:
@@ -8,7 +8,7 @@
  * - Características específicas do registro
  */
 
-import { TYPE6_PORTFOLIO_TRANSFER } from '../../../../schemas/cnab400/registros-opcionais/type6-portfolio-transfer/type6-portfolio-transfer'
+import { TYPE6_PORTFOLIO_TRANSFER } from '@banks/bradesco/schemas/cnab400/registros-opcionais/type6-portfolio-transfer/type6-portfolio-transfer'
 
 describe('Schema Bradesco CNAB 400 - Registro Tipo 6 (Múltiplas Transferências / Débito Automático)', () => {
   describe('Campos de controle e identificação', () => {

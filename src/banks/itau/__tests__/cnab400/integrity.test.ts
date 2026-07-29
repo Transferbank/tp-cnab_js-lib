@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes de integridade do Schema Itaú CNAB 400
  *
  * Verifica:
@@ -7,7 +7,7 @@
  */
 
 import { itauCnab400 } from '@banks/itau/schemas/cnab400'
-import { TYPE2_FINE } from '../../../../../src/banks/itau/schemas/cnab400/registros-opcionais/type2-fine/type2-fine'
+import { TYPE2_FINE } from '@banks/itau/schemas/cnab400/registros-opcionais/type2-fine/type2-fine'
 
 describe('Schema Itaú CNAB 400 - Integridade', () => {
   describe('Header de Arquivo', () => {

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes de validação CNAB 400 — Santander (033)
  * 
  * Testa a validação completa de arquivos CNAB 400 do Santander incluindo:
@@ -6,9 +6,9 @@
  * - Validação de múltiplos detalhes
  */
 
-import { openCnab } from '../../../../index'
+import { openCnab } from '@/index'
 import { santanderCnab400 } from '../../schemas/cnab400'
-import { buildLine400 } from '../../../../__tests__/helpers/cnab-builder'
+import { buildLine400 } from '@/__tests__/helpers/cnab-builder'
 
 describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
   describe('Checagem cruzada do trailer', () => {

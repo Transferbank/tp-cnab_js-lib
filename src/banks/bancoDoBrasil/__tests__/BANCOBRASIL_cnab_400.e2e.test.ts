@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Pipeline p�blico de ponta a ponta para BANCOBRASIL_cnab_400.REM: exercita
  * `validateCnabFile()`, o caminho que um consumidor real da lib usa � conte�do
  * bruto do arquivo, sem pr�-separar linhas nem escolher schema manualmente
@@ -10,11 +10,11 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab, CNABFile } from '../../../index'
-import { CNABFormatCode, ValidationError, CNABRecord } from '../../../types'
-import type { FixtureMetadata } from '../../../types/testing'
-import type { CNABReadResult } from '../../../types/core/read-result'
-import type { CNABData } from '../../../types/read'
+import { openCnab, CNABFile } from '@/index'
+import { CNABFormatCode, ValidationError, CNABRecord } from '@tp-types/core'
+import type { FixtureMetadata } from '@tp-types/testing'
+import type { CNABReadResult } from '@tp-types/core/read-result'
+import type { CNABData } from '@tp-types/read'
 
 describe('openCnab – pipeline público de ponta a ponta: BANCOBRASIL_cnab_400.REM', () => {
   const fixtureDir = path.join(__dirname, '../__fixtures__')

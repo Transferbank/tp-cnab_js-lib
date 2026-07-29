@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes de validação CNAB 240  Santander (033)
  * 
  * Testa a validação completa de arquivos CNAB 240 do Santander incluindo:
@@ -7,9 +7,9 @@
  * - Múltiplos títulos (pares de Segmentos P + Q)
  */
 
-import { validateCnab240Content } from '../../../../validators/cnab240-content-validator'
+import { validateCnab240Content } from '@validators/cnab240-content-validator'
 import { santanderCnab240 } from '../../schemas/cnab240'
-import { buildLine240 } from '../../../../__tests__/helpers/cnab-builder'
+import { buildLine240 } from '@/__tests__/helpers/cnab-builder'
 
 describe('validateCnab240Content — Santander (033)', () => {
   describe('Validação básica', () => {

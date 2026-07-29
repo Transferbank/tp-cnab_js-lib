@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes para extração de campos canônicos.
  * 
  * FASE 6: Testa se campos mapeados são extraídos corretamente dos schemas.
@@ -16,7 +16,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab } from '../../index'
+import { openCnab } from '@/index'
 import { CNABFormatCode } from '@tp-types/index'
 import type { CNABFile, CNABReadResult } from '@tp-types/core'
 import type { CNABData } from '@tp-types/read'

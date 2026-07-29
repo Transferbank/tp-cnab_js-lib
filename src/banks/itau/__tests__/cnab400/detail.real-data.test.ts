@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes do Schema Itaú CNAB 400 - Detalhe (Dados Reais)
  *
  * Duas camadas de evidência:
@@ -15,7 +15,7 @@ import { itauCnab400 } from '@banks/itau/schemas/cnab400'
 import { TYPE2_FINE } from '@banks/itau/schemas/cnab400/registros-opcionais/type2-fine/type2-fine'
 import { extractLineFields } from '@parser/field-extractor'
 import { readFixture, isValidCpfCnpj } from './shared'
-import { UFS_VALIDAS } from '../../../../__tests__/helpers/ufs-brasileiras'
+import { UFS_VALIDAS } from '@/__tests__/helpers/ufs-brasileiras'
 import type { FixtureMetadata } from '@tp-types/testing'
 import * as fs from 'fs'
 import * as path from 'path'

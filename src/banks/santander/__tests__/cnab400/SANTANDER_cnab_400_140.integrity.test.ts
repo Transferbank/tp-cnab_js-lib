@@ -10,7 +10,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { extractLineFields } from '@parser/field-extractor'
-import { getBankSchema } from '../../../../schemas'
+import { getBankSchema } from '@schemas/index'
 import { BANK_CODES, CNABFormatCode } from '@tp-types/index'
 import type { FixtureMetadata } from '@tp-types/testing'
 

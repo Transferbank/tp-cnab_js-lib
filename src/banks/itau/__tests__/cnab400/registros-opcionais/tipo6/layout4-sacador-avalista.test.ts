@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Testes do Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)
  *
  * Registro para emissão física de boleto pelo cedente (fluxo paralelo ao tipo 1).
  * Layout 4 contém a extensão de dados do sacador/avalista.
  */
 
-import { TYPE6_LAYOUT4_ENDORSER } from '../../../../../../../src/banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout4-endorser'
+import { TYPE6_LAYOUT4_ENDORSER } from '@banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout4-endorser'
 
 describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', () => {
   describe('Campos de identificação', () => {

@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Testes do Schema Itaú CNAB 400 - Registro Tipo 2 (Complemento de Multa)
  *
  * Registro opcional que define valores/percentuais de multa.
  * Deve vir imediatamente após o detalhe (tipo 1) correspondente.
  */
 
-import { TYPE2_FINE } from '../../../../../../../src/banks/itau/schemas/cnab400/registros-opcionais/type2-fine/type2-fine'
+import { TYPE2_FINE } from '@banks/itau/schemas/cnab400/registros-opcionais/type2-fine/type2-fine'
 
 describe('Schema Itaú CNAB 400 - Registro Tipo 2 (Multa)', () => {
   describe('Definição dos campos', () => {

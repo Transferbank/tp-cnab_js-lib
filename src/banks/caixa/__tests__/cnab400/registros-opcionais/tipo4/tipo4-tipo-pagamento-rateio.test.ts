@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes do registro Tipo 4 (Tipo de Pagamento e Rateio) — Caixa CNAB 400
  *
  * Valida:
@@ -8,7 +8,7 @@
  * - Características específicas do registro
  */
 
-import { TYPE4_PAYMENT_ALLOCATION } from '../../../../../../../src/banks/caixa/schemas/cnab400/registros-opcionais/type4-payment-allocation/type4-payment-allocation'
+import { TYPE4_PAYMENT_ALLOCATION } from '@banks/caixa/schemas/cnab400/registros-opcionais/type4-payment-allocation/type4-payment-allocation'
 
 describe('Schema Caixa CNAB 400 - Registro Tipo 4 (Tipo de Pagamento e Rateio)', () => {
   describe('Campos de controle', () => {

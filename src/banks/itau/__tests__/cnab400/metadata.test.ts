@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes de Metadados - Itaú CNAB 400
  * 
  * Valida informações básicas do schema: código do banco, nome e schemas obrigatórios.
@@ -10,7 +10,7 @@
  */
 
 import { itauCnab400 } from '@banks/itau/schemas/cnab400'
-import { BANK_CODES } from '../../../../../src/types'
+import { BANK_CODES } from '@tp-types/index'
 
 describe('Schema Itaú CNAB 400 - Metadados', () => {
   test('deve ter código do banco correto (341)', () => {
