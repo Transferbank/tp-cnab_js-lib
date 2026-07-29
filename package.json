@@ -10,8 +10,7 @@
     "dev": "tsc --watch",
     "test": "jest",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "generate-metadata": "ts-node scripts/generate-metadata.ts"
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "keywords": [
     "cnab",
