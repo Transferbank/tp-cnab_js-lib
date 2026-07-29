@@ -4,7 +4,7 @@
  */
 
 import { CNABInputError } from './base'
-import { CNABFormatCode } from '../core'
+import { CNABFormatCode } from '@tp-types/core'
 
 
 export class CNABEmptyFileError extends CNABInputError {

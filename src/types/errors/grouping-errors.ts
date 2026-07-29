@@ -4,7 +4,7 @@
  */
 
 import { CNABInputError } from './base'
-import type { ValidationError } from '../core'
+import type { ValidationError } from '@tp-types/core'
 
 
 export class CNABGroupingError extends CNABInputError {

@@ -1,5 +1,5 @@
-import type { CanonicalField } from '../read'
-import type { ParsedLine } from '../core'
+import type { CanonicalField } from '@tp-types/read'
+import type { ParsedLine } from '@tp-types/core'
 
 export enum FieldType {
   NUM = 'num',

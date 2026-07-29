@@ -5,7 +5,7 @@
  */
 
 import { CNABInternalError } from './base'
-import type { CNABFormatCode } from '../core'
+import type { CNABFormatCode } from '@tp-types/core'
 
 
 export class CNABInternalInconsistencyError extends CNABInternalError {
