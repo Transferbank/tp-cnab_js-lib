@@ -236,14 +236,14 @@ export class CNABFile {
   }
 
   /**
-   * Use para arquivos pequenos ou quando precisa de todos os dados de uma vez.
-   */
-  read(options?: ReadOptions): CNABReadResult<CNABData | Record<string, unknown>>
-
-  /**
    * Use para arquivos grandes quando não precisa carregar tudo de uma vez.
    */
   read(options: ReadOptions & { lazy: true }): CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>
+
+  /**
+   * Use para arquivos pequenos ou quando precisa de todos os dados de uma vez.
+   */
+  read(options?: ReadOptions): CNABReadResult<CNABData | Record<string, unknown>>
 
   read(options?: ReadOptions): CNABReadResult<CNABData | Record<string, unknown>> | CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>> {
     const mode = options?.mode ?? ReadMode.SIMPLE
@@ -292,9 +292,9 @@ export class CNABFile {
     }
   }
 
-  async readAsync(options?: ReadAsyncOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>>>
-
   async readAsync(options: ReadAsyncOptions & { lazy: true }): Promise<CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>>
+
+  async readAsync(options?: ReadAsyncOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>>>
 
   async readAsync(options?: ReadAsyncOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>> | CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>> {
     const mode = options?.mode ?? ReadMode.SIMPLE

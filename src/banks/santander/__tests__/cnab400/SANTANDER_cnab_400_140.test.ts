@@ -10,6 +10,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { BANK_CODES, CNABFormatCode } from '@tp-types/index'
 import type { FixtureMetadata } from '@tp-types/testing'
+import { isValidCpfCnpj } from '@utils/string-utils'
 
 describe('Metadados: SANTANDER_cnab_400_140.json', () => {
   const fixtureDir = path.join(__dirname, '../../__fixtures__/cnab400')
@@ -252,13 +253,10 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
       })
     })
 
-    test('todos os documentos devem ter checksum CPF/CNPJ v�lido', () => {
-      // Import do helper de valida��o
-      const { isValidCpfCnpj } = require('../../../../../index/utils/string-utils')
-
+    test('todos os documentos devem ter checksum CPF/CNPJ válido', () => {
       metadata.records.forEach((record) => {
-        // Valida��o externa - prova que os documentos est�o corretos
-        expect(isValidCpfCnpj(record.documentRaw)).toBe(true)
+        // Validação externa - prova que os documentos estão corretos
+        expect(isValidCpfCnpj(record.documentRaw!)).toBe(true)
       })
     })
   })

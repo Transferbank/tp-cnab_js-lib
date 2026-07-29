@@ -178,8 +178,8 @@ export function validateCnab240Structure(
     batchOpen = transitionResult.batchOpen
     billInProgress = transitionResult.billInProgress
     pairingInterruption = transitionResult.pairingInterruption
-    batchCount = transitionResult.batchCount
-    billCount = transitionResult.billCount
+    batchCount += transitionResult.batchCount
+    billCount += transitionResult.billCount
   }
 
   const finalErrors = validateFinalState(sawFileHeader, sawFileTrailer, lines.length)

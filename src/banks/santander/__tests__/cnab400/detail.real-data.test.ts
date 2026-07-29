@@ -14,8 +14,7 @@
 import { santanderCnab400 } from '@banks/santander/schemas/cnab400'
 import { extractLineFields } from '@parser/field-extractor'
 import { readFixture, isValidCpfCnpj } from './shared'
-import { UFS_VALIDAS } from '../../../../../tests/helpers/ufs-brasileiras'
-import type { FixtureMetadata } from '@tp-types/testing'
+import { UFS_VALIDAS } from '../../../../__tests__/helpers/ufs-brasileiras'
 import * as fs from 'fs'
 import * as path from 'path'
 

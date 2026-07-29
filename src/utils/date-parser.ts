@@ -63,7 +63,7 @@ export function parseDateAAAAMMDD(str: string): Date | null {
   return date
 }
 
-export function parseDate(str: string, dateFormat: DateFormat): Date | null {
+export function parseDate(str: string, dateFormat: DateFormat | null): Date | null {
   if (dateFormat === 'DDMMAA') return parseDateDDMMAA(str)
   if (dateFormat === 'DDMMAAAA') return parseDateDDMMAAAA(str)
   if (dateFormat === 'AAAAMMDD') return parseDateAAAAMMDD(str)

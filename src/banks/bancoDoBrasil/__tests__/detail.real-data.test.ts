@@ -17,7 +17,7 @@ import { bancoDoBrasilCnab400 } from '@banks/bancoDoBrasil/schemas/cnab400'
 import { extractLineFields } from '@parser/field-extractor'
 import { isValidCpfCnpj } from '@utils/string-utils'
 import { TYPE5_FINE } from '@banks/bancoDoBrasil/schemas/cnab400/registros-opcionais/type5-optional-services/type5-fine'
-import { UFS_VALIDAS } from '../../../../tests/helpers/ufs-brasileiras'
+import { UFS_VALIDAS } from '../../../__tests__/helpers/ufs-brasileiras'
 import * as fs from 'fs'
 import * as path from 'path'
 
