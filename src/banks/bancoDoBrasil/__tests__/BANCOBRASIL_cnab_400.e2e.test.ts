@@ -10,9 +10,11 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab, CNABFile } from '@/index'
-import { CNABFormatCode, ValidationError, CNABRecord } from '@tp-types/index'
-import type { FixtureMetadata } from '@tp-types/testing'
+import { openCnab, CNABFile } from '../../../index'
+import { CNABFormatCode, ValidationError, CNABRecord } from '../../../types'
+import type { FixtureMetadata } from '../../../types/testing'
+import type { CNABReadResult } from '../../../types/core/read-result'
+import type { CNABData } from '../../../types/read'
 
 describe('openCnab – pipeline público de ponta a ponta: BANCOBRASIL_cnab_400.REM', () => {
   const fixtureDir = path.join(__dirname, '../__fixtures__')
@@ -22,7 +24,7 @@ describe('openCnab – pipeline público de ponta a ponta: BANCOBRASIL_cnab_400.
 
   let metadata: FixtureMetadata
   let cnabFile: CNABFile
-  let readResult: { bills: unknown[] }
+  let readResult: CNABReadResult<CNABData | Record<string, unknown>>
   let validationResult: { isValid: boolean; feedback?: { lines?: ValidationError[]; records?: CNABRecord[] } }
 
   beforeAll(() => {
@@ -48,7 +50,7 @@ describe('openCnab – pipeline público de ponta a ponta: BANCOBRASIL_cnab_400.
     // Este arquivo real tem títulos com vencimento anterior à data atual
     // (arquivo gerado em 26/05/2026, mas estamos em 09/07/2026) – isso é
     // esperado e não é responsabilidade do schema/parser.
-    const lines = validationResult.feedback?.lines as ValidationError[] || []
+    const lines = validationResult.feedback?.lines || []
     const errosDeParsing = lines.filter(
       (error) =>
         !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual')),
@@ -65,7 +67,7 @@ describe('openCnab – pipeline público de ponta a ponta: BANCOBRASIL_cnab_400.
   })
 
   test('deve extrair dados do primeiro título corretamente', () => {
-    const records = validationResult.feedback?.records as CNABRecord[] || []
+    const records = validationResult.feedback?.records || []
     expect(records.length).toBeGreaterThan(0)
     
     const primeiro = records[0]

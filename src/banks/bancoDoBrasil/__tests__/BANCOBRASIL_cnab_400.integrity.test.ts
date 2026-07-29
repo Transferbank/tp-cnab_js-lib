@@ -4,8 +4,8 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab } from '@/index'
-import { BANK_CODES, CNABFormatCode, ValidationError } from '@tp-types/index'
+import { openCnab } from '../../../index'
+import { CNABFormatCode } from '../../../types'
 
 describe('Integridade: Schemas × Fixture BB CNAB 400', () => {
   const fixtureDir = path.join(__dirname, '../__fixtures__')
@@ -17,7 +17,7 @@ describe('Integridade: Schemas × Fixture BB CNAB 400', () => {
     const cnabFile = openCnab(txtContent)
     
     expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
-    expect(cnabFile.bankCode).toBe(BANK_CODES.BANCO_DO_BRASIL)
+    expect(cnabFile.bankCode).toBe('001')
     expect(cnabFile.bankName).toBe('Banco do Brasil')
   })
 
@@ -26,16 +26,16 @@ describe('Integridade: Schemas × Fixture BB CNAB 400', () => {
     const validationResult = cnabFile.validate({ withFeedback: true })
     
     // Filtrar apenas erros estruturais (não de negócio como vencimento no passado)
-    const allErrors = validationResult.feedback?.lines as ValidationError[] || []
+    const allErrors = validationResult.feedback?.lines || []
     const structuralErrors = allErrors.filter(
-      (error) => 
+      (error: { message: string }) => 
         !error.message.includes('anterior à data atual') &&
         !error.message.includes('vencimento')
     )
 
     if (structuralErrors.length > 0) {
       console.log('Erros estruturais encontrados:')
-      structuralErrors.forEach((error) => {
+      structuralErrors.forEach((error: { line: number; message: string }) => {
         console.log(`  Linha ${error.line}: ${error.message}`)
       })
     }
