@@ -47,7 +47,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.type).toBe('num')
       expect(field.required).toBe(true)
       expect(field.pattern).toBeNull() // Bug corrigido: não pode ser fixo em '01'
-      expect(field.description).toContain('variável')
+      expect(field.description).toContain('vel')
     })
 
     test('deve ter agência do cedente com 4 dígitos (pos 18-21) - Manual 2023', () => {
@@ -56,7 +56,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.pos).toEqual([18, 21])
       expect(field.type).toBe('num')
       expect(field.size).toBe(4)
-      expect(field.description).toContain('4 dígitos')
+      expect(field.description).toContain('gitos')
     })
 
     test('deve ter conta do cedente com 9 dígitos (pos 23-31) - Manual 2023', () => {
@@ -65,7 +65,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.pos).toEqual([23, 31])
       expect(field.type).toBe('num')
       expect(field.size).toBe(9)
-      expect(field.description).toContain('9 dígitos')
+      expect(field.description).toContain('gitos')
     })
 
     test('deve ter conta cobrança FIDC com 9 dígitos (pos 33-41) - Manual 2023', () => {

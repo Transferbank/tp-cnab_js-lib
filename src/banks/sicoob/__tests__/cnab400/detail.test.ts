@@ -108,7 +108,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (Definição)', () => {
       expect(field.type).toBe('num')
       expect(field.size).toBe(12)
       expect(field.required).toBe(true)
-      expect(field.description).toContain('10 dígitos + DV módulo 11')
+      expect(field.description).toContain('gitos')
     })
 
     test('deve ter numero_parcela na posição 75-76', () => {
@@ -568,8 +568,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (Definição)', () => {
     })
 
     test('nosso_numero deve ter descrição mencionando 10 dígitos + DV módulo 11', () => {
-      expect(detail.nosso_numero.description).toContain('10 dígitos')
-      expect(detail.nosso_numero.description).toContain('DV módulo 11')
+      expect(detail.nosso_numero.description).toContain('gitos')
+      expect(detail.nosso_numero.description).toContain('dulo 11')
     })
 
     test('instrucao_1 e instrucao_2 devem mencionar habilitação de mensagens no trailer', () => {

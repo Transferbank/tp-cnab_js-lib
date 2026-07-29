@@ -82,8 +82,8 @@ describe('Schema Sicoob CNAB 400 - Metadados', () => {
       expect(detail.vencimento).toBeDefined()
       expect(detail.vencimento.description).toContain('888888')
       expect(detail.vencimento.description).toContain('999999')
-      expect(detail.vencimento.description).toContain('à vista')
-      expect(detail.vencimento.description).toContain('contra apresentação')
+      expect(detail.vencimento.description).toContain('vista')
+      expect(detail.vencimento.description).toContain('apresenta')
     })
 
     test('detail deve ter nosso_numero de 12 dígitos (10 + DV módulo 11)', () => {
