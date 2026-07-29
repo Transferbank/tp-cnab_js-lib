@@ -1,7 +1,9 @@
-import { CNABFormatCode, CNABValidationResult, ParsedLine } from './cnab'
+import { CNABFormatCode, CNABValidationResult, ParsedLine, ValidationError, CNABRecord } from './cnab'
+import { Cnab240SegmentCode } from '../cnab240-record-types'
+import { Cnab400RecordType } from '../cnab400-record-types'
 import { ReadMode, type ReadModeValue } from './read-mode'
-import { BankSchema, RecordSchema } from '../bank'
-import { CNABError, CNABInternalInconsistencyError, CNABGroupingError, CNABLazyResolveError } from '../errors'
+import { BankSchema, RecordSchema, CNABProvider } from '@tp-types/bank'
+import { CNABError, CNABInternalInconsistencyError, CNABGroupingError, CNABLazyResolveError } from '@tp-types/errors'
 import { validateCnab240Content } from '@validators/cnab240-content-validator'
 import { validateCnab400Content } from '@validators/cnab400-content-validator'
 import { validateCnab240Structure } from '@validators/cnab240-structure-validator'
@@ -10,17 +12,13 @@ import { mergeValidationErrors } from '@validators/merge-validation-errors'
 import { extractLineFields } from '@parser/field-extractor'
 import { getCnab400RecordType, getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { getCnab240SegmentYVariant } from '@parser/cnab-positions'
-import type { CNABData } from '../read'
-import type { BillGroup } from '../processing'
+import type { CNABData } from '@tp-types/read'
+import type { BillGroup } from '@tp-types/processing'
 import type { ReadOptions, ReadAsyncOptions } from './read-options'
 import type { CNABReadResult } from './read-result'
 import type { LazyBillItem } from './lazy-bill'
+import { ValidationResult } from '@/validators/types'
 
-/**
- * Representa um arquivo CNAB detectado com schema cadastrado.
- * 
- * Use openCnab() para criar instâncias.
- */
 export class CNABFile {
   public readonly type: CNABFormatCode
   private readonly bankSchema: BankSchema
@@ -64,10 +62,10 @@ export class CNABFile {
    * uma inconsistência entre os dois registries (schema e grouping), não um caso
    * de uso normal do usuário da lib.
    */
-  private resolveProvider(mode: ReadModeValue): any {
+  private resolveProvider(mode: ReadModeValue): CNABProvider {
     // Lazy import para evitar dependência circular
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { getProvider } = require('../../provider/catalog')
+    const { getProvider } = require('@/provider/catalog')
     
     const provider = getProvider(this.bankCode, this.type, mode)
     if (!provider) {
@@ -77,48 +75,164 @@ export class CNABFile {
     return provider
   }
 
-  /**
-   * Valida o conteúdo do arquivo CNAB usando as regras do banco e formato detectados.
-   * @param options - Opções de validação
-   * @param options.withFeedback - Se true, inclui registros parseados para preview (default: false)
-   * @returns Resultado da validação com lista de erros (e opcionalmente registros)
-   * @throws {CNABInternalInconsistencyError} se provider não encontrado (inconsistência interna: schema existe mas agrupamento não)
-   */
+ 
   validate(options?: { withFeedback?: boolean }): CNABValidationResult {
     const withFeedback = options?.withFeedback ?? false
-
     const provider = this.resolveProvider(ReadMode.SIMPLE)
     const bankSchema = provider.schema
 
-    const structureResult =
-      this.type === CNABFormatCode.CNAB240
-        ? validateCnab240Structure(this.rawLines, bankSchema)
-        : validateCnab400Structure(this.rawLines, bankSchema)
+    if (!withFeedback) {
+      return this.validateFailFast(bankSchema)
+    }
 
-    const businessResult =
-      this.type === CNABFormatCode.CNAB240
-        ? validateCnab240Content(this.rawLines, bankSchema)
-        : validateCnab400Content(this.rawLines, bankSchema)
+    return this.validateWithFullFeedback(bankSchema)
+  }
 
-    // Estrutural prevalece sobre negócio em caso de conflito na mesma linha+coluna
+  private validateFailFast(bankSchema: BankSchema): CNABValidationResult {
+    const structureResult = this.runStructureValidation(bankSchema, true)
+    if (structureResult.errors.length > 0) {
+      return this.buildValidationResult(false, [structureResult.errors[0]])
+    }
+
+    const businessResult = this.runBusinessValidation(bankSchema, true)
+    if (businessResult.errors.length > 0) {
+      return this.buildValidationResult(false, [businessResult.errors[0]])
+    }
+
+    return this.buildValidationResult(true, [])
+  }
+
+  private validateWithFullFeedback(bankSchema: BankSchema): CNABValidationResult {
+    const structureResult = this.runStructureValidation(bankSchema)
+    const businessResult = this.runBusinessValidation(bankSchema)
     const errors = mergeValidationErrors(structureResult.errors, businessResult.errors)
 
-    const formatLabel = this.type === CNABFormatCode.CNAB240 ? 'CNAB 240' : 'CNAB 400'
+    return this.buildValidationResult(errors.length === 0, errors, businessResult.records)
+  }
 
-    const result: CNABValidationResult = {
-      isValid: errors.length === 0,
+  private runStructureValidation(bankSchema: BankSchema, failFast = false): { errors: ValidationError[] } {
+    return this.type === CNABFormatCode.CNAB240
+      ? validateCnab240Structure(this.rawLines, bankSchema, failFast)
+      : validateCnab400Structure(this.rawLines, bankSchema, failFast)
+  }
+
+  private runBusinessValidation(bankSchema: BankSchema, failFast = false): ValidationResult {
+    return this.type === CNABFormatCode.CNAB240
+      ? validateCnab240Content(this.rawLines, bankSchema, failFast)
+      : validateCnab400Content(this.rawLines, bankSchema, failFast)
+  }
+
+  private buildValidationResult(
+    isValid: boolean,
+    errors: ValidationError[],
+    records?: CNABRecord[]
+  ): CNABValidationResult {
+    const formatLabel = this.type === CNABFormatCode.CNAB240 ? 'CNAB 240' : 'CNAB 400'
+    
+    return {
+      isValid,
       feedback: {
         type: formatLabel,
         bank: this.bankName,
         lines: errors,
+        ...(records && { records }),
       },
     }
+  }
 
-    if (withFeedback) {
-      result.feedback.records = businessResult.records
+  private getHeaderTrailerSchemas(bankSchema: BankSchema): {
+    headerSchema: RecordSchema | undefined
+    trailerSchema: RecordSchema | undefined
+  } {
+    return {
+      headerSchema: this.type === CNABFormatCode.CNAB240 ? bankSchema.headerArquivo : bankSchema.header,
+      trailerSchema: this.type === CNABFormatCode.CNAB240 ? bankSchema.trailerArquivo : bankSchema.trailer,
     }
+  }
 
-    return result
+  private parseBodyLine(line: string, bankSchema: BankSchema): ParsedLine | undefined {
+    if (this.type === CNABFormatCode.CNAB400) {
+      return this.parseCnab400Line(line, bankSchema)
+    } else {
+      return this.parseCnab240Line(line, bankSchema)
+    }
+  }
+
+  private parseCnab400Line(line: string, bankSchema: BankSchema): ParsedLine | undefined {
+    const recordType = getCnab400RecordType(line)
+    
+    if (recordType === Cnab400RecordType.DETAIL_STANDARD || recordType === Cnab400RecordType.DETAIL_BB) {
+      return extractLineFields(line, bankSchema.detail!)
+    }
+    
+    if (bankSchema.optionalRecords) {
+      for (const optional of bankSchema.optionalRecords) {
+        if (optional.identifier === recordType) {
+          return extractLineFields(line, optional.schema)
+        }
+        
+        // Suporte para identificadores compostos (ex: '5-99' do BB)
+        if (optional.identifier.includes('-') && optional.identifier.startsWith(recordType)) {
+          return extractLineFields(line, optional.schema)
+        }
+      }
+    }
+    
+    return extractLineFields(line, bankSchema.detail!)
+  }
+
+
+  private parseCnab240Line(line: string, bankSchema: BankSchema): ParsedLine | undefined {
+    const recordType = getCnab240RecordType(line)
+    
+    if (recordType === '3') {
+      const segment = getCnab240SegmentCode(line)
+      
+      if (segment === Cnab240SegmentCode.P) {
+        return extractLineFields(line, bankSchema.segmentoP!)
+      } else if (segment === Cnab240SegmentCode.Q) {
+        return extractLineFields(line, bankSchema.segmentoQ!)
+      } else if (segment === Cnab240SegmentCode.R && bankSchema.optionalRecords) {
+        const optR = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'R')
+        if (optR) {
+          return extractLineFields(line, optR.schema)
+        }
+      } else if (segment === Cnab240SegmentCode.S && bankSchema.optionalRecords) {
+        const optS = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'S')
+        if (optS) {
+          return extractLineFields(line, optS.schema)
+        }
+      } else if (segment === Cnab240SegmentCode.Y && bankSchema.optionalRecords) {
+        const subVariant = getCnab240SegmentYVariant(line)
+        const optY = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === `Y${subVariant}`)
+        if (optY) {
+          return extractLineFields(line, optY.schema)
+        }
+      }
+    }
+    
+    return extractLineFields(line, bankSchema.segmentoP!)
+  }
+
+  private parseFile(bankSchema: BankSchema): {
+    headerParsed: ParsedLine | undefined
+    trailerParsed: ParsedLine | undefined
+    bodyParsed: ParsedLine[]
+  } {
+    const headerLine = this.rawLines[0]
+    const trailerLine = this.rawLines[this.rawLines.length - 1]
+    const bodyLines = this.rawLines.slice(1, -1)
+
+    const { headerSchema, trailerSchema } = this.getHeaderTrailerSchemas(bankSchema)
+    
+    const headerParsed = headerSchema ? extractLineFields(headerLine, headerSchema) : undefined
+    const trailerParsed = trailerSchema ? extractLineFields(trailerLine, trailerSchema) : undefined
+
+    const bodyParsed = bodyLines
+      .map((line) => this.parseBodyLine(line, bankSchema))
+      .filter((parsed): parsed is ParsedLine => parsed !== undefined)
+
+    return { headerParsed, trailerParsed, bodyParsed }
   }
 
   /**
@@ -138,70 +252,7 @@ export class CNABFile {
     const provider = this.resolveProvider(mode)
     const bankSchema = provider.schema
 
-    const headerLine = this.rawLines[0]
-    const trailerLine = this.rawLines[this.rawLines.length - 1]
-    const bodyLines = this.rawLines.slice(1, -1)
-
-    const headerSchema = this.type === CNABFormatCode.CNAB240 ? bankSchema.headerArquivo : bankSchema.header
-    const trailerSchema = this.type === CNABFormatCode.CNAB240 ? bankSchema.trailerArquivo : bankSchema.trailer
-    
-    const headerParsed = headerSchema ? extractLineFields(headerLine, headerSchema) : undefined
-    const trailerParsed = trailerSchema ? extractLineFields(trailerLine, trailerSchema) : undefined
-
-    const bodyParsed = bodyLines.map((line) => {
-      if (this.type === CNABFormatCode.CNAB400) {
-        const recordType = getCnab400RecordType(line)
-        
-        if (recordType === '1' || recordType === '7') {
-          return extractLineFields(line, bankSchema.detail!)
-        }
-        
-        if (bankSchema.optionalRecords) {
-          for (const optional of bankSchema.optionalRecords) {
-            if (optional.identifier === recordType) {
-              return extractLineFields(line, optional.schema)
-            }
-            
-            // Suporte para identificadores compostos (ex: '5-99' do BB)
-            if (optional.identifier.includes('-') && optional.identifier.startsWith(recordType)) {
-              return extractLineFields(line, optional.schema)
-            }
-          }
-        }
-        
-        return extractLineFields(line, bankSchema.detail!)
-      } else {
-        const recordType = getCnab240RecordType(line)
-        
-        if (recordType === '3') {
-          const segment = getCnab240SegmentCode(line)
-          
-          if (segment === 'P') {
-            return extractLineFields(line, bankSchema.segmentoP!)
-          } else if (segment === 'Q') {
-            return extractLineFields(line, bankSchema.segmentoQ!)
-          } else if (segment === 'R' && bankSchema.optionalRecords) {
-            const optR = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'R')
-            if (optR) {
-              return extractLineFields(line, optR.schema)
-            }
-          } else if (segment === 'S' && bankSchema.optionalRecords) {
-            const optS = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'S')
-            if (optS) {
-              return extractLineFields(line, optS.schema)
-            }
-          } else if (segment === 'Y' && bankSchema.optionalRecords) {
-            const subVariant = getCnab240SegmentYVariant(line)
-            const optY = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === `Y${subVariant}`)
-            if (optY) {
-              return extractLineFields(line, optY.schema)
-            }
-          }
-        }
-        
-        return extractLineFields(line, bankSchema.segmentoP!)
-      }
-    }).filter((parsed): parsed is ParsedLine => parsed !== undefined)
+    const { headerParsed, trailerParsed, bodyParsed } = this.parseFile(bankSchema)
 
     const { groups, errors: groupingErrors } = provider.group(bodyParsed)
 
@@ -254,74 +305,7 @@ export class CNABFile {
     const provider = this.resolveProvider(mode)
     const bankSchema = provider.schema
 
-    const headerLine = this.rawLines[0]
-    const trailerLine = this.rawLines[this.rawLines.length - 1]
-    const bodyLines = this.rawLines.slice(1, -1)
-
-    const headerSchema = this.type === CNABFormatCode.CNAB240 ? bankSchema.headerArquivo : bankSchema.header
-    const trailerSchema = this.type === CNABFormatCode.CNAB240 ? bankSchema.trailerArquivo : bankSchema.trailer
-    
-    const headerParsed = headerSchema ? extractLineFields(headerLine, headerSchema) : undefined
-    const trailerParsed = trailerSchema ? extractLineFields(trailerLine, trailerSchema) : undefined
-
-    const bodyParsed: ParsedLine[] = []
-    
-    for (let i = 0; i < bodyLines.length; i++) {
-      const line = bodyLines[i]
-      let parsed: ParsedLine | undefined
-      
-      if (this.type === CNABFormatCode.CNAB400) {
-        const recordType = getCnab400RecordType(line)
-        
-        if (recordType === '1' || recordType === '7') {
-          parsed = extractLineFields(line, bankSchema.detail!)
-        } else if (bankSchema.optionalRecords) {
-          let found = false
-          for (const optional of bankSchema.optionalRecords) {
-            if (optional.identifier === recordType || 
-                (optional.identifier.includes('-') && optional.identifier.startsWith(recordType))) {
-              parsed = extractLineFields(line, optional.schema)
-              found = true
-              break
-            }
-          }
-          if (!found) {
-            parsed = extractLineFields(line, bankSchema.detail!)
-          }
-        } else {
-          parsed = extractLineFields(line, bankSchema.detail!)
-        }
-      } else {
-        const recordType = getCnab240RecordType(line)
-        
-        if (recordType === '3') {
-          const segment = getCnab240SegmentCode(line)
-          
-          if (segment === 'P') {
-            parsed = extractLineFields(line, bankSchema.segmentoP!)
-          } else if (segment === 'Q') {
-            parsed = extractLineFields(line, bankSchema.segmentoQ!)
-          } else if (bankSchema.optionalRecords) {
-            if (segment === 'Y') {
-              const subVariant = getCnab240SegmentYVariant(line)
-              const optY = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === `Y${subVariant}`)
-              parsed = optY ? extractLineFields(line, optY.schema) : extractLineFields(line, bankSchema.segmentoP!)
-            } else {
-              const opt = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === segment)
-              parsed = opt ? extractLineFields(line, opt.schema) : extractLineFields(line, bankSchema.segmentoP!)
-            }
-          } else {
-            parsed = extractLineFields(line, bankSchema.segmentoP!)
-          }
-        } else {
-          parsed = extractLineFields(line, bankSchema.segmentoP!)
-        }
-      }
-      
-      if (parsed) {
-        bodyParsed.push(parsed)
-      }
-    }
+    const { headerParsed, trailerParsed, bodyParsed } = this.parseFile(bankSchema)
 
     const { groups, errors: groupingErrors } = provider.group(bodyParsed)
 
@@ -337,14 +321,8 @@ export class CNABFile {
       ? groups.slice(options.page.start, options.page.start + options.page.size)
       : groups
     
-    const bills: any[] = []
-    const totalBills = paginatedGroups.length
-    
-    for (let i = 0; i < paginatedGroups.length; i++) {
-      const group = paginatedGroups[i]
-      
-      if (lazy) {
-        bills.push({
+    const bills = lazy
+      ? paginatedGroups.map((group: BillGroup) => ({
           startLine: group.startLine,
           resolve: (): Promise<CNABData | Record<string, unknown>> => {
             try {
@@ -355,12 +333,14 @@ export class CNABFile {
               return Promise.reject(new CNABLazyResolveError(group.startLine, error))
             }
           },
-        })
-      } else {
-        const bill = mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
-        bills.push(bill)
-      }
-      
+        }))
+      : paginatedGroups.map((group: BillGroup) =>
+          mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
+        )
+    
+    const totalBills = paginatedGroups.length
+    
+    for (let i = 0; i < totalBills; i++) {
       if (onProgress && (i + 1) % batchSize === 0) {
         onProgress({ current: i + 1, total: totalBills })
         await new Promise((resolve) => setTimeout(resolve, 0))
