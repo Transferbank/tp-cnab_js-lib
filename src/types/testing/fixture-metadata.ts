@@ -52,6 +52,7 @@ export interface FixtureStructure {
 export interface FixtureHeader {
   cedenteNome?: string
   dataGeracao?: string
+  dataGeracaoRaw?: string // Formato raw do arquivo (ex: DDMMAA ou DDMMAAAA)
   tipoArquivo?: string
   codigoCliente?: string
   numeroInscricaoCedente?: string
@@ -71,13 +72,17 @@ export interface FixtureRecord {
   
   // Documento do pagador/sacado
   document: string
+  documentRaw?: string // Formato raw do arquivo (com zeros à esquerda)
   documentType: DocumentType
+  documentTypeCode?: string // Código do tipo (ex: "01" = CPF, "02" = CNPJ)
   
   // Valor do título (em reais)
   amount: number
+  amountRaw?: string // Formato raw do arquivo (string numérica sem decimais)
   
   // Data de vencimento (DD/MM/AAAA)
   dueDate: string
+  dueDateRaw?: string // Formato raw do arquivo (ex: DDMMAA ou DDMMAAAA)
   
   // Endereço
   address?: string
