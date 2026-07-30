@@ -1,7 +1,7 @@
-﻿/**
+/**
  * Testes para Segmento S - Santander CNAB 240
  * 
- * Segmento opcional com duas variantes para mensagens de impress�o
+ * Segmento opcional com duas variantes para mensagens de impress?o
  */
 
 import { FieldType } from '@tp-types/index'
@@ -12,29 +12,29 @@ import {
 } from '@banks/santander/schemas/cnab240'
 
 describe('Schema Santander CNAB 240 - Segmento S', () => {
-  describe('Schema Base (posi��es 1-18)', () => {
-    it('deve ter c�digo do banco na posi��o 1-3 com padr�o "033"', () => {
+  describe('Schema Base (posi??es 1-18)', () => {
+    it('deve ter c?digo do banco na posi??o 1-3 com padr?o "033"', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S.controle_banco).toMatchObject({
         pos: [1, 3],
         pattern: '033',
       })
     })
 
-    it('deve ter tipo de registro "3" (detalhe) na posi��o 8', () => {
+    it('deve ter tipo de registro "3" (detalhe) na posi??o 8', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S.controle_registro).toMatchObject({
         pos: [8, 8],
         pattern: '3',
       })
     })
 
-    it('deve ter identificador do segmento "S" na posi��o 14', () => {
+    it('deve ter identificador do segmento "S" na posi??o 14', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S.servico_segmento).toMatchObject({
         pos: [14, 14],
         pattern: 'S',
       })
     })
 
-    it('deve ter identifica��o de impress�o na posi��o 18', () => {
+    it('deve ter identifica??o de impress?o na posi??o 18', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S.identificacao_impressao).toMatchObject({
         pos: [18, 18],
         type: FieldType.NUM,
@@ -47,7 +47,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
     })
   })
 
-  describe('Variante 1 - Formul�rio Especial', () => {
+  describe('Variante 1 - Formul?rio Especial', () => {
     it('deve incluir todos os campos da base', () => {
       const camposBase = Object.keys(SANTANDER_CNAB240_SEGMENT_S)
       camposBase.forEach((campo) => {
@@ -55,7 +55,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       })
     })
 
-    it('deve ter n�mero da linha na posi��o 19-20', () => {
+    it('deve ter n?mero da linha na posi??o 19-20', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_FORM.numero_linha).toMatchObject({
         pos: [19, 20],
         type: FieldType.NUM,
@@ -63,7 +63,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       })
     })
 
-    it('deve ter mensagem para recibo na posi��o 21', () => {
+    it('deve ter mensagem para recibo na posi??o 21', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_FORM.mensagem_recibo).toMatchObject({
         pos: [21, 21],
         type: FieldType.NUM,
@@ -71,7 +71,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       })
     })
 
-    it('deve ter mensagem impressa de 100 caracteres na posi��o 22-121', () => {
+    it('deve ter mensagem impressa de 100 caracteres na posi??o 22-121', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_FORM.mensagem_impressa).toMatchObject({
         pos: [22, 121],
         type: FieldType.ALFA,
@@ -79,7 +79,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       })
     })
 
-    it('deve ter campo CNAB reservado nas posi��es finais', () => {
+    it('deve ter campo CNAB reservado nas posi??es finais', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_FORM.cnab_exclusivo_2).toMatchObject({
         pos: [122, 240],
         type: FieldType.ALFA,
@@ -105,15 +105,15 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       }
     })
 
-    it('mensagem 5 deve come�ar na posi��o 19', () => {
+    it('mensagem 5 deve come?ar na posi??o 19', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_MESSAGES.mensagem_5.pos).toEqual([19, 58])
     })
 
-    it('mensagem 9 deve terminar na posi��o 218', () => {
+    it('mensagem 9 deve terminar na posi??o 218', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_MESSAGES.mensagem_9.pos).toEqual([179, 218])
     })
 
-    it('mensagens devem ser sequenciais e cont�guas', () => {
+    it('mensagens devem ser sequenciais e cont?guas', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_MESSAGES.mensagem_5.pos).toEqual([19, 58])
       expect(SANTANDER_CNAB240_SEGMENT_S_MESSAGES.mensagem_6.pos).toEqual([59, 98])
       expect(SANTANDER_CNAB240_SEGMENT_S_MESSAGES.mensagem_7.pos).toEqual([99, 138])
@@ -121,7 +121,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_MESSAGES.mensagem_9.pos).toEqual([179, 218])
     })
 
-    it('deve ter campo CNAB reservado cobrindo posi��es 219-240', () => {
+    it('deve ter campo CNAB reservado cobrindo posi??es 219-240', () => {
       expect(SANTANDER_CNAB240_SEGMENT_S_MESSAGES.cnab_exclusivo_2).toMatchObject({
         pos: [219, 240],
         type: FieldType.ALFA,
@@ -130,8 +130,8 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
     })
   })
 
-  describe('Valida��o de estrutura - Variante Formul�rio', () => {
-    it('todos os campos devem ter posi��o, tipo e tamanho definidos', () => {
+  describe('Valida??o de estrutura - Variante Formul?rio', () => {
+    it('todos os campos devem ter posi??o, tipo e tamanho definidos', () => {
       Object.entries(SANTANDER_CNAB240_SEGMENT_S_FORM).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -141,7 +141,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       )
     })
 
-    it('deve cobrir todas as 240 posi��es', () => {
+    it('deve cobrir todas as 240 posi??es', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SANTANDER_CNAB240_SEGMENT_S_FORM).forEach(
@@ -156,8 +156,8 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
     })
   })
 
-  describe('Valida��o de estrutura - Variante Mensagens', () => {
-    it('todos os campos devem ter posi��o, tipo e tamanho definidos', () => {
+  describe('Valida??o de estrutura - Variante Mensagens', () => {
+    it('todos os campos devem ter posi??o, tipo e tamanho definidos', () => {
       Object.entries(SANTANDER_CNAB240_SEGMENT_S_MESSAGES).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -167,7 +167,7 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
       )
     })
 
-    it('deve cobrir todas as 240 posi��es', () => {
+    it('deve cobrir todas as 240 posi??es', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SANTANDER_CNAB240_SEGMENT_S_MESSAGES).forEach((fieldDef: any) => {
@@ -180,3 +180,4 @@ describe('Schema Santander CNAB 240 - Segmento S', () => {
     })
   })
 })
+

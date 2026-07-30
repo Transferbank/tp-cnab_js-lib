@@ -315,3 +315,4 @@ describe('Schema Bradesco CNAB 240 - Segmento Y-04', () => {
     })
   })
 })
+

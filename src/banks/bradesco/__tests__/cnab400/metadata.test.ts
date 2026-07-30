@@ -26,3 +26,4 @@ describe('Schema Bradesco CNAB 400 - Metadados', () => {
     expect(bradescoCnab400.trailer).toBeDefined()
   })
 })
+

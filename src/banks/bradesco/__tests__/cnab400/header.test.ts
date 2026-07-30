@@ -240,3 +240,4 @@ describe('Schema Bradesco CNAB 400 - Header de Arquivo', () => {
     })
   })
 })
+

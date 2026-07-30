@@ -364,3 +364,4 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Dados Reais)', () => {
     })
   })
 })
+

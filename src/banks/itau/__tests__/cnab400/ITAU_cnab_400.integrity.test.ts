@@ -1,10 +1,10 @@
-ï»¿/**
+/**
  * Parsing das linhas brutas de ITAU_cnab_400.REM com os schemas TS reais
- * (HEADER, DETAIL, TRAILER, TYPE2_FINE) â€“ valida que o schema realmente dÃ¡ conta
- * do arquivo de produÃ§Ã£o, independente do que estÃ¡ escrito no metadata.json.
+ * (HEADER, DETAIL, TRAILER, TYPE2_FINE) – valida que o schema realmente dá conta
+ * do arquivo de produção, independente do que está escrito no metadata.json.
  *
- * ValidaÃ§Ã£o do conteÃºdo do metadata.json em si fica em `.test.ts`.
- * Pipeline pÃºblico (`openCnab`) fica em `.e2e.test.ts`.
+ * Validação do conteúdo do metadata.json em si fica em `.test.ts`.
+ * Pipeline público (`openCnab`) fica em `.e2e.test.ts`.
  */
 
 import { readFixture } from './shared'
@@ -15,7 +15,7 @@ import type { FixtureMetadata } from '@tp-types/testing'
 import * as fs from 'fs'
 import * as path from 'path'
 
-describe('Integridade TXT Ã— Schema: ITAU_cnab_400.REM', () => {
+describe('Integridade TXT × Schema: ITAU_cnab_400.REM', () => {
   const lines = readFixture('ITAU_cnab_400.REM')
   let metadata: FixtureMetadata
 
@@ -32,7 +32,7 @@ describe('Integridade TXT Ã— Schema: ITAU_cnab_400.REM', () => {
       expect(metadata.structure.messageLines).toBe(319)
     })
 
-    test('todos os registros tipo 2 devem seguir o padrÃ£o', () => {
+    test('todos os registros tipo 2 devem seguir o padrão', () => {
       const tipo2Lines = lines.filter((line) => line[0] === '2')
       tipo2Lines.forEach((line) => {
         // Tipo de registro = '2'
@@ -43,14 +43,14 @@ describe('Integridade TXT Ã— Schema: ITAU_cnab_400.REM', () => {
     })
   })
 
-  describe('Integridade TXT Ã— Schema', () => {
+  describe('Integridade TXT × Schema', () => {
     test('deve ter 400 caracteres em cada linha', () => {
       lines.forEach((line) => {
         expect(line.length).toBe(400)
       })
     })
 
-    test('header deve ter cÃ³digo do banco correto (341)', () => {
+    test('header deve ter código do banco correto (341)', () => {
       const schema = getBankSchema(BANK_CODES.ITAU, CNABFormatCode.CNAB400)
       if (schema) {
         const headerParsed = extractLineFields(lines[0], schema.header || {})
@@ -59,7 +59,7 @@ describe('Integridade TXT Ã— Schema: ITAU_cnab_400.REM', () => {
       }
     })
 
-    test('todos os registros tipo 1 devem ser parseÃ¡veis', () => {
+    test('todos os registros tipo 1 devem ser parseáveis', () => {
       const schema = getBankSchema(BANK_CODES.ITAU, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')
@@ -78,17 +78,17 @@ describe('Integridade TXT Ã— Schema: ITAU_cnab_400.REM', () => {
       }
     })
 
-    test('deve haver alternÃ¢ncia tipo 1 â†’ tipo 2 â†’ tipo 1 â†’ tipo 2...', () => {
-      // ApÃ³s o header (linha 0), espera-se: detalhe (tipo 1), multa (tipo 2), detalhe, multa...
-      // atÃ© o trailer (tipo 9)
+    test('deve haver alternância tipo 1 ? tipo 2 ? tipo 1 ? tipo 2...', () => {
+      // Após o header (linha 0), espera-se: detalhe (tipo 1), multa (tipo 2), detalhe, multa...
+      // até o trailer (tipo 9)
       for (let i = 1; i < lines.length - 1; i++) {
         const tipoAtual = lines[i][0]
         
         if (i === lines.length - 1) {
-          // Ãšltima linha deve ser trailer
+          // Última linha deve ser trailer
           expect(tipoAtual).toBe('9')
         } else if (i % 2 === 1) {
-          // Linhas Ã­mpares (1, 3, 5...) = tipo 1 (detalhe)
+          // Linhas ímpares (1, 3, 5...) = tipo 1 (detalhe)
           expect(tipoAtual).toBe('1')
         } else {
           // Linhas pares (2, 4, 6...) = tipo 2 (multa)
@@ -112,3 +112,4 @@ describe('Integridade TXT Ã— Schema: ITAU_cnab_400.REM', () => {
     })
   })
 })
+

@@ -212,3 +212,4 @@ describe('Schema Itaú CNAB 400 - Header de Arquivo', () => {
   })
 })
 
+

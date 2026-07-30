@@ -480,7 +480,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      expect(() => cnabFile.validate({ withFeedback: false })).not.toThrow()
+      expect(() => cnabFile.validate()).not.toThrow()
     })
 
     test('deve funcionar com withFeedback: true e retornar feedback completo (não fail-fast)', () => {
@@ -488,11 +488,11 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      expect(() => cnabFile.validate({ withFeedback: true })).not.toThrow()
+      expect(() => cnabFile.validate(true)).not.toThrow()
 
-      // withFeedback: true mescla erros estruturais e de negócio (validateWithFullFeedback),
+      // withFeedback=true mescla erros estruturais e de negócio (validateWithFullFeedback),
       // diferente do padrão fail-fast que para no primeiro erro encontrado.
-      const result = cnabFile.validate({ withFeedback: true })
+      const result = cnabFile.validate(true)
       expect(result).toHaveProperty('feedback')
       expect(Array.isArray(result.feedback.lines)).toBe(true)
     })
@@ -569,7 +569,7 @@ describe('CNABFile.validate()', () => {
 
       // withFeedback: true é necessário para ver todos os erros mesclados —
       // o padrão fail-fast retorna só o primeiro erro encontrado.
-      const result = cnabFile.validate({ withFeedback: true })
+      const result = cnabFile.validate(true)
 
       // Deve ter múltiplos erros (estrutural + negócio)
       expect(result.isValid).toBe(false)
@@ -629,7 +629,7 @@ describe('CNABFile.validate()', () => {
       const cnabFile = openCnab(fileContent)
 
       // withFeedback: true é necessário para ver os erros mesclados de ambas as camadas
-      const result = cnabFile.validate({ withFeedback: true })
+      const result = cnabFile.validate(true)
 
       // Deve ter erro de negócio (CPF inválido)
       expect(result.isValid).toBe(false)
@@ -1108,3 +1108,5 @@ describe('CNABFile.read() e readAsync()  modo lazy não embrulha CNABError', (
     }
   })
 })
+
+

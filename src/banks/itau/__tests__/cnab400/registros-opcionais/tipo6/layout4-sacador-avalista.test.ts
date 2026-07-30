@@ -1,15 +1,15 @@
-Ôªø/**
- * Testes do Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)
+/**
+ * Testes do Schema Ita˙ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)
  *
- * Registro para emiss√£o f√≠sica de boleto pelo cedente (fluxo paralelo ao tipo 1).
- * Layout 4 cont√©m a extens√£o de dados do sacador/avalista.
+ * Registro para emiss„o fÌsica de boleto pelo cedente (fluxo paralelo ao tipo 1).
+ * Layout 4 contÈm a extens„o de dados do sacador/avalista.
  */
 
 import { TYPE6_LAYOUT4_ENDORSER } from '@banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout4-endorser'
 
-describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', () => {
-  describe('Campos de identifica√ß√£o', () => {
-    test('deve ter tipo de registro "6" na posi√ß√£o 1', () => {
+describe('Schema Ita˙ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', () => {
+  describe('Campos de identificaÁ„o', () => {
+    test('deve ter tipo de registro "6" na posiÁ„o 1', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.tipo_registro
 
       expect(field.pos).toEqual([1, 1])
@@ -19,7 +19,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.pattern).toBe('6')
     })
 
-    test('deve ter c√≥digo de layout "4" na posi√ß√£o 2', () => {
+    test('deve ter cÛdigo de layout "4" na posiÁ„o 2', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.codigo_layout
 
       expect(field.pos).toEqual([2, 2])
@@ -30,8 +30,8 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
     })
   })
 
-  describe('Dados de identifica√ß√£o do sacador/avalista', () => {
-    test('deve ter c√≥digo de inscri√ß√£o na posi√ß√£o 3-4', () => {
+  describe('Dados de identificaÁ„o do sacador/avalista', () => {
+    test('deve ter cÛdigo de inscriÁ„o na posiÁ„o 3-4', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.codigo_inscricao
 
       expect(field.pos).toEqual([3, 4])
@@ -40,7 +40,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('deve ter n√∫mero de inscri√ß√£o (CPF/CNPJ) na posi√ß√£o 5-18', () => {
+    test('deve ter n˙mero de inscriÁ„o (CPF/CNPJ) na posiÁ„o 5-18', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.numero_inscricao
 
       expect(field.pos).toEqual([5, 18])
@@ -49,7 +49,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('n√∫mero de inscri√ß√£o deve suportar CPF (11) e CNPJ (14)', () => {
+    test('n˙mero de inscriÁ„o deve suportar CPF (11) e CNPJ (14)', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.numero_inscricao
 
       expect(field.size).toBe(14)
@@ -58,8 +58,8 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
     })
   })
 
-  describe('Endere√ßo completo do sacador/avalista', () => {
-    test('deve ter logradouro na posi√ß√£o 19-58', () => {
+  describe('EndereÁo completo do sacador/avalista', () => {
+    test('deve ter logradouro na posiÁ„o 19-58', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.logradouro
 
       expect(field.pos).toEqual([19, 58])
@@ -68,7 +68,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('deve ter bairro na posi√ß√£o 59-70', () => {
+    test('deve ter bairro na posiÁ„o 59-70', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.bairro
 
       expect(field.pos).toEqual([59, 70])
@@ -77,7 +77,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('deve ter CEP na posi√ß√£o 71-78', () => {
+    test('deve ter CEP na posiÁ„o 71-78', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.cep
 
       expect(field.pos).toEqual([71, 78])
@@ -86,7 +86,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('deve ter cidade na posi√ß√£o 79-93', () => {
+    test('deve ter cidade na posiÁ„o 79-93', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.cidade
 
       expect(field.pos).toEqual([79, 93])
@@ -95,7 +95,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('deve ter estado (UF) na posi√ß√£o 94-95', () => {
+    test('deve ter estado (UF) na posiÁ„o 94-95', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.estado
 
       expect(field.pos).toEqual([94, 95])
@@ -104,7 +104,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('todos os campos de endere√ßo devem estar presentes', () => {
+    test('todos os campos de endereÁo devem estar presentes', () => {
       expect(TYPE6_LAYOUT4_ENDORSER.logradouro).toBeDefined()
       expect(TYPE6_LAYOUT4_ENDORSER.bairro).toBeDefined()
       expect(TYPE6_LAYOUT4_ENDORSER.cep).toBeDefined()
@@ -114,7 +114,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
   })
 
   describe('Campos finais', () => {
-    test('deve ter brancos na posi√ß√£o 96-394', () => {
+    test('deve ter brancos na posiÁ„o 96-394', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.brancos
 
       expect(field.pos).toEqual([96, 394])
@@ -123,7 +123,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       expect(field.required).toBe(false)
     })
 
-    test('deve ter n√∫mero sequencial na posi√ß√£o 395-400', () => {
+    test('deve ter n˙mero sequencial na posiÁ„o 395-400', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.numero_sequencial
 
       expect(field.pos).toEqual([395, 400])
@@ -134,7 +134,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
   })
 
   describe('Integridade do schema', () => {
-    test('n√£o deve ter sobreposi√ß√£o de posi√ß√µes', () => {
+    test('n„o deve ter sobreposiÁ„o de posiÁıes', () => {
       const fields = Object.entries(TYPE6_LAYOUT4_ENDORSER).sort(
         (a, b) => a[1].pos[0] - b[1].pos[0],
       )
@@ -150,21 +150,21 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
       }
     })
 
-    test('tamanho declarado deve bater com posi√ß√µes', () => {
+    test('tamanho declarado deve bater com posiÁıes', () => {
       Object.entries(TYPE6_LAYOUT4_ENDORSER).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)
       })
     })
 
-    test('deve ter exatamente 400 posi√ß√µes', () => {
+    test('deve ter exatamente 400 posiÁıes', () => {
       const ultimoCampo = TYPE6_LAYOUT4_ENDORSER.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('Caracter√≠sticas espec√≠ficas', () => {
-    test('tipo_registro e codigo_layout devem ter padr√µes fixos', () => {
+  describe('CaracterÌsticas especÌficas', () => {
+    test('tipo_registro e codigo_layout devem ter padrıes fixos', () => {
       expect(TYPE6_LAYOUT4_ENDORSER.tipo_registro.pattern).toBe('6')
       expect(TYPE6_LAYOUT4_ENDORSER.codigo_layout.pattern).toBe('4')
     })
@@ -174,7 +174,7 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
 
       expect(field.size).toBe(299)
 
-      // Verificar se √© o maior campo
+      // Verificar se È o maior campo
       const camposPorTamanho = Object.entries(TYPE6_LAYOUT4_ENDORSER)
         .map(([name, field]) => ({ name, size: field.size }))
         .sort((a, b) => b.size - a.size)
@@ -183,4 +183,5 @@ describe('Schema Ita√∫ CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)',
     })
   })
 })
+
 

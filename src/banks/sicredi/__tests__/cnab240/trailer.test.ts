@@ -133,3 +133,4 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
     })
   })
 })
+

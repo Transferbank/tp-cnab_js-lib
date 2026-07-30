@@ -184,3 +184,4 @@ describe('Schema Caixa CNAB 400 - Registro Tipo 3 (Envio por E-mail/SMS)', () =>
   })
 })
 
+

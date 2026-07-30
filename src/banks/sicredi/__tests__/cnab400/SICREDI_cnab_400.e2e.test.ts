@@ -1,10 +1,10 @@
-Ôªø/**
- * Pipeline p√∫blico de ponta a ponta para SICREDI_cnab_400.CRM: exercita
- * `openCnab()`, o caminho que um consumidor real da lib usa ‚Äì conte√∫do
- * bruto do arquivo, sem pr√©-separar linhas nem escolher schema manualmente
- * (detec√ß√£o de formato/banco inclu√≠da).
+/**
+ * Pipeline p˙blico de ponta a ponta para SICREDI_cnab_400.CRM: exercita
+ * `openCnab()`, o caminho que um consumidor real da lib usa ñ conte˙do
+ * bruto do arquivo, sem prÈ-separar linhas nem escolher schema manualmente
+ * (detecÁ„o de formato/banco incluÌda).
  *
- * Valida√ß√£o do conte√∫do do metadata.json em si fica em `.test.ts`.
+ * ValidaÁ„o do conte˙do do metadata.json em si fica em `.test.ts`.
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
  */
 
@@ -16,7 +16,7 @@ import type { FixtureMetadata } from '@tp-types/testing'
 import type { CNABReadResult } from '@tp-types/core/read-result'
 import type { CNABData } from '@tp-types/read'
 
-describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM', () => {
+describe('openCnab ñ pipeline p˙blico de ponta a ponta: SICREDI_cnab_400.CRM', () => {
   const fixtureDir = path.join(__dirname, '../../__fixtures__/cnab400')
   const txtPath = path.join(fixtureDir, 'SICREDI_cnab_400.CRM')
   const jsonPath = path.join(fixtureDir, 'SICREDI_cnab_400.json')
@@ -32,7 +32,7 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM'
     metadata = JSON.parse(jsonContent) as FixtureMetadata
     cnabFile = openCnab(txtContent)
     readResult = cnabFile.read()
-    validationResult = cnabFile.validate({ withFeedback: true })
+    validationResult = cnabFile.validate(true)
   })
 
   test('deve detectar formato CNAB 400 e banco Sicredi (748)', () => {
@@ -46,14 +46,14 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM'
     expect(readResult.bills.length).toBe(metadata.totals.recordCount)
   })
 
-  test('n√£o deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
-    // Este arquivo real tem t√≠tulos com vencimento anterior √† data atual
-    // (arquivo gerado em 27/06/2026, mas estamos em 29/07/2026) ‚Äì isso √©
-    // esperado e n√£o √© responsabilidade do schema/parser.
+  test('n„o deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
+    // Este arquivo real tem tÌtulos com vencimento anterior ‡ data atual
+    // (arquivo gerado em 27/06/2026, mas estamos em 29/07/2026) ñ isso È
+    // esperado e n„o È responsabilidade do schema/parser.
     const lines = validationResult.feedback?.lines || []
     const errosDeParsing = lines.filter(
       (error: ValidationError) =>
-        !(error.field === 'Data de vencimento' && error.message.includes('anterior √† data atual')),
+        !(error.field === 'Data de vencimento' && error.message.includes('anterior ‡ data atual')),
     )
 
     if (errosDeParsing.length > 0) {
@@ -66,7 +66,7 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM'
     expect(errosDeParsing).toEqual([])
   })
 
-  test('deve extrair os dados do primeiro t√≠tulo batendo com os metadados', () => {
+  test('deve extrair os dados do primeiro tÌtulo batendo com os metadados', () => {
     const records = validationResult.feedback?.records || []
     expect(records.length).toBeGreaterThan(0)
     
@@ -79,7 +79,7 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM'
     expect(primeiro.document).toBe(esperado.document.replace(/^0+/, ''))
   })
 
-  test('deve extrair os dados de todos os t√≠tulos batendo com os metadados', () => {
+  test('deve extrair os dados de todos os tÌtulos batendo com os metadados', () => {
     const records = validationResult.feedback?.records || []
     expect(records.length).toBe(metadata.records.length)
 
@@ -89,16 +89,16 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM'
       expect(record.name?.trim()).toBe(esperado.name)
       expect(record.amount).toBeCloseTo(esperado.amount, 2)
       expect(record.dueDate).toBe(esperado.dueDate)
-      // Documento: o parser remove zeros √† esquerda
+      // Documento: o parser remove zeros ‡ esquerda
       expect(record.document).toBe(esperado.document.replace(/^0+/, ''))
     })
   })
 
-  test('deve detectar todos os t√≠tulos como CNPJ', () => {
-    // Esta fixture s√≥ tem CNPJs (confirmado em metadata.records[].documentType, ver .test.ts).
-    // Nota: documentType n√£o est√° dispon√≠vel no tipo CNABRecord da API p√∫blica, ent√£o
-    // comparamos contra o documentRaw do metadata (sempre 14 d√≠gitos, com zeros √† esquerda)
-    // em vez de assumir um tamanho fixo ‚Äì o parser p√∫blico remove os zeros √† esquerda.
+  test('deve detectar todos os tÌtulos como CNPJ', () => {
+    // Esta fixture sÛ tem CNPJs (confirmado em metadata.records[].documentType, ver .test.ts).
+    // Nota: documentType n„o est· disponÌvel no tipo CNABRecord da API p˙blica, ent„o
+    // comparamos contra o documentRaw do metadata (sempre 14 dÌgitos, com zeros ‡ esquerda)
+    // em vez de assumir um tamanho fixo ñ o parser p˙blico remove os zeros ‡ esquerda.
     const records = validationResult.feedback?.records || []
     
     records.forEach((record: CNABRecord, index: number) => {
@@ -108,10 +108,10 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM'
     })
   })
 
-  test('valores extra√≠dos devem bater com os valores esperados', () => {
+  test('valores extraÌdos devem bater com os valores esperados', () => {
     const records = validationResult.feedback?.records || []
     
-    // Verificar alguns valores espec√≠ficos
+    // Verificar alguns valores especÌficos
     expect(records[0].amount).toBeCloseTo(660.14, 2)
     expect(records[1].amount).toBeCloseTo(659.93, 2)
     expect(records[2].amount).toBeCloseTo(659.93, 2)
@@ -121,20 +121,21 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: SICREDI_cnab_400.CRM'
   test('datas de vencimento devem estar formatadas corretamente', () => {
     const records = validationResult.feedback?.records || []
     
-    // Verificar alguns vencimentos espec√≠ficos
+    // Verificar alguns vencimentos especÌficos
     expect(records[0].dueDate).toBe('29/03/2026')
     expect(records[1].dueDate).toBe('28/04/2026')
     expect(records[2].dueDate).toBe('28/05/2026')
     expect(records[3].dueDate).toBe('29/03/2026')
   })
 
-  test('endere√ßos devem estar extra√≠dos corretamente', () => {
+  test('endereÁos devem estar extraÌdos corretamente', () => {
     const records = validationResult.feedback?.records || []
     
-    // Verificar alguns endere√ßos espec√≠ficos
-    // Nota: zipCode n√£o est√° dispon√≠vel no tipo CNABRecord da API p√∫blica
+    // Verificar alguns endereÁos especÌficos
+    // Nota: zipCode n„o est· disponÌvel no tipo CNABRecord da API p˙blica
     expect(records[0].address).toContain('AV EXEMPLO,100')
     expect(records[3].address).toContain('RUA EXEMPLO,113')
     expect(records[9].address).toContain('RUA EXEMPLO,126')
   })
 })
+

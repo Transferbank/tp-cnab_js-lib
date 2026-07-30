@@ -374,3 +374,4 @@ describe('Schema Itaú CNAB 400 - Detalhe (Definição)', () => {
   })
 })
 
+

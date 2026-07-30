@@ -1,4 +1,4 @@
-ï»¿/**
+/**
  * Testes do Header de Lote - Santander CNAB 240
  * 
  * Atualizado conforme Manual H7815 v6 (Fevereiro/2023).
@@ -7,15 +7,15 @@
 import { santanderCnab240 } from '@banks/santander/schemas/cnab240'
 
 describe('Schema Santander CNAB 240 - Header de Lote', () => {
-  describe('DefiniÃ§Ã£o dos campos - Manual 2023', () => {
-    test('deve ter cÃ³digo do banco na posiÃ§Ã£o 1-3 com padrÃ£o "033"', () => {
+  describe('Definição dos campos - Manual 2023', () => {
+    test('deve ter código do banco na posição 1-3 com padrão "033"', () => {
       const field = santanderCnab240.headerLote!.controle_banco
       
       expect(field.pos).toEqual([1, 3])
       expect(field.pattern).toBe('033')
     })
 
-    test('deve ter tipo de registro "1" (header de lote) na posiÃ§Ã£o 8', () => {
+    test('deve ter tipo de registro "1" (header de lote) na posição 8', () => {
       const field = santanderCnab240.headerLote!.controle_registro
       
       expect(field.pos).toEqual([8, 8])
@@ -32,7 +32,7 @@ describe('Schema Santander CNAB 240 - Header de Lote', () => {
       expect(field.description).toContain('Manual 2023')
     })
 
-    test('deve ter versÃ£o do layout "030" (nÃ£o 040) na posiÃ§Ã£o 14-16 - Manual 2023', () => {
+    test('deve ter versão do layout "030" (não 040) na posição 14-16 - Manual 2023', () => {
       const field = santanderCnab240.headerLote!.servico_layout
       
       expect(field.pos).toEqual([14, 16])
@@ -40,7 +40,7 @@ describe('Schema Santander CNAB 240 - Header de Lote', () => {
       expect(field.description).toContain('Manual 2023')
     })
 
-    test('deve ter cÃ³digo de transmissÃ£o NUMÃ‰RICO (nÃ£o alfa) na posiÃ§Ã£o 54-68 - Manual 2023', () => {
+    test('deve ter código de transmissão NUMÉRICO (não alfa) na posição 54-68 - Manual 2023', () => {
       const field = santanderCnab240.headerLote!.codigo_transmissao
       
       expect(field.pos).toEqual([54, 68])
@@ -54,8 +54,8 @@ describe('Schema Santander CNAB 240 - Header de Lote', () => {
     })
   })
 
-  describe('ValidaÃ§Ã£o de estrutura', () => {
-    test('todos os campos devem ter posiÃ§Ã£o, tipo e tamanho definidos', () => {
+  describe('Validação de estrutura', () => {
+    test('todos os campos devem ter posição, tipo e tamanho definidos', () => {
       for (const field of Object.values(santanderCnab240.headerLote!)) {
         expect(field.pos).toBeDefined()
         expect(field.type).toBeDefined()
@@ -63,7 +63,7 @@ describe('Schema Santander CNAB 240 - Header de Lote', () => {
       }
     })
 
-    test('tamanhos declarados devem bater com as posiÃ§Ãµes', () => {
+    test('tamanhos declarados devem bater com as posições', () => {
       for (const field of Object.values(santanderCnab240.headerLote!)) {
         const [start, end] = field.pos
         const calculatedSize = end - start + 1
@@ -71,7 +71,7 @@ describe('Schema Santander CNAB 240 - Header de Lote', () => {
       }
     })
 
-    test('nÃ£o deve haver sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    test('não deve haver sobreposição de posições', () => {
       const positions = new Set<number>()
       
       for (const field of Object.values(santanderCnab240.headerLote!)) {
@@ -83,7 +83,7 @@ describe('Schema Santander CNAB 240 - Header de Lote', () => {
       }
     })
 
-    test('deve cobrir todas as 240 posiÃ§Ãµes', () => {
+    test('deve cobrir todas as 240 posições', () => {
       const positions = new Set<number>()
       
       for (const field of Object.values(santanderCnab240.headerLote!)) {
@@ -97,3 +97,4 @@ describe('Schema Santander CNAB 240 - Header de Lote', () => {
     })
   })
 })
+

@@ -223,3 +223,4 @@ describe('Schema Caixa CNAB 400 - Registro Tipo 2 (Mensagens do Título)', () =>
   })
 })
 
+

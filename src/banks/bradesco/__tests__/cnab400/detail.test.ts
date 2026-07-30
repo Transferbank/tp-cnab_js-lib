@@ -368,3 +368,4 @@ describe('Schema Bradesco CNAB 400 - Detalhe (Definição)', () => {
     })
   })
 })
+

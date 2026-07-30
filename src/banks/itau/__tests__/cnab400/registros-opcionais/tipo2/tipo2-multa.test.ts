@@ -1,15 +1,15 @@
-ï»¿/**
- * Testes do Schema ItaÃº CNAB 400 - Registro Tipo 2 (Complemento de Multa)
+/**
+ * Testes do Schema Itaú CNAB 400 - Registro Tipo 2 (Complemento de Multa)
  *
  * Registro opcional que define valores/percentuais de multa.
- * Deve vir imediatamente apÃ³s o detalhe (tipo 1) correspondente.
+ * Deve vir imediatamente após o detalhe (tipo 1) correspondente.
  */
 
 import { TYPE2_FINE } from '@banks/itau/schemas/cnab400/registros-opcionais/type2-fine/type2-fine'
 
-describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
-  describe('DefiniÃ§Ã£o dos campos', () => {
-    test('deve ter tipo de registro "2" na posiÃ§Ã£o 1', () => {
+describe('Schema Itaú CNAB 400 - Registro Tipo 2 (Multa)', () => {
+  describe('Definição dos campos', () => {
+    test('deve ter tipo de registro "2" na posição 1', () => {
       const field = TYPE2_FINE.tipo_registro
 
       expect(field.pos).toEqual([1, 1])
@@ -19,7 +19,7 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
       expect(field.pattern).toBe('2')
     })
 
-    test('deve ter cÃ³digo de multa na posiÃ§Ã£o 2', () => {
+    test('deve ter código de multa na posição 2', () => {
       const field = TYPE2_FINE.cod_multa
 
       expect(field.pos).toEqual([2, 2])
@@ -28,7 +28,7 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter data de multa na posiÃ§Ã£o 3-10 com formato DDMMAAAA', () => {
+    test('deve ter data de multa na posição 3-10 com formato DDMMAAAA', () => {
       const field = TYPE2_FINE.data_multa
 
       expect(field.pos).toEqual([3, 10])
@@ -36,11 +36,11 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
       expect(field.size).toBe(8)
       expect(field.dateFormat).toBe('DDMMAAAA')
       expect(field.required).toBe(false)
-      expect(field.description).toContain('8 dÃ­gitos')
-      expect(field.description).toContain('diferente do padrÃ£o DDMMAA')
+      expect(field.description).toContain('8 dígitos')
+      expect(field.description).toContain('diferente do padrão DDMMAA')
     })
 
-    test('deve ter valor/percentual de multa na posiÃ§Ã£o 11-23 com 2 decimais', () => {
+    test('deve ter valor/percentual de multa na posição 11-23 com 2 decimais', () => {
       const field = TYPE2_FINE.multa
 
       expect(field.pos).toEqual([11, 23])
@@ -50,7 +50,7 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter brancos na posiÃ§Ã£o 24-394', () => {
+    test('deve ter brancos na posição 24-394', () => {
       const field = TYPE2_FINE.brancos
 
       expect(field.pos).toEqual([24, 394])
@@ -59,7 +59,7 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
+    test('deve ter número sequencial na posição 395-400', () => {
       const field = TYPE2_FINE.numero_sequencial
 
       expect(field.pos).toEqual([395, 400])
@@ -70,7 +70,7 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
   })
 
   describe('Integridade do schema', () => {
-    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    test('não deve ter sobreposição de posições', () => {
       const fields = Object.entries(TYPE2_FINE).sort((a, b) => a[1].pos[0] - b[1].pos[0])
 
       for (let i = 0; i < fields.length - 1; i++) {
@@ -84,27 +84,27 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
+    test('tamanho declarado deve bater com posições', () => {
       Object.entries(TYPE2_FINE).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)
       })
     })
 
-    test('deve ter exatamente 400 posiÃ§Ãµes', () => {
+    test('deve ter exatamente 400 posições', () => {
       const ultimoCampo = TYPE2_FINE.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('CaracterÃ­sticas especÃ­ficas', () => {
-    test('data_multa deve usar formato DDMMAAAA (8 dÃ­gitos) diferente do padrÃ£o DDMMAA', () => {
+  describe('Características específicas', () => {
+    test('data_multa deve usar formato DDMMAAAA (8 dígitos) diferente do padrão DDMMAA', () => {
       const field = TYPE2_FINE.data_multa
 
       expect(field.dateFormat).toBe('DDMMAAAA')
       expect(field.size).toBe(8)
 
-      // Confirmar que Ã© diferente do formato padrÃ£o usado nos outros campos
+      // Confirmar que é diferente do formato padrão usado nos outros campos
       expect(field.dateFormat).not.toBe('DDMMAA')
     })
 
@@ -113,7 +113,7 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
 
       expect(field.size).toBe(371)
 
-      // Verificar se Ã© o maior campo
+      // Verificar se é o maior campo
       const camposPorTamanho = Object.entries(TYPE2_FINE)
         .map(([name, field]) => ({ name, size: field.size }))
         .sort((a, b) => b.size - a.size)
@@ -121,24 +121,25 @@ describe('Schema ItaÃº CNAB 400 - Registro Tipo 2 (Multa)', () => {
       expect(camposPorTamanho[0].name).toBe('brancos')
     })
 
-    test('tipo_registro deve ter padrÃ£o "2" fixo', () => {
+    test('tipo_registro deve ter padrão "2" fixo', () => {
       const field = TYPE2_FINE.tipo_registro
 
       expect(field.pattern).toBe('2')
       expect(field.required).toBe(true)
     })
 
-    test('multa deve suportar valores atÃ© 99.999.999.999,99', () => {
+    test('multa deve suportar valores até 99.999.999.999,99', () => {
       const field = TYPE2_FINE.multa
 
-      // 13 posiÃ§Ãµes com 2 decimais = 11 dÃ­gitos inteiros + 2 decimais
+      // 13 posições com 2 decimais = 11 dígitos inteiros + 2 decimais
       expect(field.size).toBe(13)
       expect(field.decimals).toBe(2)
 
-      // Valor mÃ¡ximo: 99999999999.99
+      // Valor máximo: 99999999999.99
       const valorMaximo = Math.pow(10, 11) - 0.01
       expect(valorMaximo).toBe(99999999999.99)
     })
   })
 })
+
 

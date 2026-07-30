@@ -75,9 +75,7 @@ export class CNABFile {
     return provider
   }
 
- 
-  validate(options?: { withFeedback?: boolean }): CNABValidationResult {
-    const withFeedback = options?.withFeedback ?? false
+  validate(withFeedback = false): CNABValidationResult {
     const provider = this.resolveProvider(ReadMode.SIMPLE)
     const bankSchema = provider.schema
 

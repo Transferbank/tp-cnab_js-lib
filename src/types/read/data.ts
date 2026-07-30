@@ -4,8 +4,8 @@
  */
 export interface CNABData {
   valor?: number
-  vencimento?: string // DD/MM/AAAA
-  dataEmissao?: string // DD/MM/AAAA
+  vencimento?: string 
+  dataEmissao?: string 
   nossoNumero?: string
   numeroDocumento?: string
   
@@ -24,18 +24,18 @@ export interface CNABData {
   multa?: {
     tipo?: 'valor' | 'percentual' | 'dispensado'
     valor?: number
-    vigenciaAPartirDe?: string // DD/MM/AAAA
+    vigenciaAPartirDe?: string
   }
   
   juros?: {
     tipo?: 'valor' | 'percentual' | 'dispensado'
     valor?: number
-    vigenciaAPartirDe?: string // DD/MM/AAAA
+    vigenciaAPartirDe?: string
   }
   
   desconto?: {
     valor?: number
-    dataLimite?: string // DD/MM/AAAA
+    dataLimite?: string
   }
   
   abatimento?: {

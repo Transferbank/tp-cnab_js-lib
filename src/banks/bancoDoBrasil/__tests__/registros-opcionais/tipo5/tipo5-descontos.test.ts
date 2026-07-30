@@ -200,3 +200,4 @@ describe('Schema Banco do Brasil CNAB 400 - Registro Tipo 5, Serviço 07 (2º e 
     })
   })
 })
+

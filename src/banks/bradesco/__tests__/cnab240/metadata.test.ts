@@ -38,3 +38,4 @@ describe('Schema Bradesco CNAB 240 - Metadados', () => {
     expect(identifiers).toContain('Y50')
   })
 })
+

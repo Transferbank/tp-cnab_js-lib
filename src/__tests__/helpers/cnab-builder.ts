@@ -5,7 +5,7 @@
  * facilitando a criação de arquivos de teste.
  */
 
-import { RecordSchema } from '@tp-types/index'
+import { RecordSchema, FieldDefinition } from '@tp-types/index'
 
 /**
  * Função genérica para construir uma linha CNAB com tamanho especificado
@@ -17,7 +17,7 @@ function buildCnabLine(
 ): string {
   const chars = new Array(lineLength).fill(' ')
 
-  for (const [field, def] of Object.entries(schema)) {
+  for (const [field, def] of Object.entries(schema) as [string, FieldDefinition][]) {
     const value = values[field] ?? (typeof def.pattern === 'string' ? def.pattern : '')
     const [start, end] = def.pos
     const fieldLen = end - start + 1

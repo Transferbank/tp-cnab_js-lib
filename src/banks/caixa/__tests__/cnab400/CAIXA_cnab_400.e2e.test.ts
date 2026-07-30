@@ -1,8 +1,8 @@
-Ôªø/**
- * Pipeline p√∫blico de ponta a ponta para CAIXA_cnab_400.REM: exercita
- * `openCnab()`, o caminho que um consumidor real da lib usa ‚Äì conte√∫do
- * bruto do arquivo, sem pr√©-separar linhas nem escolher schema manualmente
- * (detec√ß√£o de formato/banco inclu√≠da).
+/**
+ * Pipeline p˙blico de ponta a ponta para CAIXA_cnab_400.REM: exercita
+ * `openCnab()`, o caminho que um consumidor real da lib usa ñ conte˙do
+ * bruto do arquivo, sem prÈ-separar linhas nem escolher schema manualmente
+ * (detecÁ„o de formato/banco incluÌda).
  */
 
 import * as fs from 'fs'
@@ -12,7 +12,7 @@ import { CNABFormatCode } from '@tp-types/core'
 import type { CNABReadResult } from '@tp-types/core/read-result'
 import type { CNABData } from '@tp-types/read'
 
-describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: CAIXA_cnab_400.REM', () => {
+describe('openCnab ñ pipeline p˙blico de ponta a ponta: CAIXA_cnab_400.REM', () => {
   const fixtureDir = path.join(__dirname, '../../__fixtures__/cnab400')
   const txtPath = path.join(fixtureDir, 'CAIXA_cnab_400.REM')
   const txtContent = fs.readFileSync(txtPath, 'latin1')
@@ -24,13 +24,13 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: CAIXA_cnab_400.REM', 
   beforeAll(() => {
     cnabFile = openCnab(txtContent)
     readResult = cnabFile.read()
-    validationResult = cnabFile.validate({ withFeedback: true })
+    validationResult = cnabFile.validate(true)
   })
 
   test('deve detectar formato CNAB 400 e banco Caixa (104)', () => {
     expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
     expect(cnabFile.bankCode).toBe('104')
-    expect(cnabFile.bankName).toBe('Caixa Econ√¥mica')
+    expect(cnabFile.bankName).toBe('Caixa EconÙmica')
   })
 
   test('deve extrair registros do arquivo', () => {
@@ -39,7 +39,7 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: CAIXA_cnab_400.REM', 
   })
 
   test('deve ler o arquivo sem erros estruturais graves', () => {
-    // Valida√ß√£o b√°sica - pode ter warnings de neg√≥cio mas n√£o erros de estrutura
+    // ValidaÁ„o b·sica - pode ter warnings de negÛcio mas n„o erros de estrutura
     const lines = validationResult.feedback?.lines || []
     const errosEstruturais = lines.filter(
       (error) => error.message && !error.message.includes('vencimento'),
@@ -53,21 +53,21 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: CAIXA_cnab_400.REM', 
     const lines = txtContent.split('\n').filter((l) => l.length > 0)
     expect(lines.length).toBeGreaterThan(2) // Pelo menos header + detail + trailer
 
-    // Primeira linha deve ser header (come√ßa com "0")
+    // Primeira linha deve ser header (comeÁa com "0")
     expect(lines[0][0]).toBe('0')
 
-    // √öltima linha deve ser trailer (come√ßa com "9")
+    // ⁄ltima linha deve ser trailer (comeÁa com "9")
     const lastLine = lines[lines.length - 1]
     expect(lastLine[0]).toBe('9')
   })
 
-  test('deve extrair dados b√°sicos dos t√≠tulos', () => {
+  test('deve extrair dados b·sicos dos tÌtulos', () => {
     expect(readResult.bills.length).toBeGreaterThan(0)
 
     const primeiro = readResult.bills[0] as any
     expect(primeiro).toBeDefined()
 
-    // Verificar que campos b√°sicos foram extra√≠dos
+    // Verificar que campos b·sicos foram extraÌdos
     if (primeiro.name) {
       expect(typeof primeiro.name).toBe('string')
     }
@@ -77,3 +77,4 @@ describe('openCnab ‚Äì pipeline p√∫blico de ponta a ponta: CAIXA_cnab_400.REM', 
     }
   })
 })
+

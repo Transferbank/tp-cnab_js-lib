@@ -1,11 +1,11 @@
-ï»¿/**
+/**
  * Testes de Metadados - Sicoob CNAB 400
  */
 
 import { sicoobCnab400 } from '@banks/sicoob/schemas/cnab400'
 
 describe('Schema Sicoob CNAB 400 - Metadados', () => {
-  test('deve ter cÃ³digo do banco correto (756)', () => {
+  test('deve ter código do banco correto (756)', () => {
     expect(sicoobCnab400.bankCode).toBe('756')
   })
 
@@ -13,7 +13,7 @@ describe('Schema Sicoob CNAB 400 - Metadados', () => {
     expect(sicoobCnab400.bankName).toBe('Sicoob')
   })
 
-  test('deve ter todos os schemas obrigatÃ³rios para remessa', () => {
+  test('deve ter todos os schemas obrigatórios para remessa', () => {
     expect(sicoobCnab400.header).toBeDefined()
     expect(sicoobCnab400.detail).toBeDefined()
     expect(sicoobCnab400.trailer).toBeDefined()
@@ -47,28 +47,28 @@ describe('Schema Sicoob CNAB 400 - Metadados', () => {
   })
 
   describe('Particularidades do Sicoob', () => {
-    test('header deve ter prefixo_cooperativa de 4 dÃ­gitos', () => {
+    test('header deve ter prefixo_cooperativa de 4 dígitos', () => {
       const header = sicoobCnab400.header!
       expect(header.prefixo_cooperativa).toBeDefined()
       expect(header.prefixo_cooperativa.size).toBe(4)
       expect(header.prefixo_cooperativa.pos).toEqual([27, 30])
     })
 
-    test('header deve ter codigo_cliente_beneficiario de 8 dÃ­gitos', () => {
+    test('header deve ter codigo_cliente_beneficiario de 8 dígitos', () => {
       const header = sicoobCnab400.header!
       expect(header.codigo_cliente_beneficiario).toBeDefined()
       expect(header.codigo_cliente_beneficiario.size).toBe(8)
       expect(header.codigo_cliente_beneficiario.pos).toEqual([32, 39])
     })
 
-    test('detail deve ter logradouro de 37 caracteres (nÃ£o 40 como outros bancos)', () => {
+    test('detail deve ter logradouro de 37 caracteres (não 40 como outros bancos)', () => {
       const detail = sicoobCnab400.detail!
       expect(detail.logradouro).toBeDefined()
       expect(detail.logradouro.size).toBe(37)
       expect(detail.logradouro.pos).toEqual([275, 311])
     })
 
-    test('detail deve ter aceite usando dÃ­gito (0/1), nÃ£o letra (N/A)', () => {
+    test('detail deve ter aceite usando dígito (0/1), não letra (N/A)', () => {
       const detail = sicoobCnab400.detail!
       expect(detail.aceite).toBeDefined()
       expect(detail.aceite.type).toBe('num')
@@ -86,26 +86,26 @@ describe('Schema Sicoob CNAB 400 - Metadados', () => {
       expect(detail.vencimento.description).toContain('apresenta')
     })
 
-    test('detail deve ter nosso_numero de 12 dÃ­gitos (10 + DV mÃ³dulo 11)', () => {
+    test('detail deve ter nosso_numero de 12 dígitos (10 + DV módulo 11)', () => {
       const detail = sicoobCnab400.detail!
       expect(detail.nosso_numero).toBeDefined()
       expect(detail.nosso_numero.size).toBe(12)
       expect(detail.nosso_numero.pos).toEqual([63, 74])
     })
 
-    test('header deve ter codigo do banco com padrÃ£o "756"', () => {
+    test('header deve ter codigo do banco com padrão "756"', () => {
       const header = sicoobCnab400.header!
       expect(header.codigo_banco.pattern).toBe('756')
     })
 
-    test('header deve ter nome_banco com padrÃ£o "BANCOOBCED"', () => {
+    test('header deve ter nome_banco com padrão "BANCOOBCED"', () => {
       const header = sicoobCnab400.header!
       expect(header.nome_banco).toBeDefined()
       expect(header.nome_banco.pattern).toBe('BANCOOBCED')
       expect(header.nome_banco.pos).toEqual([80, 94])
     })
 
-    test('trailer deve ter 5 blocos de mensagem de 40 caracteres cada (achado estrutural Ãºnico)', () => {
+    test('trailer deve ter 5 blocos de mensagem de 40 caracteres cada (achado estrutural único)', () => {
       const trailer = sicoobCnab400.trailer!
       expect(trailer.mensagem_responsabilidade_1).toBeDefined()
       expect(trailer.mensagem_responsabilidade_1.size).toBe(40)
@@ -119,7 +119,7 @@ describe('Schema Sicoob CNAB 400 - Metadados', () => {
       expect(trailer.mensagem_responsabilidade_5.size).toBe(40)
     })
 
-    test('trailer mensagens devem estar nas posiÃ§Ãµes 195-394', () => {
+    test('trailer mensagens devem estar nas posições 195-394', () => {
       const trailer = sicoobCnab400.trailer!
       expect(trailer.mensagem_responsabilidade_1.pos).toEqual([195, 234])
       expect(trailer.mensagem_responsabilidade_2.pos).toEqual([235, 274])
@@ -138,7 +138,7 @@ describe('Schema Sicoob CNAB 400 - Metadados', () => {
       expect(detail.codigo_moeda_valor_iof_ou_qtde_moeda.description?.toLowerCase()).toContain('monet')
     })
 
-    test('trailer nÃ£o deve ter campos de totalizaÃ§Ã£o (diferente de outros bancos)', () => {
+    test('trailer não deve ter campos de totalização (diferente de outros bancos)', () => {
       const trailer = sicoobCnab400.trailer!
       const campos = Object.keys(trailer)
       expect(campos).not.toContain('qtd_documentos')
@@ -146,3 +146,4 @@ describe('Schema Sicoob CNAB 400 - Metadados', () => {
     })
   })
 })
+

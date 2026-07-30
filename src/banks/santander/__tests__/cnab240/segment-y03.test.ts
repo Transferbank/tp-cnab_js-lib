@@ -1,4 +1,4 @@
-ï»¿/**
+/**
  * Testes para Segmento Y-03 - Santander CNAB 240
  * 
  * Segmento opcional para dados PIX (chave PIX e QR Code)
@@ -7,29 +7,29 @@
 import { SANTANDER_CNAB240_SEGMENT_Y03 } from '@banks/santander/schemas/cnab240'
 
 describe('Schema Santander CNAB 240 - Segmento Y-03 (PIX)', () => {
-  describe('DefiniÃ§Ã£o dos campos', () => {
-    it('deve ter cÃ³digo do banco na posiÃ§Ã£o 1-3 com padrÃ£o "033"', () => {
+  describe('Definição dos campos', () => {
+    it('deve ter código do banco na posição 1-3 com padrão "033"', () => {
       expect(SANTANDER_CNAB240_SEGMENT_Y03.controle_banco).toMatchObject({
         pos: [1, 3],
         pattern: '033',
       })
     })
 
-    it('deve ter tipo de registro "3" (detalhe) na posiÃ§Ã£o 8', () => {
+    it('deve ter tipo de registro "3" (detalhe) na posição 8', () => {
       expect(SANTANDER_CNAB240_SEGMENT_Y03.controle_registro).toMatchObject({
         pos: [8, 8],
         pattern: '3',
       })
     })
 
-    it('deve ter identificador do segmento "Y" na posiÃ§Ã£o 14', () => {
+    it('deve ter identificador do segmento "Y" na posição 14', () => {
       expect(SANTANDER_CNAB240_SEGMENT_Y03.servico_segmento).toMatchObject({
         pos: [14, 14],
         pattern: 'Y',
       })
     })
 
-    it('deve ter cÃ³digo de registro opcional "03" na posiÃ§Ã£o 18-19', () => {
+    it('deve ter código de registro opcional "03" na posição 18-19', () => {
       expect(SANTANDER_CNAB240_SEGMENT_Y03.registro_opcional_id).toMatchObject({
         pos: [18, 19],
         pattern: '03',
@@ -48,15 +48,15 @@ describe('Schema Santander CNAB 240 - Segmento Y-03 (PIX)', () => {
       expect(campo.size).toBeGreaterThan(0)
     })
 
-    it('deve ter campo para TXID do PIX (cÃ³digo de identificaÃ§Ã£o do QR Code)', () => {
+    it('deve ter campo para TXID do PIX (código de identificação do QR Code)', () => {
       const campo = SANTANDER_CNAB240_SEGMENT_Y03.pix_qrcode_txid
       expect(campo).toBeDefined()
       expect(campo.type).toBe('alfa')
     })
   })
 
-  describe('ValidaÃ§Ã£o de estrutura', () => {
-    it('todos os campos devem ter posiÃ§Ã£o, tipo e tamanho definidos', () => {
+  describe('Validação de estrutura', () => {
+    it('todos os campos devem ter posição, tipo e tamanho definidos', () => {
       Object.entries(SANTANDER_CNAB240_SEGMENT_Y03).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -68,7 +68,7 @@ describe('Schema Santander CNAB 240 - Segmento Y-03 (PIX)', () => {
       )
     })
 
-    it('tamanhos declarados devem bater com as posiÃ§Ãµes', () => {
+    it('tamanhos declarados devem bater com as posições', () => {
       Object.entries(SANTANDER_CNAB240_SEGMENT_Y03).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           const tamanhoCalculado = fieldDef.pos[1] - fieldDef.pos[0] + 1
@@ -77,7 +77,7 @@ describe('Schema Santander CNAB 240 - Segmento Y-03 (PIX)', () => {
       )
     })
 
-    it('nÃ£o deve haver sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    it('não deve haver sobreposição de posições', () => {
       const campos = Object.entries(SANTANDER_CNAB240_SEGMENT_Y03).map(
         ([name, def]: [string, any]) => ({
           name,
@@ -95,7 +95,7 @@ describe('Schema Santander CNAB 240 - Segmento Y-03 (PIX)', () => {
       }
     })
 
-    it('deve cobrir todas as 240 posiÃ§Ãµes', () => {
+    it('deve cobrir todas as 240 posições', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SANTANDER_CNAB240_SEGMENT_Y03).forEach((fieldDef: any) => {
@@ -110,8 +110,8 @@ describe('Schema Santander CNAB 240 - Segmento Y-03 (PIX)', () => {
     })
   })
 
-  describe('Campos especÃ­ficos PIX', () => {
-    it('tipo de chave PIX deve ser alfanumÃ©rico', () => {
+  describe('Campos específicos PIX', () => {
+    it('tipo de chave PIX deve ser alfanumérico', () => {
       expect(SANTANDER_CNAB240_SEGMENT_Y03.pix_tipo_chave.type).toBe('alfa')
     })
 
@@ -121,3 +121,4 @@ describe('Schema Santander CNAB 240 - Segmento Y-03 (PIX)', () => {
     })
   })
 })
+

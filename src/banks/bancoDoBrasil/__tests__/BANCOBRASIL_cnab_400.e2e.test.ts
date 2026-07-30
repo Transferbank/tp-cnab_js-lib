@@ -1,10 +1,10 @@
-ï»¿/**
- * Pipeline pï¿½blico de ponta a ponta para BANCOBRASIL_cnab_400.REM: exercita
- * `validateCnabFile()`, o caminho que um consumidor real da lib usa ï¿½ conteï¿½do
- * bruto do arquivo, sem prï¿½-separar linhas nem escolher schema manualmente
- * (detecï¿½ï¿½o de formato/banco incluï¿½da).
+/**
+ * Pipeline p?blico de ponta a ponta para BANCOBRASIL_cnab_400.REM: exercita
+ * `validateCnabFile()`, o caminho que um consumidor real da lib usa ? conte?do
+ * bruto do arquivo, sem pr?-separar linhas nem escolher schema manualmente
+ * (detec??o de formato/banco inclu?da).
  *
- * Validaï¿½ï¿½o do conteï¿½do do metadata.json em si fica em `.test.ts`.
+ * Valida??o do conte?do do metadata.json em si fica em `.test.ts`.
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
  */
 
@@ -16,7 +16,7 @@ import type { FixtureMetadata } from '@tp-types/testing'
 import type { CNABReadResult } from '@tp-types/core/read-result'
 import type { CNABData } from '@tp-types/read'
 
-describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: BANCOBRASIL_cnab_400.REM', () => {
+describe('openCnab – pipeline público de ponta a ponta: BANCOBRASIL_cnab_400.REM', () => {
   const fixtureDir = path.join(__dirname, '../__fixtures__')
   const txtPath = path.join(fixtureDir, 'BANCOBRASIL_cnab_400.REM')
   const jsonPath = path.join(fixtureDir, 'BANCOBRASIL_cnab_400.json')
@@ -32,7 +32,7 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: BANCOBRASIL_cnab_400.
     metadata = JSON.parse(jsonContent) as FixtureMetadata
     cnabFile = openCnab(txtContent)
     readResult = cnabFile.read()
-    validationResult = cnabFile.validate({ withFeedback: true })
+    validationResult = cnabFile.validate(true)
   })
 
   test('deve detectar formato CNAB 400 e banco Banco do Brasil (001)', () => {
@@ -46,14 +46,14 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: BANCOBRASIL_cnab_400.
     expect(readResult.bills.length).toBe(metadata.totals.recordCount)
   })
 
-  test('nÃ£o deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
-    // Este arquivo real tem tÃ­tulos com vencimento anterior Ã  data atual
-    // (arquivo gerado em 26/05/2026, mas estamos em 09/07/2026) â€“ isso Ã©
-    // esperado e nÃ£o Ã© responsabilidade do schema/parser.
+  test('não deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
+    // Este arquivo real tem títulos com vencimento anterior à data atual
+    // (arquivo gerado em 26/05/2026, mas estamos em 09/07/2026) – isso é
+    // esperado e não é responsabilidade do schema/parser.
     const lines = validationResult.feedback?.lines || []
     const errosDeParsing = lines.filter(
       (error) =>
-        !(error.field === 'Data de vencimento' && error.message.includes('anterior Ã  data atual')),
+        !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual')),
     )
 
     if (errosDeParsing.length > 0) {
@@ -66,7 +66,7 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: BANCOBRASIL_cnab_400.
     expect(errosDeParsing).toEqual([])
   })
 
-  test('deve extrair dados do primeiro tÃ­tulo corretamente', () => {
+  test('deve extrair dados do primeiro título corretamente', () => {
     const records = validationResult.feedback?.records || []
     expect(records.length).toBeGreaterThan(0)
     
@@ -76,7 +76,8 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: BANCOBRASIL_cnab_400.
     expect(primeiro.name?.trim()).toBe(esperado.name)
     expect(primeiro.amount).toBeCloseTo(esperado.amount, 2)
     expect(primeiro.dueDate).toBe(esperado.dueDate)
-    // Documento: parser remove zeros Ã  esquerda
+    // Documento: parser remove zeros à esquerda
     expect(primeiro.document).toBe(esperado.document.replace(/^0+/, ''))
   })
 })
+

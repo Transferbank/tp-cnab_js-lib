@@ -272,3 +272,4 @@ describe('Metadados: ITAU_cnab_400.json', () => {
     })
   })
 })
+

@@ -1,8 +1,8 @@
-ï»¿/**
+/**
  * Testes de Integridade do Schema Sicredi CNAB 400
  *
- * Verifica que os schemas nÃ£o tÃªm sobreposiÃ§Ã£o de posiÃ§Ãµes e que os tamanhos
- * declarados batem com as posiÃ§Ãµes efetivas.
+ * Verifica que os schemas não têm sobreposição de posições e que os tamanhos
+ * declarados batem com as posições efetivas.
  */
 
 import { HEADER } from '@banks/sicredi/schemas/cnab400/header'
@@ -13,7 +13,7 @@ function checkFieldIntegrity(schema: any, schemaName: string) {
   const campos = Object.keys(schema)
   const posicoes: { campo: string; inicio: number; fim: number }[] = []
 
-  // Coletar todas as posiÃ§Ãµes
+  // Coletar todas as posições
   campos.forEach((campo) => {
     const fieldDef = schema[campo]
     if (fieldDef.pos) {
@@ -25,10 +25,10 @@ function checkFieldIntegrity(schema: any, schemaName: string) {
     }
   })
 
-  // Ordenar por posiÃ§Ã£o inicial
+  // Ordenar por posição inicial
   posicoes.sort((a, b) => a.inicio - b.inicio)
 
-  // Verificar sobreposiÃ§Ãµes
+  // Verificar sobreposições
   for (let i = 0; i < posicoes.length - 1; i++) {
     const atual = posicoes[i]
     const proximo = posicoes[i + 1]
@@ -36,7 +36,7 @@ function checkFieldIntegrity(schema: any, schemaName: string) {
     if (atual.fim >= proximo.inicio) {
       return {
         valid: false,
-        message: `${schemaName}: SobreposiÃ§Ã£o detectada entre ${atual.campo} (${atual.inicio}-${atual.fim}) e ${proximo.campo} (${proximo.inicio}-${proximo.fim})`,
+        message: `${schemaName}: Sobreposição detectada entre ${atual.campo} (${atual.inicio}-${atual.fim}) e ${proximo.campo} (${proximo.inicio}-${proximo.fim})`,
       }
     }
   }
@@ -49,7 +49,7 @@ function checkFieldIntegrity(schema: any, schemaName: string) {
       if (tamanhoCalculado !== fieldDef.size) {
         return {
           valid: false,
-          message: `${schemaName}.${campo}: Tamanho declarado (${fieldDef.size}) nÃ£o bate com posiÃ§Ãµes ${fieldDef.pos[0]}-${fieldDef.pos[1]} (tamanho real: ${tamanhoCalculado})`,
+          message: `${schemaName}.${campo}: Tamanho declarado (${fieldDef.size}) não bate com posições ${fieldDef.pos[0]}-${fieldDef.pos[1]} (tamanho real: ${tamanhoCalculado})`,
         }
       }
     }
@@ -60,7 +60,7 @@ function checkFieldIntegrity(schema: any, schemaName: string) {
 
 describe('Schema Sicredi CNAB 400 - Integridade', () => {
   describe('Header de Arquivo', () => {
-    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    test('não deve ter sobreposição de posições', () => {
       const result = checkFieldIntegrity(HEADER, 'HEADER')
       expect(result.valid).toBe(true)
       if (!result.valid) {
@@ -68,7 +68,7 @@ describe('Schema Sicredi CNAB 400 - Integridade', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
+    test('tamanho declarado deve bater com posições', () => {
       const campos = Object.keys(HEADER)
       campos.forEach((campo) => {
         const fieldDef = HEADER[campo]
@@ -81,7 +81,7 @@ describe('Schema Sicredi CNAB 400 - Integridade', () => {
   })
 
   describe('Detail (Registro Tipo 1)', () => {
-    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    test('não deve ter sobreposição de posições', () => {
       const result = checkFieldIntegrity(DETAIL, 'DETAIL')
       expect(result.valid).toBe(true)
       if (!result.valid) {
@@ -89,7 +89,7 @@ describe('Schema Sicredi CNAB 400 - Integridade', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
+    test('tamanho declarado deve bater com posições', () => {
       const campos = Object.keys(DETAIL)
       campos.forEach((campo) => {
         const fieldDef = DETAIL[campo]
@@ -102,7 +102,7 @@ describe('Schema Sicredi CNAB 400 - Integridade', () => {
   })
 
   describe('Trailer', () => {
-    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    test('não deve ter sobreposição de posições', () => {
       const result = checkFieldIntegrity(TRAILER, 'TRAILER')
       expect(result.valid).toBe(true)
       if (!result.valid) {
@@ -110,7 +110,7 @@ describe('Schema Sicredi CNAB 400 - Integridade', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
+    test('tamanho declarado deve bater com posições', () => {
       const campos = Object.keys(TRAILER)
       campos.forEach((campo) => {
         const fieldDef = TRAILER[campo]
@@ -122,3 +122,4 @@ describe('Schema Sicredi CNAB 400 - Integridade', () => {
     })
   })
 })
+

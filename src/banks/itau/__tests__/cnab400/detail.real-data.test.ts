@@ -1,12 +1,12 @@
-ï»¿/**
- * Testes do Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)
+/**
+ * Testes do Schema Itaú CNAB 400 - Detalhe (Dados Reais)
  *
- * Duas camadas de evidÃªncia:
- * 1. VerificaÃ§Ã£o independente (checksum, consistÃªncias estruturais)
- * 2. RegressÃ£o via metadata.json
+ * Duas camadas de evidência:
+ * 1. Verificação independente (checksum, consistências estruturais)
+ * 2. Regressão via metadata.json
  *
- * O pipeline pÃºblico de ponta a ponta (`openCnab`) Ã© coberto em
- * `ITAU_cnab_400.e2e.test.ts` â€” nÃ£o duplicado aqui.
+ * O pipeline público de ponta a ponta (`openCnab`) é coberto em
+ * `ITAU_cnab_400.e2e.test.ts` — não duplicado aqui.
  *
  * Fixture: ITAU_cnab_400.REM (640 linhas: 1 header + 638 detalhes (319 tipo 1 + 319 tipo 2) + 1 trailer)
  */
@@ -20,21 +20,21 @@ import type { FixtureMetadata } from '@tp-types/testing'
 import * as fs from 'fs'
 import * as path from 'path'
 
-describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
+describe('Schema Itaú CNAB 400 - Detalhe (Dados Reais)', () => {
   const lines = readFixture('ITAU_cnab_400.REM')
   const detailType1Lines = lines.filter((line) => line[0] === '1')
   const detailType2Lines = lines.filter((line) => line[0] === '2')
   const trailerLine = lines[lines.length - 1]
 
-  describe('VerificaÃ§Ã£o independente (evidÃªncia dentro do prÃ³prio arquivo real)', () => {
-    test('CPF/CNPJ do sacado deve ser vÃ¡lido em todas as 319 linhas tipo 1 (checksum)', () => {
+  describe('Verificação independente (evidência dentro do próprio arquivo real)', () => {
+    test('CPF/CNPJ do sacado deve ser válido em todas as 319 linhas tipo 1 (checksum)', () => {
       expect(detailType1Lines.length).toBe(319)
 
       detailType1Lines.forEach((line) => {
         const detail = extractLineFields(line, itauCnab400.detail!)
         const documento = detail.sacado_numero_inscricao.raw
 
-        // Checksum externo - prova independente da posiÃ§Ã£o
+        // Checksum externo - prova independente da posição
         expect(isValidCpfCnpj(documento)).toBe(true)
       })
     })
@@ -69,7 +69,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       })
     })
 
-    test('estado (UF) deve ser vÃ¡lido quando preenchido', () => {
+    test('estado (UF) deve ser válido quando preenchido', () => {
       expect(detailType1Lines.length).toBeGreaterThan(0)
 
       let linhasComUF = 0
@@ -89,7 +89,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(linhasComUF).toBeGreaterThan(0)
     })
 
-    test('numero_sequencial deve ser a posiÃ§Ã£o 1-based da linha no arquivo (todas as 640 linhas)', () => {
+    test('numero_sequencial deve ser a posição 1-based da linha no arquivo (todas as 640 linhas)', () => {
       expect(lines.length).toBe(640)
 
       lines.forEach((line, index) => {
@@ -108,14 +108,14 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
 
         if (schema && 'numero_sequencial' in schema) {
           const parsed = extractLineFields(line, schema)
-          const sequencialEsperado = index + 1 // PosiÃ§Ã£o 1-based
+          const sequencialEsperado = index + 1 // Posição 1-based
 
           expect(parsed.numero_sequencial.value).toBe(sequencialEsperado)
         }
       })
     })
 
-    test('codigo_banco_cobrador deve ser 341 (ItaÃº) em todas as linhas tipo 1', () => {
+    test('codigo_banco_cobrador deve ser 341 (Itaú) em todas as linhas tipo 1', () => {
       expect(detailType1Lines.length).toBe(319)
 
       detailType1Lines.forEach((line) => {
@@ -131,7 +131,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       detailType1Lines.forEach((line) => {
         const detail = extractLineFields(line, itauCnab400.detail!)
 
-        // Campo padrÃ£o para ItaÃº (nÃ£o usado)
+        // Campo padrão para Itaú (não usado)
         expect(detail.agencia_cobradora.raw).toBe('00000')
       })
     })
@@ -139,17 +139,17 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
     test('totais calculados devem bater exato com o arquivo', () => {
       const trailer = extractLineFields(trailerLine, itauCnab400.trailer!)
 
-      // numero_sequencial do trailer deve ser 640 (Ãºltima linha)
+      // numero_sequencial do trailer deve ser 640 (última linha)
       expect(trailer.numero_sequencial.value).toBe(640)
 
-      // Calcular soma dos valores dos 319 tÃ­tulos (tipo 1)
+      // Calcular soma dos valores dos 319 títulos (tipo 1)
       const somaValores = detailType1Lines.reduce((sum, line) => {
         const detail = extractLineFields(line, itauCnab400.detail!)
         return sum + (Number(detail.valor_titulo.value) || 0)
       }, 0)
 
       // Valor conhecido do fixture: R$ 1.237.856,15
-      // Nota: O trailer do ItaÃº CNAB 400 nÃ£o contÃ©m campo de valor total,
+      // Nota: O trailer do Itaú CNAB 400 não contém campo de valor total,
       // mas podemos verificar a soma calculada contra o valor esperado
       expect(somaValores).toBeCloseTo(1237856.15, 2)
     })
@@ -171,9 +171,9 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
     })
   })
 
-  describe('ComparaÃ§Ã£o contra snapshot gerado (metadata.json) - testes de regressÃ£o', () => {
-    // Nota: metadata.json Ã© gerado pelo mesmo parser sendo testado
-    // Estes testes provam regressÃ£o, nÃ£o correÃ§Ã£o absoluta
+  describe('Comparação contra snapshot gerado (metadata.json) - testes de regressão', () => {
+    // Nota: metadata.json é gerado pelo mesmo parser sendo testado
+    // Estes testes provam regressão, não correção absoluta
 
     let metadata: FixtureMetadata
 
@@ -182,7 +182,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
 
       if (!fs.existsSync(metadataPath)) {
         throw new Error(
-          `Arquivo de metadata nÃ£o encontrado: ${metadataPath}\n` +
+          `Arquivo de metadata não encontrado: ${metadataPath}\n` +
             'Execute o script parse-itau-fixture.ts para gerar o arquivo',
         )
       }
@@ -196,7 +196,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(metadata.records.length).toBe(319)
     })
 
-    test('vencimento bate com metadata.json (regressÃ£o)', () => {
+    test('vencimento bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailType1Lines[0]
       const detail = extractLineFields(primeiroDetalhe, itauCnab400.detail!)
       const record = metadata.records[0]
@@ -204,7 +204,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.vencimento.raw).toBe(record.dueDateRaw)
     })
 
-    test('sacado_codigo_inscricao bate com metadata.json (regressÃ£o)', () => {
+    test('sacado_codigo_inscricao bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailType1Lines[0]
       const detail = extractLineFields(primeiroDetalhe, itauCnab400.detail!)
       const record = metadata.records[0]
@@ -212,7 +212,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.sacado_codigo_inscricao.raw).toBe(record.documentTypeCode)
     })
 
-    test('sacado_numero_inscricao bate com metadata.json (regressÃ£o)', () => {
+    test('sacado_numero_inscricao bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailType1Lines[0]
       const detail = extractLineFields(primeiroDetalhe, itauCnab400.detail!)
       const record = metadata.records[0]
@@ -220,7 +220,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.sacado_numero_inscricao.raw).toBe(record.documentRaw)
     })
 
-    test('nome bate com metadata.json (regressÃ£o)', () => {
+    test('nome bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailType1Lines[0]
       const detail = extractLineFields(primeiroDetalhe, itauCnab400.detail!)
       const record = metadata.records[0]
@@ -230,7 +230,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('logradouro bate com metadata.json (regressÃ£o)', () => {
+    test('logradouro bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailType1Lines[0]
       const detail = extractLineFields(primeiroDetalhe, itauCnab400.detail!)
       const record = metadata.records[0]
@@ -240,7 +240,7 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('todos os campos principais de todos os tÃ­tulos batem com metadata.json (regressÃ£o em loop)', () => {
+    test('todos os campos principais de todos os títulos batem com metadata.json (regressão em loop)', () => {
       expect(metadata.records.length).toBe(319)
       expect(detailType1Lines.length).toBe(319)
 
@@ -256,4 +256,5 @@ describe('Schema ItaÃº CNAB 400 - Detalhe (Dados Reais)', () => {
     })
   })
 })
+
 

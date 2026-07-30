@@ -1,19 +1,19 @@
-ï»¿/**
- * Testes de validaÃ§Ã£o CNAB 400 â€” Santander (033)
+/**
+ * Testes de validação CNAB 400 — Santander (033)
  * 
- * Testa a validaÃ§Ã£o completa de arquivos CNAB 400 do Santander incluindo:
+ * Testa a validação completa de arquivos CNAB 400 do Santander incluindo:
  * - Checagem cruzada de quantidade de documentos no trailer
- * - ValidaÃ§Ã£o de mÃºltiplos detalhes
+ * - Validação de múltiplos detalhes
  */
 
 import { openCnab } from '@/index'
 import { santanderCnab400 } from '../../schemas/cnab400'
 import { buildLine400 } from '@/__tests__/helpers/cnab-builder'
 
-describe('openCnab + CNABFile.validate() â€” Santander (033) CNAB 400', () => {
+describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
   describe('Checagem cruzada do trailer', () => {
     const header = buildLine400(santanderCnab400.header!, {
-      codigo_transmissao: '01234567890123456789', // 20 chars (agÃªncia + cÃ³digo cliente + conta)
+      codigo_transmissao: '01234567890123456789', // 20 chars (agência + código cliente + conta)
       nome_empresa: 'EMPRESA EXEMPLO',
       data_geracao: '010126',
       numero_sequencial: '1',
@@ -30,7 +30,7 @@ describe('openCnab + CNABFile.validate() â€” Santander (033) CNAB 400', () => {
 
     test('deve acusar erro quando quantidade declarada no trailer diverge do total de detalhes', () => {
       const trailer = buildLine400(santanderCnab400.trailer!, {
-        qtd_documentos: '2', // declara 2, mas sÃ³ hÃ¡ 1 detalhe
+        qtd_documentos: '2', // declara 2, mas só há 1 detalhe
         numero_sequencial: '3',
       })
 
@@ -42,7 +42,7 @@ describe('openCnab + CNABFile.validate() â€” Santander (033) CNAB 400', () => {
       )
     })
 
-    test('nÃ£o deve acusar erro quando a quantidade do trailer bate com o total de detalhes', () => {
+    test('não deve acusar erro quando a quantidade do trailer bate com o total de detalhes', () => {
       const trailer = buildLine400(santanderCnab400.trailer!, {
         qtd_documentos: '1',
         numero_sequencial: '3',
@@ -54,7 +54,7 @@ describe('openCnab + CNABFile.validate() â€” Santander (033) CNAB 400', () => {
       expect(result.feedback.lines.filter((e) => e.field === 'Quantidade no Trailer')).toEqual([])
     })
 
-    test('deve validar trailer com mÃºltiplos detalhes', () => {
+    test('deve validar trailer com múltiplos detalhes', () => {
       const detail1 = buildLine400(santanderCnab400.detail!, {
         codigo_transmissao: '01234567890123456789', // 20 chars
         sacado_codigo_inscricao: '01',
@@ -90,3 +90,4 @@ describe('openCnab + CNABFile.validate() â€” Santander (033) CNAB 400', () => {
     })
   })
 })
+

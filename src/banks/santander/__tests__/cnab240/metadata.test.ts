@@ -1,14 +1,14 @@
-ï»¿/**
+/**
  * Testes de Metadados - Santander CNAB 240
  * 
- * Valida informaÃ§Ãµes bÃ¡sicas do schema e schemas implementados.
+ * Valida informações básicas do schema e schemas implementados.
  * Atualizado para incluir novos segmentos (Y-03, Y-53, S).
  */
 
 import { santanderCnab240 } from '@banks/santander/schemas/cnab240'
 
 describe('Schema Santander CNAB 240 - Metadados', () => {
-  test('deve ter cÃ³digo do banco correto (033)', () => {
+  test('deve ter código do banco correto (033)', () => {
     expect(santanderCnab240.bankCode).toBe('033')
   })
 
@@ -16,7 +16,7 @@ describe('Schema Santander CNAB 240 - Metadados', () => {
     expect(santanderCnab240.bankName).toBe('Santander')
   })
 
-  test('deve ter todos os schemas obrigatÃ³rios', () => {
+  test('deve ter todos os schemas obrigatórios', () => {
     expect(santanderCnab240.headerArquivo).toBeDefined()
     expect(santanderCnab240.segmentoP).toBeDefined()
     expect(santanderCnab240.segmentoQ).toBeDefined()
@@ -40,13 +40,14 @@ describe('Schema Santander CNAB 240 - Metadados', () => {
     expect(identifiers).toContain('Y53')
   })
 
-  test('headerLote e trailerLote devem ser os schemas corretos (nÃ£o undefined)', () => {
-    // Bug corrigido: antes nÃ£o estavam no BankSchema principal
+  test('headerLote e trailerLote devem ser os schemas corretos (não undefined)', () => {
+    // Bug corrigido: antes não estavam no BankSchema principal
     expect(santanderCnab240.headerLote).not.toBeUndefined()
     expect(santanderCnab240.trailerLote).not.toBeUndefined()
     
-    // Verifica que tÃªm campos reais
+    // Verifica que têm campos reais
     expect(Object.keys(santanderCnab240.headerLote!).length).toBeGreaterThan(0)
     expect(Object.keys(santanderCnab240.trailerLote!).length).toBeGreaterThan(0)
   })
 })
+

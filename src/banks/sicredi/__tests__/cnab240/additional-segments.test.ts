@@ -408,3 +408,4 @@ describe('Schema Sicredi CNAB 240 - Segmentos Adicionais', () => {
     })
   })
 })
+

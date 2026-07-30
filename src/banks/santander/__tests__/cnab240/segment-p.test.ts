@@ -1,15 +1,15 @@
-ï»¿/**
+/**
  * Testes do Segmento P - Santander CNAB 240
  * 
- * Valida a estrutura e campos do Segmento P (dados financeiros do tÃ­tulo).
+ * Valida a estrutura e campos do Segmento P (dados financeiros do título).
  * Atualizado conforme Manual H7815 v6 (Fevereiro/2023).
  */
 
 import { santanderCnab240 } from '@banks/santander/schemas/cnab240'
 
 describe('Schema Santander CNAB 240 - Segmento P', () => {
-  describe('DefiniÃ§Ã£o dos campos - Manual 2023', () => {
-    test('deve ter cÃ³digo do banco na posiÃ§Ã£o 1-3 com padrÃ£o "033"', () => {
+  describe('Definição dos campos - Manual 2023', () => {
+    test('deve ter código do banco na posição 1-3 com padrão "033"', () => {
       const field = santanderCnab240.segmentoP!.controle_banco
       
       expect(field.pos).toEqual([1, 3])
@@ -17,7 +17,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.type).toBe('num')
     })
 
-    test('deve ter lote na posiÃ§Ã£o 4-7', () => {
+    test('deve ter lote na posição 4-7', () => {
       const field = santanderCnab240.segmentoP!.controle_lote
       
       expect(field.pos).toEqual([4, 7])
@@ -25,14 +25,14 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter tipo de registro "3" (detalhe) na posiÃ§Ã£o 8', () => {
+    test('deve ter tipo de registro "3" (detalhe) na posição 8', () => {
       const field = santanderCnab240.segmentoP!.controle_registro
       
       expect(field.pos).toEqual([8, 8])
       expect(field.pattern).toBe('3')
     })
 
-    test('deve ter identificador do segmento "P" na posiÃ§Ã£o 14', () => {
+    test('deve ter identificador do segmento "P" na posição 14', () => {
       const field = santanderCnab240.segmentoP!.servico_segmento
       
       expect(field.pos).toEqual([14, 14])
@@ -40,17 +40,17 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.pattern).toBe('P')
     })
 
-    test('deve ter cÃ³digo de movimento VARIÃVEL (nÃ£o fixo) na posiÃ§Ã£o 16-17', () => {
+    test('deve ter código de movimento VARIÁVEL (não fixo) na posição 16-17', () => {
       const field = santanderCnab240.segmentoP!.servico_codigo_movimento
       
       expect(field.pos).toEqual([16, 17])
       expect(field.type).toBe('num')
       expect(field.required).toBe(true)
-      expect(field.pattern).toBeNull() // Bug corrigido: nÃ£o pode ser fixo em '01'
+      expect(field.pattern).toBeNull() // Bug corrigido: não pode ser fixo em '01'
       expect(field.description).toContain('vel')
     })
 
-    test('deve ter agÃªncia do cedente com 4 dÃ­gitos (pos 18-21) - Manual 2023', () => {
+    test('deve ter agência do cedente com 4 dígitos (pos 18-21) - Manual 2023', () => {
       const field = santanderCnab240.segmentoP!.cedente_agencia
       
       expect(field.pos).toEqual([18, 21])
@@ -59,7 +59,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.description).toContain('gitos')
     })
 
-    test('deve ter conta do cedente com 9 dÃ­gitos (pos 23-31) - Manual 2023', () => {
+    test('deve ter conta do cedente com 9 dígitos (pos 23-31) - Manual 2023', () => {
       const field = santanderCnab240.segmentoP!.cedente_conta
       
       expect(field.pos).toEqual([23, 31])
@@ -68,7 +68,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.description).toContain('gitos')
     })
 
-    test('deve ter conta cobranÃ§a FIDC com 9 dÃ­gitos (pos 33-41) - Manual 2023', () => {
+    test('deve ter conta cobrança FIDC com 9 dígitos (pos 33-41) - Manual 2023', () => {
       const field = santanderCnab240.segmentoP!.conta_cobranca
       
       expect(field.pos).toEqual([33, 41])
@@ -77,7 +77,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.description).toContain('FIDC')
     })
 
-    test('deve ter nosso nÃºmero na posiÃ§Ã£o 45-57', () => {
+    test('deve ter nosso número na posição 45-57', () => {
       const field = santanderCnab240.segmentoP!.nosso_numero
       
       expect(field.pos).toEqual([45, 57])
@@ -86,7 +86,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter vencimento na posiÃ§Ã£o 78-85 com formato DDMMAAAA', () => {
+    test('deve ter vencimento na posição 78-85 com formato DDMMAAAA', () => {
       const field = santanderCnab240.segmentoP!.vencimento_titulo
       
       expect(field.pos).toEqual([78, 85])
@@ -95,7 +95,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter valor do tÃ­tulo na posiÃ§Ã£o 86-100 com 2 decimais', () => {
+    test('deve ter valor do título na posição 86-100 com 2 decimais', () => {
       const field = santanderCnab240.segmentoP!.valor_titulo
       
       expect(field.pos).toEqual([86, 100])
@@ -105,7 +105,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter percentual IOF na posiÃ§Ã£o 166-180 com 5 decimais - Manual 2023', () => {
+    test('deve ter percentual IOF na posição 166-180 com 5 decimais - Manual 2023', () => {
       const field = santanderCnab240.segmentoP!.iof_percentual
       
       expect(field.pos).toEqual([166, 180])
@@ -116,7 +116,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.description).toContain('5 casas decimais')
     })
 
-    test('deve ter agÃªncia cobradora FIDC com 4 dÃ­gitos (pos 101-104) - Manual 2023', () => {
+    test('deve ter agência cobradora FIDC com 4 dígitos (pos 101-104) - Manual 2023', () => {
       const field = santanderCnab240.segmentoP!.agencia_cobradora
       
       expect(field.pos).toEqual([101, 104])
@@ -125,7 +125,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.description).toContain('FIDC')
     })
 
-    test('deve ter DV da agÃªncia cobradora na posiÃ§Ã£o 105 - Manual 2023', () => {
+    test('deve ter DV da agência cobradora na posição 105 - Manual 2023', () => {
       const field = santanderCnab240.segmentoP!.agencia_cobradora_dv
       
       expect(field.pos).toEqual([105, 105])
@@ -133,7 +133,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       expect(field.size).toBe(1)
     })
 
-    test('deve ter prazo de baixa com 2 dÃ­gitos (pos 226-227) - Manual 2023', () => {
+    test('deve ter prazo de baixa com 2 dígitos (pos 226-227) - Manual 2023', () => {
       const field = santanderCnab240.segmentoP!.baixa_prazo
       
       expect(field.pos).toEqual([226, 227])
@@ -148,8 +148,8 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
     })
   })
 
-  describe('ValidaÃ§Ã£o de estrutura', () => {
-    test('todos os campos devem ter posiÃ§Ã£o, tipo e tamanho definidos', () => {
+  describe('Validação de estrutura', () => {
+    test('todos os campos devem ter posição, tipo e tamanho definidos', () => {
       for (const field of Object.values(santanderCnab240.segmentoP!)) {
         expect(field.pos).toBeDefined()
         expect(field.pos.length).toBe(2)
@@ -159,7 +159,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       }
     })
 
-    test('tamanhos declarados devem bater com as posiÃ§Ãµes', () => {
+    test('tamanhos declarados devem bater com as posições', () => {
       for (const field of Object.values(santanderCnab240.segmentoP!)) {
         const [start, end] = field.pos
         const calculatedSize = end - start + 1
@@ -167,7 +167,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       }
     })
 
-    test('nÃ£o deve haver sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
+    test('não deve haver sobreposição de posições', () => {
       const positions = new Set<number>()
       
       for (const field of Object.values(santanderCnab240.segmentoP!)) {
@@ -179,7 +179,7 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
       }
     })
 
-    test('deve cobrir todas as 240 posiÃ§Ãµes', () => {
+    test('deve cobrir todas as 240 posições', () => {
       const positions = new Set<number>()
       
       for (const field of Object.values(santanderCnab240.segmentoP!)) {
@@ -196,3 +196,4 @@ describe('Schema Santander CNAB 240 - Segmento P', () => {
     })
   })
 })
+

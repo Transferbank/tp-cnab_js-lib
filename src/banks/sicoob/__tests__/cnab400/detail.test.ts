@@ -1,24 +1,24 @@
-ï»¿/**
+/**
  * Testes do Detalhe - Sicoob CNAB 400
  *
- * Valida a DEFINIÃ‡ÃƒO do schema (estrutura, posiÃ§Ãµes, tipos).
+ * Valida a DEFINIÇÃO do schema (estrutura, posições, tipos).
  *
  * IMPORTANTE: Estes testes focam APENAS na estrutura do schema:
- * - PosiÃ§Ãµes corretas dos campos
+ * - Posições corretas dos campos
  * - Tipos de dados corretos
- * - Valores padrÃ£o
- * - Campos obrigatÃ³rios
+ * - Valores padrão
+ * - Campos obrigatórios
  *
- * NÃƒO usa fixture real â€” apenas valida a definiÃ§Ã£o do schema em si.
+ * NÃO usa fixture real — apenas valida a definição do schema em si.
  *
- * PosiÃ§Ãµes validadas conforme planilha oficial Sicoob (Layout_Cobranca_CNAB400 (1).xls, mai/2025).
+ * Posições validadas conforme planilha oficial Sicoob (Layout_Cobranca_CNAB400 (1).xls, mai/2025).
  */
 
 import { sicoobCnab400 } from '@banks/sicoob/schemas/cnab400'
 
-describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
-  describe('DefiniÃ§Ã£o dos campos - IdentificaÃ§Ã£o e BeneficiÃ¡rio', () => {
-    test('deve ter tipo_registro "1" (detalhe) na posiÃ§Ã£o 1', () => {
+describe('Schema Sicoob CNAB 400 - Detalhe (Definição)', () => {
+  describe('Definição dos campos - Identificação e Beneficiário', () => {
+    test('deve ter tipo_registro "1" (detalhe) na posição 1', () => {
       const field = sicoobCnab400.detail!.tipo_registro
 
       expect(field.pos).toEqual([1, 1])
@@ -27,7 +27,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter tipo_inscricao_beneficiario na posiÃ§Ã£o 2-3', () => {
+    test('deve ter tipo_inscricao_beneficiario na posição 2-3', () => {
       const field = sicoobCnab400.detail!.tipo_inscricao_beneficiario
 
       expect(field.pos).toEqual([2, 3])
@@ -36,7 +36,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter numero_inscricao_beneficiario na posiÃ§Ã£o 4-17', () => {
+    test('deve ter numero_inscricao_beneficiario na posição 4-17', () => {
       const field = sicoobCnab400.detail!.numero_inscricao_beneficiario
 
       expect(field.pos).toEqual([4, 17])
@@ -45,7 +45,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter prefixo_cooperativa na posiÃ§Ã£o 18-21 (4 dÃ­gitos)', () => {
+    test('deve ter prefixo_cooperativa na posição 18-21 (4 dígitos)', () => {
       const field = sicoobCnab400.detail!.prefixo_cooperativa
 
       expect(field.pos).toEqual([18, 21])
@@ -54,7 +54,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter dv_prefixo na posiÃ§Ã£o 22', () => {
+    test('deve ter dv_prefixo na posição 22', () => {
       const field = sicoobCnab400.detail!.dv_prefixo
 
       expect(field.pos).toEqual([22, 22])
@@ -63,7 +63,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter conta_corrente na posiÃ§Ã£o 23-30', () => {
+    test('deve ter conta_corrente na posição 23-30', () => {
       const field = sicoobCnab400.detail!.conta_corrente
 
       expect(field.pos).toEqual([23, 30])
@@ -72,7 +72,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter dv_conta na posiÃ§Ã£o 31', () => {
+    test('deve ter dv_conta na posição 31', () => {
       const field = sicoobCnab400.detail!.dv_conta
 
       expect(field.pos).toEqual([31, 31])
@@ -81,7 +81,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter numero_convenio_cobranca na posiÃ§Ã£o 32-37', () => {
+    test('deve ter numero_convenio_cobranca na posição 32-37', () => {
       const field = sicoobCnab400.detail!.numero_convenio_cobranca
 
       expect(field.pos).toEqual([32, 37])
@@ -90,7 +90,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter numero_controle_participante na posiÃ§Ã£o 38-62', () => {
+    test('deve ter numero_controle_participante na posição 38-62', () => {
       const field = sicoobCnab400.detail!.numero_controle_participante
 
       expect(field.pos).toEqual([38, 62])
@@ -100,8 +100,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('DefiniÃ§Ã£o dos campos - Nosso NÃºmero e Parcela', () => {
-    test('deve ter nosso_numero na posiÃ§Ã£o 63-74 (12 dÃ­gitos)', () => {
+  describe('Definição dos campos - Nosso Número e Parcela', () => {
+    test('deve ter nosso_numero na posição 63-74 (12 dígitos)', () => {
       const field = sicoobCnab400.detail!.nosso_numero
 
       expect(field.pos).toEqual([63, 74])
@@ -111,7 +111,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('gitos')
     })
 
-    test('deve ter numero_parcela na posiÃ§Ã£o 75-76', () => {
+    test('deve ter numero_parcela na posição 75-76', () => {
       const field = sicoobCnab400.detail!.numero_parcela
 
       expect(field.pos).toEqual([75, 76])
@@ -121,7 +121,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter grupo_valor na posiÃ§Ã£o 77-78', () => {
+    test('deve ter grupo_valor na posição 77-78', () => {
       const field = sicoobCnab400.detail!.grupo_valor
 
       expect(field.pos).toEqual([77, 78])
@@ -131,7 +131,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter brancos_1 na posiÃ§Ã£o 79-81', () => {
+    test('deve ter brancos_1 na posição 79-81', () => {
       const field = sicoobCnab400.detail!.brancos_1
 
       expect(field.pos).toEqual([79, 81])
@@ -140,7 +140,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter indicativo_mensagem_sacador na posiÃ§Ã£o 82', () => {
+    test('deve ter indicativo_mensagem_sacador na posição 82', () => {
       const field = sicoobCnab400.detail!.indicativo_mensagem_sacador
 
       expect(field.pos).toEqual([82, 82])
@@ -150,7 +150,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('sacador/avalista')
     })
 
-    test('deve ter prefixo_titulo na posiÃ§Ã£o 83-85', () => {
+    test('deve ter prefixo_titulo na posição 83-85', () => {
       const field = sicoobCnab400.detail!.prefixo_titulo
 
       expect(field.pos).toEqual([83, 85])
@@ -160,8 +160,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('DefiniÃ§Ã£o dos campos - Carteira e Controles', () => {
-    test('deve ter variacao_carteira na posiÃ§Ã£o 86-88', () => {
+  describe('Definição dos campos - Carteira e Controles', () => {
+    test('deve ter variacao_carteira na posição 86-88', () => {
       const field = sicoobCnab400.detail!.variacao_carteira
 
       expect(field.pos).toEqual([86, 88])
@@ -171,7 +171,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter conta_caucao na posiÃ§Ã£o 89', () => {
+    test('deve ter conta_caucao na posição 89', () => {
       const field = sicoobCnab400.detail!.conta_caucao
 
       expect(field.pos).toEqual([89, 89])
@@ -181,7 +181,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter numero_contrato_garantia na posiÃ§Ã£o 90-94', () => {
+    test('deve ter numero_contrato_garantia na posição 90-94', () => {
       const field = sicoobCnab400.detail!.numero_contrato_garantia
 
       expect(field.pos).toEqual([90, 94])
@@ -191,7 +191,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter dv_contrato na posiÃ§Ã£o 95', () => {
+    test('deve ter dv_contrato na posição 95', () => {
       const field = sicoobCnab400.detail!.dv_contrato
 
       expect(field.pos).toEqual([95, 95])
@@ -201,7 +201,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter numero_bordero na posiÃ§Ã£o 96-101', () => {
+    test('deve ter numero_bordero na posição 96-101', () => {
       const field = sicoobCnab400.detail!.numero_bordero
 
       expect(field.pos).toEqual([96, 101])
@@ -210,7 +210,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter brancos_2 na posiÃ§Ã£o 102-105', () => {
+    test('deve ter brancos_2 na posição 102-105', () => {
       const field = sicoobCnab400.detail!.brancos_2
 
       expect(field.pos).toEqual([102, 105])
@@ -219,7 +219,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter tipo_emissao na posiÃ§Ã£o 106', () => {
+    test('deve ter tipo_emissao na posição 106', () => {
       const field = sicoobCnab400.detail!.tipo_emissao
 
       expect(field.pos).toEqual([106, 106])
@@ -228,7 +228,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter carteira_modalidade na posiÃ§Ã£o 107-108', () => {
+    test('deve ter carteira_modalidade na posição 107-108', () => {
       const field = sicoobCnab400.detail!.carteira_modalidade
 
       expect(field.pos).toEqual([107, 108])
@@ -238,8 +238,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('DefiniÃ§Ã£o dos campos - Comando e Dados do TÃ­tulo', () => {
-    test('deve ter comando_movimento na posiÃ§Ã£o 109-110', () => {
+  describe('Definição dos campos - Comando e Dados do Título', () => {
+    test('deve ter comando_movimento na posição 109-110', () => {
       const field = sicoobCnab400.detail!.comando_movimento
 
       expect(field.pos).toEqual([109, 110])
@@ -248,7 +248,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter numero_documento na posiÃ§Ã£o 111-120', () => {
+    test('deve ter numero_documento na posição 111-120', () => {
       const field = sicoobCnab400.detail!.numero_documento
 
       expect(field.pos).toEqual([111, 120])
@@ -257,7 +257,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter vencimento na posiÃ§Ã£o 121-126 com formato DDMMAA', () => {
+    test('deve ter vencimento na posição 121-126 com formato DDMMAA', () => {
       const field = sicoobCnab400.detail!.vencimento
 
       expect(field.pos).toEqual([121, 126])
@@ -268,7 +268,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('999999')
     })
 
-    test('deve ter valor_titulo na posiÃ§Ã£o 127-139 com 2 decimais', () => {
+    test('deve ter valor_titulo na posição 127-139 com 2 decimais', () => {
       const field = sicoobCnab400.detail!.valor_titulo
 
       expect(field.pos).toEqual([127, 139])
@@ -278,7 +278,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter numero_banco na posiÃ§Ã£o 140-142 com padrÃ£o "756"', () => {
+    test('deve ter numero_banco na posição 140-142 com padrão "756"', () => {
       const field = sicoobCnab400.detail!.numero_banco
 
       expect(field.pos).toEqual([140, 142])
@@ -287,7 +287,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter prefixo_cooperativa_cobradora na posiÃ§Ã£o 143-146', () => {
+    test('deve ter prefixo_cooperativa_cobradora na posição 143-146', () => {
       const field = sicoobCnab400.detail!.prefixo_cooperativa_cobradora
 
       expect(field.pos).toEqual([143, 146])
@@ -296,7 +296,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter dv_prefixo_cobradora na posiÃ§Ã£o 147', () => {
+    test('deve ter dv_prefixo_cobradora na posição 147', () => {
       const field = sicoobCnab400.detail!.dv_prefixo_cobradora
 
       expect(field.pos).toEqual([147, 147])
@@ -305,7 +305,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter especie_titulo na posiÃ§Ã£o 148-149', () => {
+    test('deve ter especie_titulo na posição 148-149', () => {
       const field = sicoobCnab400.detail!.especie_titulo
 
       expect(field.pos).toEqual([148, 149])
@@ -314,7 +314,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter aceite na posiÃ§Ã£o 150 (dÃ­gito 0/1, nÃ£o letra N/A)', () => {
+    test('deve ter aceite na posição 150 (dígito 0/1, não letra N/A)', () => {
       const field = sicoobCnab400.detail!.aceite
 
       expect(field.pos).toEqual([150, 150])
@@ -325,7 +325,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('1=com aceite')
     })
 
-    test('deve ter data_emissao na posiÃ§Ã£o 151-156 com formato DDMMAA', () => {
+    test('deve ter data_emissao na posição 151-156 com formato DDMMAA', () => {
       const field = sicoobCnab400.detail!.data_emissao
 
       expect(field.pos).toEqual([151, 156])
@@ -335,8 +335,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('DefiniÃ§Ã£o dos campos - InstruÃ§Ãµes e Taxas', () => {
-    test('deve ter instrucao_1 na posiÃ§Ã£o 157-158', () => {
+  describe('Definição dos campos - Instruções e Taxas', () => {
+    test('deve ter instrucao_1 na posição 157-158', () => {
       const field = sicoobCnab400.detail!.instrucao_1
 
       expect(field.pos).toEqual([157, 158])
@@ -346,7 +346,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('trailer')
     })
 
-    test('deve ter instrucao_2 na posiÃ§Ã£o 159-160', () => {
+    test('deve ter instrucao_2 na posição 159-160', () => {
       const field = sicoobCnab400.detail!.instrucao_2
 
       expect(field.pos).toEqual([159, 160])
@@ -356,7 +356,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('trailer')
     })
 
-    test('deve ter taxa_mora_mes na posiÃ§Ã£o 161-166 com 4 decimais', () => {
+    test('deve ter taxa_mora_mes na posição 161-166 com 4 decimais', () => {
       const field = sicoobCnab400.detail!.taxa_mora_mes
 
       expect(field.pos).toEqual([161, 166])
@@ -366,7 +366,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter taxa_multa na posiÃ§Ã£o 167-172 com 4 decimais', () => {
+    test('deve ter taxa_multa na posição 167-172 com 4 decimais', () => {
       const field = sicoobCnab400.detail!.taxa_multa
 
       expect(field.pos).toEqual([167, 172])
@@ -376,7 +376,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter tipo_distribuicao na posiÃ§Ã£o 173', () => {
+    test('deve ter tipo_distribuicao na posição 173', () => {
       const field = sicoobCnab400.detail!.tipo_distribuicao
 
       expect(field.pos).toEqual([173, 173])
@@ -386,8 +386,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('DefiniÃ§Ã£o dos campos - Descontos e IOF', () => {
-    test('deve ter data_primeiro_desconto na posiÃ§Ã£o 174-179', () => {
+  describe('Definição dos campos - Descontos e IOF', () => {
+    test('deve ter data_primeiro_desconto na posição 174-179', () => {
       const field = sicoobCnab400.detail!.data_primeiro_desconto
 
       expect(field.pos).toEqual([174, 179])
@@ -396,7 +396,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter valor_primeiro_desconto na posiÃ§Ã£o 180-192 com 2 decimais', () => {
+    test('deve ter valor_primeiro_desconto na posição 180-192 com 2 decimais', () => {
       const field = sicoobCnab400.detail!.valor_primeiro_desconto
 
       expect(field.pos).toEqual([180, 192])
@@ -406,7 +406,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter codigo_moeda_valor_iof_ou_qtde_moeda na posiÃ§Ã£o 193-205 (campo composto)', () => {
+    test('deve ter codigo_moeda_valor_iof_ou_qtde_moeda na posição 193-205 (campo composto)', () => {
       const field = sicoobCnab400.detail!.codigo_moeda_valor_iof_ou_qtde_moeda
 
       expect(field.pos).toEqual([193, 205])
@@ -418,7 +418,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('IOF')
     })
 
-    test('deve ter valor_abatimento na posiÃ§Ã£o 206-218 com 2 decimais', () => {
+    test('deve ter valor_abatimento na posição 206-218 com 2 decimais', () => {
       const field = sicoobCnab400.detail!.valor_abatimento
 
       expect(field.pos).toEqual([206, 218])
@@ -429,8 +429,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('DefiniÃ§Ã£o dos campos - Dados do Pagador (Sacado)', () => {
-    test('deve ter sacado_codigo_inscricao na posiÃ§Ã£o 219-220', () => {
+  describe('Definição dos campos - Dados do Pagador (Sacado)', () => {
+    test('deve ter sacado_codigo_inscricao na posição 219-220', () => {
       const field = sicoobCnab400.detail!.sacado_codigo_inscricao
 
       expect(field.pos).toEqual([219, 220])
@@ -439,7 +439,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter sacado_numero_inscricao na posiÃ§Ã£o 221-234', () => {
+    test('deve ter sacado_numero_inscricao na posição 221-234', () => {
       const field = sicoobCnab400.detail!.sacado_numero_inscricao
 
       expect(field.pos).toEqual([221, 234])
@@ -448,7 +448,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter nome na posiÃ§Ã£o 235-274', () => {
+    test('deve ter nome na posição 235-274', () => {
       const field = sicoobCnab400.detail!.nome
 
       expect(field.pos).toEqual([235, 274])
@@ -457,7 +457,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter logradouro na posiÃ§Ã£o 275-311 (37 caracteres, nÃ£o 40)', () => {
+    test('deve ter logradouro na posição 275-311 (37 caracteres, não 40)', () => {
       const field = sicoobCnab400.detail!.logradouro
 
       expect(field.pos).toEqual([275, 311])
@@ -467,7 +467,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('37 chars')
     })
 
-    test('deve ter bairro na posiÃ§Ã£o 312-326', () => {
+    test('deve ter bairro na posição 312-326', () => {
       const field = sicoobCnab400.detail!.bairro
 
       expect(field.pos).toEqual([312, 326])
@@ -476,7 +476,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter cep na posiÃ§Ã£o 327-334', () => {
+    test('deve ter cep na posição 327-334', () => {
       const field = sicoobCnab400.detail!.cep
 
       expect(field.pos).toEqual([327, 334])
@@ -485,7 +485,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter cidade na posiÃ§Ã£o 335-349', () => {
+    test('deve ter cidade na posição 335-349', () => {
       const field = sicoobCnab400.detail!.cidade
 
       expect(field.pos).toEqual([335, 349])
@@ -494,7 +494,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter estado na posiÃ§Ã£o 350-351', () => {
+    test('deve ter estado na posição 350-351', () => {
       const field = sicoobCnab400.detail!.estado
 
       expect(field.pos).toEqual([350, 351])
@@ -504,8 +504,8 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('DefiniÃ§Ã£o dos campos - ObservaÃ§Ãµes e Finais', () => {
-    test('deve ter observacoes_mensagem_ou_sacador_avalista na posiÃ§Ã£o 352-391', () => {
+  describe('Definição dos campos - Observações e Finais', () => {
+    test('deve ter observacoes_mensagem_ou_sacador_avalista na posição 352-391', () => {
       const field = sicoobCnab400.detail!.observacoes_mensagem_ou_sacador_avalista
 
       expect(field.pos).toEqual([352, 391])
@@ -515,7 +515,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.description).toContain('condicional')
     })
 
-    test('deve ter dias_protesto na posiÃ§Ã£o 392-393', () => {
+    test('deve ter dias_protesto na posição 392-393', () => {
       const field = sicoobCnab400.detail!.dias_protesto
 
       expect(field.pos).toEqual([392, 393])
@@ -524,7 +524,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter brancos_3 na posiÃ§Ã£o 394', () => {
+    test('deve ter brancos_3 na posição 394', () => {
       const field = sicoobCnab400.detail!.brancos_3
 
       expect(field.pos).toEqual([394, 394])
@@ -533,7 +533,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter numero_sequencial na posiÃ§Ã£o 395-400', () => {
+    test('deve ter numero_sequencial na posição 395-400', () => {
       const field = sicoobCnab400.detail!.numero_sequencial
 
       expect(field.pos).toEqual([395, 400])
@@ -543,7 +543,7 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 
-  describe('CaracterÃ­sticas especÃ­ficas do Sicoob', () => {
+  describe('Características específicas do Sicoob', () => {
     const detail = sicoobCnab400.detail!
 
     test('deve ter 54 campos no total', () => {
@@ -551,11 +551,11 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(campos.length).toBe(54)
     })
 
-    test('logradouro deve ter descriÃ§Ã£o mencionando particularidade de 37 caracteres', () => {
+    test('logradouro deve ter descrição mencionando particularidade de 37 caracteres', () => {
       expect(detail.logradouro.description).toContain('37')
     })
 
-    test('aceite deve usar dÃ­gito (tipo num), nÃ£o letra (tipo alfa)', () => {
+    test('aceite deve usar dígito (tipo num), não letra (tipo alfa)', () => {
       expect(detail.aceite.type).toBe('num')
       expect(detail.aceite.description).not.toContain('N/A')
       expect(detail.aceite.description).toContain('0=')
@@ -567,28 +567,28 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
       expect(detail.vencimento.description).toContain('999999')
     })
 
-    test('nosso_numero deve ter descriÃ§Ã£o mencionando 10 dÃ­gitos + DV mÃ³dulo 11', () => {
+    test('nosso_numero deve ter descrição mencionando 10 dígitos + DV módulo 11', () => {
       expect(detail.nosso_numero.description).toContain('gitos')
       expect(detail.nosso_numero.description).toContain('dulo 11')
     })
 
-    test('instrucao_1 e instrucao_2 devem mencionar habilitaÃ§Ã£o de mensagens no trailer', () => {
+    test('instrucao_1 e instrucao_2 devem mencionar habilitação de mensagens no trailer', () => {
       expect(detail.instrucao_1.description).toContain('trailer')
       expect(detail.instrucao_2.description).toContain('trailer')
     })
 
-    test('campos de taxa devem ter 4 decimais (nÃ£o 2 como valores monetÃ¡rios)', () => {
+    test('campos de taxa devem ter 4 decimais (não 2 como valores monetários)', () => {
       expect(detail.taxa_mora_mes.decimals).toBe(4)
       expect(detail.taxa_multa.decimals).toBe(4)
     })
 
-    test('codigo_moeda_valor_iof_ou_qtde_moeda deve ter descriÃ§Ã£o mencionando composiÃ§Ã£o', () => {
+    test('codigo_moeda_valor_iof_ou_qtde_moeda deve ter descrição mencionando composição', () => {
       expect(detail.codigo_moeda_valor_iof_ou_qtde_moeda.description).toContain('composto')
       // Check for "digito" to avoid encoding issues
       expect(detail.codigo_moeda_valor_iof_ou_qtde_moeda.description?.toLowerCase()).toContain('d')
     })
 
-    test('campos obrigatÃ³rios devem incluir identificaÃ§Ã£o, tÃ­tulo e pagador', () => {
+    test('campos obrigatórios devem incluir identificação, título e pagador', () => {
       expect(detail.tipo_registro.required).toBe(true)
       expect(detail.tipo_inscricao_beneficiario.required).toBe(true)
       expect(detail.numero_inscricao_beneficiario.required).toBe(true)
@@ -604,3 +604,4 @@ describe('Schema Sicoob CNAB 400 - Detalhe (DefiniÃ§Ã£o)', () => {
     })
   })
 })
+

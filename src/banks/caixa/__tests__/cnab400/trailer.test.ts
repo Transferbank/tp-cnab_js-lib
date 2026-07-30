@@ -44,3 +44,4 @@ describe('Schema Caixa CNAB 400 - Trailer', () => {
     })
   })
 })
+

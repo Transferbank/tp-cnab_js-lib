@@ -356,3 +356,4 @@ describe('Metadados: SICREDI_cnab_400.json', () => {
     })
   })
 })
+

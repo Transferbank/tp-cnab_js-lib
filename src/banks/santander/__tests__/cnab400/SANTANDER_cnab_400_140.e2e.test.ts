@@ -1,10 +1,10 @@
-ï»¿/**
- * Pipeline pÃºblico de ponta a ponta para SANTANDER_cnab_400_140.REM: exercita
- * `openCnab()`, o caminho que um consumidor real da lib usa â€“ conteÃºdo
- * bruto do arquivo, sem prÃ©-separar linhas nem escolher schema manualmente
- * (detecÃ§Ã£o de formato/banco incluÃ­da).
+/**
+ * Pipeline público de ponta a ponta para SANTANDER_cnab_400_140.REM: exercita
+ * `openCnab()`, o caminho que um consumidor real da lib usa – conteúdo
+ * bruto do arquivo, sem pré-separar linhas nem escolher schema manualmente
+ * (detecção de formato/banco incluída).
  *
- * ValidaÃ§Ã£o do conteÃºdo do metadata.json em si fica em `.test.ts`.
+ * Validação do conteúdo do metadata.json em si fica em `.test.ts`.
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
  */
 
@@ -16,7 +16,7 @@ import type { FixtureMetadata } from '@tp-types/testing'
 import type { CNABReadResult } from '@tp-types/core/read-result'
 import type { CNABData } from '@tp-types/read'
 
-describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: SANTANDER_cnab_400_140.REM', () => {
+describe('openCnab – pipeline público de ponta a ponta: SANTANDER_cnab_400_140.REM', () => {
   const fixtureDir = path.join(__dirname, '../../__fixtures__/cnab400')
   const txtPath = path.join(fixtureDir, 'SANTANDER_cnab_400_140.REM')
   const jsonPath = path.join(fixtureDir, 'SANTANDER_cnab_400_140.json')
@@ -32,7 +32,7 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: SANTANDER_cnab_400_14
     metadata = JSON.parse(jsonContent) as FixtureMetadata
     cnabFile = openCnab(txtContent)
     readResult = cnabFile.read()
-    validationResult = cnabFile.validate({ withFeedback: true })
+    validationResult = cnabFile.validate(true)
   })
 
   test('deve detectar formato CNAB 400 e banco Santander (033)', () => {
@@ -46,14 +46,14 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: SANTANDER_cnab_400_14
     expect(readResult.bills.length).toBe(metadata.totals.recordCount)
   })
 
-  test('nÃ£o deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
-    // Este arquivo real tem tÃ­tulos com vencimento anterior Ã  data atual
-    // (arquivo gerado em 25/05/2026, mas estamos em 09/07/2026) â€“ isso Ã©
-    // esperado e nÃ£o Ã© responsabilidade do schema/parser.
+  test('não deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
+    // Este arquivo real tem títulos com vencimento anterior à data atual
+    // (arquivo gerado em 25/05/2026, mas estamos em 09/07/2026) – isso é
+    // esperado e não é responsabilidade do schema/parser.
     const lines = validationResult.feedback?.lines || []
     const errosDeParsing = lines.filter(
       (error: ValidationError) =>
-        !(error.field === 'Data de vencimento' && error.message.includes('anterior Ã  data atual')),
+        !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual')),
     )
 
     if (errosDeParsing.length > 0) {
@@ -66,7 +66,7 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: SANTANDER_cnab_400_14
     expect(errosDeParsing).toEqual([])
   })
 
-  test('deve extrair os dados do primeiro tÃ­tulo batendo com os metadados', () => {
+  test('deve extrair os dados do primeiro título batendo com os metadados', () => {
     const records = validationResult.feedback?.records || []
     expect(records.length).toBeGreaterThan(0)
     
@@ -79,7 +79,7 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: SANTANDER_cnab_400_14
     expect(primeiro.document).toBe(esperado.document.replace(/^0+/, ''))
   })
 
-  test('deve extrair os dados de todos os tÃ­tulos batendo com os metadados', () => {
+  test('deve extrair os dados de todos os títulos batendo com os metadados', () => {
     const records = validationResult.feedback?.records || []
     expect(records.length).toBe(metadata.records.length)
 
@@ -89,8 +89,9 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: SANTANDER_cnab_400_14
       expect(record.name?.trim()).toBe(esperado.name)
       expect(record.amount).toBeCloseTo(esperado.amount, 2)
       expect(record.dueDate).toBe(esperado.dueDate)
-      // Documento: o parser remove zeros Ã  esquerda
+      // Documento: o parser remove zeros à esquerda
       expect(record.document).toBe(esperado.document.replace(/^0+/, ''))
     })
   })
 })
+

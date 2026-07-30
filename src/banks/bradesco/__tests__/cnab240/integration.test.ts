@@ -98,3 +98,4 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
     })
   })
 })
+

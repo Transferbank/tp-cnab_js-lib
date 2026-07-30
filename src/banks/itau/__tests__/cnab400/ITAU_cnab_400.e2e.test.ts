@@ -1,10 +1,10 @@
-ï»¿/**
- * Pipeline pÃºblico de ponta a ponta para ITAU_cnab_400.REM: exercita
- * `openCnab()`, o caminho que um consumidor real da lib usa â€“ conteÃºdo
- * bruto do arquivo, sem prÃ©-separar linhas nem escolher schema manualmente
- * (detecÃ§Ã£o de formato/banco incluÃ­da).
+/**
+ * Pipeline público de ponta a ponta para ITAU_cnab_400.REM: exercita
+ * `openCnab()`, o caminho que um consumidor real da lib usa – conteúdo
+ * bruto do arquivo, sem pré-separar linhas nem escolher schema manualmente
+ * (detecção de formato/banco incluída).
  *
- * ValidaÃ§Ã£o do conteÃºdo do metadata.json em si fica em `.test.ts`.
+ * Validação do conteúdo do metadata.json em si fica em `.test.ts`.
  * Parsing das linhas brutas com os schemas TS fica em `.integrity.test.ts`.
  */
 
@@ -29,7 +29,7 @@ interface FixtureMetadata {
   }>
 }
 
-describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: ITAU_cnab_400.REM', () => {
+describe('openCnab – pipeline público de ponta a ponta: ITAU_cnab_400.REM', () => {
   const fixtureDir = path.join(__dirname, '../../__fixtures__/cnab400')
   const txtPath = path.join(fixtureDir, 'ITAU_cnab_400.REM')
   const jsonPath = path.join(fixtureDir, 'ITAU_cnab_400.json')
@@ -45,29 +45,29 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: ITAU_cnab_400.REM', (
     metadata = JSON.parse(jsonContent) as FixtureMetadata
     cnabFile = openCnab(txtContent)
     readResult = cnabFile.read()
-    validationResult = cnabFile.validate({ withFeedback: true })
+    validationResult = cnabFile.validate(true)
   })
 
-  test('deve detectar formato CNAB 400 e banco ItaÃº (341)', () => {
+  test('deve detectar formato CNAB 400 e banco Itaú (341)', () => {
     expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
     expect(cnabFile.bankCode).toBe('341')
-    expect(cnabFile.bankName).toBe('ItaÃº')
+    expect(cnabFile.bankName).toBe('Itaú')
   })
 
-  test('deve extrair um registro por tÃ­tulo (319)', () => {
+  test('deve extrair um registro por título (319)', () => {
     expect(readResult.bills.length).toBe(metadata.totals.recordCount)
     expect(readResult.bills.length).toBe(319)
   })
 
-  test('nÃ£o deve ter erros crÃ­ticos de parsing/schema', () => {
-    // Filtra apenas erros crÃ­ticos (nÃ£o avisos de vencimento no passado que sÃ£o regras de negÃ³cio)
+  test('não deve ter erros críticos de parsing/schema', () => {
+    // Filtra apenas erros críticos (não avisos de vencimento no passado que são regras de negócio)
     const lines = validationResult.feedback?.lines || []
     const errosCriticos = lines.filter(
-      (error) => !(error.field === 'Data de vencimento' && error.message.includes('anterior Ã  data atual'))
+      (error) => !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual'))
     )
 
     if (errosCriticos.length > 0) {
-      console.log('Erros crÃ­ticos encontrados:')
+      console.log('Erros críticos encontrados:')
       errosCriticos.forEach((error) => {
         console.log(`  Linha ${error.line}: ${error.field} - ${error.message}`)
       })
@@ -76,7 +76,7 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: ITAU_cnab_400.REM', (
     expect(errosCriticos).toEqual([])
   })
 
-  test('deve extrair os dados do primeiro tÃ­tulo batendo com os metadados', () => {
+  test('deve extrair os dados do primeiro título batendo com os metadados', () => {
     const records = validationResult.feedback?.records || []
     expect(records.length).toBeGreaterThan(0)
 
@@ -89,7 +89,7 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: ITAU_cnab_400.REM', (
     expect(primeiro.document).toBe(esperado.document)
   })
 
-  test('deve extrair os dados do Ãºltimo tÃ­tulo batendo com os metadados', () => {
+  test('deve extrair os dados do último título batendo com os metadados', () => {
     const records = validationResult.feedback?.records || []
     const ultimo = records[records.length - 1]
     const esperado = metadata.records[metadata.records.length - 1]
@@ -107,3 +107,4 @@ describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: ITAU_cnab_400.REM', (
     expect(somaTotal).toBeCloseTo(metadata.totals.totalAmount, 2)
   })
 })
+

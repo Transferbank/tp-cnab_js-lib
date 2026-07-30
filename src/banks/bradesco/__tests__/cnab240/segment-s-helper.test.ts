@@ -172,3 +172,4 @@ describe('Helper Bradesco CNAB 240 - Segmento S', () => {
     })
   })
 })
+

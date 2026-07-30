@@ -118,3 +118,4 @@ describe('Schema Banco do Brasil CNAB 400 - Header de Arquivo', () => {
     })
   })
 })
+

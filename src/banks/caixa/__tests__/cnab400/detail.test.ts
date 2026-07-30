@@ -471,3 +471,4 @@ describe('Schema Caixa CNAB 400 - Detalhe (Definição)', () => {
   })
 })
 
+

@@ -1,25 +1,15 @@
 /**
  * Types para o sistema de metadados de fixtures CNAB
  * 
- * Este módulo define as estruturas de dados para metadados JSON que documentam
- * e validam arquivos fixture CNAB de teste.
- * 
- * O sistema é genérico e funciona para:
- * - Qualquer banco (Bradesco, Santander, Itaú, Caixa, etc)
- * - CNAB 240 e CNAB 400
- * - Qualquer tipo de arquivo (remessa, retorno, múltiplos lotes)
+ * Define estruturas de dados para metadados JSON que documentam e validam
+ * arquivos fixture CNAB de teste. Funciona para qualquer banco, CNAB 240/400,
+ * e qualquer tipo de arquivo (remessa, retorno, múltiplos lotes).
  */
 
 import type { CNABFormatCode } from '../core'
 
-/**
- * Tipo de documento do pagador/sacado
- */
 export type DocumentType = 'CPF' | 'CNPJ'
 
-/**
- * Metadados completos de um arquivo fixture CNAB
- */
 export interface FixtureMetadata {
   description: string
   bankCode: string
@@ -31,12 +21,6 @@ export interface FixtureMetadata {
   totals: FixtureTotals
 }
 
-/**
- * Estrutura de linhas do arquivo
- * 
- * Para CNAB 240: totalLines = headerLines + detailLines + trailerLines
- * Para CNAB 400: estrutura similar mas com formato diferente
- */
 export interface FixtureStructure {
   totalLines: number
   headerLines: number
@@ -46,13 +30,10 @@ export interface FixtureStructure {
   messageLines?: number
 }
 
-/**
- * Dados do header de arquivo
- */
 export interface FixtureHeader {
   cedenteNome?: string
   dataGeracao?: string
-  dataGeracaoRaw?: string // Formato raw do arquivo (ex: DDMMAA ou DDMMAAAA)
+  dataGeracaoRaw?: string
   tipoArquivo?: string
   codigoCliente?: string
   numeroInscricaoCedente?: string
@@ -63,52 +44,37 @@ export interface FixtureHeader {
 /**
  * Representa um título/registro no arquivo CNAB
  * 
- * Contém os dados principais extraídos do arquivo CNAB, nos formatos
- * que a aplicação realmente usa (valores convertidos, datas formatadas).
+ * Campos com sufixo "Raw" contêm o formato original do arquivo
+ * (ex: amountRaw é string numérica sem decimais, dueDateRaw é DDMMAA).
  */
 export interface FixtureRecord {
   index: number
   name: string
   
-  // Documento do pagador/sacado
   document: string
-  documentRaw?: string // Formato raw do arquivo (com zeros à esquerda)
+  documentRaw?: string
   documentType: DocumentType
-  documentTypeCode?: string // Código do tipo (ex: "01" = CPF, "02" = CNPJ)
+  documentTypeCode?: string
   
-  // Valor do título (em reais)
   amount: number
-  amountRaw?: string // Formato raw do arquivo (string numérica sem decimais)
+  amountRaw?: string
   
-  // Data de vencimento (DD/MM/AAAA)
   dueDate: string
-  dueDateRaw?: string // Formato raw do arquivo (ex: DDMMAA ou DDMMAAAA)
+  dueDateRaw?: string
   
-  // Endereço
   address?: string
   city?: string
   state?: string
   zipCode?: string
 
-  // Identificadores do título
-  nossoNumero?: string // Identificador único do título no banco
-  numeroDocumento?: string // "Seu número"/número do documento na empresa
+  nossoNumero?: string
+  numeroDocumento?: string
 
-  // Campos específicos de alguns bancos
-  instrucao?: string // Código de instrução/ocorrência (ex: Sicredi)
-  especie?: string // Código de espécie do título (ex: Sicredi)
+  instrucao?: string
+  especie?: string
 }
 
-/**
- * Totalizadores para validação de integridade
- * 
- * Permite validar que soma dos valores e quantidade de registros
- * batem com o esperado
- */
 export interface FixtureTotals {
-  /** Quantidade de registros/títulos */
   recordCount: number
-
-  /** Soma total dos valores (em reais) */
   totalAmount: number
 }

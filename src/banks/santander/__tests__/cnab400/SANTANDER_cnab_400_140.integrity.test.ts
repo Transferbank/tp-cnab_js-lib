@@ -1,10 +1,10 @@
-﻿/**
+/**
  * Parsing das linhas brutas de SANTANDER_cnab_400_140.REM com os schemas TS reais
- * (HEADER, DETAIL, TRAILER) � valida que o schema realmente d� conta do arquivo
- * de produ��o, independente do que est� escrito no metadata.json.
+ * (HEADER, DETAIL, TRAILER) ? valida que o schema realmente d? conta do arquivo
+ * de produ??o, independente do que est? escrito no metadata.json.
  *
- * Valida��o do conte�do do metadata.json em si fica em `.test.ts`.
- * Pipeline p�blico (`validateCnabFile`) fica em `.e2e.test.ts`.
+ * Valida??o do conte?do do metadata.json em si fica em `.test.ts`.
+ * Pipeline p?blico (`validateCnabFile`) fica em `.e2e.test.ts`.
  */
 
 import * as fs from 'fs'
@@ -14,7 +14,7 @@ import { getBankSchema } from '@schemas/index'
 import { BANK_CODES, CNABFormatCode } from '@tp-types/index'
 import type { FixtureMetadata } from '@tp-types/testing'
 
-describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
+describe('Integridade TXT � Schema: SANTANDER_cnab_400_140.REM', () => {
   const fixtureDir = path.join(__dirname, '../../__fixtures__/cnab400')
   const txtPath = path.join(fixtureDir, 'SANTANDER_cnab_400_140.REM')
   const jsonPath = path.join(fixtureDir, 'SANTANDER_cnab_400_140.json')
@@ -28,14 +28,14 @@ describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
     metadata = JSON.parse(jsonContent) as FixtureMetadata
   })
 
-  describe('Integridade TXT × JSON', () => {
+  describe('Integridade TXT � JSON', () => {
     test('deve ter 400 caracteres em cada linha', () => {
       lines.forEach((line) => {
         expect(line.length).toBe(400)
       })
     })
 
-    test('header deve ter c�digo do banco correto', () => {
+    test('header deve ter c?digo do banco correto', () => {
       const schema = getBankSchema(BANK_CODES.SANTANDER, CNABFormatCode.CNAB400)
       if (schema) {
         const headerParsed = extractLineFields(lines[0], schema.header || {})
@@ -48,13 +48,13 @@ describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
       const schema = getBankSchema(BANK_CODES.SANTANDER, CNABFormatCode.CNAB400)
       if (schema) {
         const headerParsed = extractLineFields(lines[0], schema.header || {})
-        // Valor confirmado no arquivo (fixture com dados fict�cios)
+        // Valor confirmado no arquivo (fixture com dados fict?cios)
         expect(headerParsed.codigo_transmissao?.raw).toBe('99110022334400556677')
         expect(headerParsed.codigo_transmissao?.raw.length).toBe(20)
       }
     })
 
-    test('todos os registros tipo 1 devem ser parse�veis sem erros', () => {
+    test('todos os registros tipo 1 devem ser parse?veis sem erros', () => {
       const schema = getBankSchema(BANK_CODES.SANTANDER, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')
@@ -65,7 +65,7 @@ describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
 
           // Deve ter nome
           expect(parsed.nome?.value).toBeTruthy()
-          // Erro pode ser null (sem erro) - n�o precisa ser undefined
+          // Erro pode ser null (sem erro) - n?o precisa ser undefined
 
           // Deve ter valor
           expect(parsed.valor_titulo?.value).toBeDefined()
@@ -103,7 +103,7 @@ describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
             const expectedSequencial = index + 1
 
             expect(parsed.numero_sequencial.value).toBe(expectedSequencial)
-            // Erro pode ser null (sem erro) - n�o precisa ser undefined
+            // Erro pode ser null (sem erro) - n?o precisa ser undefined
           }
         })
       }
@@ -125,3 +125,4 @@ describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
     })
   })
 })
+

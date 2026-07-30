@@ -192,3 +192,4 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
     })
   })
 })
+

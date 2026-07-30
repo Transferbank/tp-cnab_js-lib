@@ -65,3 +65,4 @@ describe('Schema Itaú CNAB 400 - Trailer', () => {
   })
 })
 
+

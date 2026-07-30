@@ -397,3 +397,4 @@ describe('Schema Sicredi CNAB 240 - Segmento P', () => {
     })
   })
 })
+

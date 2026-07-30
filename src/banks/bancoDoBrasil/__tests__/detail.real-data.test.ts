@@ -1,16 +1,16 @@
-ï»¿/**
+/**
  * Testes do Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)
  *
- * Duas camadas de evidÃªncia:
- * 1. VerificaÃ§Ã£o independente (checksum, consistÃªncias estruturais)
- * 2. RegressÃ£o via metadata.json
+ * Duas camadas de evidência:
+ * 1. Verificação independente (checksum, consistências estruturais)
+ * 2. Regressão via metadata.json
  *
- * O pipeline pÃºblico de ponta a ponta (`openCnab`) Ã© coberto em
- * `BANCOBRASIL_cnab_400.e2e.test.ts` â€” nÃ£o duplicado aqui.
+ * O pipeline público de ponta a ponta (`openCnab`) é coberto em
+ * `BANCOBRASIL_cnab_400.e2e.test.ts` — não duplicado aqui.
  *
  * Fixture: BANCOBRASIL_cnab_400.REM (228 linhas: 1 header + 113 tipo 7 + 113 tipo 5/99 + 1 trailer)
  *
- * PARTICULARIDADE DO BB: tipo_registro = '7' (nÃ£o '1' como padrÃ£o FEBRABAN)
+ * PARTICULARIDADE DO BB: tipo_registro = '7' (não '1' como padrão FEBRABAN)
  */
 
 import { bancoDoBrasilCnab400 } from '@banks/bancoDoBrasil/schemas/cnab400'
@@ -30,11 +30,11 @@ function readFixture(filename: string): string[] {
 describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
   const lines = readFixture('BANCOBRASIL_cnab_400.REM')
   const headerLine = lines[0]
-  const detailLines = lines.filter((line) => line[0] === '7') // BB usa tipo '7', nÃ£o '1'
+  const detailLines = lines.filter((line) => line[0] === '7') // BB usa tipo '7', não '1'
   const tipo5Lines = lines.filter((line) => line[0] === '5') // Registros de multa
   const trailerLine = lines[lines.length - 1]
 
-  describe('VerificaÃ§Ã£o independente (evidÃªncia dentro do prÃ³prio arquivo real)', () => {
+  describe('Verificação independente (evidência dentro do próprio arquivo real)', () => {
     test('deve ter exatamente 113 registros tipo 7 (detalhe)', () => {
       expect(detailLines.length).toBe(113)
     })
@@ -43,19 +43,19 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(tipo5Lines.length).toBe(113)
     })
 
-    test('CPF/CNPJ do sacado deve ser vÃ¡lido em todas as 113 linhas tipo 7 (checksum)', () => {
+    test('CPF/CNPJ do sacado deve ser válido em todas as 113 linhas tipo 7 (checksum)', () => {
       expect(detailLines.length).toBe(113)
 
       detailLines.forEach((line) => {
         const detail = extractLineFields(line, bancoDoBrasilCnab400.detail!)
         const documento = detail.sacado_numero_inscricao.raw
 
-        // Checksum externo - prova independente da posiÃ§Ã£o
+        // Checksum externo - prova independente da posição
         expect(isValidCpfCnpj(documento)).toBe(true)
       })
     })
 
-    test('agÃªncia do detalhe deve bater com a do header (consistÃªncia estrutural)', () => {
+    test('agência do detalhe deve bater com a do header (consistência estrutural)', () => {
       const header = extractLineFields(headerLine, bancoDoBrasilCnab400.header!)
       const agenciaHeader = header.agencia.raw
 
@@ -64,12 +64,12 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       detailLines.forEach((line) => {
         const detail = extractLineFields(line, bancoDoBrasilCnab400.detail!)
 
-        // AgÃªncia deve ser a mesma em todos os detalhes e no header
+        // Agência deve ser a mesma em todos os detalhes e no header
         expect(detail.agencia.raw).toBe(agenciaHeader)
       })
     })
 
-    test('conta do detalhe deve bater com a do header (consistÃªncia estrutural)', () => {
+    test('conta do detalhe deve bater com a do header (consistência estrutural)', () => {
       const header = extractLineFields(headerLine, bancoDoBrasilCnab400.header!)
       const contaHeader = header.conta.raw
 
@@ -83,14 +83,14 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       })
     })
 
-    test('convÃªnio do detalhe bate com o convenio_lider do header nesta fixture (nÃ£o Ã© regra geral do layout)', () => {
-      // AtenÃ§Ã£o: convenio_lider (header) e convenio (detalhe) sÃ£o campos
-      // semanticamente diferentes â€” convenio_lider serve para agrupar o
-      // retorno de vÃ¡rios convÃªnios "lÃ­derados" (NOTA 04 do manual,
-      // ver comparativo-cnab400-bancodobrasil.md). Eles sÃ³ coincidem aqui
-      // porque este cedente usa um Ãºnico convÃªnio; nÃ£o Ã© uma invariante
-      // estrutural do BB, Ã© um fato desta fixture especÃ­fica. Se um dia
-      // entrar uma fixture com agrupamento real de convÃªnios, Ã© esperado
+    test('convênio do detalhe bate com o convenio_lider do header nesta fixture (não é regra geral do layout)', () => {
+      // Atenção: convenio_lider (header) e convenio (detalhe) são campos
+      // semanticamente diferentes — convenio_lider serve para agrupar o
+      // retorno de vários convênios "líderados" (NOTA 04 do manual,
+      // ver comparativo-cnab400-bancodobrasil.md). Eles só coincidem aqui
+      // porque este cedente usa um único convênio; não é uma invariante
+      // estrutural do BB, é um fato desta fixture específica. Se um dia
+      // entrar uma fixture com agrupamento real de convênios, é esperado
       // que este teste passe a falhar e precise ser revisado.
       const header = extractLineFields(headerLine, bancoDoBrasilCnab400.header!)
       const convenioHeader = header.convenio_lider.raw
@@ -113,7 +113,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       })
     })
 
-    test('estado (UF) deve ser vÃ¡lido quando preenchido', () => {
+    test('estado (UF) deve ser válido quando preenchido', () => {
       expect(detailLines.length).toBeGreaterThan(0)
 
       let linhasComUF = 0
@@ -133,7 +133,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(linhasComUF).toBeGreaterThan(0)
     })
 
-    test('numero_sequencial deve ser a posiÃ§Ã£o 1-based da linha no arquivo (todas as 228 linhas)', () => {
+    test('numero_sequencial deve ser a posição 1-based da linha no arquivo (todas as 228 linhas)', () => {
       expect(lines.length).toBe(228)
 
       lines.forEach((line, index) => {
@@ -147,48 +147,48 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
         } else if (tipoRegistro === '9') {
           schema = bancoDoBrasilCnab400.trailer
         } else if (tipoRegistro === '5') {
-          // Tipo 5 (multa) nÃ£o faz parte do BankSchema principal (Ã© registro
-          // opcional), entÃ£o usamos o schema TYPE5_FINE diretamente.
+          // Tipo 5 (multa) não faz parte do BankSchema principal (é registro
+          // opcional), então usamos o schema TYPE5_FINE diretamente.
           schema = TYPE5_FINE
         }
 
         if (schema && 'numero_sequencial' in schema) {
           const parsed = extractLineFields(line, schema)
-          const sequencialEsperado = index + 1 // PosiÃ§Ã£o 1-based
+          const sequencialEsperado = index + 1 // Posição 1-based
 
           expect(parsed.numero_sequencial.value).toBe(sequencialEsperado)
         }
       })
     })
 
-    test('numero_sequencial do trailer deve ser exatamente 228 (Ãºltima linha)', () => {
+    test('numero_sequencial do trailer deve ser exatamente 228 (última linha)', () => {
       const trailer = extractLineFields(trailerLine, bancoDoBrasilCnab400.trailer!)
 
-      // numero_sequencial do trailer deve ser 228 (Ãºltima linha)
+      // numero_sequencial do trailer deve ser 228 (última linha)
       expect(trailer.numero_sequencial.value).toBe(228)
       expect(trailer.numero_sequencial.value).toBe(lines.length)
     })
 
-    test('deve haver alternÃ¢ncia tipo 7 â†’ tipo 5 â†’ tipo 7 â†’ tipo 5...', () => {
-      // ApÃ³s o header (linha 0), deve haver alternÃ¢ncia detalhe/multa atÃ© o trailer
+    test('deve haver alternância tipo 7 ? tipo 5 ? tipo 7 ? tipo 5...', () => {
+      // Após o header (linha 0), deve haver alternância detalhe/multa até o trailer
       for (let i = 1; i < lines.length - 1; i += 2) {
         const linhaDetalhe = lines[i]
         const linhaMulta = lines[i + 1]
 
-        // Verifica se nÃ£o Ã© a Ãºltima linha (trailer)
+        // Verifica se não é a última linha (trailer)
         if (i + 1 < lines.length - 1) {
           expect(linhaDetalhe[0]).toBe('7') // Detalhe
           expect(linhaMulta[0]).toBe('5') // Multa
-          expect(linhaMulta.substring(1, 3)).toBe('99') // ServiÃ§o 99 (multa)
+          expect(linhaMulta.substring(1, 3)).toBe('99') // Serviço 99 (multa)
         }
       }
     })
 
     test('todos os registros tipo 5 devem ter tipo_servico = "99" (multa)', () => {
       tipo5Lines.forEach((line) => {
-        // PosiÃ§Ãµes 1-1: tipo_registro = '5'
+        // Posições 1-1: tipo_registro = '5'
         expect(line[0]).toBe('5')
-        // PosiÃ§Ãµes 2-3: tipo_servico = '99'
+        // Posições 2-3: tipo_servico = '99'
         expect(line.substring(1, 3)).toBe('99')
       })
     })
@@ -211,9 +211,9 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
     })
   })
 
-  describe('ComparaÃ§Ã£o contra snapshot gerado (metadata.json) - testes de regressÃ£o', () => {
-    // Nota: metadata.json Ã© gerado pelo mesmo parser sendo testado
-    // Estes testes provam regressÃ£o, nÃ£o correÃ§Ã£o absoluta
+  describe('Comparação contra snapshot gerado (metadata.json) - testes de regressão', () => {
+    // Nota: metadata.json é gerado pelo mesmo parser sendo testado
+    // Estes testes provam regressão, não correção absoluta
 
     let metadata: any
 
@@ -222,7 +222,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
 
       if (!fs.existsSync(metadataPath)) {
         throw new Error(
-          `Arquivo de metadata nÃ£o encontrado: ${metadataPath}\n` +
+          `Arquivo de metadata não encontrado: ${metadataPath}\n` +
           'Execute: npm run generate-metadata -- --bank=001 --format=CNAB400 --fixture=BANCOBRASIL_cnab_400'
         )
       }
@@ -235,7 +235,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(metadata.records.length).toBe(113)
     })
 
-    test('vencimento bate com metadata.json (regressÃ£o)', () => {
+    test('vencimento bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, bancoDoBrasilCnab400.detail!)
       const record = metadata.records[0]
@@ -243,7 +243,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.vencimento.raw).toBe(record.dueDateRaw)
     })
 
-    test('sacado_codigo_inscricao bate com metadata.json (regressÃ£o)', () => {
+    test('sacado_codigo_inscricao bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, bancoDoBrasilCnab400.detail!)
       const record = metadata.records[0]
@@ -251,7 +251,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.sacado_codigo_inscricao.raw).toBe(record.documentTypeCode)
     })
 
-    test('sacado_numero_inscricao bate com metadata.json (regressÃ£o)', () => {
+    test('sacado_numero_inscricao bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, bancoDoBrasilCnab400.detail!)
       const record = metadata.records[0]
@@ -259,7 +259,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.sacado_numero_inscricao.raw).toBe(record.documentRaw)
     })
 
-    test('nome bate com metadata.json (regressÃ£o)', () => {
+    test('nome bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, bancoDoBrasilCnab400.detail!)
       const record = metadata.records[0]
@@ -269,7 +269,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('logradouro bate com metadata.json (regressÃ£o)', () => {
+    test('logradouro bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, bancoDoBrasilCnab400.detail!)
       const record = metadata.records[0]
@@ -279,19 +279,19 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('bairro deve estar populado em todas as 113 linhas (verificaÃ§Ã£o independente)', () => {
+    test('bairro deve estar populado em todas as 113 linhas (verificação independente)', () => {
       expect(detailLines.length).toBe(113)
 
       detailLines.forEach((line) => {
         const detail = extractLineFields(line, bancoDoBrasilCnab400.detail!)
         const bairro = String(detail.bairro.value || '').trim()
 
-        // Todas as 113 linhas tÃªm bairro preenchido nesta fixture
+        // Todas as 113 linhas têm bairro preenchido nesta fixture
         expect(bairro.length).toBeGreaterThan(0)
       })
     })
 
-    test('cidade bate com metadata.json (regressÃ£o)', () => {
+    test('cidade bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, bancoDoBrasilCnab400.detail!)
       const record = metadata.records[0]
@@ -301,7 +301,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('estado bate com metadata.json (regressÃ£o)', () => {
+    test('estado bate com metadata.json (regressão)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, bancoDoBrasilCnab400.detail!)
       const record = metadata.records[0]
@@ -311,7 +311,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('todos os campos principais de todos os tÃ­tulos batem com metadata.json (regressÃ£o em loop)', () => {
+    test('todos os campos principais de todos os títulos batem com metadata.json (regressão em loop)', () => {
       metadata.records.forEach((expected: any, index: number) => {
         const detail = extractLineFields(detailLines[index], bancoDoBrasilCnab400.detail!)
 
@@ -321,7 +321,7 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
         expect(Number(detail.valor_titulo.value)).toBeCloseTo(expected.amount, 2)
         expect(detail.vencimento.raw).toBe(expected.dueDateRaw)
 
-        // Campos especÃ­ficos do BB
+        // Campos específicos do BB
         if (expected.city) {
           expect(String(detail.cidade.value).trim()).toBe(expected.city)
         }
@@ -333,36 +333,36 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
   })
 
   describe('Particularidades do Banco do Brasil', () => {
-    test('tipo_registro deve ser "7" em todos os detalhes (nÃ£o "1")', () => {
+    test('tipo_registro deve ser "7" em todos os detalhes (não "1")', () => {
       detailLines.forEach((line) => {
         expect(line[0]).toBe('7')
       })
     })
 
-    test('nome do sacado deve ter exatamente 37 caracteres no arquivo (nÃ£o 40)', () => {
-      // PosiÃ§Ãµes 235-271 = 37 caracteres
+    test('nome do sacado deve ter exatamente 37 caracteres no arquivo (não 40)', () => {
+      // Posições 235-271 = 37 caracteres
       detailLines.forEach((line) => {
-        const nomeCampo = line.substring(234, 271) // JavaScript Ã© 0-indexed
+        const nomeCampo = line.substring(234, 271) // JavaScript é 0-indexed
         expect(nomeCampo.length).toBe(37)
       })
     })
 
-    test('nosso nÃºmero deve ter 17 posiÃ§Ãµes (mais longo que outros bancos)', () => {
+    test('nosso número deve ter 17 posições (mais longo que outros bancos)', () => {
       detailLines.forEach((line) => {
         const detail = extractLineFields(line, bancoDoBrasilCnab400.detail!)
         expect(detail.nosso_numero.raw.length).toBe(17)
       })
     })
 
-    test('todos os detalhes devem ter comando vÃ¡lido', () => {
+    test('todos os detalhes devem ter comando válido', () => {
       detailLines.forEach((line) => {
         const detail = extractLineFields(line, bancoDoBrasilCnab400.detail!)
         const comando = detail.comando.raw
 
-        // SÃ³ temos evidÃªncia real (nesta fixture) de 01 (entrada), 02 (baixa),
-        // 04 (abatimento) e 06 (alteraÃ§Ã£o de vencimento) â€” nÃ£o validamos contra
-        // uma lista fechada de cÃ³digos porque nÃ£o temos essa lista confirmada
-        // pelo manual oficial, sÃ³ o formato de 2 dÃ­gitos.
+        // Só temos evidência real (nesta fixture) de 01 (entrada), 02 (baixa),
+        // 04 (abatimento) e 06 (alteração de vencimento) — não validamos contra
+        // uma lista fechada de códigos porque não temos essa lista confirmada
+        // pelo manual oficial, só o formato de 2 dígitos.
         expect(comando).toBeTruthy()
         expect(comando.length).toBe(2)
         expect(comando).toMatch(/^\d{2}$/)
@@ -387,3 +387,4 @@ describe('Schema Banco do Brasil CNAB 400 - Detalhe (Dados Reais)', () => {
     })
   })
 })
+
