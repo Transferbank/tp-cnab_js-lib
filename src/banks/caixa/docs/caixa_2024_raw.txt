@@ -1,0 +1,2049 @@
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.0
+Código do
+Registro
+Código Identificador do
+tipo de Registro no Arquivo
+1 1 9(001) Preencher
+02.0
+Código da
+Remessa
+Código Identificador da
+Remessa para a CAIXA
+2 2 9(001) Preencher '1'
+03.0
+Literal da
+Remessa
+Literal Correspondente ao
+Código da Remessa
+3 9 X(007) Ver Nota Explicativa NE001 NE001
+04.0
+Código do
+Serviço
+Código Identificador do
+Tipo de Serviço
+10 11 9(002)
+05.0
+Literal de
+Serviço
+Literal Correspondente ao
+Código de Serviço
+12 26 X(015) COBRANCA NE002
+06.0
+Código da
+Agência
+Código da Agência de
+vinculação do Beneficiário
+27 30 9(004)
+Preencher com o código da agência
+detentora da conta
+NE003
+07.0
+Código do
+Beneficiário
+Código Identificador da
+Empresa na CAIXA
+31 37 9(007) Ver Nota Explicativa NE004 NE004
+08.0 Uso Exclusivo Uso Exclusivo CAIXA 38 46 X(009) Preencher com brancos
+09.0
+Nome da
+Empresa
+Nome por extenso da
+Empresa
+47 76 X(030) Ver Nota Explicativa NE005 NE005
+10.0
+Código do
+Banco
+Código do Banco na
+Compensação
+77 79 9(003) NE006
+11.0 Nome do Banco Nome do Banco 80 94 X(015) Ver Nota Explicativa NE007 NE007
+12.0 Data de Geração
+Data de Geração do
+Arquivo
+95 100 9(006) Ver Nota Explicativa NE008 NE008
+12.0V
+Versão do
+Layout
+Nº da Versão do Layout 101 103 9(003) Ver Nota Explicativa NE065 NE065
+13.0 Uso Exclusivo Uso Exclusivo CAIXA 104 389 X(286) Preencher com brancos
+14.0
+Nº Sequencial -
+A
+Número Sequencial do
+Arquivo Remessa
+390 394 9(005) Ver Nota Explicativa NE009 NE009
+15.0
+Nº Sequencial -
+B
+Número Sequencial do
+Registro no Arquivo
+395 400 9(006) NE010
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.1
+Código do
+Registro
+Código Identificador do
+Tipo de Registro no
+Arquivo
+1 1 9(001)
+02.1 Tipo Inscrição
+Tipo de Inscrição da
+Empresa
+2 3 9(002)
+Preencher com o tipo de inscrição do
+Pagador: '1', se CPF (pessoa física);
+ou '2' se CNPJ (pessoa jurídica)
+NE011
+03.1 Número Inscrição
+Número de Inscrição da
+Empresa
+4 17 9(014)
+Número de inscrição da Pessoa Física
+(CPF) ou Empresa (CNPJ) a que se
+está fazendo referência. Varia de
+acordo com o código da nota anterior.
+NE012
+04.1
+Uso Exclusivo
+CAIXA
+Uso Exclusivo CAIXA 18 20 9(003)
+Preencher com zeros.
+Anteriormente utilizado para
+preencher com o código da agência
+detentora da conta. Qualquer valor
+enviado para o campo será
+desprezado pela CAIXA.
+05.1
+Código do
+Beneficiário
+Identificação da
+Empresa na CAIXA
+21 27 9(007) Ver Nota Explicativa NE004 NE004
+06.1 ID Emissão
+Identificação da
+Emissão do Boleto
+28 28 9(001) Ver Nota Explicativa NE027 NE027
+07.1 ID Postagem
+Identificação da
+Entrega/Distribuição do
+Boleto
+29 29 9(001) Ver Nota Explicativa NE028 NE028
+09.1
+Taxa
+Permanência
+Comissão de
+Permanência
+30 31 9(002) Preencher com zeros NE013
+10.1
+Uso Empresa
+Beneficiário
+Identificação do Título
+na Empresa
+32 56 X(025) Ver Nota Explicativa NE014 NE014
+11.1 Nosso Número
+Modalidade
+Identificação
+57 58 9(002)
+Ver Nota Explicativa NE015 NE015
+Identificação do Título
+na CAIXA
+59 73 9(015)
+12.1 Brancos Campos em branco 74 75 X(002) Preencher com espaços
+12A.1
+Uso livre
+banco/empresa
+Uso livre
+banco/empresa ou
+autorização de
+pagamento parcial
+76 76 9(001) Ver Nota Explicativa NE055 NE055
+13.1 Código dos juros Código do tipo de juros 77 77 9(001) Ver Nota Explicativa NE066 NE066
+13A.1 Data de Juros Data início de Juros 78 83 9(006) Ver Nota Explicativa NE063 NE063
+13B.1
+Código do
+Desconto
+Código do Tipo de
+Desconto
+84 84 9(001) Ver Nota Explicativa NE061 NE061
+13C.1 Brancos Campos em branco 85 106 X(022)
+14.1 Carteira Código da Carteira 107 108 9(002) Ver Nota Explicativa NE016 NE016
+15.1
+Código
+Ocorrência
+Identificação Tipo
+Ocorrência do arquivo
+remessa
+109 110 9(002) Ver Nota Explicativa NE017 NE017
+16.1
+Uso Empresa
+Beneficiário
+Número do Documento
+de Cobrança (Seu
+Número)
+111 120 X(010)
+Obrigatório. Número adotado e controlado pelo
+Cliente para identificar o título de cobrança.
+Informação utilizada pelos Bancos para referenciar
+a identificação do documento objeto de cobrança.
+Poderá conter número de duplicata, no caso de
+cobrança de duplicatas, número da apólice, no
+caso de cobrança de seguros, etc.
+NE018
+67.126 v029 micro
+17.1 Vencimento
+Data de Vencimento do
+Título
+121 126 9(006) Ver Nota Explicativa NE019 NE019
+18.1 Valor do Título Valor Nominal do Título 127 139 9(013) Ver Nota Explicativa NE020 NE020
+19.1 Código do Banco
+Código do Banco na
+Compensação
+140 142 9(003) NE006
+20.1
+Agência
+Cobradora
+Agência Encarregada
+da Cobrança
+143 147 9(005) NE021
+21.1 Espécie de Título Espécie do Título 148 149 9(002) Ver Nota Explicativa NE022 NE022
+22.1 Aceite
+Identificação de Título -
+Aceito / Não Aceito
+150 150 9(001) Ver Nota Explicativa NE023 NE023
+23.1
+Data Emissão
+Título
+Data da Emissão do
+Título
+151 156 9(006) Ver Nota Explicativa NE056 NE056
+24.1 Instrução 1
+Primeira Instrução de
+Cobrança
+157 158 9(002) Ver Nota Explicativa NE024 NE024
+25.1 Instrução 2
+Segunda Instrução de
+Cobrança
+159 160 9(002)
+26.1 Juros Mora
+Juros de Mora por
+dia/Valor
+161 173 9(013) Ver Nota Explicativa NE064 NE064
+27.1
+Data do
+Desconto
+Data limite para
+concessão do desconto
+174 179 9(006) Ver Nota Explicativa NE057 NE057
+28.1
+Valor/Percentual
+do Desconto
+Valor/Percentual do
+Desconto a ser
+concedido
+180 192 9(013) Ver Nota Explicativa NE062 NE062
+29.1 Valor do IOF
+Valor do IOF a ser
+recolhido
+193 205 9(013)
+30.1 Abatimento
+Valor do abatimento a
+ser concedido
+206 218 9(013)
+31.1 Tipo Inscrição
+Identificador do Tipo de
+Inscrição do Pagador
+219 220 9(002) Ver Nota Explicativa NE011 NE011
+32.1 Número Inscrição
+Número de Inscrição do
+Pagador
+221 234 9(014) Ver Nota Explicativa NE012 NE012
+33.1 Nome Nome do Pagador 235 274 X(040)
+34.1 Endereço Endereço do Pagador 275 314 X(040)
+Ver Nota Explicativa NE058 NE058
+35.1 Bairro Bairro do Pagador 315 326 X(012)
+36.1 CEP CEP do Pagador 327 334 9(008)
+37.1 Cidade Cidade do Pagador 335 349 X(015)
+38.1 UF
+Unidade da Federação
+do Pagador
+350 351 X(002)
+39.1 Data da Multa
+Definição da data para
+pagamento de multa
+352 357 9(006) Ver Nota Explicativa NE059
+40.1 Valor da Multa Valor nominal da multa 358 367 9(010)
+41.1 Sacador/Avalista
+Nome do
+Sacador/Avalista
+368 389 X(022)
+42.1 Instrução 3
+Terceira Instrução de
+Cobrança
+390 391 9(002) Ver Nota Explicativa NE029 NE029
+43.1 Prazo
+Número de dias para
+início do
+protesto/devolução
+392 393 9(002) Ver Nota Explicativa NE025 NE025
+44.1 Código da Moeda Código da Moeda 394 394 9(001) NE026
+45.1
+Número
+Sequencial
+Número Sequencial do
+Registro no Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.2
+Código do
+Registro
+Código Identificador do
+Tipo de Registro no
+Arquivo
+1 1 9(001)
+02.2 Tipo Inscrição
+Tipo de Inscrição da
+Empresa
+2 3 9(002) Ver Nota Explicativa NE011 NE011
+03.2
+Número
+Inscrição
+Número de Inscrição da
+Empresa
+4 17 9(014) Ver Nota Explicativa NE012 NE012
+04.2
+Código da
+Agência
+Código da Agência de
+Vinculação do
+Beneficiário
+18 21 9(004) Ver Nota Explicativa NE003 NE003
+05.2
+Código do
+Beneficiário
+Identificação da
+Empresa na CAIXA
+22 28 9(007) Ver Nota Explicativa NE004 NE004
+06.2 Uso Exclusivo Uso Exclusivo CAIXA 29 31 X(003) Preencher com espaços
+07.2 Brancos Campo em branco 32 56 X(025) Preencher com espaços
+08.2 Nosso Número
+Modalidade 57 58 9(002) Ver Nota Explicativa NE015 NE015
+Identificação do Título na
+CAIXA
+59 73 9(015)
+09.2 Brancos Campos em branco 74 106 X(033)
+10.2 Carteira Código da Carteira 107 108 9(002) Ver Nota Explicativa NE016 NE016
+11.2
+Código
+Ocorrência
+Identificação Tipo
+Ocorrência do arquivo
+remessa
+109 110 9(002) Ver Nota Explicativa NE017 NE017
+12.2 Uso Exclusivo Uso Exclusivo CAIXA 111 139 X(029)
+13.2
+Código do
+Banco
+Código do Banco na
+Compensação
+140 142 9(003)
+14.2 Mensagem 1
+Mensagem 1 a ser
+impressa no boleto
+143 182 X(040)
+Ver Nota Explicativa NE030 NE030
+15.2 Mensagem 2
+Mensagem 2 a ser
+impressa no boleto
+183 222 X(040)
+16.2 Mensagem 3
+Mensagem 3 a ser
+impressa no boleto
+223 262 X(040)
+17.2 Mensagem 4
+Mensagem 4 a ser
+impressa no boleto
+263 302 X(040)
+18.2 Mensagem 5
+Mensagem 5 a ser
+impressa no boleto
+303 342 X(040)
+19.2 Mensagem 6
+Mensagem 6 a ser
+impressa no boleto
+343 382 X(040)
+20.2 Uso Exclusivo Uso Exclusivo CAIXA 383 394 X(012) Preencher com espaços
+21.2
+Número
+Sequencial
+Número Sequencial do
+Registro no Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.3
+Código do
+Registro
+Código Identificador do
+Tipo de Registro no
+Arquivo
+1 1 9(001)
+02.3 Tipo Inscrição
+Tipo de Inscrição da
+Empresa
+2 3 9(002) Ver Nota Explicativa NE011 NE011
+03.3
+Número
+Inscrição
+Número de Inscrição da
+Empresa
+4 17 9(014) Ver Nota Explicativa NE012 NE012
+04.3
+Código da
+Agência
+Código da Agência de
+Vinculação do
+Beneficiário
+18 21 9(004) Ver Nota Explicativa NE003 NE003
+05.3
+Código do
+Beneficiário
+Identificação da
+Empresa na CAIXA
+22 28 9(007) Ver Nota Explicativa NE004 NE004
+07.3 Brancos Em branco 29 53 X(025) Preencher com espaços
+08.3
+Dados do
+Destinatário
+E-mail para envio da
+informação
+54 103 X(050)
+09.3 Código DDD 104 105 X(002)
+10.3
+Número do celular
+(Envio de SMS)
+106 114 X(009)
+11.3 Tipo de Mensagem SMS 115 115 X(001) Ver Nota Explicativa NE060 NE060
+12.3 Brancos Em branco 116 394 X(279)
+13.3
+Número
+Sequencial
+Número Sequencial do
+Registro no Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.4 Código do
+Registro
+Código Identificador do Tipo
+de Registro no Arquivo
+1 1 9(001)
+02.4 Tipo Inscrição Tipo de Inscrição da Empresa 2 3 9(002) Ver Nota Explicativa NE011 NE011
+03.4 Número
+Inscrição
+Número de Inscrição da
+Empresa
+4 17 9(014) Ver Nota Explicativa NE012 NE012
+04.4 Código da
+Agência
+Código da Agência de
+Vinculação do Beneficiário
+18 21 9(004) Ver Nota Explicativa NE003 NE003
+05.4 Código do
+Beneficiário
+Identificação da Empresa na
+CAIXA
+22 28 9(007) Ver Nota Explicativa NE004 NE004
+06.4 Uso Exclusivo Uso Exclusivo CAIXA 29 31 X(003) Preencher com espaços
+07.4 Brancos Campo em branco 32 56 X(025) Preencher com espaços
+08.4 Cod. Reg.
+Opcional
+Identificação Registro Opcional 57 58 9(002) Ver Nota Explicativa NE042 NE042
+09.4
+Tipo de
+pagamento
+Identificação de
+Tipo de
+Pagamento
+Identificação do tipo
+de pagamento
+59 60 9(002) Ver Nota Explicativa NE043 NE043
+10.4
+Quantidades de
+pagamentos
+Possíveis
+Quantidades de
+Pagamentos
+Possíveis
+61 62 9(002) Ver Nota Explicativa NE044 NE044
+11.4
+Alteração Nominal do Título
+Valor Nominal
+Valor Nominal do
+título
+63 77 9(015) Ver Nota Explicativa NE020 NE020
+12.4 Tipo de Valor
+Tipo de Valor
+Informado
+78 78 9(001) Ver Nota Explicativa NE045 NE045
+13.4
+Valor Máximo /
+Percentual
+Valor Máximo 79 93 9(015) Ver Nota Explicativa NE046 NE046
+14.4 % (Percentual) 94 108 9(015)
+15.4 Tipo de Valor
+Tipo de Valor
+Informado
+109 109 9(001) Ver Nota Explicativa NE045 NE045
+16.4
+Valor Mínimo /
+Percentual
+Valor Mínimo 110 124 9(015) Ver Nota Explicativa NE047 NE047
+17.4 % (Percentual) 125 139 9(015)
+18.4 Uso Exclusivo CAIXA Uso Exclusivo
+CAIXA
+140 142 X(003) Preencher com espaços
+19.4
+Conta Corrente
+Agência
+Cód.
+Agência
+Mantenedor
+a da Conta
+143 147 9(005) Ver Nota Explicativa NE048 NE048
+20.4 DV
+Dígito
+Verificador
+da Agência
+148 148 X(001) Ver Nota Explicativa NE049 NE049
+21.4
+Conta
+Nr.
+C/C
+Número da
+Conta
+Corrente
+149 160 9(012) Ver Nota Explicativa NE050 NE050
+22.4 DV
+Dígito
+Verificador
+da Conta
+161 161 X(001) Ver Nota Explicativa NE051 NE051
+23.4 DV Dígito Verificador
+da Ag/Conta
+162 162 X(001) Ver Nota Explicativa NE052 NE052
+24.4
+Nosso Número
+Modalidade do
+Nosso Numero
+163 164 9(002) Ver Nota Explicativa NE015 NE015
+25.4 Identificação do
+Título no Banco
+165 179 9(015) Ver Nota Explicativa NE015 NE015
+26.4 Uso Exclusivo CAIXA Uso Exclusivo
+CAIXA
+180 182 X(003) Preencher com espaços
+26.4
+Cód. Cálc. Rateio p/
+Beneficiário
+1. Valor Cobrado 183 183 9(001)
+2. Valor Registro 0 0 (000)
+3. Rateio p/ Menor
+Valor
+0 0 (000)
+27.4 Tipo de Valor Inform. 1. % (Percentual) 184 184 9(001)
+67.126 v029 micro
+2. Valor ou
+Quantidade
+0 0 (000)
+28.4 Valor ou % (Percentual)
+Valor ou
+Quantidade
+185 199 9(015) Ver Nota Explicativa NE053 NE053
+% (Percentual) 0 0 9(015)
+29.4 Código do Banco Código Banco p/
+Créd. Benef.
+200 202 9(003)
+30.4
+Conta Corrente
+Agência
+Cód.
+Código
+Agência p/
+Créd.
+Benef.
+203 207 9(005) Ver Nota Explicativa NE048 NE048
+31.4 DV
+Dígito Agên
+p/ Cred.
+Benef
+208 208 9(001) Ver Nota Explicativa NE049 NE049
+32.4
+Conta
+Nr.
+C/C
+C/C p/
+Créd.
+Beneficiário
+209 220 9(012) Ver Nota Explicativa NE050 NE050
+33.4 DV
+Dígito C/C
+p/ Cred
+Beneficiário
+221 221 9(001) Ver Nota Explicativa NE051 NE051
+34.4 DV
+Dígito Verificador
+da Ag/Conta
+Beneficiário
+222 222 9(001) Ver Nota Explicativa NE052 NE052
+35.4 Nome do Beneficiário Nome do
+Beneficiário (01)
+223 262 9(040)
+36.4 Parcela Ident. Parcela do
+Rateio
+263 268 9(006)
+37.4 Floating Qtde. Dias p/ Créd.
+Beneficiário
+269 271 9(003)
+38.4 Data do Crédito Data Crédito
+Beneficiário (01)
+272 279 9(008)
+39.4 Motivo Ocorrido Identificação das
+Rejeições
+280 289 9(010) Ver Nota Explicativa NE054 NE054
+40.4 Uso Exclusivo Uso Exclusivo
+CAIXA
+289 394 X(105) Preencher com espaços
+41.4 Número Sequencial
+Número Sequencial
+do Registro no
+Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.9 Código do Registro
+Código
+Identificador
+do Tipo de
+Registro no
+Arquivo
+1 1 9(001)
+02.9 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+2 394 X(393) Preencher com espaços
+03.9 Nº Sequencial
+Número
+Sequencial do
+Registro no
+Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.0 Código do Registro
+Código
+Identificador
+do tipo de
+Registro no
+Arquivo
+1 1 9(001)
+02.0 Código do Retorno
+Código
+Identificador
+do Retorno
+para a
+Empresa
+2 2 9(001) Preencher com '2'
+03.0 Literal do Retorno
+Literal
+Correspondent
+e ao Código
+do Retorno
+3 9 X(007) Ver Nota Explicativa NE031 NE031
+04.0 Código do Serviço
+Código
+Identificador
+do Tipo de
+Serviço
+10 11 9(002)
+05.0 Literal de Serviço
+Literal
+Correspondent
+e ao Código
+de Serviço
+12 26 X(015) Ver Nota Explicativa NE002 NE002
+06.0 Código da Agência
+Código da
+Agência de
+Vinculação do
+Beneficiário
+27 30 9(004) Ver Nota Explicativa NE003 NE003
+07.0 Código do Beneficiário
+Código
+Identificador
+da Empresa
+na CAIXA
+31 37 9(007) Ver Nota Explicativa NE004 NE004
+08.0 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+38 46 X(009) Preencher com espaços
+09.0 Nome da Empresa
+Nome por
+extenso da
+Empresa
+47 76 X(030) Ver Nota Explicativa NE005 NE005
+10.0 Código do Banco
+Código do
+Banco na
+Compensação
+77 79 9(003) Ver Nota Explicativa NE006 NE006
+11.0 Nome do Banco
+Nome do
+Banco
+80 94 X(015) Ver Nota Explicativa NE007 NE007
+12.0 Data de Geração
+Data de
+Geração do
+Arquivo
+95 100 9(006) Ver Nota Explicativa NE008 NE008
+13.0 Mensagem
+Mensagem de
+Retorno
+101 158 X(058)
+13.0V Versão do Layout
+Nº da Versão
+do Layout
+159 161 9(003) Ver Nota Explicativa NE065 NE065
+14.0 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+162 389 X(228) Preencher com espaços
+15.0 Nº Sequencial A
+Número
+Sequencial do
+Arquivo
+Retorno
+390 394 9(005) Ver Nota Explicativa NE009 NE009
+16.0 Nº Sequencial - B
+Número
+Sequencial do
+Registro no
+Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.1 Código do Registro
+Código
+Identificador
+do Tipo de
+Registro no
+Arquivo
+1 1 9(001)
+02.1 Tipo Inscrição
+Tipo de
+Inscrição da
+Empresa
+2 3 9(002) Ver Nota Explicativa NE011 NE011
+03.1 Número Inscrição
+Número de
+Inscrição da
+Empresa
+4 17 9(014) Ver Nota Explicativa NE012 NE012
+04.1 Uso Exclusivo CAIXA
+Uso Exclusivo
+CAIXA
+18 20 9(003)
+Preencher com zeros.
+Anteriormente utilizado para preencher
+com o código da agência detentora da
+conta. Qualquer valor enviado para o
+campo será desprezado pela CAIXA.
+05.1 Código do Beneficiário
+Identificação
+da Empresa
+na CAIXA
+21 27 9(007) Ver Nota Explicativa NE004 NE004
+06.1 ID Emissão
+Identificação
+da Emissão do
+boleto
+28 28 9(001) Ver Nota Explicativa NE027 NE027
+07.1 ID Postagem
+Identificação
+da
+Entrega/Distrib
+uição do
+boleto
+29 29 9(001) Ver Nota Explicativa NE028 NE028
+08.1 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+30 31 X(002) Preencher com espaços
+09.1 Uso da Empresa
+Identificação
+do Título na
+Empresa
+32 56 X(025) Ver Nota Explicativa NE014 NE014
+10.1 Nosso Número
+Modalidade
+Identificação
+57 58 9(002) Ver Nota Explicativa NE015 NE015
+Identificação
+do Título na
+CAIXA
+59 73 9(015)
+11.1 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+74 79 X(006) Preencher com espaços
+12.1
+Código Rejeição/Rejeição
+não impeditiva
+Código do
+Motivo da
+Rejeição/
+Rejeição não
+impeditiva
+80 82 9(003) Ver Nota Explicativa NE032
+NE032
+13.1 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+83 106 X(025)
+Para ocorrências de inclusão/alteração
+de títulos, pode retornar o código
+A4 - Pagador DDA na posição 83-84
+NE033
+14.1 Carteira
+Código da
+Carteira
+107 108 9(002) Ver Nota Explicativa NE016 NE016
+15.1 Código Ocorrência
+Identificação
+Tipo
+Ocorrência do
+arquivo
+remessa
+109 110 9(002) Ver Nota Explicativa NE033 NE033
+16.1 Data da Ocorrência
+Data da
+Ocorrência na
+CAIXA
+111 116 9(006)
+17.1 Nº Documento
+Número do
+Documento de
+Cobrança
+117 126 X(010) Ver Nota Explicativa NE018 NE018
+67.126 v029 micro
+18.1 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+127 146 X(020) Preencher com espaços
+19.1 Vencimento
+Data de
+Vencimento do
+Título
+147 152 9(006)
+20.1 Valor do Título
+Valor Nominal
+do Título
+153 165 9(013)
+21.1 Código do Banco
+Código do
+Banco na
+Compensação
+166 168 9(003) Ver Nota Explicativa NE006 NE006
+22.1 Agência Cobradora
+Agência
+Encarregada
+da Cobrança
+169 173 9(005) Ver Nota Explicativa NE021 NE021
+23.1 Espécie de Título
+Espécie do
+Título
+174 175 9(002) Ver Nota Explicativa NE022 NE022
+24.1 Dados da Liquidação
+Valor da Tarifa
+/ Despesa de
+Cobrança
+176 188 9(013)
+Código do
+canal de
+liquidação ou
+da baixa do
+título
+189 191 9(003) Ver Nota Explicativa NE035 NE035
+Código que
+identifica a
+forma de
+pagamento
+192 192 9(001) Ver Nota Explicativa NE036 NE036
+Informação do
+float
+negociado
+193 194 9(002) Ver Nota Explicativa NE034 NE034
+Data do débito
+da tarifa
+195 200 9(006) Ver Nota Explicativa NE034 NE034
+25.1 Uso Exclusivo
+Uso Exclusivo
+da CAIXA
+201 214 X(014) Preencher com espaços
+26.1 Valor do IOF
+Valor do IOF a
+ser recolhido
+215 227 9(013)
+27.1 Abatimento
+Valor do
+abatimento a
+ser concedido
+228 240 9(013)
+28.1 Descontos
+Valor do
+Desconto
+concedido
+241 253 9(013)
+29.1 Valor Principal
+Valor Principal
+pago pelo
+Pagador
+254 266 9(013)
+30.1 Valor dos Juros
+Valor dos
+Juros pago
+pelo Pagador
+267 279 9(013)
+31.1 Valor da Multa
+Valor da multa
+paga pelo
+Pagador
+280 292 9(013)
+32.1 Código da Moeda
+Código da
+Moeda
+293 293 9(001) Ver Nota Explicativa NE026 NE026
+33.1 Data do Crédito
+Data de
+Crédito para
+Ocorrência 21
+(liquidação)
+294 299 9(006) Ver Nota Explicativa NE037 NE037
+34.1
+Portador
+(efetivo pagador)
+Tipo de
+Inscrição do
+Portador
+300 300 9(001) Ver Nota Explicativa NE012 NE012
+Número de
+Inscrição do
+Portador
+301 314 9(014)
+34.1A Uso Exclusivo CAIXA
+Uso Exclusivo
+CAIXA
+315 394 X(080) Preencher com espaços
+35.1 Número Sequencial
+Número
+Sequencial do
+Registro no
+Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo Descrição
+De Até
+01.9 Código do Registro
+Código
+Identificador
+do Tipo de
+Registro no
+Arquivo
+1 1 9(001)
+02.9 Código do Retorno
+Código
+Identificador
+do Retorno
+para a
+Empresa
+2 2 9(001) Preencher com '2'
+03.9 Código do Serviço
+Código
+Identificador
+do Tipo de
+Serviço
+3 4 9(002)
+04.9 Código do Banco
+Código do
+Banco na
+Compensação
+5 7 9(003)
+05.9 Uso Exclusivo
+Uso Exclusivo
+CAIXA
+8 394 X(387) Preencher com espaços
+06.9 Nº Sequencial
+Número
+Sequencial do
+Registro no
+Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo
+De Até
+01.0 Código do Registro
+Código Identificador do tipo de
+Registro no Arquivo
+1 1 9(001)
+02.0 Operação
+Código Identificador da
+Operação
+2 2 9(001) Preencher com '1'
+03.0 Literal da Operação
+Literal Correspondente à
+Operação
+3 9 X(007)
+04.0 Código do Serviço
+Código Identificador do Tipo
+de Serviço
+10 11 9(002)
+05.0 Literal do Processamento
+Literal Correspondente ao
+Processamento
+12 26 X(015) Preencher com NE040
+06.0 Código da Agência
+Código da Agência de
+Vinculação do Beneficiário
+27 30 9(004) Preencher com NE003
+07.0 Código do Beneficiário
+Código Identificador da
+Empresa na CAIXA
+31 37 9(007) Preencher com NE004
+08.0 Uso Exclusivo Uso Exclusivo CAIXA 38 46 X(009) Preencher com espaços
+09.0 Nome da Empresa Nome por extenso da Empresa 47 76 X(030) Preencher com NE005
+10.0 Código do Banco
+Código do Banco na
+Compensação
+77 79 9(003)
+11.0 Nome do Banco Nome do Banco 80 94 X(015) Preencher com NE007
+12.0 Data de Geração Data de Geração do Arquivo 95 100 9(006) Preencher com NE008
+13.0 Mensagem
+Mensagem de Retorno
+correspondente ao
+Processamento
+101 386 X(286) Preencher com NE041
+13.0V Versão do Layout Nº da Versão do Layout 387 389 9(003) Ver NE065
+14.0 Nº Sequencial - A
+Número Sequencial do Arquivo
+Retorno
+390 394 9(005) Preencher com NE009
+15.0 Nº Sequencial - B
+Número Sequencial do
+Registro no Arquivo
+395 400 9(006)
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo
+De Até
+01.1 Código do Registro
+Código Identificador do Tipo
+de Registro no Arquivo
+1 1 9(001) Preencher com "1"
+02.1 Inscrição da Empresa
+Identificador do Tipo de
+Inscrição da Empresa
+2 3 9(002)
+03.1 Número da Inscrição
+Número de Inscrição da
+Empresa
+4 17 9(014)
+04.1 Uso Exclusivo Uso Exclusivo CAIXA 18 20 9(003)
+Preencher com zeros.
+Anteriormente utilizado para
+preencher com o código da
+agência detentora da conta.
+Qualquer valor enviado para o
+campo será desprezado pela
+CAIXA.
+05.1 Código do Beneficiário
+Identificação da Empresa na
+CAIXA
+21 27 9(007) Ver Nota Explicativa NE004
+06.1 ID Emissão
+Identificação da Emissão do
+Boleto
+28 28 9(001) Ver Nota Explicativa NE027
+07.1 ID Postagem
+Identificação da
+Entrega/Distribuição do Boleto
+29 29 9(001) Ver Nota Explicativa NE028
+08.1 Código do Erro Código do Erro 30 31 9(002) Ver Nota Explicativa NE038
+09.1 Uso da Empresa
+Identificação do Título na
+Empresa
+32 56 X(025) Ver Nota Explicativa NE014
+10.1
+Nosso Número
+Modalidade Identificação de
+Emissão/Entrega
+57 58 9(002) Ver Nota Explicativa NE015
+Identificação do Título na
+CAIXA
+59 73 9(015)
+11.1 Código do Erro Código do Erro 74 75 9(002) Ver Nota Explicativa NE038
+12.1 Branco Campo em branco 76 116 X(041) Preencher com espaços
+13.1 Nº Documento
+Número do Documento de
+Cobrança - Seu Número
+117 126 X(010) Ver Nota Explicativa NE018
+14.1 Branco Campo em branco 127 391 X(265) Preencher com espaços
+15.1 Prazo
+Nº de dias p/início da ação de
+protesto ou devolução
+392 393 9(002) Ver Nota Explicativa NE025
+16.1 Moeda Código da Moeda 394 394 9(001) - REAL
+17.1 Nº sequencial na Remessa
+Número Sequencial do
+Registro no Arquivo Remessa
+395 400 9(006) Ver Nota Explicativa NE039
+67.126 v029 micro
+Campo
+Posição
+"Picture" Conteúdo
+De Até
+01.9 Código do Registro
+Código Identificador do Tipo
+de Registro no Arquivo
+1 1 9(001)
+02.9 Uso Exclusivo Uso Exclusivo CAIXA 2 394 X(393) Preencher com espaços
+03.9 Nº Sequencial
+Número Sequencial do
+Registro no Arquivo
+395 400 9(006)
+67.126 v029 micro
+NE001 Literal Correspondente ao Código da Remessa
+Campo a ser utilizado pelo cliente/Beneficiário, para informação da situação da remessa que está sendo enviada à
+CAIXA.
+Na fase de testes (simulado), poderá conter as seguintes literais:
+Para produção, informar brancos ou qualquer valor diferente dos mencionados para teste.
+NE001
+NE002 Literal Correspondente ao Código de Serviço
+Campo a ser utilizado pelo cliente/Beneficiário, para informação do tipo de serviço da remessa que está sendo enviada
+à CAIXA.
+NE002
+NE003 Código da Agência de Vinculação do Beneficiário
+Código de 4 posições, adotado pela CAIXA para identificar a agência de vinculação do Beneficiário.
+NE003
+NE004 Código do Beneficiário na CAIXA
+Código fornecido pela CAIXA, através da agência de relacionamento do Beneficiário.
+Deverão ser obedecidas as regras de preenchimento do código do beneficiário conforme as versões de layout
+informados no Header de Remessa (campo 12.0V) e Header de Retorno (campo 13.0V).
+Demais detalhes sobre o Nº da Versão do Layout disponíveis na Notas Explicativa NE065.
+A PARA CÓDIGO DE BENEFICIÁRIO ENTRE 000001 E 999999
+A1 Para Nº da Versão do Layout preenchido com rancos (versão aplicável somente para código de beneficiário até 999999)
+Remessa
+Segmento Posição
+Posição inicial do
+Código do Beneficiário
+zero na
+posição
+Header de Remessa
+Campo 07.0
+31-37 31 37
+Registro Tipo 1 Dados do Título
+Campo 05.1
+21-27 22 21
+Registro Tipo 2 Mensagens do Título
+Campo 05.2
+22-28 22 28
+Registro Tipo 3 Informações para envio por
+e-mail e SMS
+Campo 05.3
+Registro Tipo 4 Tipo de pagamento do título
+Campo 05.4
+Retorno e Pré-Crítica
+Segmento Posição
+Posição inicial do
+Código do Beneficiário
+zero na
+posição
+Header de Retorno
+Campo 07.0
+31-37 31 37
+Registro Tipo 1 Dados do Título
+Campo 05.1
+21-27 22 21
+NE004
+67.126 v029 micro
+A2 Para Nº da Versão do Layout (aplicável para código de beneficiário até 999999)
+Remessa
+Segmento Posição
+Posição inicial do
+Código do Beneficiário
+zero
+posição
+Header de Remessa
+Campo 07.0
+31-37 32 31
+Registro Tipo 1 Dados do Título
+Campo 05.1
+21-27 22 21
+Registro Tipo 2 Mensagens do Título
+Campo 05.2
+22-28 23 22
+Registro Tipo 3 Informações para envio por
+e-mail e SMS
+Campo 05.3
+Registro Tipo 4 Tipo de pagamento do título
+Campo 05.4
+Retorno e Pré-Crítica
+Segmento Posição
+Posição inicial do
+Código do Beneficiário
+zero
+posição
+Header de Retorno
+Campo 07.0
+31-37 32 31
+Registro Tipo 1 Dados do Título
+Campo 05.1
+21-27 22 21
+B PARA CÓDIGO DE BENEFICIÁRIO A PARTIR DE 1100000
+Para Código de Beneficiário iniciado a partir de 1100000, utilizar somente o Nº da Versão do Layout , uma vez
+que serão utilizados todos os campos disponíveis para preenchimento.
+Remessa
+Segmento Posição
+Posição inicial do
+Código do Beneficiário
+Header de Remessa
+Campo 07.0
+31-37 31
+Registro Tipo 1 Dados do Título
+Campo 05.1
+21-27 21
+Registro Tipo 2 Mensagens do Título
+Campo 05.2
+22-28 22
+Registro Tipo 3 Informações para envio por
+e-mail e SMS
+Campo 05.3
+Registro Tipo 4 Tipo de pagamento do título
+Campo 05.4
+Retorno e Pré-Crítica
+Segmento Posição
+Posição inicial do
+Código do Beneficiário
+Header de Retorno
+Campo 07.0
+31-37 31
+Registro Tipo 1 Dados do Título
+Campo 05.1
+21-27 21
+67.126 v029 micro
+NE005 Nome da Empresa (Beneficiário)
+Nome que identifica o Beneficiário, pessoa física ou jurídica, a qual se quer fazer referência.
+NE005
+NE006 Código da CAIXA na Compensação
+Código fornecido pelo Banco Central para identificação do Banco que está recebendo ou enviando o arquivo, com o
+qual se firmou o contrato de prestação de serviços.
+NE006
+NE007 Nome do Banco
+Nome que identifica o Banco que está recebendo ou enviando o arquivo, com o qual se firmou o contrato de serviços.
+Informar:
+NE007
+NE008 Data de Geração do Arquivo
+Data da criação do arquivo. Informar data válida utilizar o formato DDMMAA, onde:
+DD = dia
+MM = mês
+AA = ano
+NE008
+NE009 Número Sequencial do Arquivo Remessa / Retorno
+Número sequencial adotado e controlado pelo responsável pela geração do arquivo para ordenar os arquivos
+encaminhados.
+NE009
+NE010 Número Sequencial do Registro no Arquivo
+Número para identificar a sequência de registros encaminhados no arquivo.
+NE010
+NE011 Tipo de Inscrição da Empresa ou Pessoa Física
+Código que identifica o tipo de inscrição da Empresa ou Pessoa Física a que se está fazendo referência:
+NE011
+NE012 Número de Inscrição da Empresa ou Pessoa Física
+Número de inscrição da Empresa (CNPJ) ou Pessoa Física (CPF) a que se está fazendo referência. Varia de acordo
+com o código da nota anterior.
+NE012
+NE013 Código do Tipo da Taxa de Permanência
+Código adotado para identificação do tipo de pagamento de juros de mora. Informar:
+Acata comissão por Dia (informado pelo Beneficiário)
+NE013
+NE014 Identificação do Título na Empresa (Seu Número)
+Campo destinado par uso da Empresa Beneficiário para identificação do Título
+NE014
+NE015 Identificação do Título no Banco (Nosso Número)
+Número adotado pelo Banco Beneficiário para identificar o Título.
+Para Código de Movimento (posições 109-110) igual a '01' (Entrada de Títulos):
+Se a CAIXA for responsável pela emissão do boleto: o campo Nosso Número (posições 57-73) pode ser
+preenchido com zeros. Nesse caso, a numeração será feita pelo Banco.
+Quando informado pelo Cliente/Beneficiário: o Nosso Número deverá obedecer ao seguinte formato:
+CCNNNNNNNNNNNNNNN, onde:
+CC = 11 (título Registrado, emissão CAIXA)
+CC = 14 (título Registrado, emissão Beneficiário)
+NNNNNNNNNNNNNNN = Número livre
+O número livre do Cliente/Beneficiário NÃO poderá se repetir (deverá ser único), independente da modalidade.
+NE015
+67.126 v029 micro
+NE016 Código da Carteira
+Código adotado para identificar a característica dos títulos dentro das modalidades de cobrança existentes no banco.
+Informar:
+0
+0
+0 = Cessão de Direitos Creditórios
+NE016
+NE017 Código de Movimento Arquivo Remessa
+Código adotado pela FEBRABAN, para identificar o tipo de movimentação enviado nos registros do arquivo de
+remessa.
+Código Descrição Registro/Dados Necessários
+01 Entrada de Título Obs. 1
+02 Pedido de Baixa Obs. 2
+03 Concessão de Abatimento Obs. 2 e 3
+04 Cancelamento de Abatimento Obs. 2 e 3
+05 Alteração de Vencimento Obs. 2 e 4
+06 Alteração do uso da Empresa Obs. 2 e 5
+07 Alteração do Prazo de Protesto Obs. 2 e 6
+08 Alteração do Prazo de Devolução Obs. 2 e 6
+09 Alteração de outros dados Obs. 2 e 6
+10 Alt de dados c/ emissão / emissão de boleto Obs. 2 e 6 (emissão CAIXA)
+11 Alteração da opção de Protesto para Devolução Obs. 2 e 6
+12 Alteração da opção de Devolução para Protesto Obs. 2 e 6
+13 Alteração do valor nominal do título Obs 2
+14 Alteração da carteira
+Importante: Os códigos de 03 a 09 não alteram o boleto. Para alterar o boleto na EMISSÃO ou solicitar REEMISSÃO,
+utilizar o código 10.
+Observações:
+Registros Tipo 0, 1 e 9, com todos os campos devidamente preenchidos, conforme suas definições.
+Registros Tipo 0 e 9, com todos os campos devidamente preenchidos, conforme suas definições.
+O registro Tipo 1, contém as seguintes informações:
+Código do Registro
+Código da Empresa
+Nosso Número
+Código da Carteira
+Valor do Título
+Registro Tipo 1, com campo Valor do Abatimento a conceder ou cancelar, diferente de zeros.
+Registro Tipo 1, com campo Data de Vencimento, válido.
+Registro Tipo 1, com campo Uso da Empresa, diferente de brancos.
+Registro Tipo 1, com campo Prazo de Protesto, ou Devolução, conforme o caso, válido.
+Os seguintes campos do registro Tipo 1, são passíveis de alteração:
+- Taxa de Permanência (N)
+- Uso da Empresa (X)
+-
+- Seu Número (X)
+- Data de Vencimento (N)
+- Valor do Título (N)
+NE017
+67.126 v029 micro
+- Instrução Nro. 1 (N)
+- Juros de 1 dia (N)
+- Data do Desconto (N)
+- Valor do Desconto (N)
+- Abatimento (somente concessão e cancelamento) (N)
+- Inscrição do Pagador (N)
+- Número de Inscrição do Pagador (N)
+- Nome do Pagador (X)
+- Logradouro do Pagador (X)
+- Bairro do Pagador (X)
+- CEP do Pagador (N)
+- Cidade do Pagador (X)
+- Estado do Pagador (X)
+- Data da Multa (N)
+- Valor da Multa (N)
+- Nome do Avalista (X)
+- Prazo para Protesto/Devolução (N)
+Quando não se quiser alterar um determinado campo, este será preenchido com brancos, não importando se o mesmo
+tem característica numérica ou alfanumérica.
+r anular
+caractere diferente de brancos (X
+poderá
+conter brancos.
+devolução. (Vide Nota 7)
+Qualquer outro campo que não estiver relacionado no item (a) será preenchido de acordo com a característica
+numérica ou alfanumérica do mesmo, isto é, campos numéricos com zeros e campos alfanuméricos com brancos.
+NE018 Identificação do Título na Empresa
+Número adotado e controlado pelo Cliente para identificar o título de cobrança.
+Informação utilizada pelos Bancos para referenciar a identificação do documento objeto de cobrança.
+Poderá conter número de duplicata, no caso de cobrança de duplicatas, número da apólice, no caso de cobrança de
+seguros, etc.
+NE018
+NE019 Data de Vencimento do Título
+Data de vencimento do título de cobrança. Utilizar o formato DDMMAA, onde:
+DD = dia
+MM = mês
+AA = ano
+Para título vencido: A Data de Emissão deve ser igual ou anterior à Data de Vencimento do Título. Caso contrário,
+será considerada a mesma Data de Vencimento como Data de Emissão.
+Para título vencido ou vincendo, com emissão e entrega CAIXA: A Data de Emissão + Data de Vencimento deve
+ser superior à Data de Inclusão + 12 dias úteis. Essa condição é necessária por questões de garantia quanto a
+logística para produção e postagem, de forma que o boleto seja entregue em tempo para liquidação dentro do prazo
+de vencimento.
+NE019
+NE020 Valor Nominal do Título
+Valor original do Título. Quando o valor for expresso em moeda corrente, utilizar 2 casas decimais, quando o valor for
+expresso em moeda variável, utilizar 5 casas decimais.
+NE020
+NE021 Agência Encarregada da Cobrança
+Código adotado pelo Banco responsável pela cobrança, para identificar o estabelecimento bancário responsável pela
+cobrança do título.
+Pagador.
+NE021
+67.126 v029 micro
+NE022 Espécie do Título
+Código adotado pela FEBRABAN para identificar o tipo de título de cobrança.
+Cód ID Descrição
+1 DM Duplicata Mercantil
+2 NP Nota Promissória
+3 DS Duplicata de Prestação de Serviços
+4 CH Cheque
+5 NS Nota de Seguro
+6 LC Letra de Câmbio
+7 DMI Duplicata Mercantil p/ Indicação
+8 NCC Nota de Crédito Comercial
+9 OU Outros
+10 NCI Nota de Crédito Industrial
+11 NCR Nota de Crédito Rural
+12 DSI Duplicata de Serviço
+13 NPR Nota Promissória Rural
+14 TM Triplicata Mercantil
+15 TS Triplicata de Serviço
+16 DR Duplicata Rural
+17 RC Recibo
+18 FAT Fatura
+19 ND Nota de Débito
+20 AP Apólice de Seguro
+21 ME Mensalidade Escolar
+22 PC Parcela de Consórcio
+23 NF Nota Fiscal
+24 DD Documento de Dívida
+25 CPR Cédula de Produto Rural
+26 NCE Nota de Crédito à Exportação
+30 EC Encargos Condominiais
+31 CC Cartão de Crédito
+32 BP Boleto Proposta
+Espécies 31 e 32: Permitem o registro com Valor Nominal do Título igual a 0,00. Para essas espécies, obrigatória a
+leitura das Notas Explicativas NE042 e NE043.
+Para a Espécie 31 CC Cartão de Crédito, não é permitida aplicação de desconto, abatimento, juros e multa.
+Para a Espécie 32 BP Boleto de Proposta, não é permitida aplicação de abatimento, juros e multa.
+NE022
+NE023 Identificação de Título - Aceito / Não Aceito
+Código adotado pela FEBRABAN para identificar se o título de cobrança foi aceito (reconhecimento da dívida pelo
+Pagador).
+NE023
+67.126 v029 micro
+NE024 Instrução 1: Código para Protesto / Devolução
+Código adotado pela FEBRABAN para identificar o tipo de prazo a ser considerado para o protesto.
+Qualquer outro valor (inclusive 00 ou brancos) = Devolver (Não Protestar)
+Caso o CEP do Pagador não esteja vinculado a uma agência cobradora de protesto (CEP sem praça de cobrança), o
+título será registrado com instrução de devolução, sendo o Prazo de Devolução igual ao Prazo de Protesto, com prazo
+mínimo de 5 dias.
+NE024
+NE025 Número de Dias para Protesto / Devolução
+Prazo de Protesto: Número de dias decorrentes após a data de vencimento para inicialização do processo de
+cobrança via protesto. Pode ser de 02 a 90 dias, sendo:
+De 02 a 05 = dias úteis
+Acima de 05 = dias corridos
+Caso informado menor que 02, será considerado 02, e caso informado maior que 90, será considerado 90.
+Prazo de Devolução: Número de dias corridos após a data de vencimento de um Título não pago, que deverá ser
+baixado e devolvido para o Beneficiário. Pode ser:
+De 00 a 99 dias corridos.
+Caso informado 00, será considerado 01 e baixado em D+1 após o vencimento.
+NE025
+NE026 Código da Moeda
+Código adotado para identificar a moeda referenciada no Título. Informar fixo:
+REAL
+NE026
+NE027 Identificação da Emissão do Boleto
+Código adotado pela FEBRABAN para identificar o responsável e a forma de emissão do boleto.
+Banco Emite
+Cliente Emite
+NE027
+NE028 Identificação da Entrega / Distribuição do Boleto
+Código adotado pela FEBRABAN para identificar o responsável pela distribuição do boleto.
+Id Entrega do Boleto
+Postagem pelo Beneficiário
+Pagador via Correio
+Beneficiário via Agência CAIXA
+Pagador via e-mail
+NE028
+NE029 Mensagem Verso do Boleto
+Código adotado para informar se a mensagem armazenada no sistema de cobrança da CAIXA será impressa ou não
+no verso do boleto.
+NE029
+NE030 Instrução 3: Mensagem livre do Boleto Recibo do Pagador
+O registro tipo 2 poderá ser utilizado para mandar até no máximo 6 linhas x 40 colunas de mensagens livres para
+serem impressas no boleto (quando emissão CAIXA).
+Para tanto, o registro tipo 1 corres
+As mensagens não são armazenadas no sistema, logo quando for necessário alterar alguma informação no boleto,
+todas as mensagens deverão ser enviadas novamente.
+NE030
+NE031 Literal Correspondente ao Código do Retorno
+Campo a ser utilizado pela CAIXA, para informação da situação de retorno que está sendo enviada ao Beneficiário:
+NE031
+67.126 v029 micro
+NE032 Código de Motivo de Ocorrência Rejeição no retorno
+Código adotado para identificar as rejeições em registros detalhe de títulos de cobrança.
+01 Movimento sem Beneficiário Correspondente
+02 Movimento sem Título Correspondente
+08 Movimento para título já com movimentação no dia
+09 Nosso Número não pertence ao Beneficiário
+10 Inclusão de título já existente na base
+12 Movimento duplicado
+13 Entrada Inválida para Cobrança Caucionada (Beneficiário não possui conta Caução)
+20 CEP do Pagador não encontrado (não foi possível a determinação da Agência Cobradora para o título)
+21 Agência cobradora não encontrada (agência designada para cobradora não cadastrada no sistema)
+22 Agência Beneficiário não encontrada (Agência do Beneficiário não cadastrada no sistema)
+26 Data de vencimento inválida
+44 CEP do sacado inválido
+45 Data de Vencimento com prazo superior ao limite
+49 Prazo de protesto/devolução inválido
+50 Movimento inválido para título enviado a Cartório
+54 Faixa de CEP da Agência Cobradora não abrange CEP do Pagador
+55 Título já com opção de Devolução
+56 Processo de Protesto em andamento
+57 Título já com opção de Protesto
+58 Processo de devolução em andamento
+59 Novo prazo p/ Protesto/Devolução inválido
+76 Alteração do prazo de protesto inválida
+77 Alteração do prazo de devolução inválida
+82 CNPJ/CPF do Pagador inválido (dígito não confere)
+83 Número do Documento (seu número) inválido
+84 Protesto inválido para título sem Número do documento (seu número)
+96 Código de juros inválido
+97 Código do desconto inválido
+98 Movimento inválido para título boleto PIX ou híbrido
+99 Alteração de carteira inválida
+PA Chave DICT Beneficiário Inválida - QR Code não cadastrado
+PB TXID inválido - QR Code Não cadastrado
+NE032
+NE033 Código de Ocorrência de Movimento Confirmação no Retorno
+Código Descrição
+Resposta ao código de
+ocorrência (Arq. Remessa)
+Entrada Confirmada 01
+Baixa Manual Confirmada 02
+Abatimento Concedido 03
+Abatimento Cancelado 04
+Vencimento Alterado 05
+Uso da Empresa Alterado 06
+Prazo de Protesto Alterado 07
+Prazo de Devolução Alterado 08
+Alteração Confirmada 09
+Alteração com reemissão de boleto confirmada 10
+Alteração da opção de Protesto para Devolução Confirmada 11
+Alteração da opção de Devolução para Protesto Confirmada 12
+Alteração de carteira confirmada 14
+Em Ser
+Liquidação
+Liquidação em Cartório
+Baixa por Devolução
+Baixa por Protesto
+Título enviado para Cartório
+Sustação de Protesto
+NE033
+67.126 v029 micro
+Estorno de Protesto
+Estorno de Sustação de Protesto
+Alteração de Título
+Tarifa sobre Título Vencido
+Outras Tarifas de Alteração
+Estorno de Baixa / Liquidação
+Tarifas Diversas - valor total das tarifas cobradas, exceto a de liquidação.
+Liquidação On-line
+Estorno de Liquidação On-line
+Transferência para a cobrança simples
+Transferência para a cobrança descontada
+Reconhecido pelo pagador DDA
+Não reconhecido pelo pagador DDA
+Recusado no DDA
+Rejeição do Título Código rejeição informado nas pos 80 a 82
+Pagador DDA
+PC PIX alterado - Verificar payload pela URL
+P1 Registrado com QR Code PIX
+P2 Registrado sem QR Code PIX
+P3 Registrado com QR Code PIX e Código de Barras
+Código 53: Refere-se a situação onde o pagador era reconhecido como DDA, mas no momento do processamento na
+CAIXA e na CIP (Câmara Interbancária de Pagamentos) passou a não mais ser pagador DDA, permanecendo na base
+CIP como inativo.
+NE034 Float negociado e data do débito da tarifa
+Informa o float negociado para o canal de liquidação do boleto, pode ser de 01 a 99 dias, contados a partir da data de
+liquidação.
+Data do débito da tarifa respectiva ao canal de liquidação do boleto, formato DDMMAA.
+NE034
+NE035 Códigos de Liquidação e Baixa de Títulos
+Código adotado para identificar as ocorrências de liquidação e baixas, em registros detalhe de títulos de cobrança.
+Poderão ser informados até cinco ocorrências distintas, incidentes sobre o título.
+Códi
+Liquidação
+002 Unidade Lotérica
+003 Agências CAIXA
+004 Compensação Eletrônica
+006 Internet Banking
+007 Correspondente CAIXA Aqui
+008 Em Cartório
+61 PIX CAIXA
+62 PIX Outros Bancos
+Baixa
+009 Comandada Banco
+010 Comandada Cliente via Arquivo
+011 Comandada Cliente On-line
+15 Comandado Banco por pagamento QR Code
+NE035
+NE036 Código da forma de liquidação do título
+Código adotado para identificar as ocorrências de liquidação e baixas, em registros detalhe de títulos de cobrança.
+Poderão ser informados até cinco ocorrências distintas, incidentes sobre o título.
+Forma de Liquidação do título: para as liquidações associadas aos códigos 02, 03 e 08 (posição 191 a 192)
+01 Dinheiro
+02 Cheque
+03 Débito em conta
+04 Cartão de Crédito
+NE036
+67.126 v029 micro
+NE037 Data do Crédito
+Data de efetivação do crédito referente ao pagamento do título de cobrança. Informação enviada somente no arquivo
+de retorno. Utiliza o formato DDMMAA, onde:
+DD = dia
+MM = mês
+AA = ano
+NE037
+NE038 Código de Motivo de Ocorrência Erro impeditivos e não impeditivos no retorno
+Os códigos abaixo descrevem situações onde a inclusão de um título retorna um erro impeditivo (posição 80-82 no
+arquivo retorno) ou não impeditivo (posição 80-82, associado às ocorrências descritas na NE033 na posição 109-110).
+Código Descrição
+01 Remessa sem registro tipo 0
+02 Identificação inválida da Empresa na CAIXA
+03 Número Inválido da Remessa
+04 Beneficiário não pertence a Cobrança Eletrônica
+05 Código da Remessa Inválido
+06 Literal da Remessa Inválido
+07 Código de Serviço Inválido
+08 Literal de Serviço Inválido
+09 Código do Banco Inválido
+10 Nome do Banco Inválido
+11 Data de gravação Inválida
+12 Número de Remessa já processada
+13 Tipo de registro esperado Inválido
+14 Tipo de Ocorrência Inválido
+15 Literal Remessa Inválida para fase de Testes
+16 Identificação da empresa no Registro tipo 0 difere da identificação no Registro Tipo 1
+17 Identificação na CAIXA inválida (Nosso Número)
+18 Código da Carteira inválido
+19 Número sequencial do Registro Inválido
+20 Tipo de Inscrição da empresa Inválido
+21 Número de Inscrição da empresa Inválido
+23 Taxa de Comissão de Permanência Inválida
+26 Data de vencimento inválida
+27 Valor do título inválido
+28 Espécie de título Inválida
+29 Código de Aceite Inválido
+30 Data de emissão do título inválida
+31 Instrução de Cobrança 1 Inválida
+32 Instrução de Cobrança 2 Inválida
+33 Instrução de Cobrança 3 Inválida
+34 Valor de Juros Inválido
+35 Data do Desconto Inválida
+36 Valor do Desconto Inválido
+37 Valor do IOF Inválido
+38 Valor do Abatimento Inválido
+39 Tipo de Inscrição do Pagador Inválido
+40 Número de Inscrição do Pagador Inválido
+42 Nome do Pagador obrigatório
+43 Endereço do Pagador obrigatório
+44 CEP do Pagador Inválido
+45 Cidade do Pagador obrigatório
+46 Estado do Pagador obrigatório
+47 Data da multa inválida
+48 Valor da multa inválido
+49 Prazo de protesto/devolução inválido
+50 Prazo do protesto inválido
+51 Prazo de devolução inválido
+52 Moeda inválida
+53
+54 Remessa sem registro tipo 9
+55 Solicitacao nao permitida para titulo incluido somente para protesto
+60 Identificação da emissão do boleto inválida
+61 Tipo de entrega inválido
+62 Modalidade do título inválida
+63 Forma de entrega de bloq.inválida para emis. banco
+64 Forma de entrega de bloq.inválida para emis.beneficiário
+65 Forma de emissao de boleto inválida
+66 E-mail inválido
+NE038
+67.126 v029 micro
+67 Número do DDD do celular do sacado inválido
+68 Número do celular do sacado inválido
+69 Tipo de mensagem de envio SMS inválido
+70 Envio de sms do beneficiário inválido
+71 Título com indicador de pagamento na rede bancária
+72 Movimento sem título correspondente
+73 Movimento inválido para título descontado
+74 Movimento inválido para título enviado
+75 Movimento inválido para título baixado
+76 Movimento inválido para título em garantia de crédito
+77 Processo de protesto em andamento
+78 Processo de devolução em andamento
+79 Título com endereço do pagador inconsistente
+80 Valor do abatimento maior que o valor total de rateio
+81 Bairro do pagador obrigatório
+83 Número do Documento de Cobrança (Seu Número) inválido
+84 Identificação do tipo de pagamento inválida
+85 Quantidade de pagamentos possíveis inválida
+86 Tipo de valor máximo inválido
+87 Valor máximo inválido
+88 Percentual máximo inválido
+89 Tipo de valor mínimo inválido
+90 Valor mínimo inválido
+91 Percentual mínimo inválido
+92 Tipos de valor máximo e mínimo divergentes
+93 Título autorizado para pagamentos parciais não pode ser alterado
+94 Quantidade de pagamentos possíveis menor que a quantidade de pagamentos realizados
+95 Autorização de pagamento parcial inválida
+NE039 Número Sequencial do Registro no Arquivo Remessa
+Número da linha no arquivo Remessa
+NE039
+NE040 Literal Correspondente ao Processamento da Remessa Arquivo Pré Crítica
+CONFIRMACAO: Remessa ACATADA
+REJ. PARCIAL: Remessa ACATADA PARCIALMENTE
+REMES REJEITADA: Remessa REJEITADA
+NE040
+NE041 Mensagem de Retorno correspondente ao Processamento da Remessa - Arq Pré Crítica
+Mensagem informativa informando a situação da Remessa.
+Exemplo:
+REMESSA PROCESSADA - XX REGISTROS. DD/MM/AA AS HH.MM.SS
+REMESSA REJEITADA - DD/MM/AA AS HH.MM.SSERROS ENCONTRADOS: REG.TIPO 1 - COD.DE ERRO
+POSICOES 30/31 E 75/76.
+REMESSA REJEITADA - DD/MM/AA AS HH.MM.SSERROS ENCONTRADOS: REG.TIPO 1 - COD.DE ERRO
+POSICOES 30/31 E 74/75.
+Observação: Se nas posições 101- as posições 12-26 se o
+arquivo foi rejeitado totalmente ou parcialmente (ver NE040).
+NE041
+NE042 Identificação de Registro Opcional
+Estabelece as regras para definição para Rateio de Crédito ou Tipo de Pagamento, quantidade de pagamentos
+possíveis e limites de valor / percentual para pagamento.
+- Informação de Dados para Rateio de Crédito
+- Identificação dos entes envolvidos no processo de pagamento.
+Para espécie DIFERENTE de 31 e 32, SEM NECESSIDADE de utilização da instrução para Tipo de Pagamento:
+Informar . Nessa situação, o título será registrado com:
+Tipo de Pagamento 03 à Nova Plataforma de Cobrança).
+Para espécie DIFERENTE de 31 e 32, COM NECESSIDADE de utilização da instrução para Tipo de Pagamento:
+52 - , sendo necessário informar:
+regra definida para liquidação.
+Para títulos de espécie 31 - Cartão de Crédito:
+52 - , sendo necessário informar:
+01 e
+Valor Mínimo / Percentual do Título (NE047) maior que 0,01.
+NE042
+67.126 v029 micro
+Para títulos de espécie 32 - Boleto de Proposta:
+52 - Identificação dos entes envolvidos no processo , sendo necessário informar:
+01 .
+Obs.: Para Espécie 32
+No caso de registro de título com valor nominal igual a zero (R$ 0,00), não será possível o pagamento após o
+vencimento na rede bancária.
+Nesse caso, o título deve conter valor mínimo também igual a zero, não sendo possível inclusão de valor mínimo
+maior do que zero.
+No caso de registro de títulos com valor nominal maior que zero, o título deve conter valor mínimo também maior do
+que zero, não sendo possível inclusão de valor mínimo igual a zero.
+NE043 Identificação do Tipo de Pagamento
+efine o Tipo de Pagamento, quantidade de pagamentos possíveis e
+limites de valor / percentual para pagamento. Utilizar conforme a Espécie do Título abaixo:
+Para títulos de espécie 31 - Cartão de Crédito:
+01 Pagamento Parcial ou 02 Pagamento Divergente, informando também Valor Mínimo / Percentual do Título
+(campo 16.3Y, posição 41-55) maior que 0,01.
+Para títulos de espécie 32 - Boleto de Proposta:
+01 Pagamento Parcial
+Qualquer espécie DIFERENTE de 31 e 32:
+01 - Pagamento Parcial
+02 - Pagamento Divergente
+03 - Pagamento Conforme Registro
+NE043
+NE044 Quantidade de Pagamento Possíveis
+uantidade de Pagamentos possíveis:
+De 01 a 99
+Para títulos de espécie 32 - Boleto de Proposta
+Permite apenas
+NE044
+NE045 Tipo de Valor Informado
+o Tipo do Valor Informado:
+1 = % (Percentual)
+2 = Valor
+Quando utilizado os campos Valor Máximo / Percentual do Título e Valor Mínimo / Percentual do Título, o Tipo de
+Valor Informado deverá ser igual para os mencionados campos de valor / percentual máximo e mínimo.
+NE045
+NE046 Valor Máximo / Percentual do Título
+Quando informado Registro dentifica o Valor Máximo/Percentual do Título
+Para Espécie 31 Cartão de Crédito, é permitido definir valor até superior ao Valor Nominal do Título.
+NE046
+NE047 Valor Mínimo / Percentual do Título
+Quando informado Registro dentifica o Valor Mínimo/Percentual do Título
+Para Espécie 31 Cartão de Crédito, obrigatório informar valor/percentual mínimo maior que zero.
+Para Espécie 32 Boleto Proposta
+Nesse caso, o título deve conter valor mínimo também igual a zero, não sendo possível inclusão de valor mínimo
+maior do que zero.
+No caso de registro de títulos com valor nominal maior que zero, o título deve conter valor mínimo também maior do
+que zero, não sendo possível inclusão de valor mínimo igual a zero.
+NE047
+NE048 Agência Mantenedora da Conta
+Código adotado pelo Banco responsável pela conta, para identificar a qual unidade está vinculada a conta corrente.
+Tamanho 5 posições. Preencher com zero à esquerda.
+NE048
+NE049 Dígito Verificador da Agência
+Código adotado pelo Banco responsável pela conta corrente, para verificação da autenticidade do Código da Agência.
+Fornecido pela CAIXA. (Calculado pelo módulo 11).
+NE049
+67.126 v029 micro
+NE050 Número da Conta Corrente
+Número adotado pelo Banco, para identificar o número da conta corrente utilizada pelo Cliente.
+Tamanho 12. Preencher com zeros à esquerda.
+NE050
+NE051 Dígito Verificador da Conta
+Código adotado pelo Banco, para verificação da autenticidade do Número da Conta Corrente.
+Deverá ser Calculado através do módulo 11.
+Exemplo de como calcular o DV da Conta Corrente:
+Conta Corrente: 000000109990
+0 0 0 0 0 0 1 0 9 9 9 0
+5 4 3 2 9 8 7 6 5 4 3 2
+0 0 0 0 0 0 7 0 45 36 27 0
+1ª linha Conta Corrente (12 posições preencher com zeros à esquerda)
+2ª linha Índice Multiplicação (preencher sequencialmente de 2 a 9 da direita p/a esquerda)
+3ª linha Multiplicação Coluna por Coluna
+Soma-se os valores da 3ª linha: 0+0+0+0+0+0+7+0+45+36+27+0 = 115
+Dividir o resultado da soma por onze: 115/11 = 10 (RESTO 5)
+Subtrair onze pelo resto da divisão: 11 5 = 6
+O dígito calculado é 6
+Observação: Se o resultado da subtração for maior que 9 (nove) o dígito será 0 (zero)
+NE051
+NE052 Dígito Verificador da Agência / Conta Corrente
+Código adotado pelo Banco, para verificação da autenticidade do par Código da Agência / Nº Cta Corrente.
+Deverá ser calculado através do módulo 11.
+Exemplo de como calcular o DV da Agência/Conta Corrente:
+Agência/Conta Corrente: 0161.000000109990
+Agência (sem DV) 0161 / Conta Corrente (sem operação e sem DV): 000000109990
+0 1 6 1 0 0 0 0 0 0 1 0 9 9 9 0
+9 8 7 6 5 4 3 2 9 8 7 6 5 4 3 2
+0 8 42 6 0 0 0 0 0 0 7 0 45 36 27 0
+1ª linha Agência/Conta Corrente
+2ª linha Índice Multiplicação (preencher sequencialmente de 2 a 9 da direita p/a esquerda)
+3ª linha Multiplicação Coluna por Coluna
+Soma-se os valores da 3ª linha: 0+8+42+6+0+0+0+0+0+0+7+0+45+36+27+0 = 171
+Dividir o resultado da soma por onze: 171/11 = 15 (RESTO 6)
+Subtrair onze pelo resto da divisão: 11 6 = 5
+O dígito calculado é 5
+Observação: Se o resultado da subtração for maior que 9 (nove) o dígito será 0 (zero)
+NE052
+NE053 Valor / Percentual do Título ou Quantidade de Moedas
+Quando moeda corrente, utiliza 2 casas decimais;
+Quando moeda variável, utilizar 5 casas decimais;
+Quando percentual, utilizar 2 casas decimais.
+Valor ou percentual do título para Rateio de Crédito. Quando o valor for expresso em percentual, deve ser informado
+com 3 decimais.
+NE053
+67.126 v029 micro
+NE054 Identificação das Rejeições
+Código adotado pela FEBRABAN para identificar o motivo ocorrido para rejeição de registro de rateio de crédito.
+Código Descrição
+Conta Beneficiário Inválida
+Conta Corrente Inativa para Rateio
+Código de Cálculo do Rateio Diferente de 1, 2 ou 3
+Banco/Agência/Conta do Beneficiário Não Numérico
+Valor do Rateio Informado Não Numérico
+Percentual para Rateio Não Numérico
+Tipo de Valor Informado Diferente de 1 ou 2
+Banco Não Participante do Rateio
+Dígito Agência Beneficiário Não Confere
+Dígito Conta Beneficiário Não Confere
+Banco/Agência/Conta Beneficiário Igual a Zeros
+Nome do Beneficiário Não Informado
+Quantidade de Beneficiários Excedida
+Floating Beneficiário Inválido
+Tipo Valor Informado, Inválido para Código Cálculo Rateio
+Beneficiário com Códigos de Cálculo de Rateio Diferentes
+Beneficiários Informados em Percentual e Outros em Valor
+Somatória dos Valores dos Beneficiários Excedeu Valor do Título
+Somatório dos Percentuais dos Beneficiários Excedeu 100%
+Acerto do Rateio Efetuado
+Cliente Bloqueado para Rateio
+Título Não Registrado na Cobrança
+Título Não Cadastrado para Rateio, Efetuada a Inclusão
+Cancelamento de Rateio Efetuado
+Rateio Cancelado, Título Baixado
+Rateio Efetuado, Beneficiário Aguardando Crédito
+Rateio Efetuado, Beneficiário Já Creditado
+Rateio Não Efetuado, Conta Beneficiário Encerrada
+Rateio Não Efetuado, Conta Débito Beneficiário Bloqueada
+Rateio Não Efetuado, Código Cálculo 2 (Vlr Registro) e Vlr Pago Menor
+Ocorrência Não Possui Rateio
+Título Já Cadastrado para Rateio
+Número do Documento Inválido (Seu Número)
+Título Já Rateado ou Baixado
+NE054
+NE055 Uso livre banco/empresa / Autorização de Pagamento Parcial e/ou divergente
+Necessário para habilitar o Registro Tipo 4, que estabelece as regras para definição do Tipo de Pagamento,
+quantidade de pagamentos possíveis e limites de valor / percentual para pagamento.
+Não autoriza pagamento parcial e/ou divergente
+2 Autoriza pagamentos parciais e/ou divergente
+NE055
+NE056 Data da Emissão do Título
+Data de emissão do Título. Utilizar o formato DDMMAAAA, onde:
+DD = dia
+MM = mês
+AAAA = ano
+Para título a vencer: Caso a Data de Emissão seja informada diferente da data do envio/acatamento da remessa na
+CAIXA, esta última será considerada a Data de Emissão.
+Para título vencido: A Data de Emissão deve ser igual ou anterior à Data de Vencimento do Título. Caso contrário,
+será considerada a mesma Data de Vencimento como Data de Emissão.
+Para título vencido ou a vencer, com emissão e entrega CAIXA: A Data de Emissão + Data de Vencimento deve
+ser superior à Data de Inclusão + 10 dias úteis. Essa condição é necessária por questões de garantia quanto a
+logística para produção e postagem, de forma que o boleto seja entregue em tempo para liquidação dentro do prazo
+de vencimento.
+NE056
+NE057 Data do Desconto
+Data limite do desconto do título de cobrança. Utilizar o formato DDMMAA, onde:
+DD = dia
+MM = mês
+AA = ano
+Se Data do Desconto maior que Data de Vencimento do Título, será considerado Data de Desconto igual a Data de
+NE057
+67.126 v029 micro
+Vencimento.
+Se Data do Desconto igual a zeros ou brancos, será considerado Data de Desconto igual a Data de Vencimento.
+Se Valor/Percentual do Desconto não informado, Data do Desconto será desprezado.
+.
+NE058 Endereço / Bairro / CEP / Cidade / UF
+Informação para registro do endereço do pagador.
+Opcional caso a emissão e entrega do boleto sejam realizados pelo beneficiário.
+Obrigatório caso a emissão e entrega do boleto sejam realizados pela CAIXA.
+Obrigatório Protestar, independentemente da forma de emissão e
+postagem.
+NE058
+NE059 Data da Multa
+Data a partir da qual a multa deverá ser cobrada. Na ausência, será considerada a data de vencimento. Utilizar o
+formato DDMMAAAA, onde:
+DD = dia
+MM = mês
+AAAA = ano
+Se informado Data da Multa anterior à Data de Vencimento do Título, será considerado o prazo de D+1 após a Data
+de Vencimento do Título.
+NE059
+NE060 Tipo de Mensagem SMS
+Utilizada para informar a disponibilidade do boleto ao cliente, a partir dos seguintes formatos:
+1 = Mensagem Informativa
+2 = Mensagem com Representação Numérica
+3 = Mensagem PEC da Cobrança
+NE060
+NE061 Código do Desconto
+Código adotado pela FEBRABAN para identificação do tipo de desconto que deverá ser concedido.
+Ao se optar por valor, o desconto deve ser expresso em valor. Idem ao se optar por percentual, o desconto deve ser
+expresso em percentual.
+Sem Desconto
+do Desconto.
+Não informar Data do Desconto para utiliza
+NE061
+NE062 Valor / Percentual do Desconto
+Valor ou percentual de desconto a ser concedido sobre o título de cobrança. Se Código do Desconto:
+= Informar valor
+= Informar percentual
+Se o Valor do Desconto for maior ou igual ao Valor do Título de Cobrança, será desconsiderado o desconto.
+Se o Valor do Desconto não for informado, será desconsiderado o desconto.
+NE062
+67.126 v029 micro
+NE063 Data do Juros de Mora
+Data indicativa do início da cobrança de Juros de Mora de um título de cobrança, deverá ser maior que a Data de
+Vencimento do título de cobrança.
+Caso seja inválida ou não informada o sistema assumirá a data de vencimento + 1 dia. Utilizar o formato DDMMAAAA,
+onde:
+DD = dia
+MM = mês
+AA = ano
+Caso informado valor menor que a Data de Vencimento do Título, será considerado como Data do Juros de Mora o
+prazo de D+1 à Data de Vencimento do Título.
+NE063
+NE064 Juros de Mora por Dia
+Valor de juros por dia (corrido) sobre o valor do título.
+NE064
+NE065 Número da Versão do Layout
+Código adotado para identificar qual a versão de layout do arquivo encaminhado.
+Deverão ser obedecidas as regras de preenchimento do código do beneficiário conforme a versão do layout informado
+no Header de Remessa (campo 12.0V) e Header de Retorno (campo 13.0V)
+Em branco
+Aplica-se para clientes com códigos de beneficiário composto por até 6 dígitos. Os campos descritos na Nota
+Explicativa NE004 (item A1) possuem 7 posições, mas terão o comprimento de leitura definido em 6 posições a partir
+da posição inicial de leitura.
+Aplica-se para clientes com códigos de beneficiário composto por até 7 dígitos. Os campos descritos na Nota
+Explicativa NE004 possuem 7 posições, mas terão o comprimento de leitura definido conforme os itens abaixo:
+Item A2 (para Código de Beneficiário até 999999)
+6 posições a partir da posição inicial de leitura
+Item B (para Código de Beneficiário a partir de 1100000)
+7 posições, utilizando todas as posições disponíveis
+Demais detalhes sobre o Código do Beneficiário disponíveis na Nota Explicativa NE004.
+NE065
+NE066 Código dos Juros
+1 - Valor (dias corridos)
+3 - Percentual ao mês (dias corridos)
+5 - Isento
+6 - Valor (dia útil)
+8 - Percentual ao mês (dias úteis)
+, o sistema assume código de juros = 1 Valor (dias corridos), se valor dos juros for
+numérico e diferente de zeros
+Se for diferente, O sistema assume o código de juros 5 Isento.
+NE066
+67.126 v029 micro
+
