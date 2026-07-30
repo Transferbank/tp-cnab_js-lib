@@ -39,21 +39,28 @@ function checkFieldFormat(rawValue: string, fieldDef: FieldDefinition): string |
 
   if (expectedPattern !== undefined && expectedPattern !== null && isRequired) {
     const actual = rawValue.trim()
-    if (actual && actual !== String(expectedPattern)) {
+    const hasActual = actual.length > 0
+    const patternMatches = actual === String(expectedPattern)
+    
+    if (hasActual && !patternMatches) {
       return `Esperado "${expectedPattern}", encontrado "${actual}"`
     }
-    if (!actual) {
+    if (!hasActual) {
       return `Campo obrigatório vazio, esperado "${expectedPattern}"`
     }
   }
 
-  if (isRequired && (!rawValue || !rawValue.trim())) {
+  const valueIsEmpty = rawValue === null || rawValue === undefined || rawValue.trim().length === 0
+  if (isRequired && valueIsEmpty) {
     return 'Campo obrigatório não preenchido'
   }
 
-  if (fieldType === FieldType.NUM && rawValue.trim()) {
-    if (!/^\d+$/.test(rawValue.trim())) {
-      return `Campo numérico contém caracteres inválidos: "${rawValue.trim()}"`
+  const trimmedValue = rawValue.trim()
+  const hasValue = trimmedValue.length > 0
+  if (fieldType === FieldType.NUM && hasValue) {
+    const isNotNumeric = !/^\d+$/.test(trimmedValue)
+    if (isNotNumeric) {
+      return `Campo numérico contém caracteres inválidos: "${trimmedValue}"`
     }
   }
 
@@ -87,7 +94,9 @@ export function getRecordTypePattern(
   schema: RecordSchema | undefined,
   position: 1 | 8
 ): string | number | null {
-  if (!schema) return null
+  const hasSchema = schema !== null && schema !== undefined
+  if (!hasSchema) return null
+  
   const field = Object.values(schema).find(f => f.pos[0] === position)
   return field?.pattern ?? null
 }

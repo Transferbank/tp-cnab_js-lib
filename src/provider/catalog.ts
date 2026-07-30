@@ -13,7 +13,11 @@ export function createProvider(
 ): CNABProvider | null {
   const schema = getBankSchema(bankCode, format)
   const groupingRule = getGroupingRule(bankCode, format)
-  if (!schema || !groupingRule) return null
+  
+  const hasSchema = schema !== null && schema !== undefined
+  const hasGroupingRule = groupingRule !== null && groupingRule !== undefined
+  
+  if (!hasSchema || !hasGroupingRule) return null
 
   return {
     bankCode,

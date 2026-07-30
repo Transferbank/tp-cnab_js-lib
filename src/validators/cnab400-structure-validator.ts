@@ -205,7 +205,8 @@ function validateMiddleLine(
     optionalByIdentifier.get(`${recordType}-${suffix1}`) ||
     optionalByIdentifier.get(recordType)
 
-  if (!optionalRecord) {
+  const hasOptionalRecord = optionalRecord !== null && optionalRecord !== undefined
+  if (!hasOptionalRecord) {
     return {
       error: {
         line: lineNumber,

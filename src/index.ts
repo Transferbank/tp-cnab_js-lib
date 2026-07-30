@@ -9,8 +9,6 @@ import { getBankSchema } from '@schemas/index'
 import { CNABFile } from '@tp-types/core'
 import {
   CNABEmptyFileError,
-  CNABFormatNotRecognizedError,
-  CNABBankNotFoundError,
   CNABSchemaNotFoundError,
 } from '@tp-types/errors'
 
@@ -27,36 +25,23 @@ import {
  * @throws {CNABUnknownFieldCodeError} (via read/readAsync) se código de campo não reconhecido durante extração canônica
  */
 export function openCnab(raw: string): CNABFile {
-  if (raw === null || raw === undefined) {
-    throw new CNABEmptyFileError()
-  }
+  const rawLines = raw?.split(/\r?\n/).filter((line) => line.length > 0) ?? []
 
-  const rawLines = raw.split(/\r?\n/).filter((line) => line.length > 0)
-
-  if (rawLines.length === 0) {
+  const isEmpty = rawLines.length === 0
+  if (isEmpty) {
     throw new CNABEmptyFileError()
   }
 
   const format = detectFormat(rawLines)
-
-  if (!format) {
-    const lineLength = rawLines[0]?.length ?? 0
-    throw new CNABFormatNotRecognizedError(lineLength)
-  }
-
   const bankCode = detectBank(rawLines[0], format)
-
-  if (!bankCode) {
-    throw new CNABBankNotFoundError(format)
-  }
-
   const bankSchema = getBankSchema(bankCode, format)
 
-  if (!bankSchema) {
-    throw new CNABSchemaNotFoundError(bankCode, format)
+  const hasSchema = bankSchema !== null && bankSchema !== undefined
+  if (hasSchema) {
+    return new CNABFile(format, bankSchema, rawLines)
   }
 
-  return new CNABFile(format, bankSchema, rawLines)
+  throw new CNABSchemaNotFoundError(bankCode, format)
 }
 
 // ========== EXPORTAÇÕES PÚBLICAS ==========

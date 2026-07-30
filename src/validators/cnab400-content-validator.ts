@@ -97,7 +97,8 @@ function validateDetailLine(
   const decimals = detailSchema?.valor_titulo?.decimals ?? 2
   const dateFormat = detailSchema?.vencimento?.dateFormat || DateFormat.DDMMAA
 
-  if (!fieldsWithError.has('nome') && (!payerName || (payerName as string).length < 3)) {
+  const payerNameIsEmpty = payerName === null || payerName === undefined || (payerName as string).length < 3
+  if (!fieldsWithError.has('nome') && payerNameIsEmpty) {
     errors.push({
       line: lineNumber,
       field: 'Nome do pagador',
@@ -105,7 +106,8 @@ function validateDetailLine(
     })
   }
 
-  if (!fieldsWithError.has('sacado_numero_inscricao') && !validatePayerDocument(payerDocument)) {
+  const documentIsInvalid = !validatePayerDocument(payerDocument)
+  if (!fieldsWithError.has('sacado_numero_inscricao') && documentIsInvalid) {
     errors.push({
       line: lineNumber,
       field: 'CPF/CNPJ',
@@ -113,10 +115,8 @@ function validateDetailLine(
     })
   }
 
-  if (
-    !fieldsWithError.has('valor_titulo') &&
-    (!amountRaw || !/^\d+$/.test(amountRaw) || parseInt(amountRaw) <= 0)
-  ) {
+  const amountIsInvalid = amountRaw === null || amountRaw === undefined || !/^\d+$/.test(amountRaw) || parseInt(amountRaw) <= 0
+  if (!fieldsWithError.has('valor_titulo') && amountIsInvalid) {
     errors.push({
       line: lineNumber,
       field: 'Valor da cobrança',
@@ -130,7 +130,8 @@ function validateDetailLine(
   const dueDate = isSpecialDueDate ? null : parseDate(dueDateRaw, dateFormat)
   
   if (!fieldsWithError.has('vencimento') && !isSpecialDueDate) {
-    if (!dueDate) {
+    const dueDateIsInvalid = dueDate === null || dueDate === undefined
+    if (dueDateIsInvalid) {
       errors.push({
         line: lineNumber,
         field: 'Data de vencimento',
@@ -145,7 +146,8 @@ function validateDetailLine(
     }
   }
 
-  const amountValue = amountRaw && /^\d+$/.test(amountRaw) ? parseInt(amountRaw) / Math.pow(10, decimals) : 0
+  const amountIsValid = amountRaw !== null && amountRaw !== undefined && /^\d+$/.test(amountRaw)
+  const amountValue = amountIsValid ? parseInt(amountRaw) / Math.pow(10, decimals) : 0
   
   return {
     errors,

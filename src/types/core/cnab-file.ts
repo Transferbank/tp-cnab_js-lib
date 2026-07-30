@@ -68,7 +68,8 @@ export class CNABFile {
     const { getProvider } = require('@/provider/catalog')
     
     const provider = getProvider(this.bankCode, this.type, mode)
-    if (!provider) {
+    const hasProvider = provider !== null && provider !== undefined
+    if (!hasProvider) {
       throw new CNABInternalInconsistencyError(this.bankCode, this.type)
     }
     
@@ -79,7 +80,8 @@ export class CNABFile {
     const provider = this.resolveProvider(ReadMode.SIMPLE)
     const bankSchema = provider.schema
 
-    if (!withFeedback) {
+    const shouldFailFast = withFeedback === false
+    if (shouldFailFast) {
       return this.validateFailFast(bankSchema)
     }
 

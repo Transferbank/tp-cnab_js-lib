@@ -128,7 +128,8 @@ function validateSegmentP(
 
   const dueDate = parseDate(dueDateRaw, dateFormat)
   if (!fieldsWithError.has('vencimento_titulo')) {
-    if (!dueDate) {
+    const dueDateIsInvalid = dueDate === null || dueDate === undefined
+    if (dueDateIsInvalid) {
       errors.push({
         line: lineNumber,
         field: 'Data de vencimento',
@@ -143,11 +144,14 @@ function validateSegmentP(
     }
   }
 
+  const amountIsValid = amountRaw !== null && amountRaw !== undefined && /^\d+$/.test(amountRaw)
+  const amountValue = amountIsValid ? parseInt(amountRaw) / Math.pow(10, decimals) : 0
+  
   return {
     errors,
     pendingData: {
-      amount: amountRaw && /^\d+$/.test(amountRaw) ? parseInt(amountRaw) / Math.pow(10, decimals) : 0,
-      dueDate: dueDate ? formatDateBR(dueDate) : '—',
+      amount: amountValue,
+      dueDate: dueDate !== null && dueDate !== undefined ? formatDateBR(dueDate) : '—',
     },
   }
 }
@@ -163,7 +167,8 @@ function validateSegmentQ(
 } {
   const errors: ValidationError[] = []
 
-  if (!pendingP) {
+  const hasPendingP = pendingP !== null && pendingP !== undefined
+  if (!hasPendingP) {
     errors.push({
       line: lineNumber,
       field: 'Segmento Q',
@@ -191,7 +196,8 @@ function validateSegmentQ(
   const payerName = parsed?.sacado_nome?.value || extractPositionTrimmed(line, CNAB240_SEGMENT_Q_POSITIONS.SACADO_NOME)
   const payerAddress = parsed?.sacado_endereco?.value || extractPositionTrimmed(line, CNAB240_SEGMENT_Q_POSITIONS.SACADO_ENDERECO)
 
-  if (!fieldsWithError.has('sacado_inscricao_numero') && !validatePayerDocument(payerDocument)) {
+  const documentIsInvalid = !validatePayerDocument(payerDocument)
+  if (!fieldsWithError.has('sacado_inscricao_numero') && documentIsInvalid) {
     errors.push({
       line: lineNumber,
       field: 'CPF/CNPJ',
@@ -199,7 +205,8 @@ function validateSegmentQ(
     })
   }
 
-  if (!fieldsWithError.has('sacado_nome') && (!payerName || (payerName as string).length < 3)) {
+  const payerNameIsEmpty = payerName === null || payerName === undefined || (payerName as string).length < 3
+  if (!fieldsWithError.has('sacado_nome') && payerNameIsEmpty) {
     errors.push({
       line: lineNumber,
       field: 'Nome do pagador',

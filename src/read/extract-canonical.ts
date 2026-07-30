@@ -45,7 +45,8 @@ function setNestedValue(obj: CanonicalObject, path: string, value: unknown): voi
   
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i]
-    if (!current[part]) {
+    const partExists = current[part] !== null && current[part] !== undefined
+    if (!partExists) {
       current[part] = {}
     }
     current = current[part] as CanonicalObject
@@ -57,12 +58,18 @@ function setNestedValue(obj: CanonicalObject, path: string, value: unknown): voi
 
 function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): void {
   for (const [fieldName, field] of Object.entries(line)) {
-    if (fieldName === 'raw' || !field || typeof field !== 'object') {
+    if (fieldName === 'raw') {
+      continue
+    }
+    
+    const fieldIsInvalid = field === null || field === undefined || typeof field !== 'object'
+    if (fieldIsInvalid) {
       continue
     }
     
     const canonical = field.canonical
-    if (!canonical) {
+    const hasCanonical = canonical !== null && canonical !== undefined
+    if (!hasCanonical) {
       continue
     }
     
@@ -111,7 +118,8 @@ function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): 
 }
 
 export function extractHeader(headerLine: ParsedLine | undefined): CNABHeader {
-  if (!headerLine) {
+  const hasHeaderLine = headerLine !== null && headerLine !== undefined
+  if (!hasHeaderLine) {
     return {
       cedente: {},
     }
@@ -127,7 +135,8 @@ export function extractHeader(headerLine: ParsedLine | undefined): CNABHeader {
 }
 
 export function extractTrailer(trailerLine: ParsedLine | undefined): CNABTrailer {
-  if (!trailerLine) {
+  const hasTrailerLine = trailerLine !== null && trailerLine !== undefined
+  if (!hasTrailerLine) {
     return {}
   }
   

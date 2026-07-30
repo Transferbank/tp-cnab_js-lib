@@ -65,7 +65,8 @@ export function isValidCpfCnpj(document: string): boolean {
  */
 export function validatePayerDocument(rawDocument: string): boolean {
   const cleaned = rawDocument.trim().replace(/^0+/, '')
-  if (!cleaned) return false
+  const isEmpty = cleaned.length === 0
+  if (isEmpty) return false
 
   const padded = cleaned.length <= 11 ? cleaned.padStart(11, '0') : cleaned.padStart(14, '0')
   return isValidCpfCnpj(padded)

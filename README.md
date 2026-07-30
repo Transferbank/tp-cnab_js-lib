@@ -12,13 +12,10 @@ Biblioteca TypeScript para processamento e validação de arquivos CNAB 240 e 40
 
 ## Instalação
 
-Não publicado em registry — consumido direto do Git. `dist/` não é commitado; o script `prepare` builda (`tsc`) na instalação.
-
 ```bash
-npm install git+https://github.com/Transferbank/tp-cnab-lib.git
+npm install tp-cnab-lib
 ```
 
-> **Windows**: se o clone falhar com `Filename too long`, rode `git config --global core.longpaths true`.
 
 ## Uso Básico
 
@@ -33,7 +30,7 @@ const fileContent = fs.readFileSync('remessa.rem', 'latin1')
 const cnabFile = openCnab(fileContent) // detecta formato/banco, resolve o schema
 console.log(cnabFile.type, cnabFile.bankName)
 
-const validation = cnabFile.validate()
+const validation = cnabFile.validate(true)
 if (!validation.isValid) {
   validation.feedback.lines.forEach(err => console.log(`Linha ${err.line}: ${err.message}`))
 }
@@ -87,15 +84,8 @@ const primeiro = await bills[0].resolve() // extrai só esse boleto
 | Sicredi (748) | ✅ | ✅ |
 | Sicoob (756) | ✅ | |
 
-## Desenvolvimento
 
-```bash
-npm install
-npm run build     # tsc
-npm run dev       # tsc --watch
-npm test          # jest
-npm run lint
-```
+
 
 ## Estrutura do Projeto
 

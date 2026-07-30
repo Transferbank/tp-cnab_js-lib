@@ -1,7 +1,8 @@
 import { DateFormat } from '@tp-types/index'
 
 export function parseDateDDMMAA(str: string): Date | null {
-  if (!str || str.length !== 6 || !/^\d{6}$/.test(str)) return null
+  const isInvalid = str === null || str === undefined || str.length !== 6 || !/^\d{6}$/.test(str)
+  if (isInvalid) return null
 
   const day = parseInt(str.substring(0, 2), 10)
   const month = parseInt(str.substring(2, 4), 10)
@@ -21,7 +22,8 @@ export function parseDateDDMMAA(str: string): Date | null {
 }
 
 export function parseDateDDMMAAAA(str: string): Date | null {
-  if (!str || str.length !== 8 || !/^\d{8}$/.test(str)) return null
+  const isInvalid = str === null || str === undefined || str.length !== 8 || !/^\d{8}$/.test(str)
+  if (isInvalid) return null
 
   const day = parseInt(str.substring(0, 2), 10)
   const month = parseInt(str.substring(2, 4), 10)
@@ -44,7 +46,8 @@ export function parseDateDDMMAAAA(str: string): Date | null {
  * Formato AAAAMMDD usado pelo Sicredi (diferente do DDMMAAAA padrão).
  */
 export function parseDateAAAAMMDD(str: string): Date | null {
-  if (!str || str.length !== 8 || !/^\d{8}$/.test(str)) return null
+  const isInvalid = str === null || str === undefined || str.length !== 8 || !/^\d{8}$/.test(str)
+  if (isInvalid) return null
 
   const year = parseInt(str.substring(0, 4), 10)
   const month = parseInt(str.substring(4, 6), 10)

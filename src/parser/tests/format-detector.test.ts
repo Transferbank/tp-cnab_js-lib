@@ -4,7 +4,12 @@
 
 import { detectFormat, detectBank } from '@parser/format-detector'
 import { CNABFormatCode } from '@tp-types/index'
-import { CNABNoLinesProvidedError, CNABInvalidHeaderError } from '@tp-types/errors'
+import {
+  CNABNoLinesProvidedError,
+  CNABInvalidHeaderError,
+  CNABFormatNotRecognizedError,
+  CNABBankNotFoundError,
+} from '@tp-types/errors'
 
 describe('detectFormat', () => {
   describe('Detecção de CNAB 240', () => {
@@ -54,52 +59,42 @@ describe('detectFormat', () => {
   })
 
   describe('Casos inválidos', () => {
-    test('deve retornar null para array vazio', () => {
+    test('deve lançar exceção para array vazio', () => {
       expect(() => detectFormat([])).toThrow(CNABNoLinesProvidedError)
       expect(() => detectFormat([])).toThrow('Nenhuma linha fornecida para detecção de formato')
     })
 
-    test('deve retornar null para linha com tamanho incorreto', () => {
+    test('deve lançar exceção para linha com tamanho incorreto', () => {
       const lines = ['linha muito curta']
 
-      const format = detectFormat(lines)
-
-      expect(format).toBeNull()
+      expect(() => detectFormat(lines)).toThrow(CNABFormatNotRecognizedError)
     })
 
-    test('deve retornar null para linha de 241 caracteres', () => {
+    test('deve lançar exceção para linha de 241 caracteres', () => {
       const lines = ['A'.repeat(241)]
 
-      const format = detectFormat(lines)
-
-      expect(format).toBeNull()
+      expect(() => detectFormat(lines)).toThrow(CNABFormatNotRecognizedError)
     })
 
-    test('deve retornar null para linha de 239 caracteres', () => {
+    test('deve lançar exceção para linha de 239 caracteres', () => {
       const lines = ['A'.repeat(239)]
 
-      const format = detectFormat(lines)
-
-      expect(format).toBeNull()
+      expect(() => detectFormat(lines)).toThrow(CNABFormatNotRecognizedError)
     })
 
-    test('deve retornar null para linha de 401 caracteres', () => {
+    test('deve lançar exceção para linha de 401 caracteres', () => {
       const lines = ['A'.repeat(401)]
 
-      const format = detectFormat(lines)
-
-      expect(format).toBeNull()
+      expect(() => detectFormat(lines)).toThrow(CNABFormatNotRecognizedError)
     })
 
-    test('deve retornar null para linha de 399 caracteres', () => {
+    test('deve lançar exceção para linha de 399 caracteres', () => {
       const lines = ['A'.repeat(399)]
 
-      const format = detectFormat(lines)
-
-      expect(format).toBeNull()
+      expect(() => detectFormat(lines)).toThrow(CNABFormatNotRecognizedError)
     })
 
-    test('deve retornar null quando não há linhas', () => {
+    test('deve lançar exceção quando não há linhas', () => {
       expect(() => detectFormat(null as any)).toThrow(CNABNoLinesProvidedError)
       expect(() => detectFormat(null as any)).toThrow('Nenhuma linha fornecida para detecção de formato')
     })
@@ -163,12 +158,11 @@ describe('detectBank', () => {
       expect(bankCode).toBe('33')
     })
 
-    test('deve retornar null quando código do banco está vazio', () => {
+    test('deve lançar exceção quando código do banco está vazio', () => {
       const header = 'X'.repeat(76) + '   ' + 'Y'.repeat(321)
 
-      const bankCode = detectBank(header, CNABFormatCode.CNAB400)
-
-      expect(bankCode).toBeNull()
+      expect(() => detectBank(header, CNABFormatCode.CNAB400)).toThrow(CNABBankNotFoundError)
+      expect(() => detectBank(header, CNABFormatCode.CNAB400)).toThrow('Código do banco não encontrado no header')
     })
   })
 
@@ -213,27 +207,26 @@ describe('detectBank', () => {
       expect(bankCode).toBe('33')
     })
 
-    test('deve retornar null quando código do banco está vazio', () => {
+    test('deve lançar exceção quando código do banco está vazio', () => {
       const header = '   ' + 'X'.repeat(237)
 
-      const bankCode = detectBank(header, CNABFormatCode.CNAB240)
-
-      expect(bankCode).toBeNull()
+      expect(() => detectBank(header, CNABFormatCode.CNAB240)).toThrow(CNABBankNotFoundError)
+      expect(() => detectBank(header, CNABFormatCode.CNAB240)).toThrow('Código do banco não encontrado no header')
     })
   })
 
   describe('Casos inválidos', () => {
-    test('deve retornar null para header vazio', () => {
+    test('deve lançar exceção para header vazio', () => {
       expect(() => detectBank('', CNABFormatCode.CNAB240)).toThrow(CNABInvalidHeaderError)
       expect(() => detectBank('', CNABFormatCode.CNAB240)).toThrow('Header vazio')
     })
 
-    test('deve retornar null para header null', () => {
+    test('deve lançar exceção para header null', () => {
       expect(() => detectBank(null as any, CNABFormatCode.CNAB240)).toThrow(CNABInvalidHeaderError)
       expect(() => detectBank(null as any, CNABFormatCode.CNAB240)).toThrow('Header fornecido é null')
     })
 
-    test('deve retornar null para header undefined', () => {
+    test('deve lançar exceção para header undefined', () => {
       expect(() => detectBank(undefined as any, CNABFormatCode.CNAB400)).toThrow(CNABInvalidHeaderError)
       expect(() => detectBank(undefined as any, CNABFormatCode.CNAB400)).toThrow('Header não fornecido (undefined)')
     })
