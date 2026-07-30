@@ -87,14 +87,16 @@ export function extractSegmentSMessages(line: string): string[] {
   if (variant === 'frente_verso') {
     // Variante 1: apenas uma mensagem (pos 21-100)
     const msg = fields.mensagem?.value
-    if (msg && typeof msg === 'string' && msg.trim()) {
+    const msgIsValid = msg !== null && msg !== undefined && typeof msg === 'string' && msg.trim().length > 0
+    if (msgIsValid) {
       messages.push(msg.trim())
     }
   } else {
     // Variante 2: mensagens 1-3 (pos 21-138)
     for (let i = 1; i <= 3; i++) {
       const msg = fields[`mensagem_${i}`]?.value
-      if (msg && typeof msg === 'string' && msg.trim()) {
+      const msgIsValid = msg !== null && msg !== undefined && typeof msg === 'string' && msg.trim().length > 0
+      if (msgIsValid) {
         messages.push(msg.trim())
       }
     }

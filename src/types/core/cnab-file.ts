@@ -196,20 +196,23 @@ export class CNABFile {
       } 
       else if (segment === Cnab240SegmentCode.R && bankSchema.optionalRecords) {
         const optR = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'R')
-        if (optR) {
+        const hasOptR = optR !== null && optR !== undefined
+        if (hasOptR) {
           return extractLineFields(line, optR.schema)
         }
       } 
       else if (segment === Cnab240SegmentCode.S && bankSchema.optionalRecords) {
         const optS = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'S')
-        if (optS) {
+        const hasOptS = optS !== null && optS !== undefined
+        if (hasOptS) {
           return extractLineFields(line, optS.schema)
         }
       } 
       else if (segment === Cnab240SegmentCode.Y && bankSchema.optionalRecords) {
         const subVariant = getCnab240SegmentYVariant(line)
         const optY = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === `Y${subVariant}`)
-        if (optY) {
+        const hasOptY = optY !== null && optY !== undefined
+        if (hasOptY) {
           return extractLineFields(line, optY.schema)
         }
       }

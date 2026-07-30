@@ -15,7 +15,8 @@ import type {
  */
 function getFieldByPosition(line: ParsedLine, position: number): ParsedField | undefined {
   for (const field of Object.values(line)) {
-    if (field && typeof field === 'object') {
+    const fieldIsValid = field !== null && field !== undefined && typeof field === 'object'
+    if (fieldIsValid) {
       const fieldWithPos = field as { pos?: [number, number] }
       if (Array.isArray(fieldWithPos.pos) && fieldWithPos.pos[0] === position) {
         return field as ParsedField
@@ -32,16 +33,19 @@ function getFieldByPosition(line: ParsedLine, position: number): ParsedField | u
 function identifyRecordType(line: ParsedLine, format: CNABFormatCode): string {
   if (format === CNABFormatCode.CNAB400) {
     const recordTypeField = getFieldByPosition(line, 1)
-    return recordTypeField ? String(recordTypeField.value) : 'u'
+    const hasRecordTypeField = recordTypeField !== null && recordTypeField !== undefined
+    return hasRecordTypeField ? String(recordTypeField.value) : 'u'
   }
   
   const recordTypeField = getFieldByPosition(line, 8)
   const segmentField = getFieldByPosition(line, 14)
   
-  if (recordTypeField) {
+  const hasRecordTypeField = recordTypeField !== null && recordTypeField !== undefined
+  if (hasRecordTypeField) {
     const recordType = String(recordTypeField.value)
     
-    if (recordType === '3' && segmentField) {
+    const hasSegmentField = segmentField !== null && segmentField !== undefined
+    if (recordType === '3' && hasSegmentField) {
       const segment = String(segmentField.value)
       
       /**
@@ -50,7 +54,8 @@ function identifyRecordType(line: ParsedLine, format: CNABFormatCode): string {
        */
       if (segment === Cnab240SegmentCode.Y) {
         const subVariantField = getFieldByPosition(line, 18)
-        if (subVariantField) {
+        const hasSubVariantField = subVariantField !== null && subVariantField !== undefined
+        if (hasSubVariantField) {
           return `Y${subVariantField.value}`
         }
       }

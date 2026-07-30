@@ -93,18 +93,22 @@ function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): 
     
     if (DATE_FIELDS.has(canonical)) {
       const dateFormat = field.dateFormat
-      if (dateFormat && typeof dateFormat === 'string') {
+      const hasValidDateFormat = dateFormat !== null && dateFormat !== undefined && typeof dateFormat === 'string'
+      if (hasValidDateFormat) {
         const parsed = parseDate(field.raw?.trim() ?? '', dateFormat as DateFormat)
-        value = parsed ? formatDateBR(parsed) : undefined
+        const hasValidParsedDate = parsed !== null && parsed !== undefined
+        value = hasValidParsedDate ? formatDateBR(parsed) : undefined
       } else {
         value = undefined
       }
     } else if (RAW_STRING_FIELDS.has(canonical)) {
       const raw = field.raw?.trim()
-      value = raw || undefined
+      const hasRawValue = raw !== null && raw !== undefined && raw.length > 0
+      value = hasRawValue ? raw : undefined
     } else if (DOCUMENT_FIELDS.has(canonical)) {
       const raw = field.raw?.trim().replace(/^0+/, '') ?? ''
-      value = raw || undefined
+      const hasRawValue = raw.length > 0
+      value = hasRawValue ? raw : undefined
     } else {
       value = field.value
     }
