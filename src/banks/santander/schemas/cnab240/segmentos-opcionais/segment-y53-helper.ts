@@ -31,7 +31,11 @@ import { ParsedLine } from '@tp-types/index'
  * resolveY53Amount("000000001234567", "2") // 12345.67
  */
 export function resolveY53Amount(rawDigits: string, tipo: string): number {
-  const intValue = parseInt(rawDigits.trim(), 10) || 0
+  const parsedValue = parseInt(rawDigits.trim(), 10)
+  // rawDigits pode vir em branco (campo condicional não preenchido) ou com lixo se o
+  // registro estiver corrompido; checkFieldFormat já reporta isso via ParsedField.error,
+  // então aqui o fallback para 0 é intencional (não é um "parseou pra zero" legítimo).
+  const intValue = Number.isNaN(parsedValue) ? 0 : parsedValue
   const decimais = tipo === '1' ? 5 : 2
   return intValue / Math.pow(10, decimais)
 }

@@ -243,14 +243,23 @@ function validateFinalConstraints(
       const startIdx = pos[0] - 1
       const endIdx = pos[1]
       const rawValue = trailerLine.substring(startIdx, endIdx).trim()
-      const declaredCount = parseInt(rawValue, 10) || 0
 
-      if (declaredCount > 0 && declaredCount !== detailCount) {
-        errors.push({
-          line: lines.length,
-          field: 'Quantidade no Trailer',
-          message: `Trailer declara ${declaredCount} títulos, mas o arquivo contém ${detailCount}`,
-        })
+      if (rawValue !== '') {
+        const declaredCount = parseInt(rawValue, 10)
+
+        if (Number.isNaN(declaredCount)) {
+          errors.push({
+            line: lines.length,
+            field: 'Quantidade no Trailer',
+            message: `Campo de quantidade no Trailer contém valor não numérico: "${rawValue}"`,
+          })
+        } else if (declaredCount > 0 && declaredCount !== detailCount) {
+          errors.push({
+            line: lines.length,
+            field: 'Quantidade no Trailer',
+            message: `Trailer declara ${declaredCount} títulos, mas o arquivo contém ${detailCount}`,
+          })
+        }
       }
     }
   }

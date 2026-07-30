@@ -19,7 +19,11 @@ function getFieldValue(rawValue: string, fieldDef: FieldDefinition): string | nu
 
   if (fieldType === FieldType.NUM) {
     const cleaned = rawValue.replace(/\s/g, '') || '0'  // CNAB usa espaço como "vazio"
-    const numVal = parseInt(cleaned, 10) || 0
+    const parsedNum = parseInt(cleaned, 10)
+    // `cleaned` pode conter caracteres não numéricos se o campo estiver corrompido;
+    // checkFieldFormat já reporta esse erro separadamente em ParsedField.error,
+    // então aqui o fallback para 0 é intencional (não é um "parseou pra zero" legítimo).
+    const numVal = Number.isNaN(parsedNum) ? 0 : parsedNum
     return decimalPlaces > 0 ? numVal / Math.pow(10, decimalPlaces) : numVal
   }
 

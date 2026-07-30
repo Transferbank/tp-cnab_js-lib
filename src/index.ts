@@ -27,9 +27,12 @@ import {
  * @throws {CNABUnknownFieldCodeError} (via read/readAsync) se código de campo não reconhecido durante extração canônica
  */
 export function openCnab(raw: string): CNABFile {
-  const rawLines = (raw || '').split(/\r?\n/).filter((line) => line.length > 0)
+  if (raw === null || raw === undefined) {
+    throw new CNABEmptyFileError()
+  }
 
-  
+  const rawLines = raw.split(/\r?\n/).filter((line) => line.length > 0)
+
   if (rawLines.length === 0) {
     throw new CNABEmptyFileError()
   }
