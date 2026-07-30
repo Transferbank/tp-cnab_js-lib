@@ -1,47 +1,45 @@
-/**
- * Banco do Brasil (001) — CNAB 400 — Header de Arquivo (Remessa)
- *
+﻿/**
+ * Banco do Brasil (001) � CNAB 400 � Header de Arquivo (Remessa)
  * Fonte:
- * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) — §3 p.4
+ * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) � �3 p.4
  * - brcobranca (remessa/cnab400/banco_brasil.rb)
  * - cnab_yaml (cnab400/001/remessa/header_arquivo.yml)
  * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Bb.php)
- *
  * Todas as fontes concordam byte a byte.
  *
- * Atenção: campo "numero_sequencial" aparece em DUAS posições diferentes:
+ * Aten��o: campo "numero_sequencial" aparece em DUAS posi��es diferentes:
  * - 101-107: sequencial da remessa (controle do cliente)
  * - 395-400: sequencial do registro (sempre '000001' no header)
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
 
 export const HEADER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identificação do registro header',
+    description: 'Identifica��o do registro header',
     canonical: null,
   },
   tipo_operacao: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de operação: 1=Remessa',
+    description: 'Tipo de opera��o: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
     pos: [3, 9],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 7,
     decimals: 0,
     required: true,
@@ -52,73 +50,73 @@ export const HEADER: RecordSchema = {
   },
   codigo_servico: {
     pos: [10, 11],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Código do serviço: 01=Cobrança',
+    description: 'C�digo do servi�o: 01=Cobran�a',
     canonical: null,
   },
   literal_servico: {
     pos: [12, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal do tipo de serviço',
+    description: 'Literal do tipo de servi�o',
     canonical: null,
   },
   agencia: {
     pos: [27, 30],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Prefixo da agência do cedente',
+    description: 'Prefixo da ag�ncia do cedente',
     canonical: null,
   },
   agencia_dv: {
     pos: [31, 31],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Dígito verificador da agência',
+    description: 'D�gito verificador da ag�ncia',
     canonical: null,
   },
   conta: {
     pos: [32, 39],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número da conta corrente',
+    description: 'N�mero da conta corrente',
     canonical: null,
   },
   conta_dv: {
     pos: [40, 40],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Dígito verificador da conta',
+    description: 'D�gito verificador da conta',
     canonical: null,
   },
   zeros: {
     pos: [41, 46],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
@@ -129,29 +127,29 @@ export const HEADER: RecordSchema = {
   },
   nome_empresa: {
     pos: [47, 76],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 30,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Razão social do cedente',
+    description: 'Raz�o social do cedente',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
     pos: [77, 79],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '001',
-    description: 'Código FEBRABAN do Banco do Brasil',
+    description: 'C�digo FEBRABAN do Banco do Brasil',
     canonical: null,
   },
   nome_banco: {
     pos: [80, 94],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -162,29 +160,29 @@ export const HEADER: RecordSchema = {
   },
   data_geracao: {
     pos: [95, 100],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de geração do arquivo',
+    description: 'Data de gera��o do arquivo',
     canonical: 'dataGeracao',
   },
   sequencial_remessa: {
     pos: [101, 107],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: '0000001',
-    description: 'Número sequencial da remessa (controle do cliente)',
+    description: 'N�mero sequencial da remessa (controle do cliente)',
     canonical: null,
   },
   brancos_1: {
     pos: [108, 129],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 22,
     decimals: 0,
     required: false,
@@ -195,18 +193,18 @@ export const HEADER: RecordSchema = {
   },
   convenio_lider: {
     pos: [130, 136],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: '0000000',
-    description: 'Número do convênio líder',
+    description: 'N�mero do conv�nio l�der',
     canonical: null,
   },
   brancos_2: {
     pos: [137, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 258,
     decimals: 0,
     required: false,
@@ -217,13 +215,13 @@ export const HEADER: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'Número sequencial do registro no arquivo (sempre 000001 no header)',
+    description: 'N�mero sequencial do registro no arquivo (sempre 000001 no header)',
     canonical: null,
   },
 }

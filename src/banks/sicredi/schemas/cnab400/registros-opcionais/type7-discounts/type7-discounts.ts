@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Sicredi (748) — CNAB 400 — Registro Tipo 7 (Descontos 2 e 3)
  *
  * Registro opcional que permite cadastrar um 2º e 3º nível de desconto (data limite + valor
@@ -14,12 +14,12 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo7/tipo7-descontos.md
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
 
 export const TYPE7_DISCOUNTS: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -30,7 +30,7 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   nosso_numero: {
     pos: [2, 16],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -41,7 +41,7 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   numero_documento: {
     pos: [17, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 10,
     decimals: 0,
     required: false,
@@ -52,7 +52,7 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   numero_inscricao_pagador: {
     pos: [27, 40],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: true,
@@ -63,7 +63,7 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   numero_inscricao_beneficiario_final: {
     pos: [41, 54],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: false,
@@ -74,18 +74,18 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   data_limite_desconto_2: {
     pos: [55, 60],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description: 'Data limite para o 2º desconto',
     canonical: null,
   },
   valor_desconto_2: {
     pos: [61, 73],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: true,
@@ -96,18 +96,18 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   data_limite_desconto_3: {
     pos: [74, 79],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description: 'Data limite para o 3º desconto',
     canonical: null,
   },
   valor_desconto_3: {
     pos: [80, 92],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -118,7 +118,7 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   brancos: {
     pos: [93, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 302,
     decimals: 0,
     required: false,
@@ -129,7 +129,7 @@ export const TYPE7_DISCOUNTS: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

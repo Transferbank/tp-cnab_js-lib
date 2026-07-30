@@ -5,10 +5,8 @@
  * CNABInternalError: inconsistências internas da lib (bugs)
  */
 
-// Re-export classes base abstratas
 export * from './base'
 
-// Re-export exceptions concretas
 export * from './input-errors'
 export * from './internal-errors'
 export * from './grouping-errors'

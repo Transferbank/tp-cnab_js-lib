@@ -6,7 +6,7 @@
  * Fonte do layout: laravel-boleto
  */
 
-import { BankSchema, BANK_CODES } from '../../../../types'
+import { BankSchema, BANK_CODES } from '@tp-types/index'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'

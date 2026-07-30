@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Santander (033) — CNAB 400 — Registro Tipo 8 (Pagamento via PIX/QR Code)
  *
  * Registro opcional que permite que o boleto tenha também uma opção de pagamento via
@@ -23,12 +23,12 @@
  * - Este registro é emitido imediatamente após o detalhe (tipo 1) do título
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE8_PIX: RecordSchema = {
   codigo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -39,7 +39,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   tipo_pagamento: {
     pos: [2, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
@@ -51,7 +51,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   quantidade_pagamentos: {
     pos: [4, 5],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
@@ -62,7 +62,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   tipo_valor: {
     pos: [6, 6],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -74,7 +74,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   valor_maximo: {
     pos: [7, 19],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -85,7 +85,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   percentual_maximo: {
     pos: [20, 24],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 2,
     required: false,
@@ -96,7 +96,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   valor_minimo: {
     pos: [25, 37],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -107,7 +107,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   percentual_minimo: {
     pos: [38, 42],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 2,
     required: false,
@@ -118,7 +118,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   tipo_chave_dict: {
     pos: [43, 43],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -130,7 +130,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   codigo_chave_dict: {
     pos: [44, 120],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 77,
     decimals: 0,
     required: true,
@@ -142,7 +142,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   identificador_qrcode: {
     pos: [121, 155],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 35,
     decimals: 0,
     required: false,
@@ -153,7 +153,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   reservado: {
     pos: [156, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 239,
     decimals: 0,
     required: false,
@@ -164,7 +164,7 @@ export const TYPE8_PIX: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

@@ -1,35 +1,30 @@
-/**
- * Schema do Trailer de Arquivo - Santander CNAB 240
- * 
- * Última linha do arquivo CNAB. Contém totalizadores gerais:
+﻿/* *
+ * �ltima linha do arquivo CNAB. Cont�m totalizadores gerais:
  * quantidade de lotes e quantidade total de registros.
- * 
- * Tipo de registro: 9
  * Lote: 9999
  * 
  * Baseado em:
- * - Manual "Layout Padrão 240 – Cobrança, Versão 2.5" (Setembro/2014)
+ * - Manual "Layout Padr�o 240 � Cobran�a, Vers�o 2.5" (Setembro/2014)
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const SANTANDER_CNAB240_FILE_TRAILER: RecordSchema = {
-  // ========== CONTROLE (1-8) ==========
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'Código FEBRABAN do Santander',
+    description: 'C�digo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
@@ -40,7 +35,7 @@ export const SANTANDER_CNAB240_FILE_TRAILER: RecordSchema = {
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -49,11 +44,9 @@ export const SANTANDER_CNAB240_FILE_TRAILER: RecordSchema = {
     description: 'Tipo: 9=Trailer de Arquivo',
     canonical: null,
   },
-
-  // ========== RESERVADO (9-17) ==========
   cnab_exclusivo_1: {
     pos: [9, 17],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
@@ -62,11 +55,9 @@ export const SANTANDER_CNAB240_FILE_TRAILER: RecordSchema = {
     description: 'Uso exclusivo FEBRABAN/CNAB',
     canonical: null,
   },
-
-  // ========== TOTALIZADORES (18-29) ==========
   totais_quantidade_lotes: {
     pos: [18, 23],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
@@ -77,7 +68,7 @@ export const SANTANDER_CNAB240_FILE_TRAILER: RecordSchema = {
   },
   totais_quantidade_registros: {
     pos: [24, 29],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
@@ -86,11 +77,9 @@ export const SANTANDER_CNAB240_FILE_TRAILER: RecordSchema = {
     description: 'Quantidade total de registros no arquivo',
     canonical: 'quantidadeRegistros',
   },
-
-  // ========== RESERVADO (30-240) ==========
   cnab_exclusivo_2: {
     pos: [30, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 211,
     decimals: 0,
     required: false,

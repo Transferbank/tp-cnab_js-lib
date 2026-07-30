@@ -16,8 +16,18 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@tp-types/*": ["src/types/*"],
+      "@validators/*": ["src/validators/*"],
+      "@parser/*": ["src/parser/*"],
+      "@schemas/*": ["src/schemas/*"],
+      "@banks/*": ["src/banks/*"],
+      "@utils/*": ["src/utils/*"]
+    }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "exclude": ["node_modules", "dist", "src/**/*.test.ts", "src/**/__tests__", "src/**/__fixtures__"]
 }

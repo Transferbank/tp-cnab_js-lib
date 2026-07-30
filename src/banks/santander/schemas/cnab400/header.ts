@@ -1,45 +1,42 @@
-/**
- * Santander (033) — CNAB 400 — Header de Arquivo (Remessa)
- *
+﻿/**
+ * Santander (033) � CNAB 400 � Header de Arquivo (Remessa)
  * Fontes do layout:
  * - Manual oficial Santander (Santander_Layout-Cobranca-400-posicoes-jul-2025-Portugues.pdf,
- *   v2.36) — revelou 5 campos de mensagem nas posições 117-351
+ *   v2.36) � revelou 5 campos de mensagem nas posi��es 117-351
  * - brcobranca (Ruby)
  * - cnab_yaml (YAML)
  * - laravel-boleto (PHP)
  *
- * Confirmado contra arquivo real de 130 linhas.
- *
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
 
 export const HEADER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identificação do registro header',
+    description: 'Identifica��o do registro header',
     canonical: null,
   },
   tipo_operacao: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de operação: 1=Remessa',
+    description: 'Tipo de opera��o: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
     pos: [3, 9],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 7,
     decimals: 0,
     required: true,
@@ -50,62 +47,62 @@ export const HEADER: RecordSchema = {
   },
   codigo_servico: {
     pos: [10, 11],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Código de serviço: 01=Cobrança',
+    description: 'C�digo de servi�o: 01=Cobran�a',
     canonical: null,
   },
   literal_servico: {
     pos: [12, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal de serviço',
+    description: 'Literal de servi�o',
     canonical: null,
   },
   codigo_transmissao: {
     pos: [27, 46],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 20,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código de transmissão (agência + código cliente + conta)',
+    description: 'C�digo de transmiss�o (ag�ncia + c�digo cliente + conta)',
     canonical: null,
   },
   nome_empresa: {
     pos: [47, 76],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 30,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do beneficiário',
+    description: 'Nome do benefici�rio',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
     pos: [77, 79],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'Código FEBRABAN do Santander',
+    description: 'C�digo FEBRABAN do Santander',
     canonical: null,
   },
   nome_banco: {
     pos: [80, 94],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: true,
@@ -116,18 +113,18 @@ export const HEADER: RecordSchema = {
   },
   data_geracao: {
     pos: [95, 100],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de geração do arquivo',
+    description: 'Data de gera��o do arquivo',
     canonical: 'dataGeracao',
   },
   zeros: {
     pos: [101, 116],
-    type: 'num',
+    type: FieldType.NUM,
     size: 16,
     decimals: 0,
     required: false,
@@ -138,7 +135,7 @@ export const HEADER: RecordSchema = {
   },
   mensagem_1: {
     pos: [117, 163],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 47,
     decimals: 0,
     required: false,
@@ -149,7 +146,7 @@ export const HEADER: RecordSchema = {
   },
   mensagem_2: {
     pos: [164, 210],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 47,
     decimals: 0,
     required: false,
@@ -160,7 +157,7 @@ export const HEADER: RecordSchema = {
   },
   mensagem_3: {
     pos: [211, 257],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 47,
     decimals: 0,
     required: false,
@@ -171,7 +168,7 @@ export const HEADER: RecordSchema = {
   },
   mensagem_4: {
     pos: [258, 304],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 47,
     decimals: 0,
     required: false,
@@ -182,7 +179,7 @@ export const HEADER: RecordSchema = {
   },
   mensagem_5: {
     pos: [305, 351],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 47,
     decimals: 0,
     required: false,
@@ -193,7 +190,7 @@ export const HEADER: RecordSchema = {
   },
   reservado_1: {
     pos: [352, 385],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 34,
     decimals: 0,
     required: false,
@@ -204,7 +201,7 @@ export const HEADER: RecordSchema = {
   },
   reservado_2: {
     pos: [386, 391],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 6,
     decimals: 0,
     required: false,
@@ -215,18 +212,18 @@ export const HEADER: RecordSchema = {
   },
   numero_versao: {
     pos: [392, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 3,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: '000',
-    description: 'Número da versão do layout',
+    description: 'N�mero da vers�o do layout',
     canonical: null,
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

@@ -1,29 +1,15 @@
 /**
  * Banco do Brasil (001) — CNAB 400
  *
- * Estrutura de um arquivo CNAB 400 (cada linha tem exatamente 400 caracteres):
- * - HEADER (primeira linha, tipo_registro = '0')
- * - DETALHE (linhas intermediárias, tipo_registro = '7' - não '1' como padrão FEBRABAN)
- * - TRAILER (última linha, tipo_registro = '9')
+ * PARTICULARIDADE: tipo_registro do detalhe é '7' (não '1' como padrão FEBRABAN)
  *
- * PARTICULARIDADE DO BB: tipo_registro do detalhe é '7' (não '1' como nos outros bancos)
+ * Registros opcionais:
+ * - TIPO 5-99: Multa | TIPO 5-07: Descontos | TIPO 5-08: Consulta serasa
  *
- * Registros opcionais de remessa:
- * - TIPO 5 / serviço '99': Multa (implementado)
- * - TIPO 5 / serviço '01': E-mail do sacado (não implementado)
- * - TIPO 5 / serviço '03': "Seu número" com 15 posições (não implementado)
- *
- * Fontes do layout:
- * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012)
- * - Manual oficial BB retorno (Doc2628CBR643Pos7.pdf, jan/2014)
- * - brcobranca (Ruby)
- * - cnab_yaml (YAML)
- * - laravel-boleto (PHP)
- *
- * Todas as fontes concordam byte a byte em toda a remessa e retorno.
+ * Fonte: Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012)
  */
 
-import { BankSchema, BANK_CODES } from '../../../../types'
+import { BankSchema, BANK_CODES } from '@tp-types/index'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'

@@ -16,7 +16,7 @@
  * Baseado em: Manual oficial Sicredi CNAB 240, versão 29 (seção 8, Segmento P)
  */
 
-import { ParsedLine } from '../../../../types'
+import { ParsedLine } from '@tp-types/index'
 
 /**
  * Resolve o valor real do título a partir dos dígitos brutos e do código da moeda.

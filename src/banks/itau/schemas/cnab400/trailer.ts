@@ -1,26 +1,25 @@
-/**
- * Itaú (341) — CNAB 400 — Trailer de Arquivo (Remessa)
- *
+﻿/**
+ * Ita� (341) � CNAB 400 � Trailer de Arquivo (Remessa)
  * Fonte do layout: laravel-boleto + brcobranca
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TRAILER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identificação do trailer',
+    description: 'Identifica��o do trailer',
     canonical: null,
   },
   brancos: {
     pos: [2, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 393,
     decimals: 0,
     required: false,
@@ -31,13 +30,13 @@ export const TRAILER: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Último sequencial',
+    description: '�ltimo sequencial',
     canonical: null,
   },
 }

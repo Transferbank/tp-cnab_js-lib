@@ -68,7 +68,7 @@ Contém os dados financeiros do título e informações do sacado para remessa a
 - `juros_mora` (161-173): Juros de mora por dia de atraso
 - Desconto, IOF, abatimento (174-218)
 - Dados do sacado (219-334) — nomes genéricos (sem prefixo `sacado_*` em `nome`/`logradouro`/`cep`)
-  porque `src/validators/cnab400-business-validator.ts` e os demais bancos (Santander, Caixa, Itaú, Sicoob, BB)
+  porque `src/validators/cnab400-content-validator.ts` e os demais bancos (Santander, Caixa, Itaú, Sicoob, BB)
   leem esses campos por esse nome; usar outro nome faz o validador cair no fallback de offset fixo:
   - `sacado_codigo_inscricao` (219-220)
   - `sacado_numero_inscricao` (221-234)

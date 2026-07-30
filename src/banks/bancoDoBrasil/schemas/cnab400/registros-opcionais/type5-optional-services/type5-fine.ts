@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Banco do Brasil (001) — CNAB 400 — Registro Tipo 5, Serviço '99' (Multa)
  *
  * Registro opcional que especifica multa de cobrança. Deve ser enviado imediatamente
@@ -23,12 +23,12 @@
  *   não aceita esse campo
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
 
 export const TYPE5_FINE: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -39,7 +39,7 @@ export const TYPE5_FINE: RecordSchema = {
   },
   tipo_servico: {
     pos: [2, 3],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: true,
@@ -50,7 +50,7 @@ export const TYPE5_FINE: RecordSchema = {
   },
   codigo_multa: {
     pos: [4, 4],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -71,18 +71,18 @@ export const TYPE5_FINE: RecordSchema = {
   },
   data_inicio_multa: {
     pos: [5, 10],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description: 'Data a partir da qual a multa é cobrada (zeros se codigo_multa=9)',
     canonical: 'multa.vigenciaAPartirDe',
   },
   valor_percentual_multa: {
     pos: [11, 22],
-    type: 'num',
+    type: FieldType.NUM,
     size: 12,
     decimals: 2,
     required: false,
@@ -94,7 +94,7 @@ export const TYPE5_FINE: RecordSchema = {
   },
   dias_recebimento_apos_vencimento: {
     pos: [23, 25],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
@@ -106,7 +106,7 @@ export const TYPE5_FINE: RecordSchema = {
   },
   brancos: {
     pos: [26, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 369,
     decimals: 0,
     required: false,
@@ -117,7 +117,7 @@ export const TYPE5_FINE: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

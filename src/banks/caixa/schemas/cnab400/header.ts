@@ -1,7 +1,6 @@
-/**
- * Caixa Econômica Federal (104) — CNAB 400 — Header de Arquivo (Remessa)
- *
- * Usa sistema SIGCB, nosso número de 17 posições (2 dígitos modalidade + 15 dígitos livres).
+﻿/**
+ * Caixa Econ�mica Federal (104) � CNAB 400 � Header de Arquivo (Remessa)
+ * Usa sistema SIGCB, nosso n�mero de 17 posi��es (2 d�gitos modalidade + 15 d�gitos livres).
  *
  * Fontes:
  * - Manual oficial Caixa CNAB 400 (caixa_layout_CNAB_400_2024.pdf, 2024)
@@ -9,34 +8,34 @@
  *
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
 
 export const HEADER: RecordSchema = {
   codigo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identificação do header',
+    description: 'Identifica��o do header',
     canonical: null,
   },
   codigo_remessa: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de operação: 1=Remessa',
+    description: 'Tipo de opera��o: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
     pos: [3, 9],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 7,
     decimals: 0,
     required: true,
@@ -47,40 +46,40 @@ export const HEADER: RecordSchema = {
   },
   codigo_servico: {
     pos: [10, 11],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Código de serviço',
+    description: 'C�digo de servi�o',
     canonical: null,
   },
   literal_servico: {
     pos: [12, 26],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal de serviço (NE002)',
+    description: 'Literal de servi�o (NE002)',
     canonical: null,
   },
   codigo_agencia: {
     pos: [27, 30],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código da agência de vinculação do beneficiário (NE003)',
+    description: 'C�digo da ag�ncia de vincula��o do benefici�rio (NE003)',
     canonical: null,
   },
   codigo_beneficiario: {
     pos: [31, 37],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: true,
@@ -91,7 +90,7 @@ export const HEADER: RecordSchema = {
   },
   uso_exclusivo_1: {
     pos: [38, 46],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 9,
     decimals: 0,
     required: false,
@@ -102,7 +101,7 @@ export const HEADER: RecordSchema = {
   },
   nome_empresa: {
     pos: [47, 76],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 30,
     decimals: 0,
     required: true,
@@ -113,18 +112,18 @@ export const HEADER: RecordSchema = {
   },
   codigo_banco: {
     pos: [77, 79],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '104',
-    description: 'Código FEBRABAN da Caixa (NE006)',
+    description: 'C�digo FEBRABAN da Caixa (NE006)',
     canonical: null,
   },
   nome_banco: {
     pos: [80, 94],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: true,
@@ -135,29 +134,29 @@ export const HEADER: RecordSchema = {
   },
   data_geracao: {
     pos: [95, 100],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: true,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de geração do arquivo (NE008)',
+    description: 'Data de gera��o do arquivo (NE008)',
     canonical: 'dataGeracao',
   },
   versao_layout: {
     pos: [101, 103],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Número da versão do layout (NE065) - campo que só existe também no Sicredi entre os bancos do projeto',
+    description: 'N�mero da vers�o do layout (NE065) - campo que s� existe tamb�m no Sicredi entre os bancos do projeto',
     canonical: null,
   },
   uso_exclusivo_2: {
     pos: [104, 389],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 286,
     decimals: 0,
     required: false,
@@ -168,24 +167,24 @@ export const HEADER: RecordSchema = {
   },
   numero_sequencial_arquivo: {
     pos: [390, 394],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do arquivo remessa (NE009)',
+    description: 'N�mero sequencial do arquivo remessa (NE009)',
     canonical: null,
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do registro (NE010)',
+    description: 'N�mero sequencial do registro (NE010)',
     canonical: null,
   },
 }

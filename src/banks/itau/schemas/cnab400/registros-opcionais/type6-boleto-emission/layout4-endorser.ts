@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Itaú (341) — CNAB 400 — Registro Tipo 6, Layout 4 (Sacador/Avalista)
  *
  * Registro para emissão física de boleto pelo cedente (fluxo paralelo ao tipo 1).
@@ -15,12 +15,12 @@
  * Fonte: Manual oficial Itaú, layout_cobranca_400bytes_cnab_itau.pdf, §6, p.46-47
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -31,7 +31,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   codigo_layout: {
     pos: [2, 2],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -42,7 +42,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   codigo_inscricao: {
     pos: [3, 4],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -53,7 +53,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   numero_inscricao: {
     pos: [5, 18],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: false,
@@ -64,7 +64,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   logradouro: {
     pos: [19, 58],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -75,7 +75,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   bairro: {
     pos: [59, 70],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 12,
     decimals: 0,
     required: false,
@@ -86,7 +86,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   cep: {
     pos: [71, 78],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -97,7 +97,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   cidade: {
     pos: [79, 93],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -108,7 +108,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   estado: {
     pos: [94, 95],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: false,
@@ -119,7 +119,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   brancos: {
     pos: [96, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 299,
     decimals: 0,
     required: false,
@@ -130,7 +130,7 @@ export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

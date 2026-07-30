@@ -1,48 +1,41 @@
-/**
- * Schema do Trailer de Lote REMESSA - Santander CNAB 240
- * 
- * Última linha de cada lote de REMESSA.
- * Versão simplificada conforme Manual H7815 v6 (Fevereiro/2023).
- * 
- * IMPORTANTE: Este é o trailer de lote para REMESSA, não RETORNO.
+﻿/* *
+ * �ltima linha de cada lote de REMESSA.
+ * Vers�o simplificada conforme Manual H7815 v6 (Fevereiro/2023).
+ * IMPORTANTE: Este � o trailer de lote para REMESSA, n�o RETORNO.
  * O trailer de RETORNO possui estrutura rica com totalizadores detalhados
- * (simples/vinculada/caucionada/descontada + aviso bancário) - essa versão
- * rica foi o que estava implementado antes, mas não se aplica à remessa.
- * 
- * Tipo de registro: 5
- * 
- * Fonte: Manual "MANUAL DO CLIENTE DE COBRANÇA", código H7815, Versão 6, Fevereiro/2023
+ * (simples/vinculada/caucionada/descontada + aviso banc�rio) - essa vers�o
+ * rica foi o que estava implementado antes, mas n�o se aplica � remessa. *
+ * Fonte: Manual "MANUAL DO CLIENTE DE COBRAN�A", c�digo H7815, Vers�o 6, Fevereiro/2023
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const SANTANDER_CNAB240_BATCH_TRAILER: RecordSchema = {
-  // ========== CONTROLE (1-8) ==========
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'Código FEBRABAN do Santander',
+    description: 'C�digo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número do lote',
+    description: 'N�mero do lote',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -51,11 +44,9 @@ export const SANTANDER_CNAB240_BATCH_TRAILER: RecordSchema = {
     description: 'Tipo: 5=Trailer de Lote',
     canonical: null,
   },
-
-  // ========== RESERVADO (9-17) ==========
   cnab_exclusivo_1: {
     pos: [9, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 9,
     decimals: 0,
     required: false,
@@ -64,11 +55,9 @@ export const SANTANDER_CNAB240_BATCH_TRAILER: RecordSchema = {
     description: 'Reservado (uso Banco)',
     canonical: null,
   },
-
-  // ========== TOTALIZADOR (18-23) ==========
   totais_quantidade_registros: {
     pos: [18, 23],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
@@ -77,11 +66,9 @@ export const SANTANDER_CNAB240_BATCH_TRAILER: RecordSchema = {
     description: 'Quantidade de registros no lote',
     canonical: null,
   },
-
-  // ========== RESERVADO (24-240) ==========
   cnab_exclusivo_2: {
     pos: [24, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 217,
     decimals: 0,
     required: false,

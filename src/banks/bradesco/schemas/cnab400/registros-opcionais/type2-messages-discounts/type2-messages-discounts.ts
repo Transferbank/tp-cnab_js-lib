@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bradesco (237) — CNAB 400 — Registro Tipo 2 (Mensagem / Descontos Adicionais)
  *
  * Registro opcional de remessa que serve duas finalidades independentes:
@@ -24,12 +24,12 @@
  * Ver: src/schemas/banks/bradesco/cnab400/registros-opcionais/tipo2/tipo2-mensagem-descontos-adicionais.md
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
 
 export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -40,7 +40,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   mensagem_1: {
     pos: [2, 81],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -52,7 +52,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   mensagem_2: {
     pos: [82, 161],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -64,7 +64,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   mensagem_3: {
     pos: [162, 241],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -76,7 +76,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   mensagem_4: {
     pos: [242, 321],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 80,
     decimals: 0,
     required: false,
@@ -88,18 +88,18 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   data_limite_desconto_2: {
     pos: [322, 327],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description: 'Data limite para concessão do 2º desconto',
     canonical: null,
   },
   valor_desconto_2: {
     pos: [328, 340],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -110,18 +110,18 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   data_limite_desconto_3: {
     pos: [341, 346],
-    type: 'data',
+    type: FieldType.DATA,
     size: 6,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAA',
+    dateFormat: DateFormat.DDMMAA,
     pattern: null,
     description: 'Data limite para concessão do 3º desconto',
     canonical: null,
   },
   valor_desconto_3: {
     pos: [347, 359],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -132,7 +132,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   reserva: {
     pos: [360, 366],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 7,
     decimals: 0,
     required: false,
@@ -143,7 +143,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   carteira: {
     pos: [367, 369],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
@@ -154,7 +154,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   agencia: {
     pos: [370, 374],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
@@ -165,7 +165,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   conta: {
     pos: [375, 381],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: true,
@@ -177,7 +177,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   dac_conta: {
     pos: [382, 382],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -188,7 +188,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   nosso_numero: {
     pos: [383, 393],
-    type: 'num',
+    type: FieldType.NUM,
     size: 11,
     decimals: 0,
     required: true,
@@ -199,7 +199,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   dac_nosso_numero: {
     pos: [394, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -210,7 +210,7 @@ export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

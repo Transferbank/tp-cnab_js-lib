@@ -17,7 +17,7 @@
  * - brcobranca, cnab_yaml, laravel-boleto
  */
 
-import { BankSchema, BANK_CODES } from '../../../../types'
+import { BankSchema, BANK_CODES } from '@tp-types/index'
 import { BRADESCO_CNAB400_HEADER_REMESSA } from './header'
 import { BRADESCO_CNAB400_DETAIL } from './detail'
 import { BRADESCO_CNAB400_TRAILER } from './trailer'

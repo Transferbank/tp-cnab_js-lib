@@ -4,12 +4,9 @@
  */
 
 import { CNABInputError } from './base'
-import type { ValidationError } from '../core'
+import type { ValidationError } from '@tp-types/core'
 
-/**
- * Erro ao agrupar registros em boletos.
- * Ex: Segmento Q sem P correspondente, sequência inválida.
- */
+
 export class CNABGroupingError extends CNABInputError {
   readonly code = 'GROUPING_ERROR'
   readonly originalError: ValidationError
@@ -21,7 +18,6 @@ export class CNABGroupingError extends CNABInputError {
     this.originalError = originalError
   }
 
-  /** Atalho para originalError.line */
   get line(): number {
     return this.originalError.line
   }

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bradesco (237) — CNAB 400 — Registro Tipo 6 (Múltiplas Transferências / Débito Automático)
  *
  * Registro opcional de remessa usado para duas finalidades:
@@ -20,12 +20,12 @@
  * Ver: src/schemas/banks/bradesco/cnab400/registros-opcionais/tipo6/tipo6-transferencia-carteira.md
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
 
 export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -37,7 +37,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   carteira: {
     pos: [2, 4],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
@@ -48,7 +48,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   agencia: {
     pos: [5, 9],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
@@ -59,7 +59,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   conta: {
     pos: [10, 16],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: true,
@@ -71,7 +71,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   nosso_numero: {
     pos: [17, 27],
-    type: 'num',
+    type: FieldType.NUM,
     size: 11,
     decimals: 0,
     required: true,
@@ -82,7 +82,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   dac_nosso_numero: {
     pos: [28, 28],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -93,7 +93,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   tipo_operacao: {
     pos: [29, 29],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -104,7 +104,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   utilizacao_cheque_especial: {
     pos: [30, 30],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -115,7 +115,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   consulta_saldo_apos_vencimento: {
     pos: [31, 31],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -126,7 +126,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   codigo_identificacao_contrato: {
     pos: [32, 56],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 25,
     decimals: 0,
     required: false,
@@ -137,11 +137,11 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   prazo_validade_contrato: {
     pos: [57, 64],
-    type: 'data',
+    type: FieldType.DATA,
     size: 8,
     decimals: 0,
     required: false,
-    dateFormat: 'DDMMAAAA',
+    dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
     description:
       "Prazo de validade do contrato (formato DD/MM/AAAA) ou '99999999'=indeterminado",
@@ -149,7 +149,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   brancos: {
     pos: [65, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 330,
     decimals: 0,
     required: false,
@@ -160,7 +160,7 @@ export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

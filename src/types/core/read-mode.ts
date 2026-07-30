@@ -2,6 +2,14 @@
  * Modo de leitura de dados do arquivo CNAB.
  * 
  * - SIMPLE: leitura genérica com campos canônicos comuns a todos os bancos
- * - FULL: leitura completa com tipos específicos por banco (não implementado na Fase 5)
+ * - FULL: leitura completa com tipos específicos por banco
  */
-export type ReadMode = 'SIMPLE' | 'FULL'
+export enum ReadMode {
+  SIMPLE = 'SIMPLE',
+  FULL = 'FULL',
+}
+
+/**
+ * Permite backward compatibility com código existente que usa 'SIMPLE' | 'FULL'.
+ */
+export type ReadModeValue = ReadMode | 'SIMPLE' | 'FULL'

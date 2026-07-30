@@ -1,45 +1,42 @@
-/**
+﻿/**
  * Bradesco CNAB 240 - Segmento Q
- * 
  * Segmento Q (pos 8 = '3', pos 14 = 'Q')
  * Linha com os dados de quem vai pagar o boleto (o pagador/sacado): nome, CPF/CNPJ,
- * endereço, CEP, cidade, UF. Sempre vem logo após o Segmento P do mesmo boleto.
- * 
+ * endere�o, CEP, cidade, UF. Sempre vem logo ap�s o Segmento P do mesmo boleto.
  * Terminologia:
- *   Cedente = quem emite o boleto (a empresa que está cobrando)
+ *   Cedente = quem emite o boleto (a empresa que est� cobrando)
  *   Sacado/Pagador = quem vai pagar o boleto (o devedor)
- * 
  * Fonte do layout: pycnab240 + cnab_yaml generic FEBRABAN
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'Código FEBRABAN do Bradesco',
+    description: 'C�digo FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de serviço',
+    description: 'Lote de servi�o',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -50,18 +47,18 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   servico_numero_registro: {
     pos: [9, 13],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do registro no lote',
+    description: 'N�mero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
     pos: [14, 14],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -72,7 +69,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   cnab_exclusivo_1: {
     pos: [15, 15],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -83,18 +80,18 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   servico_codigo_movimento: {
     pos: [16, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código de movimento da remessa',
+    description: 'C�digo de movimento da remessa',
     canonical: null,
   },
   sacado_inscricao_tipo: {
     pos: [18, 18],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -105,7 +102,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_inscricao_numero: {
     pos: [19, 33],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: true,
@@ -116,7 +113,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_nome: {
     pos: [34, 73],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: true,
@@ -127,18 +124,18 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_endereco: {
     pos: [74, 113],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endereço',
+    description: 'Endere�o',
     canonical: 'sacado.endereco.logradouro',
   },
   sacado_bairro: {
     pos: [114, 128],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -149,18 +146,18 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_cep: {
     pos: [129, 133],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (5 dígitos)',
+    description: 'CEP (5 d�gitos)',
     canonical: 'sacado.endereco.cep',
   },
   sacado_cep_sufixo: {
     pos: [134, 136],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
@@ -171,7 +168,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_cidade: {
     pos: [137, 151],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -182,7 +179,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_uf: {
     pos: [152, 153],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: false,
@@ -193,62 +190,62 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   beneficiario_final_inscricao_tipo: {
     pos: [154, 154],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscrição do Beneficiário Final: 0=Isento, 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscri��o do Benefici�rio Final: 0=Isento, 1=CPF, 2=CNPJ',
     canonical: null,
   },
   beneficiario_final_inscricao_numero: {
     pos: [155, 169],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CPF ou CNPJ do Beneficiário Final',
+    description: 'CPF ou CNPJ do Benefici�rio Final',
     canonical: null,
   },
   beneficiario_final_nome: {
     pos: [170, 209],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Beneficiário Final (nomenclatura BACEN 3598/3656/3956 — antigo "Sacador/Avalista")',
+    description: 'Nome do Benefici�rio Final (nomenclatura BACEN 3598/3656/3956 � antigo "Sacador/Avalista")',
     canonical: null,
   },
   banco_correspondente: {
     pos: [210, 212],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Código do banco correspondente',
+    description: 'C�digo do banco correspondente',
     canonical: null,
   },
   numero_banco_correspondente: {
     pos: [213, 232],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 20,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso número no banco correspondente',
+    description: 'Nosso n�mero no banco correspondente',
     canonical: null,
   },
   cnab_exclusivo_2: {
     pos: [233, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 8,
     decimals: 0,
     required: false,

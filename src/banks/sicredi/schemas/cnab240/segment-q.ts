@@ -1,49 +1,43 @@
-/**
- * Schema do Segmento Q - Sicredi CNAB 240
- * 
- * Contém os dados do pagador (sacado): nome, CPF/CNPJ, endereço,
+﻿/* *
+ * Cont�m os dados do pagador (sacado): nome, CPF/CNPJ, endere�o,
  * CEP, cidade, UF, etc.
- * 
- * Tipo de registro: 3 (detalhe)
  * Segmento: Q
  * 
- * IMPORTANTE: O Sicredi já usa a nomenclatura "Beneficiário Final"
+ * IMPORTANTE: O Sicredi j� usa a nomenclatura "Benefici�rio Final"
  * conforme Circulares BACEN 3598, 3656 e 3956.
- * 
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, versão 29 (seção 8 - Arquivo de Remessa)
- * - Layout CNAB 240 versão 081
+ * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 vers�o 081
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
-  // ========== CONTROLE (1-17) ==========
   controle_banco: {
     pos: [1, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'Código FEBRABAN do Sicredi',
+    description: 'C�digo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
     pos: [4, 7],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número do lote',
+    description: 'N�mero do lote',
     canonical: null,
   },
   controle_registro: {
     pos: [8, 8],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -54,18 +48,18 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   servico_numero_registro: {
     pos: [9, 13],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do registro no lote',
+    description: 'N�mero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
     pos: [14, 14],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: true,
@@ -76,7 +70,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   cnab_exclusivo_1: {
     pos: [15, 15],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -87,20 +81,18 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   servico_codigo_movimento: {
     pos: [16, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Código de movimento (mesma tabela do Segmento P)',
+    description: 'C�digo de movimento (mesma tabela do Segmento P)',
     canonical: null,
   },
-
-  // ========== DADOS DO PAGADOR (18-153) ==========
   sacado_inscricao_tipo: {
     pos: [18, 18],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -111,7 +103,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_inscricao_numero: {
     pos: [19, 33],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: true,
@@ -122,29 +114,29 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_nome: {
     pos: [34, 73],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do pagador (sem acentuação)',
+    description: 'Nome do pagador (sem acentua��o)',
     canonical: 'sacado.nome',
   },
   sacado_endereco: {
     pos: [74, 113],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endereço do pagador',
+    description: 'Endere�o do pagador',
     canonical: 'sacado.endereco.logradouro',
   },
   cnab_exclusivo_2: {
     pos: [114, 128],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -155,18 +147,18 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_cep: {
     pos: [129, 136],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (8 dígitos)',
+    description: 'CEP (8 d�gitos)',
     canonical: 'sacado.endereco.cep',
   },
   sacado_cidade: {
     pos: [137, 151],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 15,
     decimals: 0,
     required: false,
@@ -177,7 +169,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
   },
   sacado_uf: {
     pos: [152, 153],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 2,
     decimals: 0,
     required: false,
@@ -186,70 +178,64 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     description: 'UF',
     canonical: 'sacado.endereco.estado',
   },
-
-  // ========== BENEFICIÁRIO FINAL (154-209) ==========
   beneficiario_final_tipo: {
     pos: [154, 154],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de pessoa (Beneficiário Final): 0=Sem Beneficiário Final, 1=CPF, 2=CNPJ',
+    description: 'Tipo de pessoa (Benefici�rio Final): 0=Sem Benefici�rio Final, 1=CPF, 2=CNPJ',
     canonical: null,
   },
   beneficiario_final_inscricao: {
     pos: [155, 169],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CPF/CNPJ do Beneficiário Final (branco se não houver)',
+    description: 'CPF/CNPJ do Benefici�rio Final (branco se n�o houver)',
     canonical: null,
   },
   beneficiario_final_nome: {
     pos: [170, 209],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Beneficiário Final (sem acentuação)',
+    description: 'Nome do Benefici�rio Final (sem acentua��o)',
     canonical: null,
   },
-
-  // ========== BANCO CORRESPONDENTE (210-232) ==========
   banco_correspondente_codigo: {
     pos: [210, 212],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Código Banco Correspondente (não utilizado, 000)',
+    description: 'C�digo Banco Correspondente (n�o utilizado, 000)',
     canonical: null,
   },
   banco_correspondente_nosso_numero: {
     pos: [213, 232],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 20,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso Número no Banco Correspondente (sem preenchimento)',
+    description: 'Nosso N�mero no Banco Correspondente (sem preenchimento)',
     canonical: null,
   },
-
-  // ========== RESERVADO (233-240) ==========
   cnab_exclusivo_3: {
     pos: [233, 240],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 8,
     decimals: 0,
     required: false,

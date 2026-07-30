@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Itaú (341) — CNAB 400 — Registro Tipo 2 (Complemento de Multa)
  *
  * Registro opcional que pode ser enviado logo após cada detalhe (tipo 1)
@@ -16,12 +16,12 @@
  * Fonte: Manual oficial Itaú, layout_cobranca_400bytes_cnab_itau.pdf, p.9
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
 
 export const TYPE2_FINE: RecordSchema = {
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -32,7 +32,7 @@ export const TYPE2_FINE: RecordSchema = {
   },
   cod_multa: {
     pos: [2, 2],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -43,18 +43,18 @@ export const TYPE2_FINE: RecordSchema = {
   },
   data_multa: {
       pos: [3, 10],
-      type: 'data',
+      type: FieldType.DATA,
       size: 8,
       decimals: 0,
       required: false,
-      dateFormat: 'DDMMAAAA',
+      dateFormat: DateFormat.DDMMAAAA,
       pattern: null,
       description: 'Data da multa (formato DDMMAAAA com 8 dígitos - atenção: diferente do padrão DDMMAA do resto do layout)',
     canonical: null,
   },
   multa: {
     pos: [11, 23],
-    type: 'num',
+    type: FieldType.NUM,
     size: 13,
     decimals: 2,
     required: false,
@@ -65,7 +65,7 @@ export const TYPE2_FINE: RecordSchema = {
   },
   brancos: {
     pos: [24, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 371,
     decimals: 0,
     required: false,
@@ -76,7 +76,7 @@ export const TYPE2_FINE: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

@@ -1,54 +1,45 @@
-/**
- * Schema do Trailer de Arquivo - Bradesco CNAB 400
- * 
- * Última linha do arquivo CNAB 400. Indica o fechamento do arquivo.
- * 
- * Tipo de registro: 9
+﻿/* *
+ * �ltima linha do arquivo CNAB 400. Indica o fechamento do arquivo.
  * 
  * Baseado em:
- * - Manual "Layout de Cobrança CNAB 400 — versão em português" (27/07/2017)
+ * - Manual "Layout de Cobran�a CNAB 400 � vers�o em portugu�s" (27/07/2017)
  * - brcobranca, cnab_yaml, laravel-boleto
  */
 
-import { RecordSchema } from '../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const BRADESCO_CNAB400_TRAILER: RecordSchema = {
-  // ========== IDENTIFICAÇÃO DO REGISTRO (1-1) ==========
   tipo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identificação do registro: 9=Trailer',
+    description: 'Identifica��o do registro: 9=Trailer',
     canonical: null,
   },
-
-  // ========== BRANCOS (2-394) ==========
   brancos: {
     pos: [2, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 393,
     decimals: 0,
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espaços em branco ou reservado',
+    description: 'Espa�os em branco ou reservado',
     canonical: null,
   },
-
-  // ========== NÚMERO SEQUENCIAL (395-400) ==========
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Número sequencial do último registro',
+    description: 'N�mero sequencial do �ltimo registro',
     canonical: null,
   },
 }

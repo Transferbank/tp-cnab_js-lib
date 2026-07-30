@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Caixa Econômica Federal (104) — CNAB 400 — Registro Tipo 4 (Tipo de Pagamento e Rateio)
  *
  * O mais complexo dos três registros opcionais da Caixa: combina duas finalidades num
@@ -31,12 +31,12 @@
  *   bytes) — essa é a faixa que fecha a soma total em exatos 400 bytes.
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   codigo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -48,7 +48,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   tipo_inscricao_empresa: {
     pos: [2, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -59,7 +59,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   numero_inscricao_empresa: {
     pos: [4, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: false,
@@ -70,7 +70,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   codigo_agencia: {
     pos: [18, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -81,7 +81,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   codigo_beneficiario: {
     pos: [22, 28],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -92,7 +92,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   uso_exclusivo_1: {
     pos: [29, 31],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 3,
     decimals: 0,
     required: false,
@@ -103,7 +103,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   brancos_1: {
     pos: [32, 56],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 25,
     decimals: 0,
     required: false,
@@ -114,7 +114,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   codigo_registro_opcional: {
     pos: [57, 58],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -126,7 +126,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   tipo_pagamento: {
     pos: [59, 60],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -137,7 +137,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   quantidade_pagamentos_possiveis: {
     pos: [61, 62],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -148,7 +148,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   valor_nominal_titulo: {
     pos: [63, 77],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -159,7 +159,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   tipo_valor_maximo: {
     pos: [78, 78],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -170,7 +170,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   valor_maximo: {
     pos: [79, 93],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -181,7 +181,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   percentual_maximo: {
     pos: [94, 108],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -192,7 +192,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   tipo_valor_minimo: {
     pos: [109, 109],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -203,7 +203,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   valor_minimo: {
     pos: [110, 124],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -214,7 +214,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   percentual_minimo: {
     pos: [125, 139],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -225,7 +225,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   uso_exclusivo_2: {
     pos: [140, 142],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 3,
     decimals: 0,
     required: false,
@@ -236,7 +236,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   agencia_credito_beneficiario: {
     pos: [143, 147],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
@@ -247,7 +247,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   dv_agencia_credito: {
     pos: [148, 148],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -258,7 +258,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   conta_credito_beneficiario: {
     pos: [149, 160],
-    type: 'num',
+    type: FieldType.NUM,
     size: 12,
     decimals: 0,
     required: false,
@@ -269,7 +269,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   dv_conta_credito: {
     pos: [161, 161],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -280,7 +280,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   dv_agencia_conta: {
     pos: [162, 162],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 1,
     decimals: 0,
     required: false,
@@ -291,7 +291,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   nosso_numero_modalidade: {
     pos: [163, 164],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -302,7 +302,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   nosso_numero: {
     pos: [165, 179],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -313,7 +313,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   uso_exclusivo_3: {
     pos: [180, 182],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 3,
     decimals: 0,
     required: false,
@@ -324,7 +324,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   codigo_calculo_rateio: {
     pos: [183, 183],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -336,7 +336,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   tipo_valor_informado_rateio: {
     pos: [184, 184],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -348,7 +348,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   valor_ou_percentual_rateio: {
     pos: [185, 199],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -360,7 +360,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   codigo_banco_credito: {
     pos: [200, 202],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
@@ -371,7 +371,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   agencia_credito: {
     pos: [203, 207],
-    type: 'num',
+    type: FieldType.NUM,
     size: 5,
     decimals: 0,
     required: false,
@@ -382,7 +382,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   dv_agencia_credito_2: {
     pos: [208, 208],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -393,7 +393,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   conta_credito: {
     pos: [209, 220],
-    type: 'num',
+    type: FieldType.NUM,
     size: 12,
     decimals: 0,
     required: false,
@@ -404,7 +404,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   dv_conta_credito_2: {
     pos: [221, 221],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -415,7 +415,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   dv_agencia_conta_2: {
     pos: [222, 222],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: false,
@@ -426,7 +426,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   nome_beneficiario: {
     pos: [223, 262],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -438,7 +438,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   parcela: {
     pos: [263, 268],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: false,
@@ -449,7 +449,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   floating: {
     pos: [269, 271],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
@@ -460,7 +460,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   data_credito: {
     pos: [272, 279],
-    type: 'num',
+    type: FieldType.NUM,
     size: 8,
     decimals: 0,
     required: false,
@@ -471,7 +471,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   motivo_ocorrido: {
     pos: [280, 289],
-    type: 'num',
+    type: FieldType.NUM,
     size: 10,
     decimals: 0,
     required: false,
@@ -482,7 +482,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   uso_exclusivo_4: {
     pos: [290, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 105,
     decimals: 0,
     required: false,
@@ -494,7 +494,7 @@ export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,

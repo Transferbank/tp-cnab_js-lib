@@ -1,34 +1,21 @@
-/**
- * Provider types for CNAB processing.
- * 
- * Bundle de schema + regra de agrupamento + funções de extração para um
- * banco+formato+modo específico. 100% derivado dos registries existentes
- * (getBankSchema, getGroupingRule) — nunca escrito à mão por banco.
- */
-
 import type { BankSchema } from './bank-schema'
-import type { GroupingRule, BillGroup, GroupingError } from '../processing'
-import type { ParsedLine } from '../core'
-import type { CNABHeader, CNABTrailer, CNABData } from '../read'
-import type { CNABFormatCode } from '../core'
-import type { ReadMode } from '../core'
+import type { GroupingRule, BillGroup, GroupingError } from '@tp-types/processing'
+import type { ParsedLine } from '@tp-types/core'
+import type { CNABHeader, CNABTrailer, CNABData } from '@tp-types/read'
+import type { CNABFormatCode } from '@tp-types/core'
+import type { ReadModeValue } from '@tp-types/core'
 
-/**
- * Bundle de schema + regra de agrupamento + funções de extração para um
- * banco+formato+modo específico. 100% derivado dos registries existentes
- * (getBankSchema, getGroupingRule) — nunca escrito à mão por banco.
- */
 export interface CNABProvider {
   bankCode: string
   format: CNABFormatCode
-  mode: ReadMode
+  mode: ReadModeValue
 
   schema: BankSchema
   groupingRule: GroupingRule
 
   group(lines: ParsedLine[]): { groups: BillGroup[]; errors: GroupingError[] }
-  extractHeader(line: ParsedLine): CNABHeader
-  extractTrailer(line: ParsedLine): CNABTrailer
+  extractHeader(line: ParsedLine | undefined): CNABHeader
+  extractTrailer(line: ParsedLine | undefined): CNABTrailer
   extractBill(group: BillGroup): CNABData
   extractBillFull(group: BillGroup): Record<string, unknown>
 }

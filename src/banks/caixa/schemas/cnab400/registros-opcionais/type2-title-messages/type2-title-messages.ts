@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Caixa Econômica Federal (104) — CNAB 400 — Registro Tipo 2 (Mensagens do Título)
  *
  * Registro opcional que permite anexar até 6 mensagens livres de 40 caracteres cada,
@@ -23,12 +23,12 @@
  *   mensagens, sugerindo que o registro é auto-suficiente para localizar o título.
  */
 
-import { RecordSchema } from '../../../../../../types'
+import { RecordSchema, FieldType } from '@tp-types/index'
 
 export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   codigo_registro: {
     pos: [1, 1],
-    type: 'num',
+    type: FieldType.NUM,
     size: 1,
     decimals: 0,
     required: true,
@@ -40,7 +40,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   tipo_inscricao_empresa: {
     pos: [2, 3],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -51,7 +51,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   numero_inscricao_empresa: {
     pos: [4, 17],
-    type: 'num',
+    type: FieldType.NUM,
     size: 14,
     decimals: 0,
     required: false,
@@ -62,7 +62,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   codigo_agencia: {
     pos: [18, 21],
-    type: 'num',
+    type: FieldType.NUM,
     size: 4,
     decimals: 0,
     required: false,
@@ -73,7 +73,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   codigo_beneficiario: {
     pos: [22, 28],
-    type: 'num',
+    type: FieldType.NUM,
     size: 7,
     decimals: 0,
     required: false,
@@ -84,7 +84,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   uso_exclusivo_1: {
     pos: [29, 31],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 3,
     decimals: 0,
     required: false,
@@ -95,7 +95,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   brancos_1: {
     pos: [32, 56],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 25,
     decimals: 0,
     required: false,
@@ -106,7 +106,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   nosso_numero_modalidade: {
     pos: [57, 58],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -118,7 +118,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   nosso_numero: {
     pos: [59, 73],
-    type: 'num',
+    type: FieldType.NUM,
     size: 15,
     decimals: 0,
     required: false,
@@ -130,7 +130,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   brancos_2: {
     pos: [74, 106],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 33,
     decimals: 0,
     required: false,
@@ -141,7 +141,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   carteira: {
     pos: [107, 108],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -152,7 +152,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   codigo_ocorrencia: {
     pos: [109, 110],
-    type: 'num',
+    type: FieldType.NUM,
     size: 2,
     decimals: 0,
     required: false,
@@ -163,7 +163,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   uso_exclusivo_2: {
     pos: [111, 139],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 29,
     decimals: 0,
     required: false,
@@ -174,7 +174,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   codigo_banco: {
     pos: [140, 142],
-    type: 'num',
+    type: FieldType.NUM,
     size: 3,
     decimals: 0,
     required: false,
@@ -185,7 +185,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   mensagem_1: {
     pos: [143, 182],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -196,7 +196,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   mensagem_2: {
     pos: [183, 222],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -207,7 +207,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   mensagem_3: {
     pos: [223, 262],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -218,7 +218,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   mensagem_4: {
     pos: [263, 302],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -229,7 +229,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   mensagem_5: {
     pos: [303, 342],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -240,7 +240,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   mensagem_6: {
     pos: [343, 382],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 40,
     decimals: 0,
     required: false,
@@ -251,7 +251,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   uso_exclusivo_3: {
     pos: [383, 394],
-    type: 'alfa',
+    type: FieldType.ALFA,
     size: 12,
     decimals: 0,
     required: false,
@@ -262,7 +262,7 @@ export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   },
   numero_sequencial: {
     pos: [395, 400],
-    type: 'num',
+    type: FieldType.NUM,
     size: 6,
     decimals: 0,
     required: true,
