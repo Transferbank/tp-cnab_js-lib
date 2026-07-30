@@ -92,9 +92,9 @@ export class CNABFile {
       return this.buildValidationResult(false, [structureResult.errors[0]])
     }
 
-    const businessResult = this.runBusinessValidation(bankSchema, true)
-    if (businessResult.errors.length > 0) {
-      return this.buildValidationResult(false, [businessResult.errors[0]])
+    const contentResult = this.runContentValidation(bankSchema, true)
+    if (contentResult.errors.length > 0) {
+      return this.buildValidationResult(false, [contentResult.errors[0]])
     }
 
     return this.buildValidationResult(true, [])
@@ -102,10 +102,10 @@ export class CNABFile {
 
   private validateWithFullFeedback(bankSchema: BankSchema): CNABValidationResult {
     const structureResult = this.runStructureValidation(bankSchema)
-    const businessResult = this.runBusinessValidation(bankSchema)
-    const errors = mergeValidationErrors(structureResult.errors, businessResult.errors)
+    const contentResult = this.runContentValidation(bankSchema)
+    const errors = mergeValidationErrors(structureResult.errors, contentResult.errors)
 
-    return this.buildValidationResult(errors.length === 0, errors, businessResult.records)
+    return this.buildValidationResult(errors.length === 0, errors, contentResult.records)
   }
 
   private runStructureValidation(bankSchema: BankSchema, failFast = false): { errors: ValidationError[] } {
@@ -114,7 +114,7 @@ export class CNABFile {
       : validateCnab400Structure(this.rawLines, bankSchema, failFast)
   }
 
-  private runBusinessValidation(bankSchema: BankSchema, failFast = false): ValidationResult {
+  private runContentValidation(bankSchema: BankSchema, failFast = false): ValidationResult {
     return this.type === CNABFormatCode.CNAB240
       ? validateCnab240Content(this.rawLines, bankSchema, failFast)
       : validateCnab400Content(this.rawLines, bankSchema, failFast)
@@ -188,19 +188,23 @@ export class CNABFile {
       
       if (segment === Cnab240SegmentCode.P) {
         return extractLineFields(line, bankSchema.segmentoP!)
-      } else if (segment === Cnab240SegmentCode.Q) {
+      } 
+      else if (segment === Cnab240SegmentCode.Q) {
         return extractLineFields(line, bankSchema.segmentoQ!)
-      } else if (segment === Cnab240SegmentCode.R && bankSchema.optionalRecords) {
+      } 
+      else if (segment === Cnab240SegmentCode.R && bankSchema.optionalRecords) {
         const optR = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'R')
         if (optR) {
           return extractLineFields(line, optR.schema)
         }
-      } else if (segment === Cnab240SegmentCode.S && bankSchema.optionalRecords) {
+      } 
+      else if (segment === Cnab240SegmentCode.S && bankSchema.optionalRecords) {
         const optS = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'S')
         if (optS) {
           return extractLineFields(line, optS.schema)
         }
-      } else if (segment === Cnab240SegmentCode.Y && bankSchema.optionalRecords) {
+      } 
+      else if (segment === Cnab240SegmentCode.Y && bankSchema.optionalRecords) {
         const subVariant = getCnab240SegmentYVariant(line)
         const optY = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === `Y${subVariant}`)
         if (optY) {

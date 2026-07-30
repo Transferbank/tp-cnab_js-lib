@@ -6,9 +6,9 @@ import { ValidationError } from '@tp-types/index'
  */
 export function mergeValidationErrors(
   structural: ValidationError[],
-  business: ValidationError[]
+  content: ValidationError[]
 ): ValidationError[] {
   const structuralKeys = new Set(structural.map(e => `${e.line}::${e.field}`))
-  const businessFiltered = business.filter(e => !structuralKeys.has(`${e.line}::${e.field}`))
-  return [...structural, ...businessFiltered].sort((a, b) => a.line - b.line)
+  const contentFiltered = content.filter(e => !structuralKeys.has(`${e.line}::${e.field}`))
+  return [...structural, ...contentFiltered].sort((a, b) => a.line - b.line)
 }
