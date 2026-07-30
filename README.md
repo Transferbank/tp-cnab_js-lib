@@ -30,6 +30,13 @@ const fileContent = fs.readFileSync('remessa.rem', 'latin1')
 const cnabFile = openCnab(fileContent) // detecta formato/banco, resolve o schema
 console.log(cnabFile.type, cnabFile.bankName)
 
+// Apenas verificar se é válido (retorna boolean)
+const isValid = cnabFile.validate()
+if (!isValid) {
+  console.log('Arquivo inválido')
+}
+
+// Ou obter feedback detalhado (retorna objeto com erros)
 const validation = cnabFile.validate(true)
 if (!validation.isValid) {
   validation.feedback.lines.forEach(err => console.log(`Linha ${err.line}: ${err.message}`))
@@ -61,7 +68,8 @@ Ponto de entrada único. O corpo do arquivo só é processado quando `.read()`/`
 | Membro | Descrição |
 |---|---|
 | `.type`, `.bankCode`, `.bankName`, `.lineCount` | Metadados já detectados |
-| `.validate(options?)` | Validação estrutural + negócio. Nunca lança por erro de conteúdo — devolve `{ isValid, feedback: { type, bank, lines } }` |
+| `.validate()` | Retorna `boolean` — validação rápida (fail-fast) |
+| `.validate(true)` | Retorna `CNABValidationResult` — validação completa com feedback detalhado `{ isValid, feedback: { type, bank, lines } }` |
 | `.read(options?)` | Extrai `{ header, trailer, bills }`. `mode: 'SIMPLE'` (campos canônicos) ou `'FULL'` (todos os campos do banco); `lazy: true` devolve `LazyBillItem[]` (extração sob demanda via `.resolve()`); `page: { start, size }` pagina |
 | `.readAsync(options?)` | Igual a `.read()`, assíncrono; aceita `onProgress`/`batchSize` para arquivos grandes |
 

@@ -76,13 +76,17 @@ export class CNABFile {
     return provider
   }
 
-  validate(withFeedback = false): CNABValidationResult {
+  validate(): boolean
+  validate(withFeedback: false): boolean
+  validate(withFeedback: true): CNABValidationResult
+  validate(withFeedback?: boolean): boolean | CNABValidationResult {
     const provider = this.resolveProvider(ReadMode.SIMPLE)
     const bankSchema = provider.schema
 
-    const shouldFailFast = withFeedback === false
+    const shouldFailFast = withFeedback !== true
     if (shouldFailFast) {
-      return this.validateFailFast(bankSchema)
+      const result = this.validateFailFast(bankSchema)
+      return result.isValid
     }
 
     return this.validateWithFullFeedback(bankSchema)

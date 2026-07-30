@@ -10,7 +10,7 @@ import { openCnab } from '@/index'
 import { santanderCnab400 } from '../../schemas/cnab400'
 import { buildLine400 } from '@/tests/helpers/cnab-builder'
 
-describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
+describe('openCnab + CNABFile.validate(true) — Santander (033) CNAB 400', () => {
   describe('Checagem cruzada do trailer', () => {
     const header = buildLine400(santanderCnab400.header!, {
       codigo_transmissao: '01234567890123456789', // 20 chars (agência + código cliente + conta)
@@ -35,7 +35,7 @@ describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
       })
 
       const cnabFile = openCnab([header, detail, trailer].join('\n'))
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.lines).toContainEqual(
         expect.objectContaining({ field: 'Quantidade no Trailer' }),
@@ -49,7 +49,7 @@ describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
       })
 
       const cnabFile = openCnab([header, detail, trailer].join('\n'))
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.lines.filter((e) => e.field === 'Quantidade no Trailer')).toEqual([])
     })
@@ -83,7 +83,7 @@ describe('openCnab + CNABFile.validate() — Santander (033) CNAB 400', () => {
       })
 
       const cnabFile = openCnab([header, detail1, detail2, trailer].join('\n'))
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.lines.filter((e) => e.field === 'Quantidade no Trailer')).toEqual([])
       expect(result.isValid).toBe(true)

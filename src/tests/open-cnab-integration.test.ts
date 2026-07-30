@@ -84,7 +84,7 @@ describe('openCnab() - integração com fixtures reais', () => {
 
     test('validate() não lança e não reporta erros além de "Data de vencimento"', () => {
       const cnabFile = openCnab(loadFixture(path))
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(typeof result.isValid).toBe('boolean')
       expect(Array.isArray(result.feedback.lines)).toBe(true)

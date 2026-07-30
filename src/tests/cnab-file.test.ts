@@ -282,14 +282,14 @@ describe('openCnab', () => {
   })
 })
 
-describe('CNABFile.validate()', () => {
+describe('CNABFile.validate(true)', () => {
   describe('Validação básica', () => {
     test('deve validar arquivo CNAB 400 do Bradesco sem erros estruturais', () => {
       const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Bradesco')
@@ -304,7 +304,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.type).toBe('CNAB 240')
       expect(result.feedback.bank).toBe('Bradesco')
@@ -317,7 +317,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Banco do Brasil')
@@ -332,7 +332,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Itaú')
@@ -347,7 +347,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Santander')
@@ -362,7 +362,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.type).toBe('CNAB 400')
       expect(result.feedback.bank).toBe('Sicredi')
@@ -383,7 +383,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = [header, invalidDetail, trailer].join('\n')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.isValid).toBe(false)
       expect(result.feedback.lines.length).toBeGreaterThan(0)
@@ -401,7 +401,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = [header, invalidDetail, trailer].join('\n')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.isValid).toBe(false)
       expect(result.feedback.lines.length).toBeGreaterThan(0)
@@ -414,7 +414,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result).toHaveProperty('isValid')
       expect(result).toHaveProperty('feedback')
@@ -433,7 +433,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       if (result.isValid) {
         expect(result.feedback.lines).toHaveLength(0)
@@ -451,7 +451,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = [header, invalidDetail, trailer].join('\n')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       expect(result.feedback.lines.length).toBeGreaterThan(0)
       
@@ -472,7 +472,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      expect(() => cnabFile.validate()).not.toThrow()
+      expect(() => cnabFile.validate(true)).not.toThrow()
     })
 
     test('deve funcionar com withFeedback: false', () => {
@@ -480,7 +480,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = readFileSync(fixturePath, 'latin1')
       const cnabFile = openCnab(fileContent)
 
-      expect(() => cnabFile.validate()).not.toThrow()
+      expect(() => cnabFile.validate(true)).not.toThrow()
     })
 
     test('deve funcionar com withFeedback: true e retornar feedback completo (não fail-fast)', () => {
@@ -509,7 +509,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = [header, detail, headerInMiddle, detail, trailer].join('\n')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       // Deve detectar o erro estrutural
       expect(result.isValid).toBe(false)
@@ -535,7 +535,7 @@ describe('CNABFile.validate()', () => {
       // Arquivo só com P, sem Q algum - deve gerar erro estrutural
       const fileOnlyP = [headerArquivo, headerLote, segP2OrfaoSemQ, trailerLote, trailerArquivo].join('\n')
       const cnabFileOnlyP = openCnab(fileOnlyP)
-      const resultOnlyP = cnabFileOnlyP.validate()
+      const resultOnlyP = cnabFileOnlyP.validate(true)
 
       // Deve detectar erro estrutural: P pendente sem Q
       expect(resultOnlyP.isValid).toBe(false)
@@ -594,7 +594,7 @@ describe('CNABFile.validate()', () => {
       const fileContent = [header, detail, trailerBadType].join('\n')
       const cnabFile = openCnab(fileContent)
 
-      const result = cnabFile.validate()
+      const result = cnabFile.validate(true)
 
       // Deve ter erro de trailer
       const trailerErrors = result.feedback.lines.filter(e => 
