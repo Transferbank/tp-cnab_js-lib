@@ -8,7 +8,7 @@ retorno. Para instalação e um exemplo mínimo de uso, veja [README.md](README.
 | Chamada | Devolve | Lança exceção? |
 |---|---|---|
 | `openCnab(raw)` | `CNABFile` | Sim — erros de setup (arquivo/formato/banco/schema) |
-| `cnabFile.validate()` | `CNABFileValidationResult` | Não para erros de conteúdo — eles vêm dentro do próprio retorno |
+| `cnabFile.validate(withFeedback?)` | `CNABValidationResult` | Não para erros de conteúdo — eles vêm dentro do próprio retorno. Pode lançar `CNABInternalInconsistencyError` (bug interno, raro) |
 | `cnabFile.read(options?)` | `CNABReadResult<T>` | Sim — erros de agrupamento/extração (exceto no boleto individual em modo `lazy`) |
 | `cnabFile.readAsync(options?)` | `Promise<CNABReadResult<T>>` | Mesma regra de `read()`, mas via rejeição da Promise |
 
@@ -20,10 +20,10 @@ Todos estendem `CNABError` (têm `.code` e `.message`) e podem ser distinguidos 
 
 | Classe | `code` | Campos extras | Quando acontece |
 |---|---|---|---|
-| `CNABEmptyFileError` | `EMPTY_FILE` | — | Arquivo vazio ou só linhas em branco |
+| `CNABEmptyFileError` | `EMPTY_FILE` | — | `raw` é `null`/`undefined`, ou vira 0 linhas após split (arquivo vazio ou só linhas em branco) |
 | `CNABFormatNotRecognizedError` | `FORMAT_NOT_RECOGNIZED` | `lineLength: number` | Primeira linha não tem 240 nem 400 caracteres |
-| `CNABBankNotFoundError` | `BANK_NOT_FOUND` | `format: 'cnab240' \| 'cnab400'` | Código do banco não encontrado no header |
-| `CNABSchemaNotFoundError` | `SCHEMA_NOT_FOUND` | `bankCode: string`, `format` | Banco identificado, mas sem schema cadastrado |
+| `CNABBankNotFoundError` | `BANK_NOT_FOUND` | `format: CNABFormatCode` (`'CNAB240'` \| `'CNAB400'`) | Código do banco não encontrado no header |
+| `CNABSchemaNotFoundError` | `SCHEMA_NOT_FOUND` | `bankCode: string`, `format: CNABFormatCode` | Banco identificado, mas sem schema cadastrado |
 
 ```typescript
 try {
@@ -37,7 +37,12 @@ try {
 }
 ```
 
-## 2. `cnabFile.validate()` → `CNABFileValidationResult`
+Duas outras classes de erro de input existem na hierarquia (`CNABNoLinesProvidedError`,
+`CNABInvalidHeaderError`) mas hoje não são alcançáveis por `openCnab()` — `openCnab()` já garante
+"pelo menos uma linha" e "header não vazio" antes de chamar as funções internas que as lançariam.
+Elas ficam exportadas por completude da hierarquia de erros.
+
+## 2. `cnabFile.validate(withFeedback?)` → `CNABValidationResult`
 
 ```typescript
 {
@@ -46,29 +51,65 @@ try {
     type: 'CNAB 240' | 'CNAB 400'
     bank: string             // nome do banco, ex: 'Bradesco'
     lines: ValidationError[] // erros de estrutura + negócio, já mesclados
+    records?: CNABRecord[]   // só presente quando withFeedback === true — ver abaixo
   }
 }
 ```
 
-`ValidationError` é `{ line: number; column: string; message: string }` — `column` é o nome do
+`ValidationError` é `{ line: number; field: string; message: string }` — `field` é o nome do
 campo (ex: `'Data de vencimento'`) ou um rótulo genérico (`'Estrutura'`) quando o problema não é
 de um campo específico.
 
-```typescript
-const validation = cnabFile.validate()
+### `withFeedback` — dois modos de validação
 
-if (!validation.isValid) {
-  validation.feedback.lines.forEach(({ line, column, message }) => {
-    console.log(`Linha ${line} — ${column}: ${message}`)
+`validate()` tem um único parâmetro booleano, `withFeedback` (padrão `false`), que muda
+completamente a estratégia:
+
+| `withFeedback` | Modo | Comportamento |
+|---|---|---|
+| `false` (padrão) | **fail-fast** | Para na estrutura ou no conteúdo assim que encontra o **primeiro** erro. `feedback.lines` tem no máximo 1 item. Mais rápido quando o arquivo tem erro cedo; se o arquivo for válido, ainda percorre tudo (não há erro pra parar). Conteúdo só é validado se a estrutura passar limpa — evita gastar tempo validando campos de um arquivo estruturalmente quebrado. |
+| `true` | **full feedback** | Roda estrutura **e** conteúdo por completo, reporta **todos** os erros encontrados (`feedback.lines` pode ter vários itens), e popula `feedback.records: CNABRecord[]` — uma linha por título de detalhe processado, com `{ name, amount, dueDate, address, document }`. |
+
+```typescript
+// fail-fast — resposta rápida, só o primeiro problema
+const quick = cnabFile.validate()
+
+// full feedback — todos os erros + lista de registros
+const full = cnabFile.validate(true)
+
+if (!full.isValid) {
+  full.feedback.lines.forEach(({ line, field, message }) => {
+    console.log(`Linha ${line} — ${field}: ${message}`)
   })
 }
+
+full.feedback.records?.forEach((r) => console.log(r.name, r.amount, r.dueDate))
 ```
 
-**Não tem** `records`/`totalRecords` — esses dois campos existem só no retorno legado de
-`validateCnabFile()`. Se você precisa de uma lista achatada de boletos para exibir em tela, monte
-a partir de `.read()` (seção 5).
+Use fail-fast (`false`) para checagem rápida de "esse arquivo está ok?" antes de processar. Use
+`true` quando quiser mostrar uma lista completa de problemas pro usuário final, ou quando quiser a
+lista de registros já pronta pra exibir em tela sem chamar `.read()` separadamente.
 
-## 3. `cnabFile.read()` / `.readAsync()` → `CNABReadResult<T>`
+## 3. Outros métodos e propriedades de `CNABFile`
+
+Além de `validate()`/`read()`/`readAsync()`, a instância devolvida por `openCnab()` expõe:
+
+| Membro | Tipo | Descrição |
+|---|---|---|
+| `.type` | `CNABFormatCode` | `'CNAB240'` ou `'CNAB400'`, formato detectado |
+| `.bankCode` | `string` | Código do banco (ex: `'237'`) |
+| `.bankName` | `string` | Nome do banco (ex: `'Bradesco'`) |
+| `.lineCount` | `number` | Total de linhas do arquivo, incluindo header e trailer |
+| `.getLines()` | `readonly string[]` | Linhas brutas do arquivo, sem modificação |
+| `.toString()` | `string` | Resumo legível: `"CNABFile { type: CNAB 240, bank: Bradesco (237), lines: 42 }"` |
+
+```typescript
+const cnabFile = openCnab(fileContent)
+
+console.log(cnabFile.bankName, cnabFile.type, cnabFile.lineCount)
+```
+
+## 4. `cnabFile.read()` / `.readAsync()` → `CNABReadResult<T>`
 
 ```typescript
 {
@@ -94,7 +135,7 @@ a partir de `.read()` (seção 5).
 |---|---|
 | (nenhuma) ou `{ mode: 'SIMPLE' }` | `CNABData` — campos canônicos, iguais entre bancos |
 | `{ mode: 'FULL' }` | `Record<string, unknown>` — todos os campos brutos do schema daquele banco |
-| `{ lazy: true }` (com qualquer `mode`) | `LazyBillItem<T>` — item ainda não extraído, ver seção 4 |
+| `{ lazy: true }` (com qualquer `mode`) | `LazyBillItem<T>` — item ainda não extraído, ver seção 5 |
 
 `{ page: { start, size } }` pagina `bills` em qualquer combinação acima (útil para arquivos grandes).
 
@@ -133,7 +174,29 @@ formam um boleto válido — ex: segmento Q sem P correspondente) e `CNABUnknown
 (código de campo não reconhecido durante extração). `CNABInternalInconsistencyError` também pode
 ocorrer, mas indica bug na lib, não erro de input.
 
-## 4. Modo lazy: `LazyBillItem<T>`
+### `readAsync()` — opções extras
+
+Além de tudo que `ReadOptions` aceita, `readAsync()` aceita:
+
+```typescript
+interface ReadAsyncOptions extends ReadOptions {
+  onProgress?: (progress: { current: number; total: number }) => void
+  batchSize?: number  // padrão 100 — de quantos em quantos boletos o progresso é reportado
+}
+```
+
+`onProgress` é chamado a cada `batchSize` boletos processados (e uma vez no final, se o total não
+for múltiplo de `batchSize`), com um `await` de um tick (`setTimeout(..., 0)`) entre chamadas —
+não bloqueia a *thread* principal por todo o processamento de uma vez.
+
+```typescript
+const { bills } = await cnabFile.readAsync({
+  batchSize: 500,
+  onProgress: ({ current, total }) => console.log(`${current}/${total}`),
+})
+```
+
+## 5. Modo lazy: `LazyBillItem<T>`
 
 Com `{ lazy: true }`, `bills` vem como `LazyBillItem<T>[]` em vez de `T[]` — nada é extraído até
 você chamar `resolve()`:
@@ -157,10 +220,10 @@ Sem cache — chamar `resolve()` duas vezes reprocessa a mesma linha. Se a extra
 - um novo `CNABLazyResolveError` (`code: 'LAZY_RESOLVE_FAILED'`, campos `startLine`/`cause`)
   envolvendo qualquer outro erro inesperado.
 
-## 5. Montando uma lista achatada (para tabela/UI)
+## 6. Montando uma lista achatada (para tabela/UI)
 
-Se seu projeto precisa de algo parecido com o antigo `records` de `validateCnabFile()`, monte a
-partir de `.read()`:
+Se você já chama `validate(true)`, a lista de registros vem pronta em `feedback.records` (seção 2)
+— não precisa montar nada na mão. Se você só chama `.read()` e quer o mesmo formato achatado:
 
 ```typescript
 const { bills } = cnabFile.read()
@@ -173,6 +236,25 @@ const records = bills.map((bill) => ({
   document: bill.sacado?.documento ?? '—',
 }))
 ```
+
+## Hierarquia completa de erros
+
+Todas as classes abaixo estendem `CNABError` (`code: string`, `message: string`), que por sua vez
+tem duas subclasses abstratas: `CNABInputError` (input do consumidor) e `CNABInternalError` (bug
+interno da lib — reportar como issue se aparecer).
+
+| Classe | Base | `code` | Origem |
+|---|---|---|---|
+| `CNABEmptyFileError` | `CNABInputError` | `EMPTY_FILE` | `openCnab()` |
+| `CNABFormatNotRecognizedError` | `CNABInputError` | `FORMAT_NOT_RECOGNIZED` | `openCnab()` |
+| `CNABBankNotFoundError` | `CNABInputError` | `BANK_NOT_FOUND` | `openCnab()` |
+| `CNABSchemaNotFoundError` | `CNABInputError` | `SCHEMA_NOT_FOUND` | `openCnab()` |
+| `CNABNoLinesProvidedError` | `CNABInputError` | `NO_LINES_PROVIDED` | interno (não alcançável via `openCnab()` hoje) |
+| `CNABInvalidHeaderError` | `CNABInputError` | `INVALID_HEADER` | interno (não alcançável via `openCnab()` hoje) |
+| `CNABGroupingError` | `CNABInputError` | `GROUPING_ERROR` | `read()` / `readAsync()` |
+| `CNABUnknownFieldCodeError` | `CNABInputError` | `UNKNOWN_FIELD_CODE` | `read()` / `readAsync()` / `resolve()` |
+| `CNABInternalInconsistencyError` | `CNABInternalError` | `INTERNAL_INCONSISTENCY` | `validate()` / `read()` / `readAsync()` |
+| `CNABLazyResolveError` | `CNABError` | `LAZY_RESOLVE_FAILED` | `LazyBillItem.resolve()` |
 
 ## Ver também
 
