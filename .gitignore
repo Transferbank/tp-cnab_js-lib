@@ -20,7 +20,7 @@ coverage/
 npm-debug.log*
 # Build output
 dist/
-docs/
+/docs/
 
 # Scripts temporários
 scripts/
@@ -33,4 +33,4 @@ scripts/
 
 # Material interno (preparação de apresentação, resumos de status) — não é
 # documentação da lib, fica só local
-/Estudo/
+/local/

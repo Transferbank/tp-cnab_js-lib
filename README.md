@@ -6,7 +6,9 @@ Biblioteca TypeScript para processamento e validação de arquivos CNAB 240 e 40
 
 - **TypeScript first**, zero dependências
 - CNAB 240 e 400, múltiplos bancos
-- Validação em duas camadas: estrutural (sequência/tipo de registro) e de negócio (CPF/CNPJ, datas, valores)
+- Suporte assíncrono
+- Validações com feedback
+- Extensível para novos bancos
 
 ## Instalação
 
@@ -24,6 +26,7 @@ npm install git+https://github.com/Transferbank/tp-cnab-lib.git
 import { openCnab } from 'tp-cnab-lib'
 import * as fs from 'fs'
 
+try {
 // CNAB usa encoding Latin-1, não UTF-8
 const fileContent = fs.readFileSync('remessa.rem', 'latin1')
 
@@ -39,10 +42,10 @@ const { header, trailer, bills } = cnabFile.read()
 bills.forEach(bill => console.log(bill.sacado?.nome, bill.valor, bill.vencimento))
 ```
 
-`openCnab()` lança exceção (nunca retorna `null`) para arquivo vazio, formato não reconhecido, banco não identificado no header, ou banco/formato sem schema cadastrado:
+`openCnab()` lança exceção para arquivo vazio, formato não reconhecido, banco não identificado no header, ou banco/formato sem schema cadastrado:
 
 ```typescript
-try {
+
   const cnabFile = openCnab(fileContent)
 } catch (error) {
   // CNABEmptyFileError | CNABFormatNotRecognizedError | CNABBankNotFoundError | CNABSchemaNotFoundError
@@ -98,16 +101,39 @@ npm run lint
 
 ```
 src/
-├── index.ts          # openCnab + exports públicos
-├── types/            # core (CNABFile), bank (BankSchema), errors, read, processing
-├── banks/<banco>/schemas/{cnab400,cnab240}/  # um arquivo por registro — ver IMPLEMENTATION_GUIDE.md
-├── schemas/index.ts  # registro central (cnab400Banks/cnab240Banks)
-├── provider/catalog.ts   # monta schema + regra de agrupamento
-├── grouping/          # agrupa linhas em boletos (núcleo + satélites)
-├── read/              # extração de campos canônicos/full
-├── parser/            # extração de campos por posição, detecção de formato/banco
-├── validators/         # validação estrutural e de negócio (240/400)
-└── utils/              # datas, CPF/CNPJ
+├── index.ts         
+├── types/          
+├── banks/
+|     ├── /bank
+|           ├── /docs    
+|           ├── /schemas   
+|           |       ├── /cnab240
+|           |       ├── /cnab400
+|           ├── /tests  
+| 
+├── schemas/  
+├── provider/
+├── grouping/         
+├── read/      
+├── parser/            
+├── validators/        
+└── utils/            
+
+Pastas principais                  Responsabilidades
+index.ts                         openCnab + exports públicos
+types/                           Core (CNABFile), bank (BankSchema), errors, read, processing
+banks/                           Schemas específicos de cada banco
+schemas/                         Registro central (cnab400Banks/cnab240Banks)
+provider/                        Monta schema + regra de agrupamento
+grouping/                        Agrupa linhas em boletos (núcleo + satélites)
+read/                            Extração de campos canônicos/full
+parser/                          Extração de campos por posição, detecção de formato/banco
+validators/                      Validação estrutural e de negócio (240/400)
+utils/                           Datas, CPF/CNPJ
+
+
+
+
 ```
 
 ## Contribuindo
@@ -116,4 +142,18 @@ Para adicionar um banco novo, veja [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUID
 
 ## Licença
 
-MIT
+Copyright (c) 2026 Transferbank
+
+Este projeto é distribuído sob os termos da GNU Lesser General Public License, versão 3.0 (LGPL-3.0).
+
+Você pode utilizá-lo, modificá-lo e redistribuí-lo conforme os termos da LGPL. Alterações feitas na própria biblioteca devem permanecer sob a mesma licença.
+
+Consulte o arquivo LICENSE para o texto completo.
+
+No package.json
+
+{
+
+"license": "LGPL-3.0-or-later"
+
+}
