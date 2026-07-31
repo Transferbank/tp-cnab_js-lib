@@ -1,5 +1,13 @@
 import { DateFormat } from '@tp-types/index'
 
+function isValidDate(date: Date, year: number, month: number, day: number): boolean {
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  )
+}
+
 export function parseDateDDMMAA(str: string): Date | null {
   if (str == null || str.length !== 6 || !/^\d{6}$/.test(str)) return null
 
@@ -9,15 +17,7 @@ export function parseDateDDMMAA(str: string): Date | null {
 
   const date = new Date(year, month - 1, day)
 
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return null
-  }
-
-  return date
+  return isValidDate(date, year, month, day) ? date : null
 }
 
 export function parseDateDDMMAAAA(str: string): Date | null {
@@ -29,15 +29,7 @@ export function parseDateDDMMAAAA(str: string): Date | null {
 
   const date = new Date(year, month - 1, day)
 
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return null
-  }
-
-  return date
+  return isValidDate(date, year, month, day) ? date : null
 }
 
 /**
@@ -52,15 +44,7 @@ export function parseDateAAAAMMDD(str: string): Date | null {
 
   const date = new Date(year, month - 1, day)
 
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return null
-  }
-
-  return date
+  return isValidDate(date, year, month, day) ? date : null
 }
 
 export function parseDate(str: string, dateFormat: DateFormat | null): Date | null {
