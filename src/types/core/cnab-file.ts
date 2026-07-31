@@ -56,6 +56,7 @@ export class CNABFile {
   }
 
   private resolveProvider(mode: ReadMode): CNABProvider {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { getProvider } = require('@/provider/catalog')
     return getProvider(this.bankCode, this.type, mode)
   }
@@ -260,22 +261,30 @@ export class CNABFile {
       ? groups.slice(options.page.start, options.page.start + options.page.size)
       : groups
     
-    const bills = lazy
-      ? paginatedGroups.map((group: BillGroup) => ({
-          startLine: group.startLine,
-          resolve: (): Promise<CNABData | Record<string, unknown>> => {
-            try {
-              const result = mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
-              return Promise.resolve(result)
-            } catch (error) {
-              if (error instanceof CNABError) return Promise.reject(error)
-              return Promise.reject(new CNABLazyResolveError(group.startLine, error))
-            }
-          },
-        }))
-      : paginatedGroups.map((group: BillGroup) =>
-          mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
-        )
+    if (lazy) {
+      const lazyBills = paginatedGroups.map((group: BillGroup) => ({
+        startLine: group.startLine,
+        resolve: (): Promise<CNABData | Record<string, unknown>> => {
+          try {
+            const result = mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
+            return Promise.resolve(result)
+          } catch (error) {
+            if (error instanceof CNABError) return Promise.reject(error)
+            return Promise.reject(new CNABLazyResolveError(group.startLine, error))
+          }
+        },
+      }))
+
+      return {
+        header,
+        trailer,
+        bills: lazyBills,
+      }
+    }
+
+    const bills = paginatedGroups.map((group: BillGroup) =>
+      mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
+    )
 
     return {
       header,
@@ -289,10 +298,10 @@ export class CNABFile {
   async readAsync(options?: ReadAsyncOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>>>
 
   async readAsync(options?: ReadAsyncOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>> | CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>> {
-    const mode = options?.mode ?? ReadMode.SIMPLE
-    const lazy = options?.lazy ?? false
     const batchSize = options?.batchSize ?? 100
     const onProgress = options?.onProgress
+    const mode = options?.mode ?? ReadMode.SIMPLE
+    const lazy = options?.lazy ?? false
 
     const provider = this.resolveProvider(mode)
     const bankSchema = provider.schema
@@ -313,23 +322,6 @@ export class CNABFile {
       ? groups.slice(options.page.start, options.page.start + options.page.size)
       : groups
     
-    const bills = lazy
-      ? paginatedGroups.map((group: BillGroup) => ({
-          startLine: group.startLine,
-          resolve: (): Promise<CNABData | Record<string, unknown>> => {
-            try {
-              const result = mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
-              return Promise.resolve(result)
-            } catch (error) {
-              if (error instanceof CNABError) return Promise.reject(error)
-              return Promise.reject(new CNABLazyResolveError(group.startLine, error))
-            }
-          },
-        }))
-      : paginatedGroups.map((group: BillGroup) =>
-          mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
-        )
-    
     const totalBills = paginatedGroups.length
     
     for (let i = 0; i < totalBills; i++) {
@@ -342,6 +334,31 @@ export class CNABFile {
     if (onProgress && totalBills % batchSize !== 0) {
       onProgress({ current: totalBills, total: totalBills })
     }
+
+    if (lazy) {
+      const lazyBills = paginatedGroups.map((group: BillGroup) => ({
+        startLine: group.startLine,
+        resolve: (): Promise<CNABData | Record<string, unknown>> => {
+          try {
+            const result = mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
+            return Promise.resolve(result)
+          } catch (error) {
+            if (error instanceof CNABError) return Promise.reject(error)
+            return Promise.reject(new CNABLazyResolveError(group.startLine, error))
+          }
+        },
+      }))
+
+      return {
+        header,
+        trailer,
+        bills: lazyBills,
+      }
+    }
+
+    const bills = paginatedGroups.map((group: BillGroup) =>
+      mode === ReadMode.FULL ? provider.extractBillFull(group) : provider.extractBill(group)
+    )
 
     return {
       header,

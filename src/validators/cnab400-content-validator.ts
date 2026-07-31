@@ -1,10 +1,11 @@
 import { extractLineFields, getRecordTypePattern } from '@parser/field-extractor'
 import { getCnab400RecordType } from '@parser/position-reader'
 import { CNAB400_DETAIL_POSITIONS, extractPosition, extractPositionTrimmed } from '@parser/cnab-positions'
-import { BankSchema, CNABRecord, ValidationError, DateFormat, BANK_CODES } from '@tp-types/index'
+import { BankSchema, CNABRecord, ValidationError, DateFormat, BANK_CODES, RecordSchema } from '@tp-types/index'
 import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
 import { validatePayerDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'
+import { validateHeader } from '@validators/validate-header'
 
 export function validateCnab400Content(
   lines: string[],
@@ -43,29 +44,10 @@ export function validateCnab400Content(
   return { errors, records }
 }
 
-function validateHeader(headerLine: string, headerSchema: any): ValidationError[] {
-  const errors: ValidationError[] = []
-
-  if (headerSchema) {
-    const parsedHeader = extractLineFields(headerLine, headerSchema)
-    for (const [field, data] of Object.entries(parsedHeader)) {
-      if (data.error) {
-        errors.push({ 
-          line: 1, 
-          field: (data.descricao as string) || field, 
-          message: data.error 
-        })
-      }
-    }
-  }
-
-  return errors
-}
-
 function validateDetailLine(
   line: string,
   lineNumber: number,
-  detailSchema: any,
+  detailSchema: RecordSchema | undefined,
   bankSchema: BankSchema | null
 ): {
   errors: ValidationError[]

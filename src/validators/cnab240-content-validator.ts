@@ -1,10 +1,11 @@
 import { extractLineFields } from '@parser/field-extractor'
 import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { CNAB240_SEGMENT_P_POSITIONS, CNAB240_SEGMENT_Q_POSITIONS, extractPosition, extractPositionTrimmed } from '@parser/cnab-positions'
-import { BankSchema, CNABRecord, ValidationError, DateFormat, Cnab240SegmentCode } from '@tp-types/index'
+import { BankSchema, CNABRecord, ValidationError, DateFormat, Cnab240SegmentCode, RecordSchema } from '@tp-types/index'
 import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
 import { validatePayerDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'
+import { validateHeader } from '@validators/validate-header'
 
 export function validateCnab240Content(
   lines: string[],
@@ -66,29 +67,10 @@ export function validateCnab240Content(
   return { errors, records }
 }
 
-function validateHeader(headerLine: string, headerSchema: any): ValidationError[] {
-  const errors: ValidationError[] = []
-
-  if (headerSchema) {
-    const parsedHeader = extractLineFields(headerLine, headerSchema)
-    for (const [field, data] of Object.entries(parsedHeader)) {
-      if (data.error) {
-        errors.push({ 
-          line: 1, 
-          field: (data.descricao as string) || field, 
-          message: data.error 
-        })
-      }
-    }
-  }
-
-  return errors
-}
-
 function validateSegmentP(
   line: string,
   lineNumber: number,
-  segPSchema: any
+  segPSchema: RecordSchema | undefined
 ): {
   errors: ValidationError[]
   pendingData: { amount: number; dueDate: string }
@@ -158,7 +140,7 @@ function validateSegmentP(
 function validateSegmentQ(
   line: string,
   lineNumber: number,
-  segQSchema: any,
+  segQSchema: RecordSchema | undefined,
   pendingP: { amount: number; dueDate: string } | null
 ): {
   errors: ValidationError[]

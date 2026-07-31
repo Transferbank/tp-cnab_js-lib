@@ -31,9 +31,7 @@ const RAW_STRING_FIELDS = new Set<CanonicalField>([
   'sacado.endereco.cep',
 ])
 
-/**
- * CPF/CNPJ: string crua com zeros à esquerda removidos (consistente com validators).
- */
+
 const DOCUMENT_FIELDS = new Set<CanonicalField>([
   'sacado.documento',
   'cedente.documento',
