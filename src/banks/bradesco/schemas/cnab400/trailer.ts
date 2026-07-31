@@ -1,8 +1,8 @@
 ﻿/* *
- * �ltima linha do arquivo CNAB 400. Indica o fechamento do arquivo.
+ * última linha do arquivo CNAB 400. Indica o fechamento do arquivo.
  * 
  * Baseado em:
- * - Manual "Layout de Cobran�a CNAB 400 � vers�o em portugu�s" (27/07/2017)
+ * - Manual "Layout de Cobrança CNAB 400 é versão em português" (27/07/2017)
  * - brcobranca, cnab_yaml, laravel-boleto
  */
 
@@ -17,7 +17,7 @@ export const BRADESCO_CNAB400_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identifica��o do registro: 9=Trailer',
+    description: 'Identificação do registro: 9=Trailer',
     canonical: null,
   },
   brancos: {
@@ -28,7 +28,7 @@ export const BRADESCO_CNAB400_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco ou reservado',
+    description: 'Espaços em branco ou reservado',
     canonical: null,
   },
   numero_sequencial: {
@@ -39,7 +39,7 @@ export const BRADESCO_CNAB400_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do �ltimo registro',
+    description: 'Número sequencial do último registro',
     canonical: null,
   },
 }

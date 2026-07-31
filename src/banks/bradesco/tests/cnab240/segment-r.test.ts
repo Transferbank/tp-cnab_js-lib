@@ -8,7 +8,7 @@
  * - Tipos de dados corretos
  * - Tamanhos e decimais
  * 
- * NÃO testam regras de negócio (valores válidos, datas no passado, etc.)
+ * NÕO testam regras de negócio (valores válidos, datas no passado, etc.)
  * 
  * NOTA: O Segmento R é opcional e aparece apenas quando há:
  * - Descontos adicionais (2º e 3º descontos)
@@ -22,7 +22,7 @@ import { extractLineFields } from '@parser/field-extractor'
 // Buscar segmento R de optionalRecords
 const segmentoR = bradescoCnab240.optionalRecords?.find(r => r.identifier === 'R')?.schema
 if (!segmentoR) {
-  throw new Error('Segmento R n�o encontrado em optionalRecords')
+  throw new Error('Segmento R não encontrado em optionalRecords')
 }
 
 describe('Schema Bradesco CNAB 240 - Segmento R', () => {

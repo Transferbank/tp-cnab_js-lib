@@ -1,15 +1,15 @@
 ﻿/**
  * Bradesco CNAB 240 - Header de Arquivo
  * Header de Arquivo (pos 8 = '0')
- * Primeira linha do arquivo. Cont�m os dados de quem est� emitindo os boletos
- * (a empresa/benefici�rio), o c�digo do banco, e a data/hora em que o arquivo foi gerado.
- * � como a "capa" do arquivo � identifica quem mandou e quando.
- * ATEN��O: O campo `arquivo_sequencia` (pos 158-163) N�O � o n�mero sequencial
- * de remessa. O campo autoritativo para isso � o 
+ * Primeira linha do arquivo. Contém os dados de quem está emitindo os boletos
+ * (a empresa/beneficiário), o código do banco, e a data/hora em que o arquivo foi gerado.
+ * é como a "capa" do arquivo é identifica quem mandou e quando.
+ * ATENÇÃO: O campo `arquivo_sequencia` (pos 158-163) NÃO é o número sequencial
+ * de remessa. O campo autoritativo para isso é o 
 umero_remessa_retorno` do
  * Header de Lote (pos 184-191 do registro tipo '1').
  * Fonte do layout:
- * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, vers�o 04, dez/2024)
+ * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, versão 04, dez/2024)
  * - pycnab240 (header_arquivo.json)
  */
 
@@ -24,7 +24,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -68,7 +68,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do cedente: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrição do cedente: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   cedente_inscricao_numero: {
@@ -79,7 +79,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de inscri��o do cedente (CPF ou CNPJ com zeros � esquerda)',
+    description: 'Número de inscrição do cedente (CPF ou CNPJ com zeros é esquerda)',
     canonical: 'cedente.documento',
   },
   cedente_convenio: {
@@ -90,7 +90,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do conv�nio no banco (fornecido pelo Bradesco)',
+    description: 'Código do convênio no banco (fornecido pelo Bradesco)',
     canonical: null,
   },
   cedente_agencia: {
@@ -101,7 +101,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da ag�ncia mantenedora da conta',
+    description: 'Código da agência mantenedora da conta',
     canonical: null,
   },
   cedente_agencia_dv: {
@@ -112,7 +112,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia (branco se n�o houver)',
+    description: 'Dígito verificador da agência (branco se não houver)',
     canonical: null,
   },
   cedente_conta: {
@@ -123,7 +123,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da conta corrente',
+    description: 'Número da conta corrente',
     canonical: null,
   },
   cedente_conta_dv: {
@@ -134,7 +134,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'Dígito verificador da conta',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -156,7 +156,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do cedente/benefici�rio (raz�o social ou nome completo)',
+    description: 'Nome do cedente/beneficiário (razão social ou nome completo)',
     canonical: 'cedente.nome',
   },
   nome_do_banco: {
@@ -189,7 +189,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'C�digo do arquivo: 1=Remessa, 2=Retorno',
+    description: 'Código do arquivo: 1=Remessa, 2=Retorno',
     canonical: null,
   },
   arquivo_data_de_geracao: {
@@ -200,7 +200,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo (DDMMAAAA)',
+    description: 'Data de geração do arquivo (DDMMAAAA)',
     canonical: 'dataGeracao',
   },
   arquivo_hora_de_geracao: {
@@ -211,7 +211,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Hora de gera��o do arquivo (HHMMSS)',
+    description: 'Hora de geração do arquivo (HHMMSS)',
     canonical: null,
   },
   arquivo_sequencia: {
@@ -222,7 +222,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Sequencial do arquivo (incrementa a cada arquivo). ATEN��O: Este N�O � o n�mero sequencial de remessa - o campo autoritativo para isso � o numero_remessa_retorno do Header de Lote (pos 184-191 do registro tipo 1)',
+    description: 'Sequencial do arquivo (incrementa a cada arquivo). ATENÇÃO: Este NÃO é o número sequencial de remessa - o campo autoritativo para isso é o numero_remessa_retorno do Header de Lote (pos 184-191 do registro tipo 1)',
     canonical: null,
   },
   arquivo_layout: {
@@ -233,7 +233,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '084',
-    description: 'Vers�o do layout do arquivo (084 para CNAB 240)',
+    description: 'Versão do layout do arquivo (084 para CNAB 240)',
     canonical: null,
   },
   arquivo_densidade: {
@@ -244,7 +244,7 @@ export const BRADESCO_CNAB240_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Densidade de grava��o (ex: 6250 BPI - legado, normalmente vazio)',
+    description: 'Densidade de gravação (ex: 6250 BPI - legado, normalmente vazio)',
     canonical: null,
   },
   reservado_banco: {

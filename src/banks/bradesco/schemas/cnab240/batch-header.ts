@@ -1,16 +1,16 @@
 ﻿/**
  * Bradesco CNAB 240 - Header de Lote
  * Header de Lote (pos 8 = '1')
- * Primeira linha de cada lote dentro do arquivo. Um arquivo pode conter v�rios lotes,
- * cada um com seu header pr�prio. O lote agrupa t�tulos/boletos relacionados.
- * Cont�m dados do cedente (benefici�rio) espec�ficos do lote, como ag�ncia, conta,
- * conv�nio e informa��es complementares.
- * ATEN��O: O campo 
-umero_remessa_retorno` (pos 184-191) � o campo autoritativo
- * para o n�mero sequencial de remessa do Bradesco (n�o o campo do Header de Arquivo).
- * Este n�mero deve ser incrementado a cada novo arquivo de remessa enviado.
+ * Primeira linha de cada lote dentro do arquivo. Um arquivo pode conter vários lotes,
+ * cada um com seu header próprio. O lote agrupa títulos/boletos relacionados.
+ * Contém dados do cedente (beneficiário) específicos do lote, como agência, conta,
+ * convênio e informações complementares.
+ * ATENÇÃO: O campo 
+umero_remessa_retorno` (pos 184-191) é o campo autoritativo
+ * para o número sequencial de remessa do Bradesco (não o campo do Header de Arquivo).
+ * Este número deve ser incrementado a cada novo arquivo de remessa enviado.
  * Fonte do layout: 
- * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, vers�o 04, dez/2024)
+ * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, versão 04, dez/2024)
  * - pycnab240 (header_lote_cobranca.json)
  */
 
@@ -25,7 +25,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -36,7 +36,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do lote (incrementa de 1 em 1, come�a em 0001)',
+    description: 'Número sequencial do lote (incrementa de 1 em 1, começa em 0001)',
     canonical: null,
   },
   controle_registro: {
@@ -58,7 +58,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'R',
-    description: 'Tipo de opera��o: R=Remessa, T=Retorno',
+    description: 'Tipo de operação: R=Remessa, T=Retorno',
     canonical: null,
   },
   servico_tipo: {
@@ -69,7 +69,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Tipo de servi�o: 01=Cobran�a',
+    description: 'Tipo de serviço: 01=Cobrança',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -91,7 +91,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '042',
-    description: 'N�mero da vers�o do layout do lote (042 para cobran�a Bradesco)',
+    description: 'Número da versão do layout do lote (042 para cobrança Bradesco)',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -113,7 +113,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do cedente: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrição do cedente: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   cedente_inscricao_numero: {
@@ -124,7 +124,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de inscri��o do cedente (CPF ou CNPJ com zeros � esquerda)',
+    description: 'Número de inscrição do cedente (CPF ou CNPJ com zeros é esquerda)',
     canonical: null,
   },
   cedente_convenio: {
@@ -135,7 +135,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do conv�nio no banco (fornecido pelo Bradesco)',
+    description: 'Código do convênio no banco (fornecido pelo Bradesco)',
     canonical: null,
   },
   cedente_agencia: {
@@ -146,7 +146,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da ag�ncia mantenedora da conta',
+    description: 'Código da agência mantenedora da conta',
     canonical: null,
   },
   cedente_agencia_dv: {
@@ -157,7 +157,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia (branco se n�o houver)',
+    description: 'Dígito verificador da agência (branco se não houver)',
     canonical: null,
   },
   cedente_conta: {
@@ -168,7 +168,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da conta corrente',
+    description: 'Número da conta corrente',
     canonical: null,
   },
   cedente_conta_dv: {
@@ -179,7 +179,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'Dígito verificador da conta',
     canonical: null,
   },
   cnab_exclusivo_3: {
@@ -201,7 +201,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do cedente/benefici�rio (raz�o social ou nome completo)',
+    description: 'Nome do cedente/beneficiário (razão social ou nome completo)',
     canonical: null,
   },
   informacao_1: {
@@ -212,7 +212,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Mensagem 1 (informa��o livre para impress�o no boleto)',
+    description: 'Mensagem 1 (informação livre para impressão no boleto)',
     canonical: null,
   },
   informacao_2: {
@@ -223,7 +223,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Mensagem 2 (informa��o livre para impress�o no boleto)',
+    description: 'Mensagem 2 (informação livre para impressão no boleto)',
     canonical: null,
   },
   numero_remessa_retorno: {
@@ -234,7 +234,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial da remessa (campo autoritativo - incrementa a cada arquivo enviado)',
+    description: 'Número sequencial da remessa (campo autoritativo - incrementa a cada arquivo enviado)',
     canonical: null,
   },
   data_gravacao: {
@@ -245,7 +245,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de grava��o do arquivo (DDMMAAAA)',
+    description: 'Data de gravação do arquivo (DDMMAAAA)',
     canonical: null,
   },
   data_credito: {
@@ -256,7 +256,7 @@ export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de cr�dito (DDMMAAAA, zeros se n�o aplic�vel)',
+    description: 'Data de crédito (DDMMAAAA, zeros se não aplicável)',
     canonical: null,
   },
   cnab_exclusivo_4: {

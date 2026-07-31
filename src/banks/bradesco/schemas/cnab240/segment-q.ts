@@ -2,9 +2,9 @@
  * Bradesco CNAB 240 - Segmento Q
  * Segmento Q (pos 8 = '3', pos 14 = 'Q')
  * Linha com os dados de quem vai pagar o boleto (o pagador/sacado): nome, CPF/CNPJ,
- * endere�o, CEP, cidade, UF. Sempre vem logo ap�s o Segmento P do mesmo boleto.
+ * endereço, CEP, cidade, UF. Sempre vem logo após o Segmento P do mesmo boleto.
  * Terminologia:
- *   Cedente = quem emite o boleto (a empresa que est� cobrando)
+ *   Cedente = quem emite o boleto (a empresa que está cobrando)
  *   Sacado/Pagador = quem vai pagar o boleto (o devedor)
  * Fonte do layout: pycnab240 + cnab_yaml generic FEBRABAN
  */
@@ -20,7 +20,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -31,7 +31,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de servi�o',
+    description: 'Lote de serviço',
     canonical: null,
   },
   controle_registro: {
@@ -53,7 +53,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Número sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -86,7 +86,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa',
+    description: 'Código de movimento da remessa',
     canonical: null,
   },
   sacado_inscricao_tipo: {
@@ -130,7 +130,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o',
+    description: 'Endereço',
     canonical: 'sacado.endereco.logradouro',
   },
   sacado_bairro: {
@@ -152,7 +152,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (5 d�gitos)',
+    description: 'CEP (5 dígitos)',
     canonical: 'sacado.endereco.cep',
   },
   sacado_cep_sufixo: {
@@ -196,7 +196,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do Benefici�rio Final: 0=Isento, 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrição do Beneficiário Final: 0=Isento, 1=CPF, 2=CNPJ',
     canonical: null,
   },
   beneficiario_final_inscricao_numero: {
@@ -207,7 +207,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CPF ou CNPJ do Benefici�rio Final',
+    description: 'CPF ou CNPJ do Beneficiário Final',
     canonical: null,
   },
   beneficiario_final_nome: {
@@ -218,7 +218,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Benefici�rio Final (nomenclatura BACEN 3598/3656/3956 � antigo "Sacador/Avalista")',
+    description: 'Nome do Beneficiário Final (nomenclatura BACEN 3598/3656/3956 é antigo "Sacador/Avalista")',
     canonical: null,
   },
   banco_correspondente: {
@@ -229,7 +229,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do banco correspondente',
+    description: 'Código do banco correspondente',
     canonical: null,
   },
   numero_banco_correspondente: {
@@ -240,7 +240,7 @@ export const BRADESCO_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso n�mero no banco correspondente',
+    description: 'Nosso número no banco correspondente',
     canonical: null,
   },
   cnab_exclusivo_2: {

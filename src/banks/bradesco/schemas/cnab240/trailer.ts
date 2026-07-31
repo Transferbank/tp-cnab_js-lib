@@ -1,13 +1,13 @@
 ﻿/**
  * Bradesco CNAB 240 - Trailer de Arquivo
  * Trailer de Arquivo (pos 8 = '9')
- * �ltima linha do arquivo. Serve para o banco saber que o arquivo terminou
- * corretamente (n�o foi cortado no meio). Cont�m totalizadores do arquivo:
+ * última linha do arquivo. Serve para o banco saber que o arquivo terminou
+ * corretamente (não foi cortado no meio). Contém totalizadores do arquivo:
  * quantidade de lotes, quantidade total de registros e quantidade de contas
- * para concilia��o. Funciona como um "fechamento" � se essa linha faltar,
+ * para conciliação. Funciona como um "fechamento" é se essa linha faltar,
  * o banco rejeita o arquivo.
  * Fonte do layout:
- * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, vers�o 04, dez/2024)
+ * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, versão 04, dez/2024)
  * - pycnab240 (trailer_arquivo.json)
  */
 
@@ -22,7 +22,7 @@ export const BRADESCO_CNAB240_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -88,7 +88,7 @@ export const BRADESCO_CNAB240_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de contas para concilia��o (normalmente zeros)',
+    description: 'Quantidade de contas para conciliação (normalmente zeros)',
     canonical: null,
   },
   cnab_exclusivo_2: {

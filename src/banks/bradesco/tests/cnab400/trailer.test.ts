@@ -64,7 +64,7 @@ describe('Schema Bradesco CNAB 400 - Trailer', () => {
       
       // O trailer é sempre a última linha, e numero_sequencial deve conter
       // a posição 1-based dessa linha, ou seja, o total de linhas do arquivo.
-      // Isso valida não só o parsing mas também a POSIÇÃO CORRETA do campo:
+      // Isso valida não só o parsing mas também a POSIÇÕO CORRETA do campo:
       // se estivesse em outra posição, não bateria com 76 (fixture real tem 76 linhas).
       expect(trailer.numero_sequencial.value).toBe(lines.length)
       expect(trailer.numero_sequencial.error).toBeFalsy()

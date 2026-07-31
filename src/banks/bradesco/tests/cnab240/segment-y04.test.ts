@@ -8,7 +8,7 @@
  * - Tipos de dados corretos
  * - Tamanhos e decimais
  * 
- * NÃO testam regras de negócio (e-mail válido, chave PIX existente, etc.)
+ * NÕO testam regras de negócio (e-mail válido, chave PIX existente, etc.)
  * 
  * NOTA: Este é o segmento mais recente do manual Bradesco CNAB 240 (versão 04, dez/2024).
  * Inclui campos de PIX (tipo de chave, chave/URL QR Code, TXID) que não existem em

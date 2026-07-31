@@ -8,7 +8,7 @@
  * - Tipos de dados corretos
  * - Tamanhos e decimais
  * 
- * NÃO testam regras de negócio (valores válidos, CEP existente, etc.)
+ * NÕO testam regras de negócio (valores válidos, CEP existente, etc.)
  * 
  * NOTA: Este segmento é opcional e diferente do Segmento Q. O Segmento Q contém apenas
  * tipo/número/nome do sacador/avalista, enquanto o Y-01 traz o Beneficiário Final completo

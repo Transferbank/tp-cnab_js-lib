@@ -1,9 +1,9 @@
 ﻿/* *
- * Primeira linha do arquivo CNAB 400. Cont�m identifica��o do banco,
- * dados do cedente e informa��es sobre o arquivo.
+ * Primeira linha do arquivo CNAB 400. Contém identificação do banco,
+ * dados do cedente e informações sobre o arquivo.
  * 
  * Baseado em:
- * - Manual "Layout de Cobran�a CNAB 400 � vers�o em portugu�s" (27/07/2017)
+ * - Manual "Layout de Cobrança CNAB 400 é versão em português" (27/07/2017)
  * - brcobranca, cnab_yaml, laravel-boleto
  */
 
@@ -18,7 +18,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do registro: 0=Header',
+    description: 'Identificação do registro: 0=Header',
     canonical: null,
   },
   tipo_operacao: {
@@ -29,7 +29,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de opera��o: 1=Remessa',
+    description: 'Tipo de operação: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
@@ -51,7 +51,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo de servi�o: 01=Cobran�a',
+    description: 'Código de serviço: 01=Cobrança',
     canonical: null,
   },
   literal_servico: {
@@ -62,7 +62,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal COBRANCA (com espa�os � direita)',
+    description: 'Literal COBRANCA (com espaços é direita)',
     canonical: null,
   },
   codigo_cedente: {
@@ -73,7 +73,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da empresa no banco (20 posi��es)',
+    description: 'Código da empresa no banco (20 posições)',
     canonical: null,
   },
   nome_empresa: {
@@ -84,7 +84,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Raz�o social do cedente',
+    description: 'Razão social do cedente',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
@@ -95,7 +95,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   nome_banco: {
@@ -117,7 +117,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo',
+    description: 'Data de geração do arquivo',
     canonical: 'dataGeracao',
   },
   brancos_1: {
@@ -128,7 +128,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaços em branco',
     canonical: null,
   },
   identificacao_sistema: {
@@ -139,7 +139,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'MX',
-    description: 'Identifica��o do sistema: MX (fixo)',
+    description: 'Identificação do sistema: MX (fixo)',
     canonical: null,
   },
   sequencial_remessa: {
@@ -150,7 +150,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial da remessa',
+    description: 'Número sequencial da remessa',
     canonical: null,
   },
   brancos_2: {
@@ -161,7 +161,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaços em branco',
     canonical: null,
   },
   numero_sequencial: {
@@ -172,7 +172,7 @@ export const BRADESCO_CNAB400_HEADER_REMESSA: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'N�mero sequencial do registro (sempre 000001 no header)',
+    description: 'Número sequencial do registro (sempre 000001 no header)',
     canonical: null,
   },
 }
@@ -186,7 +186,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do registro: 0=Header',
+    description: 'Identificação do registro: 0=Header',
     canonical: null,
   },
   tipo_operacao: {
@@ -197,7 +197,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '2',
-    description: 'Tipo de opera��o: 2=Retorno',
+    description: 'Tipo de operação: 2=Retorno',
     canonical: null,
   },
   literal_retorno: {
@@ -219,7 +219,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo de servi�o: 01=Cobran�a',
+    description: 'Código de serviço: 01=Cobrança',
     canonical: null,
   },
   literal_servico: {
@@ -230,7 +230,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal COBRANCA (com espa�os � direita)',
+    description: 'Literal COBRANCA (com espaços é direita)',
     canonical: null,
   },
   codigo_cedente: {
@@ -241,7 +241,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da empresa no banco (20 posi��es)',
+    description: 'Código da empresa no banco (20 posições)',
     canonical: null,
   },
   nome_empresa: {
@@ -252,7 +252,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Raz�o social do cedente',
+    description: 'Razão social do cedente',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
@@ -263,7 +263,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   nome_banco: {
@@ -285,7 +285,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo de retorno',
+    description: 'Data de geração do arquivo de retorno',
     canonical: 'dataGeracao',
   },
   densidade_gravacao: {
@@ -296,7 +296,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '01600000',
-    description: 'Densidade de grava��o (campo legado)',
+    description: 'Densidade de gravação (campo legado)',
     canonical: null,
   },
   numero_aviso_bancario: {
@@ -307,7 +307,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do aviso banc�rio (5 d�gitos no retorno)',
+    description: 'Número do aviso bancário (5 dígitos no retorno)',
     canonical: null,
   },
   brancos: {
@@ -318,7 +318,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaços em branco',
     canonical: null,
   },
   data_credito: {
@@ -329,7 +329,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de cr�dito dos valores',
+    description: 'Data de crédito dos valores',
     canonical: null,
   },
   brancos_2: {
@@ -340,7 +340,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaços em branco',
     canonical: null,
   },
   numero_sequencial: {
@@ -351,7 +351,7 @@ export const BRADESCO_CNAB400_HEADER_RETORNO: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'N�mero sequencial do registro (sempre 000001 no header)',
+    description: 'Número sequencial do registro (sempre 000001 no header)',
     canonical: null,
   },
 }

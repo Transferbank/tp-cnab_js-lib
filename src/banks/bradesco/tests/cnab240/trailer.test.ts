@@ -8,7 +8,7 @@
  * - Tipos de dados corretos
  * - Tamanhos e decimais
  * 
- * NÃO testam regras de negócio (valores válidos, consistência de totais, etc.)
+ * NÕO testam regras de negócio (valores válidos, consistência de totais, etc.)
  */
 
 import { bradescoCnab240 } from '@banks/bradesco/schemas/cnab240'

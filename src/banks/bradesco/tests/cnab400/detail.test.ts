@@ -1,7 +1,7 @@
 /**
  * Testes do Detalhe - Bradesco CNAB 400
  *
- * Valida a DEFINIÇÃO do schema (estrutura, posições, tipos).
+ * Valida a DEFINIÇÕO do schema (estrutura, posições, tipos).
  *
  * IMPORTANTE: Estes testes focam APENAS na estrutura do schema:
  * - Posições corretas dos campos
@@ -9,7 +9,7 @@
  * - Valores padrão
  * - Campos obrigatórios
  *
- * NÃO usa fixture real — apenas valida a definição do schema em si.
+ * NÕO usa fixture real — apenas valida a definição do schema em si.
  * Para testes contra arquivo real, ver: detail.real-data.test.ts
  *
  * Posições validadas cruzando brcobranca (Ruby) e cnab_yaml (YAML), duas fontes

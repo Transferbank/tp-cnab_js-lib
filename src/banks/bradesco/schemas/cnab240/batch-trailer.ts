@@ -1,11 +1,11 @@
 ﻿/**
  * Bradesco CNAB 240 - Trailer de Lote
  * Trailer de Lote (pos 8 = '5')
- * �ltima linha de cada lote dentro do arquivo. Cont�m totalizadores do lote:
- * quantidade de registros, quantidade e valor total de t�tulos por tipo de cobran�a
+ * última linha de cada lote dentro do arquivo. Contém totalizadores do lote:
+ * quantidade de registros, quantidade e valor total de títulos por tipo de cobrança
  * (simples, vinculada, caucionada, descontada).
  * Fonte do layout:
- * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, vers�o 04, dez/2024)
+ * - Manual oficial Bradesco CNAB 240 (bradesco_cnab240_2024.pdf, versão 04, dez/2024)
  * - pycnab240 (trailer_lote_cobranca.json)
  */
 
@@ -20,7 +20,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -31,7 +31,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do lote (mesmo n�mero do Header de Lote correspondente)',
+    description: 'Número sequencial do lote (mesmo número do Header de Lote correspondente)',
     canonical: null,
   },
   controle_registro: {
@@ -75,7 +75,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de t�tulos em cobran�a simples',
+    description: 'Quantidade de títulos em cobrança simples',
     canonical: null,
   },
   cobranca_simples_valor_total: {
@@ -86,7 +86,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos t�tulos em cobran�a simples (2 decimais impl�citas)',
+    description: 'Valor total dos títulos em cobrança simples (2 decimais implícitas)',
     canonical: null,
   },
   cobranca_vinculada_qtde_titulos: {
@@ -97,7 +97,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de t�tulos em cobran�a vinculada',
+    description: 'Quantidade de títulos em cobrança vinculada',
     canonical: null,
   },
   cobranca_vinculada_valor_total: {
@@ -108,7 +108,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos t�tulos em cobran�a vinculada (2 decimais impl�citas)',
+    description: 'Valor total dos títulos em cobrança vinculada (2 decimais implícitas)',
     canonical: null,
   },
   cobranca_caucionada_qtde_titulos: {
@@ -119,7 +119,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de t�tulos em cobran�a caucionada',
+    description: 'Quantidade de títulos em cobrança caucionada',
     canonical: null,
   },
   cobranca_caucionada_valor_total: {
@@ -130,7 +130,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos t�tulos em cobran�a caucionada (2 decimais impl�citas)',
+    description: 'Valor total dos títulos em cobrança caucionada (2 decimais implícitas)',
     canonical: null,
   },
   cobranca_descontada_qtde_titulos: {
@@ -141,7 +141,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de t�tulos em cobran�a descontada',
+    description: 'Quantidade de títulos em cobrança descontada',
     canonical: null,
   },
   cobranca_descontada_valor_total: {
@@ -152,7 +152,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor total dos t�tulos em cobran�a descontada (2 decimais impl�citas)',
+    description: 'Valor total dos títulos em cobrança descontada (2 decimais implícitas)',
     canonical: null,
   },
   numero_aviso_lancamento: {
@@ -163,7 +163,7 @@ export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do aviso de lan�amento (informado pelo banco)',
+    description: 'Número do aviso de lançamento (informado pelo banco)',
     canonical: null,
   },
   cnab_exclusivo_2: {

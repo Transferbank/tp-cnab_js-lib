@@ -1,8 +1,8 @@
 /**
- * Testes de Integra��o - Bradesco CNAB 240
+ * Testes de Integração - Bradesco CNAB 240
  * 
- * Valida o parsing completo de arquivos CNAB reais com m�ltiplos t�tulos.
- * Testa a estrutura geral do arquivo e extra��o de todos os campos principais.
+ * Valida o parsing completo de arquivos CNAB reais com múltiplos títulos.
+ * Testa a estrutura geral do arquivo e extração de todos os campos principais.
  */
 
 import { bradescoCnab240 } from '@banks/bradesco/schemas/cnab240'
@@ -10,7 +10,7 @@ import { extractLineFields } from '@parser/field-extractor'
 import { readFixture, findSegmentLines } from './shared'
 import { loadCnab240Metadata, type FixtureMetadata, type FixtureRecord } from '../test-helpers'
 
-describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
+describe('Schema Bradesco CNAB 240 - Integração (Parsing Completo)', () => {
   let lines: string[]
   let metadata: FixtureMetadata
 
@@ -20,7 +20,7 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
   })
 
   describe('Estrutura do arquivo', () => {
-    test('deve ter n�mero correto de linhas (do JSON)', () => {
+    test('deve ter número correto de linhas (do JSON)', () => {
       expect(lines).toHaveLength(metadata.structure!.totalLines)
     })
 
@@ -30,16 +30,16 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
       })
     })
 
-    test('deve parsear todos os campos sem erros de extra��o', () => {
+    test('deve parsear todos os campos sem erros de extração', () => {
       // Header de Arquivo
       const headerArquivo = extractLineFields(lines[0], bradescoCnab240.headerArquivo!)
       expect(headerArquivo.controle_banco.error).toBeFalsy()
       expect(headerArquivo.cedente_nome.error).toBeFalsy()
       expect(headerArquivo.arquivo_data_de_geracao.error).toBeFalsy()
 
-      // Segmentos P e Q s�o localizados pelo conte�do (pos 8 = '3', pos 14 = letra do
-      // segmento), n�o por �ndice fixo, j� que o arquivo tamb�m tem Header de Lote e
-      // Segmentos R/S entre os t�tulos.
+      // Segmentos P e Q são localizados pelo conteúdo (pos 8 = '3', pos 14 = letra do
+      // segmento), não por éndice fixo, já que o arquivo também tem Header de Lote e
+      // Segmentos R/S entre os títulos.
       const segPLines = findSegmentLines(lines, 'P')
       const segQLines = findSegmentLines(lines, 'Q')
 
@@ -63,17 +63,17 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
   })
 
   describe('Contagem de registros', () => {
-    test('deve parsear quantidade correta de t�tulos (do JSON)', () => {
-      // Contagem de segmentos P (cada t�tulo tem um segmento P), identificados pelo
-      // conte�do da linha (pos 8 = '3', pos 14 = 'P')
+    test('deve parsear quantidade correta de títulos (do JSON)', () => {
+      // Contagem de segmentos P (cada título tem um segmento P), identificados pelo
+      // conteúdo da linha (pos 8 = '3', pos 14 = 'P')
       const segmentosP = findSegmentLines(lines, 'P')
 
       expect(segmentosP.length).toBe(metadata.records.length)
     })
   })
 
-  describe('Extra��o de todos os campos principais', () => {
-    test('deve extrair todos os campos principais de todos os t�tulos', () => {
+  describe('Extração de todos os campos principais', () => {
+    test('deve extrair todos os campos principais de todos os títulos', () => {
       expect(metadata.records.length).toBeGreaterThan(0)
 
       const segPLines = findSegmentLines(lines, 'P')
@@ -83,13 +83,13 @@ describe('Schema Bradesco CNAB 240 - Integra��o (Parsing Completo)', () => {
         const segP = extractLineFields(segPLines[index], bradescoCnab240.segmentoP!)
         const segQ = extractLineFields(segQLines[index], bradescoCnab240.segmentoQ!)
 
-        // Verificar que campos principais foram extra�dos sem erro
+        // Verificar que campos principais foram extraídos sem erro
         expect(segP.valor_titulo.error).toBeFalsy()
         expect(segP.vencimento_titulo.error).toBeFalsy()
         expect(segQ.sacado_nome.error).toBeFalsy()
         expect(segQ.sacado_inscricao_numero.error).toBeFalsy()
 
-        // Verificar valores extra�dos
+        // Verificar valores extraídos
         expect(segP.valor_titulo.value).toBe(expected.amount)
         expect(segP.vencimento_titulo.raw).toBe(expected.dueDateRaw)
         expect(segQ.sacado_nome.value).toMatch(new RegExp(expected.name))

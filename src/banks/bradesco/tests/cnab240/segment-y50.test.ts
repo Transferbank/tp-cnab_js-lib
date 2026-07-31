@@ -8,7 +8,7 @@
  * - Tipos de dados corretos
  * - Tamanhos e decimais
  * 
- * NÃO testam regras de negócio (soma dos rateios, validação de contas, etc.)
+ * NÕO testam regras de negócio (soma dos rateios, validação de contas, etc.)
  * 
  * NOTA: Este segmento é opcional e pode ocorrer várias vezes por título, permitindo
  * distribuir o valor recebido entre múltiplas contas por percentual ou valor fixo.

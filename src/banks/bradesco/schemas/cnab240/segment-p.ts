@@ -2,7 +2,7 @@
  * Bradesco CNAB 240 - Segmento P
  * Segmento P (pos 8 = '3', pos 14 = 'P')
  * Linha com os dados financeiros de cada boleto: valor cobrado, data de vencimento,
- * nosso n�mero (identificador �nico do boleto no banco), esp�cie do t�tulo, etc.
+ * nosso número (identificador único do boleto no banco), espécie do título, etc.
  * Cada boleto gera uma linha de Segmento P.
  * Fonte do layout: pycnab240 + cnab_yaml generic FEBRABAN
  */
@@ -18,7 +18,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -29,7 +29,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de servi�o',
+    description: 'Lote de serviço',
     canonical: null,
   },
   controle_registro: {
@@ -51,7 +51,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Número sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -62,7 +62,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'P',
-    description: 'Segmento P = dados do t�tulo',
+    description: 'Segmento P = dados do título',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -84,7 +84,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa',
+    description: 'Código de movimento da remessa',
     canonical: null,
   },
   cedente_agencia: {
@@ -95,7 +95,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia do cedente',
+    description: 'Agência do cedente',
     canonical: null,
   },
   cedente_agencia_dv: {
@@ -106,7 +106,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia',
+    description: 'Dígito verificador da agência',
     canonical: null,
   },
   cedente_conta: {
@@ -128,7 +128,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'Dígito verificador da conta',
     canonical: null,
   },
   cedente_agencia_conta_dv: {
@@ -139,7 +139,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia/conta do cedente',
+    description: 'Dígito verificador da agência/conta do cedente',
     canonical: null,
   },
   identificacao_titulo_banco: {
@@ -150,7 +150,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo no banco (carteira + nosso n�mero)',
+    description: 'Identificação do título no banco (carteira + nosso número)',
     canonical: null,
   },
   cobranca_carteira: {
@@ -161,7 +161,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da carteira: 1=Simples, 3=Caucionada, 4=Descontada',
+    description: 'Código da carteira: 1=Simples, 3=Caucionada, 4=Descontada',
     canonical: null,
   },
   cobranca_cadastramento: {
@@ -194,7 +194,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '2',
-    description: 'Identifica��o da emiss�o: 1=Banco, 2=Empresa',
+    description: 'Identificação da emissão: 1=Banco, 2=Empresa',
     canonical: null,
   },
   cobranca_distribuicao_bloqueto: {
@@ -205,7 +205,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o da distribui��o: 1=Banco, 2=Empresa',
+    description: 'Identificação da distribuição: 1=Banco, 2=Empresa',
     canonical: null,
   },
   numero_documento: {
@@ -216,7 +216,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do documento de cobran�a',
+    description: 'Número do documento de cobrança',
     canonical: 'numeroDocumento',
   },
   vencimento_titulo: {
@@ -238,7 +238,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do t�tulo',
+    description: 'Valor do título',
     canonical: 'valor',
   },
   agencia_cobradora: {
@@ -249,7 +249,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia cobradora/recebedora',
+    description: 'Agência cobradora/recebedora',
     canonical: null,
   },
   agencia_cobradora_dv: {
@@ -260,7 +260,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia cobradora',
+    description: 'Dígito verificador da agência cobradora',
     canonical: null,
   },
   especie_titulo: {
@@ -271,7 +271,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Esp�cie do t�tulo: 01=DM, 02=NP, etc.',
+    description: 'Espécie do título: 01=DM, 02=NP, etc.',
     canonical: null,
   },
   aceite_titulo: {
@@ -282,7 +282,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Aceite: A=Aceite, N=N�o aceite',
+    description: 'Aceite: A=Aceite, N=Não aceite',
     canonical: null,
   },
   data_emissao_titulo: {
@@ -293,7 +293,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de emiss�o do t�tulo',
+    description: 'Data de emissão do título',
     canonical: 'dataEmissao',
   },
   juros_codigo: {
@@ -304,7 +304,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de juros: 0=Isento, 1=Valor/dia, 2=Taxa mensal',
+    description: 'Código de juros: 0=Isento, 1=Valor/dia, 2=Taxa mensal',
     canonical: {
       field: 'juros.tipo',
       interpret: (value: unknown) => {
@@ -324,7 +324,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de in�cio da cobran�a de juros',
+    description: 'Data de início da cobrança de juros',
     canonical: 'juros.vigenciaAPartirDe',
   },
   juros_valor: {
@@ -346,7 +346,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do primeiro desconto: 0=Sem, 1=Valor fixo, 2=Percentual',
+    description: 'Código do primeiro desconto: 0=Sem, 1=Valor fixo, 2=Percentual',
     canonical: null,
   },
   desconto1_data: {
@@ -401,7 +401,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo na empresa',
+    description: 'Identificação do título na empresa',
     canonical: null,
   },
   codigo_protesto: {
@@ -412,7 +412,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo para protesto: 1=Protestar, 3=N�o protestar',
+    description: 'Código para protesto: 1=Protestar, 3=Não protestar',
     canonical: null,
   },
   prazo_protesto: {
@@ -423,7 +423,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de dias para protesto',
+    description: 'Número de dias para protesto',
     canonical: null,
   },
   codigo_baixa: {
@@ -434,7 +434,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo para baixa/devolu��o: 1=Baixar, 2=N�o baixar',
+    description: 'Código para baixa/devolução: 1=Baixar, 2=Não baixar',
     canonical: null,
   },
   prazo_baixa: {
@@ -445,7 +445,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de dias para baixa/devolu��o',
+    description: 'Número de dias para baixa/devolução',
     canonical: null,
   },
   codigo_moeda: {
@@ -456,7 +456,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da moeda: 09=Real',
+    description: 'Código da moeda: 09=Real',
     canonical: null,
   },
   numero_contrato: {
@@ -467,7 +467,7 @@ export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do contrato da opera��o de cr�dito',
+    description: 'Número do contrato da operação de crédito',
     canonical: null,
   },
   cnab_exclusivo_3: {
