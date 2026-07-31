@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { CNABEmptyFileError } from '@tp-types/errors'
+import { splitAndValidateLines } from '@utils/file-reader'
 
 export function createFileFromString(content: string, filename = 'test.rem'): File {
   const encoder = new TextEncoder()
@@ -9,13 +9,7 @@ export function createFileFromString(content: string, filename = 'test.rem'): Fi
 }
 
 export function stringToLines(content: string): string[] {
-  const lines = content.split(/\r?\n/).filter((line) => line.length > 0)
-  
-  if (lines.length === 0) {
-    throw new CNABEmptyFileError()
-  }
-  
-  return lines
+  return splitAndValidateLines(content)
 }
 
 export function loadFixtureAsFile(filename: string): File {

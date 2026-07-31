@@ -1,10 +1,9 @@
 import { CNABEmptyFileError } from '@tp-types/errors'
 
-export async function readCnabFile(file: File): Promise<string[]> {
-  const arrayBuffer = await file.arrayBuffer()
-  const decoder = new TextDecoder('latin1')
-  const content = decoder.decode(arrayBuffer)
-  
+/**
+ * Divide conteúdo em linhas, filtra vazias e valida arquivo não-vazio.
+ */
+export function splitAndValidateLines(content: string): string[] {
   const lines = content.split(/\r?\n/).filter((line) => line.length > 0)
   
   if (lines.length === 0) {
@@ -12,4 +11,12 @@ export async function readCnabFile(file: File): Promise<string[]> {
   }
   
   return lines
+}
+
+export async function readCnabFile(file: File): Promise<string[]> {
+  const arrayBuffer = await file.arrayBuffer()
+  const decoder = new TextDecoder('latin1')
+  const content = decoder.decode(arrayBuffer)
+  
+  return splitAndValidateLines(content)
 }
