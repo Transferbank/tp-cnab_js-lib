@@ -2,13 +2,14 @@ import { CNABFormatCode, CNABValidationResult, ParsedLine, ValidationError, CNAB
 import { Cnab240SegmentCode } from '../cnab240-record-types'
 import { Cnab400RecordType } from '../cnab400-record-types'
 import { ReadMode } from './read-mode'
-import { BankSchema, RecordSchema, CNABProvider } from '@tp-types/bank'
+import { BankSchema, RecordSchema, CNABProvider, OptionalRecordSchema } from '@tp-types/bank'
 import { CNABError, CNABGroupingError, CNABLazyResolveError } from '@tp-types/errors'
 import { validateCnab240Content } from '@validators/cnab240-content-validator'
 import { validateCnab400Content } from '@validators/cnab400-content-validator'
 import { validateCnab240Structure } from '@validators/cnab240-structure-validator'
 import { validateCnab400Structure } from '@validators/cnab400-structure-validator'
 import { mergeValidationErrors } from '@validators/merge-validation-errors'
+import { buildOptionalMap } from '@validators/build-optional-map'
 import { extractLineFields } from '@parser/field-extractor'
 import { getCnab400RecordType, getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { getCnab240SegmentYVariant } from '@parser/cnab-positions'
@@ -139,31 +140,38 @@ export class CNABFile {
     }
   }
 
-  private parseBodyLine(line: string, bankSchema: BankSchema): ParsedLine | undefined {
+  private parseBodyLine(
+    line: string, 
+    bankSchema: BankSchema,
+    optionalMap: Map<string, OptionalRecordSchema>
+  ): ParsedLine | undefined {
     if (this.type === CNABFormatCode.CNAB400) {
-      return this.parseCnab400Line(line, bankSchema)
+      return this.parseCnab400Line(line, bankSchema, optionalMap)
     } else {
-      return this.parseCnab240Line(line, bankSchema)
+      return this.parseCnab240Line(line, bankSchema, optionalMap)
     }
   }
 
-  private parseCnab400Line(line: string, bankSchema: BankSchema): ParsedLine | undefined {
+  private parseCnab400Line(
+    line: string, 
+    bankSchema: BankSchema,
+    optionalMap: Map<string, OptionalRecordSchema>
+  ): ParsedLine | undefined {
     const recordType = getCnab400RecordType(line)
     
     if (recordType === Cnab400RecordType.DETAIL_STANDARD || recordType === Cnab400RecordType.DETAIL_BB) {
       return extractLineFields(line, bankSchema.detail!)
     }
     
-    if (bankSchema.optionalRecords) {
-      for (const optional of bankSchema.optionalRecords) {
-        if (optional.identifier === recordType) {
-          return extractLineFields(line, optional.schema)
-        }
-        
-        // Suporte para identificadores compostos (ex: '5-99' do BB)
-        if (optional.identifier.includes('-') && optional.identifier.startsWith(recordType)) {
-          return extractLineFields(line, optional.schema)
-        }
+    const optional = optionalMap.get(recordType)
+    if (optional != null) {
+      return extractLineFields(line, optional.schema)
+    }
+    
+    // Suporte para identificadores compostos (ex: '5-99' do BB)
+    for (const [identifier, opt] of optionalMap.entries()) {
+      if (identifier.includes('-') && identifier.startsWith(recordType)) {
+        return extractLineFields(line, opt.schema)
       }
     }
     
@@ -171,7 +179,11 @@ export class CNABFile {
   }
 
 
-  private parseCnab240Line(line: string, bankSchema: BankSchema): ParsedLine | undefined {
+  private parseCnab240Line(
+    line: string, 
+    bankSchema: BankSchema,
+    optionalMap: Map<string, OptionalRecordSchema>
+  ): ParsedLine | undefined {
     const recordType = getCnab240RecordType(line)
     
     if (recordType === '3') {
@@ -183,21 +195,21 @@ export class CNABFile {
       else if (segment === Cnab240SegmentCode.Q) {
         return extractLineFields(line, bankSchema.segmentoQ!)
       } 
-      else if (segment === Cnab240SegmentCode.R && bankSchema.optionalRecords) {
-        const optR = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'R')
+      else if (segment === Cnab240SegmentCode.R) {
+        const optR = optionalMap.get('R')
         if (optR != null) {
           return extractLineFields(line, optR.schema)
         }
       } 
-      else if (segment === Cnab240SegmentCode.S && bankSchema.optionalRecords) {
-        const optS = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'S')
+      else if (segment === Cnab240SegmentCode.S) {
+        const optS = optionalMap.get('S')
         if (optS != null) {
           return extractLineFields(line, optS.schema)
         }
       } 
-      else if (segment === Cnab240SegmentCode.Y && bankSchema.optionalRecords) {
+      else if (segment === Cnab240SegmentCode.Y) {
         const subVariant = getCnab240SegmentYVariant(line)
-        const optY = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === `Y${subVariant}`)
+        const optY = optionalMap.get(`Y${subVariant}`)
         if (optY != null) {
           return extractLineFields(line, optY.schema)
         }
@@ -221,8 +233,9 @@ export class CNABFile {
     const headerParsed = headerSchema ? extractLineFields(headerLine, headerSchema) : undefined
     const trailerParsed = trailerSchema ? extractLineFields(trailerLine, trailerSchema) : undefined
 
+    const optionalMap = buildOptionalMap(bankSchema)
     const bodyParsed = bodyLines
-      .map((line) => this.parseBodyLine(line, bankSchema))
+      .map((line) => this.parseBodyLine(line, bankSchema, optionalMap))
       .filter((parsed): parsed is ParsedLine => parsed !== undefined)
 
     return { headerParsed, trailerParsed, bodyParsed }
