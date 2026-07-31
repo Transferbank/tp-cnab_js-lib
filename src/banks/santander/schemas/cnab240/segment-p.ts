@@ -1,10 +1,10 @@
 ﻿/* *
- * Cont�m os dados financeiros do t�tulo (boleto): valor, vencimento,
- * nosso n�mero, juros, descontos, etc.
+ * Contm os dados financeiros do ttulo (boleto): valor, vencimento,
+ * nosso nmero, juros, descontos, etc.
  * Segmento: P
  * 
  * Baseado em:
- * - Manual "Layout Padr�o 240 � Cobran�a, Vers�o 2.5" (Setembro/2014)
+ * - Manual "Layout Padro 240  Cobrana, Verso 2.5" (Setembro/2014)
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
@@ -19,7 +19,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -30,7 +30,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -52,7 +52,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -63,7 +63,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'P',
-    description: 'Segmento P = dados do t�tulo',
+    description: 'Segmento P = dados do ttulo',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -85,7 +85,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa (vari�vel: 01=Entrada, 02=Baixa, 04=Abatimento, etc.)',
+    description: 'Cdigo de movimento da remessa (varivel: 01=Entrada, 02=Baixa, 04=Abatimento, etc.)',
     canonical: null,
   },
   cedente_agencia: {
@@ -96,7 +96,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia Destinat�ria (Santander usa 4 d�gitos)',
+    description: 'Agncia Destinatria (Santander usa 4 dgitos)',
     canonical: null,
   },
   cedente_agencia_dv: {
@@ -107,7 +107,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito da Ag�ncia Destinat�ria',
+    description: 'Dgito da Agncia Destinatria',
     canonical: null,
   },
   cedente_conta: {
@@ -118,7 +118,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da conta corrente (Santander usa 9 d�gitos)',
+    description: 'Nmero da conta corrente (Santander usa 9 dgitos)',
     canonical: null,
   },
   cedente_conta_dv: {
@@ -129,7 +129,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'Dgito verificador da conta',
     canonical: null,
   },
   conta_cobranca: {
@@ -140,7 +140,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Conta cobran�a Destinat�ria FIDC (Santander, 9 d�gitos)',
+    description: 'Conta cobrana Destinatria FIDC (Santander, 9 dgitos)',
     canonical: null,
   },
   conta_cobranca_dv: {
@@ -151,7 +151,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito da conta cobran�a FIDC',
+    description: 'Dgito da conta cobrana FIDC',
     canonical: null,
   },
   cnab_exclusivo_3: {
@@ -173,7 +173,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo no banco (Nosso N�mero)',
+    description: 'Identificao do ttulo no banco (Nosso Nmero)',
     canonical: 'nossoNumero',
   },
   tipo_cobranca: {
@@ -184,7 +184,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de cobran�a: 1=Simples, 3=Caucionada, etc.',
+    description: 'Tipo de cobrana: 1=Simples, 3=Caucionada, etc.',
     canonical: null,
   },
   forma_cadastramento: {
@@ -228,7 +228,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do documento de cobran�a (seu n�mero)',
+    description: 'Nmero do documento de cobrana (seu nmero)',
     canonical: 'numeroDocumento',
   },
   vencimento_titulo: {
@@ -239,7 +239,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de vencimento do t�tulo',
+    description: 'Data de vencimento do ttulo',
     canonical: 'vencimento',
   },
   valor_titulo: {
@@ -250,7 +250,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor nominal do t�tulo',
+    description: 'Valor nominal do ttulo',
     canonical: 'valor',
   },
   agencia_cobradora: {
@@ -261,7 +261,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia encarregada da cobran�a FIDC',
+    description: 'Agncia encarregada da cobrana FIDC',
     canonical: null,
   },
   agencia_cobradora_dv: {
@@ -272,7 +272,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito da Ag�ncia do Benefici�rio FIDC',
+    description: 'Dgito da Agncia do Beneficirio FIDC',
     canonical: null,
   },
   cnab_exclusivo_6: {
@@ -294,7 +294,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '02',
-    description: 'Esp�cie do t�tulo: 01=DM, 02=NP, etc.',
+    description: 'Espcie do ttulo: 01=DM, 02=NP, etc.',
     canonical: null,
   },
   aceite: {
@@ -305,7 +305,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'N',
-    description: 'Identifica��o de aceite: A=Aceite, N=N�o aceite',
+    description: 'Identificao de aceite: A=Aceite, N=No aceite',
     canonical: null,
   },
   data_emissao_titulo: {
@@ -316,7 +316,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de emiss�o do t�tulo',
+    description: 'Data de emisso do ttulo',
     canonical: 'dataEmissao',
   },
   juros_mora_codigo: {
@@ -327,7 +327,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'C�digo de juros: 0=Isento, 1=Valor/dia, 2=%/m�s',
+    description: 'Cdigo de juros: 0=Isento, 1=Valor/dia, 2=%/ms',
     canonical: {
       field: 'juros.tipo',
       interpret: (value: unknown) => {
@@ -358,7 +358,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou percentual de juros por dia/m�s',
+    description: 'Valor ou percentual de juros por dia/ms',
     canonical: 'juros.valor',
   },
   desconto_codigo: {
@@ -369,7 +369,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'C�digo de desconto: 0=Sem, 1=Valor fixo, 2=%',
+    description: 'Cdigo de desconto: 0=Sem, 1=Valor fixo, 2=%',
     canonical: null,
   },
   desconto_data: {
@@ -402,7 +402,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Percentual do IOF a ser recolhido (5 casas decimais � Nota 18 do manual). Preenchido apenas quando o Benefici�rio n�o possui cadastro de IOF no perfil do conv�nio.',
+    description: 'Percentual do IOF a ser recolhido (5 casas decimais  Nota 18 do manual). Preenchido apenas quando o Beneficirio no possui cadastro de IOF no perfil do convnio.',
     canonical: null,
   },
   abatimento_valor: {
@@ -424,7 +424,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo na empresa',
+    description: 'Identificao do ttulo na empresa',
     canonical: null,
   },
   protesto_codigo: {
@@ -435,7 +435,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'C�digo de protesto: 0=N�o protestar',
+    description: 'Cdigo de protesto: 0=No protestar',
     canonical: null,
   },
   protesto_prazo: {
@@ -457,7 +457,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'C�digo de baixa: 0=N�o baixar',
+    description: 'Cdigo de baixa: 0=No baixar',
     canonical: null,
   },
   cnab_exclusivo_7: {
@@ -468,7 +468,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Reservado (uso Banco) � zero fixo',
+    description: 'Reservado (uso Banco)  zero fixo',
     canonical: null,
   },
   baixa_prazo: {
@@ -479,7 +479,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de dias para Baixa/Devolu��o',
+    description: 'Nmero de dias para Baixa/Devoluo',
     canonical: null,
   },
   moeda_codigo: {
@@ -490,7 +490,7 @@ export const SANTANDER_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '09',
-    description: 'C�digo da moeda: 09=Real',
+    description: 'Cdigo da moeda: 09=Real',
     canonical: null,
   },
   cnab_exclusivo_5: {

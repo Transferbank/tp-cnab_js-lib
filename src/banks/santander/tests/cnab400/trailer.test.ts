@@ -1,7 +1,7 @@
 /**
  * Testes do Schema Santander CNAB 400 - Trailer
  *
- * Parte 1: Definição dos campos (sem fixture)
+ * Parte 1: DefiniÃ§Ã£o dos campos (sem fixture)
  * Parte 2: Parsing de arquivo real
  */
 
@@ -10,10 +10,10 @@ import { extractLineFields } from '@parser/field-extractor'
 import { readFixture } from './shared'
 
 describe('Schema Santander CNAB 400 - Trailer', () => {
-  describe('Definição dos campos', () => {
+  describe('DefiniÃ§Ã£o dos campos', () => {
     const trailer = santanderCnab400.trailer!
 
-    test('deve ter tipo de registro "9" (trailer) na posição 1', () => {
+    test('deve ter tipo de registro "9" (trailer) na posiÃ§Ã£o 1', () => {
       expect(trailer.tipo_registro).toBeDefined()
       expect(trailer.tipo_registro.pos).toEqual([1, 1])
       expect(trailer.tipo_registro.type).toBe('num')
@@ -21,14 +21,14 @@ describe('Schema Santander CNAB 400 - Trailer', () => {
       expect(trailer.tipo_registro.pattern).toBe('9')
     })
 
-    test('deve ter quantidade de documentos na posição 2-7', () => {
+    test('deve ter quantidade de documentos na posiÃ§Ã£o 2-7', () => {
       expect(trailer.qtd_documentos).toBeDefined()
       expect(trailer.qtd_documentos.pos).toEqual([2, 7])
       expect(trailer.qtd_documentos.type).toBe('num')
       expect(trailer.qtd_documentos.size).toBe(6)
     })
 
-    test('deve ter valor total na posição 8-20 com 2 decimais', () => {
+    test('deve ter valor total na posiÃ§Ã£o 8-20 com 2 decimais', () => {
       expect(trailer.valor_total).toBeDefined()
       expect(trailer.valor_total.pos).toEqual([8, 20])
       expect(trailer.valor_total.type).toBe('num')
@@ -36,14 +36,14 @@ describe('Schema Santander CNAB 400 - Trailer', () => {
       expect(trailer.valor_total.decimals).toBe(2)
     })
 
-    test('deve ter zeros na posição 21-394', () => {
+    test('deve ter zeros na posiÃ§Ã£o 21-394', () => {
       expect(trailer.zeros).toBeDefined()
       expect(trailer.zeros.pos).toEqual([21, 394])
       expect(trailer.zeros.type).toBe('num')
       expect(trailer.zeros.size).toBe(374)
     })
 
-    test('deve ter número sequencial na posição 395-400', () => {
+    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
       expect(trailer.numero_sequencial).toBeDefined()
       expect(trailer.numero_sequencial.pos).toEqual([395, 400])
       expect(trailer.numero_sequencial.type).toBe('num')
@@ -65,12 +65,12 @@ describe('Schema Santander CNAB 400 - Trailer', () => {
     test('qtd_documentos deve ser 128 (total de detalhes no arquivo)', () => {
       const trailer = extractLineFields(trailerLine, santanderCnab400.trailer!)
       
-      // Evidência estrutural: deve bater com a contagem real de linhas de detalhe
+      // EvidÃªncia estrutural: deve bater com a contagem real de linhas de detalhe
       expect(trailer.qtd_documentos.value).toBe(detailLines.length)
       expect(trailer.qtd_documentos.value).toBe(128)
     })
 
-    test('valor_total deve bater com a soma dos valores dos títulos', () => {
+    test('valor_total deve bater com a soma dos valores dos tÃ­tulos', () => {
       const trailer = extractLineFields(trailerLine, santanderCnab400.trailer!)
       
       // Calcular soma manual dos detalhes
@@ -85,10 +85,10 @@ describe('Schema Santander CNAB 400 - Trailer', () => {
       expect(valorTrailer).toBeCloseTo(somaEsperada, 2)
     })
 
-    test('numero_sequencial deve ser exatamente igual ao total de linhas do arquivo (evidência estrutural)', () => {
+    test('numero_sequencial deve ser exatamente igual ao total de linhas do arquivo (evidÃªncia estrutural)', () => {
       const trailer = extractLineFields(trailerLine, santanderCnab400.trailer!)
       
-      // Trailer é sempre a última linha, numero_sequencial deve ser igual ao total de linhas
+      // Trailer Ã© sempre a Ãºltima linha, numero_sequencial deve ser igual ao total de linhas
       expect(trailer.numero_sequencial.value).toBe(lines.length)
       expect(trailer.numero_sequencial.value).toBe(130)
     })

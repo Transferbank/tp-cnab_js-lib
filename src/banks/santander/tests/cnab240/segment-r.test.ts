@@ -7,49 +7,49 @@
 import { SANTANDER_CNAB240_SEGMENT_R } from '@banks/santander/schemas/cnab240'
 
 describe('Schema Santander CNAB 240 - Segmento R', () => {
-  describe('Definição dos campos - Controle', () => {
-    it('deve ter código do banco na posição 1-3 com padrão "033"', () => {
+  describe('DefiniÃ§Ã£o dos campos - Controle', () => {
+    it('deve ter cÃ³digo do banco na posiÃ§Ã£o 1-3 com padrÃ£o "033"', () => {
       expect(SANTANDER_CNAB240_SEGMENT_R.controle_banco).toMatchObject({
         pos: [1, 3],
         pattern: '033',
       })
     })
 
-    it('deve ter tipo de registro "3" (detalhe) na posição 8', () => {
+    it('deve ter tipo de registro "3" (detalhe) na posiÃ§Ã£o 8', () => {
       expect(SANTANDER_CNAB240_SEGMENT_R.controle_registro).toMatchObject({
         pos: [8, 8],
         pattern: '3',
       })
     })
 
-    it('deve ter identificador do segmento "R" na posição 14', () => {
+    it('deve ter identificador do segmento "R" na posiÃ§Ã£o 14', () => {
       expect(SANTANDER_CNAB240_SEGMENT_R.servico_segmento).toMatchObject({
         pos: [14, 14],
         pattern: 'R',
       })
     })
 
-    it('deve ter código de movimento VARIÁVEL (não fixo) na posição 16-17', () => {
+    it('deve ter cÃ³digo de movimento VARIÃVEL (nÃ£o fixo) na posiÃ§Ã£o 16-17', () => {
       const campo = SANTANDER_CNAB240_SEGMENT_R.servico_codigo_movimento
       expect(campo.pos).toEqual([16, 17])
-      expect(campo.pattern).toBeNull() // variável, não fixo
+      expect(campo.pattern).toBeNull() // variÃ¡vel, nÃ£o fixo
     })
   })
 
   describe('Campos de desconto e multa', () => {
-    it('deve ter campos do segundo desconto (código, data, valor)', () => {
+    it('deve ter campos do segundo desconto (cÃ³digo, data, valor)', () => {
       expect(SANTANDER_CNAB240_SEGMENT_R.desconto2_codigo).toBeDefined()
       expect(SANTANDER_CNAB240_SEGMENT_R.desconto2_data).toBeDefined()
       expect(SANTANDER_CNAB240_SEGMENT_R.desconto2_valor).toBeDefined()
     })
 
-    it('deve ter campos do terceiro desconto (código, data, valor)', () => {
+    it('deve ter campos do terceiro desconto (cÃ³digo, data, valor)', () => {
       expect(SANTANDER_CNAB240_SEGMENT_R.desconto3_codigo).toBeDefined()
       expect(SANTANDER_CNAB240_SEGMENT_R.desconto3_data).toBeDefined()
       expect(SANTANDER_CNAB240_SEGMENT_R.desconto3_valor).toBeDefined()
     })
 
-    it('deve ter campos de multa (código, data, valor/percentual)', () => {
+    it('deve ter campos de multa (cÃ³digo, data, valor/percentual)', () => {
       expect(SANTANDER_CNAB240_SEGMENT_R.multa_codigo).toBeDefined()
       expect(SANTANDER_CNAB240_SEGMENT_R.multa_data).toBeDefined()
       expect(SANTANDER_CNAB240_SEGMENT_R.multa_valor).toBeDefined()
@@ -65,8 +65,8 @@ describe('Schema Santander CNAB 240 - Segmento R', () => {
     })
   })
 
-  describe('Validação de estrutura', () => {
-    it('todos os campos devem ter posição, tipo e tamanho definidos', () => {
+  describe('ValidaÃ§Ã£o de estrutura', () => {
+    it('todos os campos devem ter posiÃ§Ã£o, tipo e tamanho definidos', () => {
       Object.entries(SANTANDER_CNAB240_SEGMENT_R).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -78,7 +78,7 @@ describe('Schema Santander CNAB 240 - Segmento R', () => {
       )
     })
 
-    it('tamanhos declarados devem bater com as posições', () => {
+    it('tamanhos declarados devem bater com as posiÃ§Ãµes', () => {
       Object.entries(SANTANDER_CNAB240_SEGMENT_R).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           const tamanhoCalculado = fieldDef.pos[1] - fieldDef.pos[0] + 1
@@ -87,7 +87,7 @@ describe('Schema Santander CNAB 240 - Segmento R', () => {
       )
     })
 
-    it('não deve haver sobreposição de posições', () => {
+    it('nÃ£o deve haver sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const campos = Object.entries(SANTANDER_CNAB240_SEGMENT_R).map(
         ([name, def]: [string, any]) => ({
           name,
@@ -105,7 +105,7 @@ describe('Schema Santander CNAB 240 - Segmento R', () => {
       }
     })
 
-    it('deve cobrir todas as 240 posições', () => {
+    it('deve cobrir todas as 240 posiÃ§Ãµes', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SANTANDER_CNAB240_SEGMENT_R).forEach((fieldDef: any) => {

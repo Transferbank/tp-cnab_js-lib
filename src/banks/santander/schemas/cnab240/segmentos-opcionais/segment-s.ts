@@ -1,12 +1,12 @@
 ﻿/**
- * Santander CNAB 240 - Segmento S (Mensagens/Formul�rio Especial)
- * Registro opcional para mensagens de impress�o no boleto.
+ * Santander CNAB 240 - Segmento S (Mensagens/Formulrio Especial)
+ * Registro opcional para mensagens de impresso no boleto.
  * Possui duas variantes mutuamente exclusivas identificadas pelo campo pos 18:
- * - Variante 1 (pos 18 = '1'): Formul�rio Especial
+ * - Variante 1 (pos 18 = '1'): Formulrio Especial
  * - Variante 2 (pos 18 = '2'): Mensagens fixas (blocos de 40 caracteres)
  * Segmento S (pos 8 = '3', pos 14 = 'S')
  * 
- * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRAN�A", c�digo H7815, Vers�o 6, Fevereiro/2023
+ * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRANA", cdigo H7815, Verso 6, Fevereiro/2023
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -19,7 +19,7 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -30,7 +30,7 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -52,7 +52,7 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -63,7 +63,7 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'S',
-    description: 'Segmento S = mensagens/formul�rio',
+    description: 'Segmento S = mensagens/formulrio',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -85,7 +85,7 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento Remessa',
+    description: 'Cdigo de movimento Remessa',
     canonical: null,
   },
   identificacao_impressao: {
@@ -96,7 +96,7 @@ export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o da impress�o: 1=Formul�rio Especial, 2=Mensagens fixas',
+    description: 'Identificao da impresso: 1=Formulrio Especial, 2=Mensagens fixas',
     canonical: null,
   },
 }
@@ -110,7 +110,7 @@ export const SANTANDER_CNAB240_SEGMENT_S_FORM: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da linha a ser impressa (01 a 22)',
+    description: 'Nmero da linha a ser impressa (01 a 22)',
     canonical: null,
   },
   mensagem_recibo: {

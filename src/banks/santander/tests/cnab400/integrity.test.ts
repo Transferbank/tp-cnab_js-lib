@@ -2,8 +2,8 @@
  * Testes de integridade do Schema Santander CNAB 400
  *
  * Verifica:
- * - Sem sobreposição de posições
- * - Tamanho declarado bate com posições
+ * - Sem sobreposiÃ§Ã£o de posiÃ§Ãµes
+ * - Tamanho declarado bate com posiÃ§Ãµes
  */
 
 import { santanderCnab400 } from '@banks/santander/schemas/cnab400'
@@ -12,7 +12,7 @@ describe('Schema Santander CNAB 400 - Integridade', () => {
   describe('Header de Arquivo', () => {
     const header = santanderCnab400.header!
 
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const fields = Object.entries(header).sort((a, b) => a[1].pos[0] - b[1].pos[0])
 
       for (let i = 0; i < fields.length - 1; i++) {
@@ -26,7 +26,7 @@ describe('Schema Santander CNAB 400 - Integridade', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       Object.entries(header).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)
@@ -37,7 +37,7 @@ describe('Schema Santander CNAB 400 - Integridade', () => {
   describe('Detail', () => {
     const detail = santanderCnab400.detail!
 
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const fields = Object.entries(detail).sort((a, b) => a[1].pos[0] - b[1].pos[0])
 
       for (let i = 0; i < fields.length - 1; i++) {
@@ -51,7 +51,7 @@ describe('Schema Santander CNAB 400 - Integridade', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       Object.entries(detail).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)
@@ -62,7 +62,7 @@ describe('Schema Santander CNAB 400 - Integridade', () => {
   describe('Trailer', () => {
     const trailer = santanderCnab400.trailer!
 
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const fields = Object.entries(trailer).sort((a, b) => a[1].pos[0] - b[1].pos[0])
 
       for (let i = 0; i < fields.length - 1; i++) {
@@ -76,7 +76,7 @@ describe('Schema Santander CNAB 400 - Integridade', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       Object.entries(trailer).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)

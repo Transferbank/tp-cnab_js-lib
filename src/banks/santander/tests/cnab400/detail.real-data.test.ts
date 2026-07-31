@@ -1,12 +1,12 @@
 /**
  * Testes do Schema Santander CNAB 400 - Detalhe (Dados Reais)
  *
- * Duas camadas de evidência:
- * 1. Verificação independente (checksum, consistências estruturais)
- * 2. Regressão via metadata.json
+ * Duas camadas de evidÃªncia:
+ * 1. VerificaÃ§Ã£o independente (checksum, consistÃªncias estruturais)
+ * 2. RegressÃ£o via metadata.json
  *
- * O pipeline público de ponta a ponta (`openCnab`) é coberto em
- * `SANTANDER_cnab_400_140.e2e.test.ts` — não duplicado aqui.
+ * O pipeline pÃºblico de ponta a ponta (`openCnab`) Ã© coberto em
+ * `SANTANDER_cnab_400_140.e2e.test.ts` â€” nÃ£o duplicado aqui.
  *
  * Fixture: SANTANDER_cnab_400_140.REM (130 linhas: 1 header + 128 detalhes + 1 trailer)
  */
@@ -24,20 +24,20 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
   const detailLines = lines.filter((line) => line[0] === '1')
   const trailerLine = lines[lines.length - 1]
 
-  describe('Verificação independente (evidência dentro do próprio arquivo real)', () => {
-    test('CPF/CNPJ do sacado deve ser válido em todas as 128 linhas (checksum)', () => {
+  describe('VerificaÃ§Ã£o independente (evidÃªncia dentro do prÃ³prio arquivo real)', () => {
+    test('CPF/CNPJ do sacado deve ser vÃ¡lido em todas as 128 linhas (checksum)', () => {
       expect(detailLines.length).toBe(128)
 
       detailLines.forEach((line) => {
         const detail = extractLineFields(line, santanderCnab400.detail!)
         const documento = detail.sacado_numero_inscricao.raw
 
-        // Checksum externo - prova independente da posição
+        // Checksum externo - prova independente da posiÃ§Ã£o
         expect(isValidCpfCnpj(documento)).toBe(true)
       })
     })
 
-    test('codigo_transmissao do detalhe deve bater com o do header (consistência estrutural)', () => {
+    test('codigo_transmissao do detalhe deve bater com o do header (consistÃªncia estrutural)', () => {
       const header = extractLineFields(headerLine, santanderCnab400.header!)
       const codigoTransmissaoHeader = header.codigo_transmissao.raw
 
@@ -46,12 +46,12 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       detailLines.forEach((line) => {
         const detail = extractLineFields(line, santanderCnab400.detail!)
         
-        // Posições diferentes (18-37 no detalhe, 27-46 no header), mas mesmo valor
+        // PosiÃ§Ãµes diferentes (18-37 no detalhe, 27-46 no header), mas mesmo valor
         expect(detail.codigo_transmissao.raw).toBe(codigoTransmissaoHeader)
       })
     })
 
-    test('numero_controle deve conter numero_documento (consistência interna)', () => {
+    test('numero_controle deve conter numero_documento (consistÃªncia interna)', () => {
       expect(detailLines.length).toBe(128)
 
       let linhasComCorrespondencia = 0
@@ -67,11 +67,11 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
         }
       })
 
-      // Verificar que encontrou pelo menos algumas linhas com correspondência
+      // Verificar que encontrou pelo menos algumas linhas com correspondÃªncia
       expect(linhasComCorrespondencia).toBeGreaterThan(0)
     })
 
-    test('estado (UF) deve ser válido quando preenchido', () => {
+    test('estado (UF) deve ser vÃ¡lido quando preenchido', () => {
       expect(detailLines.length).toBeGreaterThan(0)
 
       let linhasComUF = 0
@@ -91,7 +91,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(linhasComUF).toBeGreaterThan(0)
     })
 
-    test('numero_sequencial deve ser a posição 1-based da linha no arquivo (todas as 130 linhas)', () => {
+    test('numero_sequencial deve ser a posiÃ§Ã£o 1-based da linha no arquivo (todas as 130 linhas)', () => {
       expect(lines.length).toBe(130)
 
       lines.forEach((line, index) => {
@@ -108,7 +108,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
 
         if (schema && 'numero_sequencial' in schema) {
           const parsed = extractLineFields(line, schema)
-          const sequencialEsperado = index + 1 // Posição 1-based
+          const sequencialEsperado = index + 1 // PosiÃ§Ã£o 1-based
 
           expect(parsed.numero_sequencial.value).toBe(sequencialEsperado)
         }
@@ -121,7 +121,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       // qtd_documentos deve ser 128
       expect(trailer.qtd_documentos.value).toBe(128)
 
-      // numero_sequencial do trailer deve ser 130 (última linha)
+      // numero_sequencial do trailer deve ser 130 (Ãºltima linha)
       expect(trailer.numero_sequencial.value).toBe(130)
 
       // Calcular soma dos valores
@@ -130,15 +130,15 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
         return sum + (Number(detail.valor_titulo.value) || 0)
       }, 0)
 
-      // valor_total do trailer deve bater (com tolerância de arredondamento)
+      // valor_total do trailer deve bater (com tolerÃ¢ncia de arredondamento)
       const valorTotalTrailer = Number(trailer.valor_total.value) || 0
       expect(Math.abs(valorTotalTrailer - somaValores)).toBeLessThan(0.01)
     })
   })
 
-  describe('Comparação contra snapshot gerado (metadata.json) - testes de regressão', () => {
-    // Nota: metadata.json é gerado pelo mesmo parser sendo testado
-    // Estes testes provam regressão, não correção absoluta
+  describe('ComparaÃ§Ã£o contra snapshot gerado (metadata.json) - testes de regressÃ£o', () => {
+    // Nota: metadata.json Ã© gerado pelo mesmo parser sendo testado
+    // Estes testes provam regressÃ£o, nÃ£o correÃ§Ã£o absoluta
 
     let metadata: any
 
@@ -150,7 +150,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       
       if (!fs.existsSync(metadataPath)) {
         throw new Error(
-          `Arquivo de metadata não encontrado: ${metadataPath}\n` +
+          `Arquivo de metadata nÃ£o encontrado: ${metadataPath}\n` +
           'Execute: npm run generate-metadata -- --bank=033 --format=CNAB400 --fixture=SANTANDER_cnab_400_140'
         )
       }
@@ -159,7 +159,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       metadata = JSON.parse(metadataContent)
     })
 
-    test('vencimento bate com metadata.json (regressão)', () => {
+    test('vencimento bate com metadata.json (regressÃ£o)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, santanderCnab400.detail!)
       const record = metadata.records[0]
@@ -167,7 +167,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.vencimento.raw).toBe(record.dueDateRaw)
     })
 
-    test('sacado_codigo_inscricao bate com metadata.json (regressão)', () => {
+    test('sacado_codigo_inscricao bate com metadata.json (regressÃ£o)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, santanderCnab400.detail!)
       const record = metadata.records[0]
@@ -175,7 +175,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.sacado_codigo_inscricao.raw).toBe(record.documentTypeCode)
     })
 
-    test('sacado_numero_inscricao bate com metadata.json (regressão)', () => {
+    test('sacado_numero_inscricao bate com metadata.json (regressÃ£o)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, santanderCnab400.detail!)
       const record = metadata.records[0]
@@ -183,7 +183,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       expect(detail.sacado_numero_inscricao.raw).toBe(record.documentRaw)
     })
 
-    test('nome bate com metadata.json (regressão)', () => {
+    test('nome bate com metadata.json (regressÃ£o)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, santanderCnab400.detail!)
       const record = metadata.records[0]
@@ -193,7 +193,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('logradouro bate com metadata.json (regressão)', () => {
+    test('logradouro bate com metadata.json (regressÃ£o)', () => {
       const primeiroDetalhe = detailLines[0]
       const detail = extractLineFields(primeiroDetalhe, santanderCnab400.detail!)
       const record = metadata.records[0]
@@ -203,7 +203,7 @@ describe('Schema Santander CNAB 400 - Detalhe (Dados Reais)', () => {
       }
     })
 
-    test('todos os campos principais de todos os títulos batem com metadata.json (regressão em loop)', () => {
+    test('todos os campos principais de todos os tÃ­tulos batem com metadata.json (regressÃ£o em loop)', () => {
       metadata.records.forEach((expected: any, index: number) => {
         const detail = extractLineFields(detailLines[index], santanderCnab400.detail!)
 

@@ -1,10 +1,10 @@
 ﻿/* *
- * �ltima linha do arquivo CNAB. Cont�m totalizadores gerais:
+ * ltima linha do arquivo CNAB. Contm totalizadores gerais:
  * quantidade de lotes e quantidade total de registros.
  * Lote: 9999
  * 
  * Baseado em:
- * - Manual "Layout Padr�o 240 � Cobran�a, Vers�o 2.5" (Setembro/2014)
+ * - Manual "Layout Padro 240  Cobrana, Verso 2.5" (Setembro/2014)
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
@@ -19,7 +19,7 @@ export const SANTANDER_CNAB240_FILE_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {

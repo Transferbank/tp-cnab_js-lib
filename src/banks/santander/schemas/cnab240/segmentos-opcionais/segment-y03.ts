@@ -4,7 +4,7 @@
  * Introduzido em Novembro/2021.
  * Segmento Y-03 (pos 8 = '3', pos 14 = 'Y', pos 18-19 = '03')
  * 
- * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRAN�A", c�digo H7815, Vers�o 6, Fevereiro/2023
+ * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRANA", cdigo H7815, Verso 6, Fevereiro/2023
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -18,7 +18,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y03: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -29,7 +29,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y03: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -51,7 +51,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y03: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -84,7 +84,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y03: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento Remessa',
+    description: 'Cdigo de movimento Remessa',
     canonical: null,
   },
   registro_opcional_id: {
@@ -95,7 +95,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y03: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '03',
-    description: 'Identifica��o do Registro Opcional: 03=PIX',
+    description: 'Identificao do Registro Opcional: 03=PIX',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -117,7 +117,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y03: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de Chave PIX (ver tabela de c�digos no manual)',
+    description: 'Tipo de Chave PIX (ver tabela de cdigos no manual)',
     canonical: null,
   },
   pix_chave: {
@@ -139,7 +139,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y03: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de identifica��o do QR Code (TXID)',
+    description: 'Cdigo de identificao do QR Code (TXID)',
     canonical: null,
   },
   cnab_exclusivo_3: {

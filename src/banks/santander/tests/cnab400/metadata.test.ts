@@ -2,16 +2,16 @@
  * Testes de metadados do Schema Santander CNAB 400
  *
  * Verifica:
- * - C骴igo do banco correto
+ * - C贸digo do banco correto
  * - Nome do banco correto
- * - Schemas obrigat髍ios definidos
+ * - Schemas obrigat贸rios definidos
  */
 
 import { santanderCnab400 } from '@banks/santander/schemas/cnab400'
 import { BANK_CODES } from '@tp-types/index'
 
 describe('Schema Santander CNAB 400 - Metadados', () => {
-  test('deve ter c骴igo do banco correto (033)', () => {
+  test('deve ter c贸digo do banco correto (033)', () => {
     expect(santanderCnab400.bankCode).toBe(BANK_CODES.SANTANDER)
   })
 
@@ -19,7 +19,7 @@ describe('Schema Santander CNAB 400 - Metadados', () => {
     expect(santanderCnab400.bankName).toBe('Santander')
   })
 
-  test('deve ter todos os schemas obrigat髍ios para remessa', () => {
+  test('deve ter todos os schemas obrigat贸rios para remessa', () => {
     expect(santanderCnab400.header).toBeDefined()
     expect(santanderCnab400.detail).toBeDefined()
     expect(santanderCnab400.trailer).toBeDefined()

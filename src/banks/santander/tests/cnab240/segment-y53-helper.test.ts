@@ -1,8 +1,8 @@
 /**
  * Testes do Helper Segmento Y-53 - Santander CNAB 240
  * 
- * Valida as funções auxiliares para resolver campos condicionais
- * (valor_maximo e valor_minimo com precisão decimal variável).
+ * Valida as funÃ§Ãµes auxiliares para resolver campos condicionais
+ * (valor_maximo e valor_minimo com precisÃ£o decimal variÃ¡vel).
  */
 
 import {
@@ -13,14 +13,14 @@ import {
 import type { ParsedLine } from '@tp-types/core'
 
 describe('Helper Santander CNAB 240 - Segmento Y-53', () => {
-  describe('resolveY53Amount - função base', () => {
+  describe('resolveY53Amount - funÃ§Ã£o base', () => {
     test('deve calcular percentual com 5 decimais quando tipo = "1"', () => {
       // 1234567 com 5 decimais = 12.34567
       const result = resolveY53Amount('000000001234567', '1')
       expect(result).toBe(12.34567)
     })
 
-    test('deve calcular valor monetário com 2 decimais quando tipo = "2"', () => {
+    test('deve calcular valor monetÃ¡rio com 2 decimais quando tipo = "2"', () => {
       // 1234567 com 2 decimais = 12345.67
       const result = resolveY53Amount('000000001234567', '2')
       expect(result).toBe(12345.67)
@@ -48,15 +48,15 @@ describe('Helper Santander CNAB 240 - Segmento Y-53', () => {
       expect(result).toBe(9999999999999.99)
     })
 
-    test('deve usar 2 decimais como padrão para tipo desconhecido', () => {
-      // Quando tipo não é '1', assume valor monetário (2 decimais)
+    test('deve usar 2 decimais como padrÃ£o para tipo desconhecido', () => {
+      // Quando tipo nÃ£o Ã© '1', assume valor monetÃ¡rio (2 decimais)
       const result = resolveY53Amount('000000001234567', '9')
       expect(result).toBe(12345.67)
     })
   })
 
   describe('resolveMaxAmount - wrapper para valor_maximo', () => {
-    test('deve resolver valor máximo como percentual (tipo 1)', () => {
+    test('deve resolver valor mÃ¡ximo como percentual (tipo 1)', () => {
       const fields: ParsedLine = {
         valor_maximo_tipo: { value: 1, raw: '1', error: null, canonical: null },
         valor_maximo: { value: 12345.67, raw: '000000001234567', error: null, canonical: null }, // valor parseado com decimals:2 (incorreto)
@@ -66,7 +66,7 @@ describe('Helper Santander CNAB 240 - Segmento Y-53', () => {
       expect(result).toBe(12.34567) // Corrigido para 5 decimais
     })
 
-    test('deve resolver valor máximo como monetário (tipo 2)', () => {
+    test('deve resolver valor mÃ¡ximo como monetÃ¡rio (tipo 2)', () => {
       const fields: ParsedLine = {
         valor_maximo_tipo: { value: 2, raw: '2', error: null, canonical: null },
         valor_maximo: { value: 12345.67, raw: '000000001234567', error: null, canonical: null },
@@ -78,7 +78,7 @@ describe('Helper Santander CNAB 240 - Segmento Y-53', () => {
   })
 
   describe('resolveMinAmount - wrapper para valor_minimo', () => {
-    test('deve resolver valor mínimo como percentual (tipo 1)', () => {
+    test('deve resolver valor mÃ­nimo como percentual (tipo 1)', () => {
       const fields: ParsedLine = {
         valor_minimo_tipo: { value: 1, raw: '1', error: null, canonical: null },
         valor_minimo: { value: 50000, raw: '000000005000000', error: null, canonical: null },
@@ -88,7 +88,7 @@ describe('Helper Santander CNAB 240 - Segmento Y-53', () => {
       expect(result).toBe(50) // 5000000 com 5 decimais = 50.00000
     })
 
-    test('deve resolver valor mínimo como monetário (tipo 2)', () => {
+    test('deve resolver valor mÃ­nimo como monetÃ¡rio (tipo 2)', () => {
       const fields: ParsedLine = {
         valor_minimo_tipo: { value: 2, raw: '2', error: null, canonical: null },
         valor_minimo: { value: 100.50, raw: '000000000010050', error: null, canonical: null },

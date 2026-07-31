@@ -253,9 +253,9 @@ describe('Metadados: SANTANDER_cnab_400_140.json', () => {
       })
     })
 
-    test('todos os documentos devem ter checksum CPF/CNPJ v·lido', () => {
+    test('todos os documentos devem ter checksum CPF/CNPJ v√°lido', () => {
       metadata.records.forEach((record) => {
-        // ValidaÁ„o externa - prova que os documentos est„o corretos
+        // Valida√ß√£o externa - prova que os documentos est√£o corretos
         expect(isValidCpfCnpj(record.documentRaw!)).toBe(true)
       })
     })

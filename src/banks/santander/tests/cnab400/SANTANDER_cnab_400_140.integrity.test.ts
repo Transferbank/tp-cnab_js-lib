@@ -14,7 +14,7 @@ import { getBankSchema } from '@schemas/index'
 import { BANK_CODES, CNABFormatCode } from '@tp-types/index'
 import type { FixtureMetadata } from '@tp-types/testing'
 
-describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
+describe('Integridade TXT Ã— Schema: SANTANDER_cnab_400_140.REM', () => {
   const fixtureDir = path.join(__dirname, '../../docs/cnab400')
   const txtPath = path.join(fixtureDir, 'SANTANDER_cnab_400_140.REM')
   const jsonPath = path.join(fixtureDir, 'SANTANDER_cnab_400_140.json')
@@ -28,7 +28,7 @@ describe('Integridade TXT × Schema: SANTANDER_cnab_400_140.REM', () => {
     metadata = JSON.parse(jsonContent) as FixtureMetadata
   })
 
-  describe('Integridade TXT × JSON', () => {
+  describe('Integridade TXT Ã— JSON', () => {
     test('deve ter 400 caracteres em cada linha', () => {
       lines.forEach((line) => {
         expect(line.length).toBe(400)

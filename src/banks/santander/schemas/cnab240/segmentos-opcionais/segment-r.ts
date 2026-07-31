@@ -1,12 +1,12 @@
 ﻿/* *
- * Segmento opcional que cont�m:
+ * Segmento opcional que contm:
  * - Segundo e terceiro descontos
  * - Multa
- * - Mensagens livres para impress�o no boleto
+ * - Mensagens livres para impresso no boleto
  * Segmento: R
  * 
  * Baseado em:
- * - Manual "Layout Padr�o 240 � Cobran�a, Vers�o 2.5" (Setembro/2014)
+ * - Manual "Layout Padro 240  Cobrana, Verso 2.5" (Setembro/2014)
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
@@ -21,7 +21,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -32,7 +32,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -54,7 +54,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -87,7 +87,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa (vari�vel: 01=Entrada, 02=Baixa, 04=Abatimento, etc.)',
+    description: 'Cdigo de movimento da remessa (varivel: 01=Entrada, 02=Baixa, 04=Abatimento, etc.)',
     canonical: null,
   },
   desconto2_codigo: {
@@ -98,7 +98,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0',
-    description: 'C�digo do 2� desconto: 0=Sem, 1=Valor, 2=%',
+    description: 'Cdigo do 2 desconto: 0=Sem, 1=Valor, 2=%',
     canonical: null,
   },
   desconto2_data: {
@@ -109,7 +109,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data limite para o 2� desconto',
+    description: 'Data limite para o 2 desconto',
     canonical: null,
   },
   desconto2_valor: {
@@ -120,7 +120,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou percentual do 2� desconto',
+    description: 'Valor ou percentual do 2 desconto',
     canonical: null,
   },
   desconto3_codigo: {
@@ -131,7 +131,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0',
-    description: 'C�digo do 3� desconto: 0=Sem, 1=Valor, 2=%',
+    description: 'Cdigo do 3 desconto: 0=Sem, 1=Valor, 2=%',
     canonical: null,
   },
   desconto3_data: {
@@ -142,7 +142,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data limite para o 3� desconto',
+    description: 'Data limite para o 3 desconto',
     canonical: null,
   },
   desconto3_valor: {
@@ -153,7 +153,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou percentual do 3� desconto',
+    description: 'Valor ou percentual do 3 desconto',
     canonical: null,
   },
   multa_codigo: {
@@ -164,7 +164,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0',
-    description: 'C�digo de multa: 0=Sem, 1=Valor, 2=%',
+    description: 'Cdigo de multa: 0=Sem, 1=Valor, 2=%',
     canonical: {
       field: 'multa.tipo',
       interpret: (value: unknown) => {
@@ -217,7 +217,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Mensagem 1 para impress�o no boleto',
+    description: 'Mensagem 1 para impresso no boleto',
     canonical: null,
   },
   mensagem_2: {
@@ -228,7 +228,7 @@ export const SANTANDER_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Mensagem 2 para impress�o no boleto',
+    description: 'Mensagem 2 para impresso no boleto',
     canonical: null,
   },
   cnab_exclusivo_3: {

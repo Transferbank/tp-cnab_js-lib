@@ -1,11 +1,11 @@
 ﻿/* *
- * �ltima linha de cada lote de REMESSA.
- * Vers�o simplificada conforme Manual H7815 v6 (Fevereiro/2023).
- * IMPORTANTE: Este � o trailer de lote para REMESSA, n�o RETORNO.
+ * ltima linha de cada lote de REMESSA.
+ * Verso simplificada conforme Manual H7815 v6 (Fevereiro/2023).
+ * IMPORTANTE: Este  o trailer de lote para REMESSA, no RETORNO.
  * O trailer de RETORNO possui estrutura rica com totalizadores detalhados
- * (simples/vinculada/caucionada/descontada + aviso banc�rio) - essa vers�o
- * rica foi o que estava implementado antes, mas n�o se aplica � remessa. *
- * Fonte: Manual "MANUAL DO CLIENTE DE COBRAN�A", c�digo H7815, Vers�o 6, Fevereiro/2023
+ * (simples/vinculada/caucionada/descontada + aviso bancrio) - essa verso
+ * rica foi o que estava implementado antes, mas no se aplica  remessa. *
+ * Fonte: Manual "MANUAL DO CLIENTE DE COBRANA", cdigo H7815, Verso 6, Fevereiro/2023
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -19,7 +19,7 @@ export const SANTANDER_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -30,7 +30,7 @@ export const SANTANDER_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {

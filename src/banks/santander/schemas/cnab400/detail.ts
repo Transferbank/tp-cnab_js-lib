@@ -1,11 +1,11 @@
 ﻿/**
- * Santander (033) � CNAB 400 � Detalhe (Registro Tipo 1)
+ * Santander (033)  CNAB 400  Detalhe (Registro Tipo 1)
  * Fontes do layout:
  * - brcobranca (Ruby)
  * - cnab_yaml (YAML)
  * - laravel-boleto (PHP) *
- * Nota: O campo percentual_multa (79-82) tem 4 d�gitos conforme cnab_yaml e
- * laravel-boleto (coment�rio do brcobranca indicava 6 mas foi identificado
+ * Nota: O campo percentual_multa (79-82) tem 4 dgitos conforme cnab_yaml e
+ * laravel-boleto (comentrio do brcobranca indicava 6 mas foi identificado
  * como desatualizado).
  */
 
@@ -31,7 +31,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do cedente: 01=CPF, 02=CNPJ',
+    description: 'Tipo de inscrio do cedente: 01=CPF, 02=CNPJ',
     canonical: null,
   },
   numero_inscricao: {
@@ -53,7 +53,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de transmiss�o (ag�ncia + c�digo cliente + conta)',
+    description: 'Cdigo de transmisso (agncia + cdigo cliente + conta)',
     canonical: null,
   },
   numero_controle: {
@@ -64,7 +64,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de controle do participante (uso da empresa)',
+    description: 'Nmero de controle do participante (uso da empresa)',
     canonical: null,
   },
   nosso_numero: {
@@ -75,7 +75,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso n�mero (8 d�gitos)',
+    description: 'Nosso nmero (8 dgitos)',
     canonical: 'nossoNumero',
   },
   data_seg_desconto: {
@@ -119,7 +119,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Percentual de multa (2 decimais impl�citas)',
+    description: 'Percentual de multa (2 decimais implcitas)',
     canonical: null,
   },
   unidade_valor: {
@@ -163,7 +163,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data para cobran�a de multa',
+    description: 'Data para cobrana de multa',
     canonical: null,
   },
   carteira: {
@@ -174,7 +174,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da carteira: 1=Eletr�nica, 5=R�pida',
+    description: 'Cdigo da carteira: 1=Eletrnica, 5=Rpida',
     canonical: null,
   },
   codigo_ocorrencia: {
@@ -185,7 +185,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de ocorr�ncia: 01=Entrada, 02=Baixa, 04=Concess�o abatimento, 06=Altera��o vencimento',
+    description: 'Cdigo de ocorrncia: 01=Entrada, 02=Baixa, 04=Concesso abatimento, 06=Alterao vencimento',
     canonical: null,
   },
   numero_documento: {
@@ -196,7 +196,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do documento (identificador livre do cedente)',
+    description: 'Nmero do documento (identificador livre do cedente)',
     canonical: 'numeroDocumento',
   },
   vencimento: {
@@ -218,7 +218,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do t�tulo (2 decimais impl�citas)',
+    description: 'Valor do ttulo (2 decimais implcitas)',
     canonical: 'valor',
   },
   codigo_banco_cobrador: {
@@ -229,7 +229,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo do banco cobrador',
+    description: 'Cdigo do banco cobrador',
     canonical: null,
   },
   agencia_cobradora: {
@@ -240,7 +240,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00000',
-    description: 'Ag�ncia cobradora',
+    description: 'Agncia cobradora',
     canonical: null,
   },
   especie: {
@@ -251,7 +251,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Esp�cie do documento',
+    description: 'Espcie do documento',
     canonical: null,
   },
   aceite: {
@@ -262,7 +262,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: 'N',
-    description: 'Identifica��o de aceite: A=Aceite, N=N�o aceite',
+    description: 'Identificao de aceite: A=Aceite, N=No aceite',
     canonical: null,
   },
   data_emissao: {
@@ -273,7 +273,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de emiss�o do t�tulo',
+    description: 'Data de emisso do ttulo',
     canonical: 'dataEmissao',
   },
   instrucao1: {
@@ -284,7 +284,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Primeira instru��o de cobran�a',
+    description: 'Primeira instruo de cobrana',
     canonical: null,
   },
   instrucao2: {
@@ -295,7 +295,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Segunda instru��o de cobran�a',
+    description: 'Segunda instruo de cobrana',
     canonical: null,
   },
   juros_mora: {
@@ -306,7 +306,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor de juros de mora por dia (2 decimais impl�citas)',
+    description: 'Valor de juros de mora por dia (2 decimais implcitas)',
     canonical: null,
   },
   desconto_ate: {
@@ -317,7 +317,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data limite para concess�o de desconto',
+    description: 'Data limite para concesso de desconto',
     canonical: null,
   },
   valor_desconto: {
@@ -328,7 +328,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do desconto (2 decimais impl�citas)',
+    description: 'Valor do desconto (2 decimais implcitas)',
     canonical: 'desconto.valor',
   },
   valor_iof: {
@@ -339,7 +339,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do IOF (2 decimais impl�citas)',
+    description: 'Valor do IOF (2 decimais implcitas)',
     canonical: null,
   },
   valor_abatimento: {
@@ -350,7 +350,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do abatimento (2 decimais impl�citas)',
+    description: 'Valor do abatimento (2 decimais implcitas)',
     canonical: 'abatimento.valor',
   },
   sacado_codigo_inscricao: {
@@ -394,7 +394,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do pagador',
+    description: 'Endereo do pagador',
     canonical: 'sacado.endereco.logradouro',
   },
   bairro: {
@@ -416,7 +416,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (8 d�gitos)',
+    description: 'CEP (8 dgitos)',
     canonical: 'sacado.endereco.cep',
   },
   cidade: {
@@ -471,7 +471,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: 'I',
-    description: 'Identifica��o de complemento',
+    description: 'Identificao de complemento',
     canonical: null,
   },
   complemento_conta: {
@@ -482,7 +482,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Complemento da conta (�ltimo d�gito + DV)',
+    description: 'Complemento da conta (ltimo dgito + DV)',
     canonical: null,
   },
   brancos_4: {

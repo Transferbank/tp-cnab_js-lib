@@ -1,8 +1,8 @@
 ﻿/**
- * Santander (033) � CNAB 400 � Header de Arquivo (Remessa)
+ * Santander (033)  CNAB 400  Header de Arquivo (Remessa)
  * Fontes do layout:
  * - Manual oficial Santander (Santander_Layout-Cobranca-400-posicoes-jul-2025-Portugues.pdf,
- *   v2.36) � revelou 5 campos de mensagem nas posi��es 117-351
+ *   v2.36)  revelou 5 campos de mensagem nas posies 117-351
  * - brcobranca (Ruby)
  * - cnab_yaml (YAML)
  * - laravel-boleto (PHP)
@@ -20,7 +20,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do registro header',
+    description: 'Identificao do registro header',
     canonical: null,
   },
   tipo_operacao: {
@@ -31,7 +31,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de opera��o: 1=Remessa',
+    description: 'Tipo de operao: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
@@ -53,7 +53,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo de servi�o: 01=Cobran�a',
+    description: 'Cdigo de servio: 01=Cobrana',
     canonical: null,
   },
   literal_servico: {
@@ -64,7 +64,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal de servi�o',
+    description: 'Literal de servio',
     canonical: null,
   },
   codigo_transmissao: {
@@ -75,7 +75,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de transmiss�o (ag�ncia + c�digo cliente + conta)',
+    description: 'Cdigo de transmisso (agncia + cdigo cliente + conta)',
     canonical: null,
   },
   nome_empresa: {
@@ -86,7 +86,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do benefici�rio',
+    description: 'Nome do beneficirio',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
@@ -97,7 +97,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   nome_banco: {
@@ -119,7 +119,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo',
+    description: 'Data de gerao do arquivo',
     canonical: 'dataGeracao',
   },
   zeros: {
@@ -218,7 +218,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '000',
-    description: 'N�mero da vers�o do layout',
+    description: 'Nmero da verso do layout',
     canonical: null,
   },
   numero_sequencial: {

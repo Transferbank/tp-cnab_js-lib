@@ -1,5 +1,5 @@
 ﻿/**
- * Santander (033) � CNAB 400 � Trailer de Arquivo (Remessa)
+ * Santander (033)  CNAB 400  Trailer de Arquivo (Remessa)
  * Fontes do layout:
  * - brcobranca (Ruby)
  * - cnab_yaml (YAML)
@@ -18,7 +18,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identifica��o do trailer',
+    description: 'Identificao do trailer',
     canonical: null,
   },
   qtd_documentos: {
@@ -40,7 +40,7 @@ export const TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Soma dos valores de todos os t�tulos (2 decimais impl�citas)',
+    description: 'Soma dos valores de todos os ttulos (2 decimais implcitas)',
     canonical: 'valorTotal',
   },
   zeros: {
@@ -62,7 +62,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: '�ltimo sequencial do arquivo',
+    description: 'ltimo sequencial do arquivo',
     canonical: null,
   },
 }

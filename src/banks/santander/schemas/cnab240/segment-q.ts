@@ -1,11 +1,11 @@
 ﻿/* *
- * Cont�m os dados do pagador/sacado (quem vai pagar o boleto):
- * CPF/CNPJ, nome, endere�o, CEP, cidade, UF, sacador/avalista,
- * e campos espec�ficos do Santander para carn�/parcelamento.
+ * Contm os dados do pagador/sacado (quem vai pagar o boleto):
+ * CPF/CNPJ, nome, endereo, CEP, cidade, UF, sacador/avalista,
+ * e campos especficos do Santander para carn/parcelamento.
  * Segmento: Q
  * 
  * Baseado em:
- * - Manual "Layout Padr�o 240 � Cobran�a, Vers�o 2.5" (Setembro/2014)
+ * - Manual "Layout Padro 240  Cobrana, Verso 2.5" (Setembro/2014)
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
@@ -20,7 +20,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -31,7 +31,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -53,7 +53,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -86,7 +86,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa (vari�vel: 01=Entrada, 02=Baixa, 04=Abatimento, etc.)',
+    description: 'Cdigo de movimento da remessa (varivel: 01=Entrada, 02=Baixa, 04=Abatimento, etc.)',
     canonical: null,
   },
   sacado_inscricao_tipo: {
@@ -97,7 +97,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrio: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   sacado_inscricao_numero: {
@@ -130,7 +130,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do pagador',
+    description: 'Endereo do pagador',
     canonical: 'sacado.endereco.logradouro',
   },
   sacado_bairro: {
@@ -152,7 +152,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (5 primeiros d�gitos)',
+    description: 'CEP (5 primeiros dgitos)',
     canonical: 'sacado.endereco.cep',
   },
   sacado_cep_sufixo: {
@@ -163,7 +163,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (sufixo - 3 �ltimos d�gitos)',
+    description: 'CEP (sufixo - 3 ltimos dgitos)',
     canonical: null,
   },
   sacado_cidade: {
@@ -188,7 +188,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     description: 'UF do pagador',
     canonical: 'sacado.endereco.estado',
   },
-  // Nota: Manual 2023 renomeia "Sacador/Avalista" para "Benefici�rio Final"
+  // Nota: Manual 2023 renomeia "Sacador/Avalista" para "Beneficirio Final"
   beneficiario_final_inscricao_tipo: {
     pos: [154, 154],
     type: FieldType.NUM,
@@ -197,7 +197,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0',
-    description: 'Tipo de inscri��o Benefici�rio Final: 0=Sem, 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrio Beneficirio Final: 0=Sem, 1=CPF, 2=CNPJ',
     canonical: null,
   },
   beneficiario_final_inscricao_numero: {
@@ -208,7 +208,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CPF ou CNPJ do Benefici�rio Final (antigo Sacador/Avalista)',
+    description: 'CPF ou CNPJ do Beneficirio Final (antigo Sacador/Avalista)',
     canonical: null,
   },
   beneficiario_final_nome: {
@@ -219,12 +219,12 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Benefici�rio Final (antigo Sacador/Avalista)',
+    description: 'Nome do Beneficirio Final (antigo Sacador/Avalista)',
     canonical: null,
   },
   // Nota: O manual 2023 documenta esta faixa como "Reservado (brancos)".
   // As 4 fontes de terceiros consultadas (pycnab240, laravel-boleto, brcobranca, cnab_yaml)
-  // e o manual 2014 documentam campos reais aqui (carn�/parcelamento).
+  // e o manual 2014 documentam campos reais aqui (carn/parcelamento).
   // Mantidos como "Reservado" conforme manual mais recente.
   cnab_reservado_1: {
     pos: [210, 221],
@@ -234,7 +234,7 @@ export const SANTANDER_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Reservado (brancos) - Manual 2023. Vers�es anteriores: campos de carn�/parcelamento',
+    description: 'Reservado (brancos) - Manual 2023. Verses anteriores: campos de carn/parcelamento',
     canonical: null,
   },
   cnab_exclusivo_2: {

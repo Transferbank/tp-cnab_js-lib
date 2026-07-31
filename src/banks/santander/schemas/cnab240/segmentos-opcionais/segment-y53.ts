@@ -1,12 +1,12 @@
 ﻿/**
  * Santander CNAB 240 - Segmento Y-53 (Tipo de Pagamento)
- * Registro opcional para configurar pagamento parcial/com faixa de valores (m�n/m�x ou percentual).
+ * Registro opcional para configurar pagamento parcial/com faixa de valores (mn/mx ou percentual).
  * Introduzido em Abril/2022.
  * Segmento Y-53 (pos 8 = '3', pos 14 = 'Y', pos 18-19 = '53')
  * 
  * NOTA: Os campos 024/040 (Tipo de valor Informado) tornam os campos 025-039 e 041-055 
- * condicionais - podem ser valores monet�rios (N013,2) ou percentuais (N010,5).
- * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRAN�A", c�digo H7815, Vers�o 6, Fevereiro/2023
+ * condicionais - podem ser valores monetrios (N013,2) ou percentuais (N010,5).
+ * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRANA", cdigo H7815, Verso 6, Fevereiro/2023
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -20,7 +20,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -31,7 +31,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -53,7 +53,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -86,7 +86,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento Remessa',
+    description: 'Cdigo de movimento Remessa',
     canonical: null,
   },
   registro_opcional_id: {
@@ -97,7 +97,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '53',
-    description: 'Identifica��o do Registro Opcional: 53=Tipo de Pagamento',
+    description: 'Identificao do Registro Opcional: 53=Tipo de Pagamento',
     canonical: null,
   },
   tipo_pagamento_id: {
@@ -108,7 +108,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o de tipo de Pagamento',
+    description: 'Identificao de tipo de Pagamento',
     canonical: null,
   },
   pagamentos_quantidade: {
@@ -119,7 +119,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de Pagamentos Poss�veis',
+    description: 'Quantidade de Pagamentos Possveis',
     canonical: null,
   },
   valor_maximo_tipo: {
@@ -130,7 +130,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de valor Informado: indica se campo seguinte � valor ou percentual',
+    description: 'Tipo de valor Informado: indica se campo seguinte  valor ou percentual',
     canonical: null,
   },
   valor_maximo: {
@@ -141,7 +141,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor M�ximo OU % Percentual (condicional ao tipo em pos 24) - N(13)V99 se valor, N(10)V99999 se percentual',
+    description: 'Valor Mximo OU % Percentual (condicional ao tipo em pos 24) - N(13)V99 se valor, N(10)V99999 se percentual',
     canonical: null,
   },
   valor_minimo_tipo: {
@@ -152,7 +152,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de valor Informado: indica se campo seguinte � valor ou percentual',
+    description: 'Tipo de valor Informado: indica se campo seguinte  valor ou percentual',
     canonical: null,
   },
   valor_minimo: {
@@ -163,7 +163,7 @@ export const SANTANDER_CNAB240_SEGMENT_Y53: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor M�nimo OU % Percentual (condicional ao tipo em pos 40) - N(13)V99 se valor, N(10)V99999 se percentual',
+    description: 'Valor Mnimo OU % Percentual (condicional ao tipo em pos 40) - N(13)V99 se valor, N(10)V99999 se percentual',
     canonical: null,
   },
   cnab_exclusivo_2: {

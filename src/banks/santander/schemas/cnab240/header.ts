@@ -1,10 +1,10 @@
 ﻿/* *
- * Primeira linha do arquivo CNAB. Cont�m identifica��o do banco,
- * dados do cedente (benefici�rio) e informa��es sobre o arquivo.
+ * Primeira linha do arquivo CNAB. Contm identificao do banco,
+ * dados do cedente (beneficirio) e informaes sobre o arquivo.
  * Lote: 0000
  * 
  * Baseado em:
- * - Manual "Layout Padr�o 240 � Cobran�a, Vers�o 2.5" (Setembro/2014)
+ * - Manual "Layout Padro 240  Cobrana, Verso 2.5" (Setembro/2014)
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
@@ -19,7 +19,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -63,7 +63,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrio: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   cedente_inscricao_numero: {
@@ -74,7 +74,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do CPF/CNPJ do cedente',
+    description: 'Nmero do CPF/CNPJ do cedente',
     canonical: 'cedente.documento',
   },
   codigo_transmissao: {
@@ -85,7 +85,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de transmiss�o (ag�ncia + "0000" + c�digo do cliente)',
+    description: 'Cdigo de transmisso (agncia + "0000" + cdigo do cliente)',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -140,7 +140,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'C�digo do arquivo: 1=Remessa, 2=Retorno',
+    description: 'Cdigo do arquivo: 1=Remessa, 2=Retorno',
     canonical: null,
   },
   arquivo_data_de_geracao: {
@@ -151,7 +151,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo',
+    description: 'Data de gerao do arquivo',
     canonical: null,
   },
   cnab_exclusivo_4: {
@@ -162,7 +162,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Uso exclusivo FEBRABAN/CNAB (hora n�o existe no Santander)',
+    description: 'Uso exclusivo FEBRABAN/CNAB (hora no existe no Santander)',
     canonical: null,
   },
   arquivo_sequencia: {
@@ -173,7 +173,7 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do arquivo',
+    description: 'Nmero sequencial do arquivo',
     canonical: null,
   },
   arquivo_layout: {
@@ -184,13 +184,13 @@ export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '040',
-    description: 'Vers�o do layout (040 para CNAB 240)',
+    description: 'Verso do layout (040 para CNAB 240)',
     canonical: null,
   },
-  // Manual 2023: bloco �nico "Reservado (uso Banco)", brancos. Vers�es anteriores
+  // Manual 2023: bloco nico "Reservado (uso Banco)", brancos. Verses anteriores
   // do schema subdividiam essa faixa em densidade/reservado_banco/reservado_empresa,
   // mas o manual e a maioria das fontes de terceiros (pycnab240, laravel-boleto)
-  // tratam como um campo �nico de 74 bytes.
+  // tratam como um campo nico de 74 bytes.
   cnab_exclusivo_5: {
     pos: [167, 240],
     type: FieldType.ALFA,

@@ -1,10 +1,10 @@
 ﻿/* *
- * Primeira linha de cada lote. Agrupa t�tulos (boletos) que pertencem
- * ao mesmo tipo de servi�o (cobran�a, pagamento, etc.).
- * Lote: n�mero sequencial (0001, 0002, ...)
+ * Primeira linha de cada lote. Agrupa ttulos (boletos) que pertencem
+ * ao mesmo tipo de servio (cobrana, pagamento, etc.).
+ * Lote: nmero sequencial (0001, 0002, ...)
  * 
  * Baseado em:
- * - Manual "Layout Padr�o 240 � Cobran�a, Vers�o 2.5" (Setembro/2014)
+ * - Manual "Layout Padro 240  Cobrana, Verso 2.5" (Setembro/2014)
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
@@ -19,7 +19,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '033',
-    description: 'C�digo FEBRABAN do Santander',
+    description: 'Cdigo FEBRABAN do Santander',
     canonical: null,
   },
   controle_lote: {
@@ -30,7 +30,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do lote (0001, 0002...)',
+    description: 'Nmero sequencial do lote (0001, 0002...)',
     canonical: null,
   },
   controle_registro: {
@@ -52,7 +52,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'R',
-    description: 'Tipo de opera��o: R=Remessa, T=Retorno',
+    description: 'Tipo de operao: R=Remessa, T=Retorno',
     canonical: null,
   },
   servico_tipo: {
@@ -63,7 +63,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Tipo de servi�o: 01=Cobran�a',
+    description: 'Tipo de servio: 01=Cobrana',
     canonical: null,
   },
   servico_forma: {
@@ -85,7 +85,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '030',
-    description: 'Vers�o do layout do lote (030 para CNAB 240 - Manual 2023)',
+    description: 'Verso do layout do lote (030 para CNAB 240 - Manual 2023)',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -107,7 +107,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrio: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   cedente_inscricao_numero: {
@@ -118,7 +118,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do CPF/CNPJ do cedente',
+    description: 'Nmero do CPF/CNPJ do cedente',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -140,7 +140,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de transmiss�o (ag�ncia + "0000" + c�digo do cliente)',
+    description: 'Cdigo de transmisso (agncia + "0000" + cdigo do cliente)',
     canonical: null,
   },
   cnab_exclusivo_3: {
@@ -195,7 +195,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial da remessa ou retorno',
+    description: 'Nmero sequencial da remessa ou retorno',
     canonical: null,
   },
   data_gravacao: {
@@ -206,7 +206,7 @@ export const SANTANDER_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de grava��o do lote',
+    description: 'Data de gravao do lote',
     canonical: null,
   },
   cnab_exclusivo_4: {
