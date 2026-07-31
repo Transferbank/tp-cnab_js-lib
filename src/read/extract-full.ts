@@ -1,4 +1,5 @@
 import type { BillGroup } from '@tp-types/processing/grouping'
+import { getAllLines } from '@tp-types/processing/grouping'
 
 /**
  * Extrai todos os campos do schema (modo FULL), não só canônicos.
@@ -9,7 +10,7 @@ import type { BillGroup } from '@tp-types/processing/grouping'
  */
 export function extractBillFull(group: BillGroup): Record<string, unknown> {
   const result: Record<string, unknown> = {}
-  const allLines = [...group.core, ...group.satellites]
+  const allLines = getAllLines(group)
 
   for (const line of allLines) {
     for (const [fieldName, field] of Object.entries(line)) {

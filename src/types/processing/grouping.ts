@@ -32,3 +32,10 @@ export interface GroupingResult {
   groups: BillGroup[]
   errors: GroupingError[]
 }
+
+/**
+ * Retorna todas as linhas de um grupo (núcleo + satélites) na ordem correta.
+ */
+export function getAllLines(group: BillGroup): ParsedLine[] {
+  return [...group.core, ...group.satellites]
+}

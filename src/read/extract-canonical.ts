@@ -1,6 +1,7 @@
 import type { ParsedLine } from '@tp-types/core'
 import type { CNABHeader, CNABData, CNABTrailer, CanonicalField } from '@tp-types/read'
 import type { BillGroup } from '@tp-types/processing/grouping'
+import { getAllLines } from '@tp-types/processing/grouping'
 import type { DateFormat } from '@tp-types/bank'
 import { parseDate, formatDateBR } from '@utils/date-parser'
 import { CNABUnknownFieldCodeError } from '@tp-types/errors'
@@ -144,7 +145,7 @@ export function extractTrailer(trailerLine: ParsedLine | undefined): CNABTrailer
 export function extractBill(group: BillGroup): CNABData {
   const bill: CNABData = {}
   
-  const allLines = [...group.core, ...group.satellites]
+  const allLines = getAllLines(group)
   
   for (const line of allLines) {
     extractFieldsFromLine(line, bill as unknown as CanonicalObject)
