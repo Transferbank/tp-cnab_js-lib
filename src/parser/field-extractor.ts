@@ -64,8 +64,9 @@ function checkFieldFormat(rawValue: string, fieldDef: FieldDefinition): string |
 
 export function extractLineFields(line: string, schema: RecordSchema): ParsedLine {
   const result: ParsedLine = {}
+  const schemaEntries = Object.entries(schema)
 
-  for (const [fieldName, fieldDef] of Object.entries(schema)) {
+  for (const [fieldName, fieldDef] of schemaEntries) {
     const [start, end] = fieldDef.pos
     const rawValue = getFieldRaw(line, start, end)
     const error = checkFieldFormat(rawValue, fieldDef)
@@ -74,7 +75,15 @@ export function extractLineFields(line: string, schema: RecordSchema): ParsedLin
       raw: rawValue,
       value: getFieldValue(rawValue, fieldDef),
       error,
-      ...fieldDef,
+      canonical: fieldDef.canonical,
+      pos: fieldDef.pos,
+      type: fieldDef.type,
+      size: fieldDef.size,
+      decimals: fieldDef.decimals,
+      required: fieldDef.required,
+      dateFormat: fieldDef.dateFormat,
+      pattern: fieldDef.pattern,
+      description: fieldDef.description,
     } as ParsedField
   }
 
