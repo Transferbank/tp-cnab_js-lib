@@ -1,22 +1,22 @@
 /**
  * Testes do Helper Segmento P - Sicredi CNAB 240
  *
- * Valida a função auxiliar que resolve o campo condicional valor_titulo
- * (2 decimais para moeda corrente, 5 para moeda variável).
+ * Valida a funÃ§Ã£o auxiliar que resolve o campo condicional valor_titulo
+ * (2 decimais para moeda corrente, 5 para moeda variÃ¡vel).
  */
 
 import { resolveTitleAmount, resolveTitleAmountSegmentP } from '@banks/sicredi/schemas/cnab240/segment-p-helper'
 import type { ParsedLine } from '@tp-types/core'
 
 describe('Helper Sicredi CNAB 240 - Segmento P', () => {
-  describe('resolveTitleAmount - função base', () => {
-    test('deve calcular valor monetário com 2 decimais quando moeda = "09" (Real)', () => {
+  describe('resolveTitleAmount - funÃ§Ã£o base', () => {
+    test('deve calcular valor monetÃ¡rio com 2 decimais quando moeda = "09" (Real)', () => {
       // 36812 com 2 decimais = 368.12
       const result = resolveTitleAmount('000000000036812', '09')
       expect(result).toBe(368.12)
     })
 
-    test('deve calcular valor com 5 decimais quando moeda != "09" (moeda variável)', () => {
+    test('deve calcular valor com 5 decimais quando moeda != "09" (moeda variÃ¡vel)', () => {
       // 1234567 com 5 decimais = 12.34567
       const result = resolveTitleAmount('000000001234567', '05')
       expect(result).toBe(12.34567)
@@ -58,7 +58,7 @@ describe('Helper Sicredi CNAB 240 - Segmento P', () => {
       expect(resolveTitleAmountSegmentP(fields)).toBe(12.34567) // corrigido para 5 decimais
     })
 
-    test('deve assumir moeda corrente (2 decimais) quando moeda_codigo não está presente', () => {
+    test('deve assumir moeda corrente (2 decimais) quando moeda_codigo nÃ£o estÃ¡ presente', () => {
       const fields: ParsedLine = {
         valor_titulo: { value: 368.12, raw: '000000000036812', error: null, canonical: null },
       }

@@ -1,17 +1,17 @@
 ﻿/**
- * Sicredi (748) � CNAB 400 � Detalhe de Remessa (Registro Tipo 1)
+ * Sicredi (748)  CNAB 400  Detalhe de Remessa (Registro Tipo 1)
  * Fonte:
- * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) � �8.2, p.26-31
- * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Sicredi.php) � confirma um subconjunto das posi��es
- *   (a lib n�o implementa ~15 campos de neg�cio do manual: tipo de impress�o/carn�, datas de in�cio
- *   de cobran�a de juros/multa, desconto por antecipa��o, multa em valor monet�rio, negativa��o
- *   autom�tica, abatimento � grava zeros/brancos fixos nessas faixas em vez de expor os campos)
- * Nomenclatura "Benefici�rio Final" (n�o "Sacador/Avalista", nome usado por libs de terceiros mais
+ * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026)  8.2, p.26-31
+ * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Sicredi.php)  confirma um subconjunto das posies
+ *   (a lib no implementa ~15 campos de negcio do manual: tipo de impresso/carn, datas de incio
+ *   de cobrana de juros/multa, desconto por antecipao, multa em valor monetrio, negativao
+ *   automtica, abatimento  grava zeros/brancos fixos nessas faixas em vez de expor os campos)
+ * Nomenclatura "Beneficirio Final" (no "Sacador/Avalista", nome usado por libs de terceiros mais
  * antigas) segue as Circulares BACEN 3598, 3656 e 3956, citadas explicitamente pelo manual.
- * Particularidade: datas de in�cio de cobran�a de juros/multa e a data de instru��o usam formato
- * AAAAMMDD (8 d�gitos) � diferente de vencimento/emiss�o/desconto, que usam DDMMAA (6 d�gitos).
- * Duas formata��es de data convivem no mesmo registro; confirmado pelo manual oficial, n�o � erro.
- * Ver an�lise completa (incluindo notas sobre inconsist�ncias do pr�prio PDF do manual) em:
+ * Particularidade: datas de incio de cobrana de juros/multa e a data de instruo usam formato
+ * AAAAMMDD (8 dgitos)  diferente de vencimento/emisso/desconto, que usam DDMMAA (6 dgitos).
+ * Duas formataes de data convivem no mesmo registro; confirmado pelo manual oficial, no  erro.
+ * Ver anlise completa (incluindo notas sobre inconsistncias do prprio PDF do manual) em:
  */
 
 import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
@@ -25,7 +25,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Identifica��o do registro detalhe',
+    description: 'Identificao do registro detalhe',
     canonical: null,
   },
   tipo_cobranca: {
@@ -36,7 +36,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'A',
-    description: 'Tipo de cobran�a: A=Sicredi com Registro (�nico valor documentado)',
+    description: 'Tipo de cobrana: A=Sicredi com Registro (nico valor documentado)',
     canonical: null,
   },
   numero_carteira: {
@@ -47,7 +47,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'A',
-    description: 'Tipo de carteira: A=Simples (�nico valor documentado)',
+    description: 'Tipo de carteira: A=Simples (nico valor documentado)',
     canonical: null,
   },
   tipo_impressao: {
@@ -58,7 +58,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de impress�o: A=Normal, B=Carn�',
+    description: 'Tipo de impresso: A=Normal, B=Carn',
     canonical: null,
   },
   brancos_1: {
@@ -80,7 +80,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de boleto: H=H�brido (com QR Code) � controla se o registro tipo 8 � obrigat�rio',
+    description: 'Tipo de boleto: H=Hbrido (com QR Code)  controla se o registro tipo 8  obrigatrio',
     canonical: null,
   },
   brancos_2: {
@@ -102,7 +102,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'A',
-    description: 'Tipo de moeda: A=Real (�nico valor documentado)',
+    description: 'Tipo de moeda: A=Real (nico valor documentado)',
     canonical: null,
   },
   tipo_desconto: {
@@ -113,7 +113,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de desconto: A=Valor monet�rio, B=Percentual',
+    description: 'Tipo de desconto: A=Valor monetrio, B=Percentual',
     canonical: null,
   },
   tipo_juros: {
@@ -124,7 +124,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de juros: A=Valor monet�rio, B=Percentual di�rio, C=Percentual mensal',
+    description: 'Tipo de juros: A=Valor monetrio, B=Percentual dirio, C=Percentual mensal',
     canonical: null,
   },
   tipo_multa: {
@@ -135,7 +135,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de multa: A=Valor monet�rio, B=Percentual (default percentual se n�o informado)',
+    description: 'Tipo de multa: A=Valor monetrio, B=Percentual (default percentual se no informado)',
     canonical: null,
   },
   data_inicio_juros: {
@@ -146,7 +146,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.AAAAMMDD,
     pattern: null,
-    description: 'Data de in�cio da cobran�a de juros (m�n. vencimento+1, ou zeros)',
+    description: 'Data de incio da cobrana de juros (mn. vencimento+1, ou zeros)',
     canonical: 'juros.vigenciaAPartirDe',
   },
   data_inicio_multa: {
@@ -157,7 +157,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.AAAAMMDD,
     pattern: null,
-    description: 'Data de in�cio da cobran�a de multa (m�n. vencimento+1, ou zeros)',
+    description: 'Data de incio da cobrana de multa (mn. vencimento+1, ou zeros)',
     canonical: null,
   },
   brancos_3: {
@@ -179,7 +179,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso n�mero � pode ficar em branco se impress�o pelo Sicredi (gerado automaticamente)',
+    description: 'Nosso nmero  pode ficar em branco se impresso pelo Sicredi (gerado automaticamente)',
     canonical: 'nossoNumero',
   },
   brancos_4: {
@@ -201,7 +201,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.AAAAMMDD,
     pattern: null,
-    description: 'Data de instru��o � s� usada quando instrucao (109-110) = "31"; sen�o vazio',
+    description: 'Data de instruo  s usada quando instrucao (109-110) = "31"; seno vazio',
     canonical: null,
   },
   campo_alterado_instrucao31: {
@@ -213,7 +213,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'Campo alterado quando instrucao=31: A=Desconto, B=Juros por dia, C=Desconto por antecipa��o, D=Data limite para desconto, E=Cancelamento de protesto autom�tico',
+      'Campo alterado quando instrucao=31: A=Desconto, B=Juros por dia, C=Desconto por antecipao, D=Data limite para desconto, E=Cancelamento de protesto automtico',
     canonical: null,
   },
   postagem_titulo: {
@@ -224,7 +224,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Postagem do t�tulo: S=Sicredi posta, N=benefici�rio/cedente posta',
+    description: 'Postagem do ttulo: S=Sicredi posta, N=beneficirio/cedente posta',
     canonical: null,
   },
   brancos_5: {
@@ -246,7 +246,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Impress�o do boleto: A=Sicredi, B=benefici�rio/cedente',
+    description: 'Impresso do boleto: A=Sicredi, B=beneficirio/cedente',
     canonical: null,
   },
   numero_parcela_carne: {
@@ -257,7 +257,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da parcela do carn� � s� quando tipo_impressao=B',
+    description: 'Nmero da parcela do carn  s quando tipo_impressao=B',
     canonical: null,
   },
   total_parcelas_carne: {
@@ -268,7 +268,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Total de parcelas do carn� � s� quando tipo_impressao=B',
+    description: 'Total de parcelas do carn  s quando tipo_impressao=B',
     canonical: null,
   },
   brancos_6: {
@@ -290,7 +290,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou percentual de desconto por dia de antecipa��o',
+    description: 'Valor ou percentual de desconto por dia de antecipao',
     canonical: null,
   },
   valor_multa_percentual: {
@@ -301,7 +301,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor da multa em PERCENTUAL � usar s� quando tipo_multa=B',
+    description: 'Valor da multa em PERCENTUAL  usar s quando tipo_multa=B',
     canonical: null,
   },
   valor_multa_monetario: {
@@ -312,7 +312,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor da multa em VALOR MONET�RIO � usar s� quando tipo_multa=A',
+    description: 'Valor da multa em VALOR MONETRIO  usar s quando tipo_multa=A',
     canonical: null,
   },
   instrucao: {
@@ -324,7 +324,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'C�digo de instru��o: 01=Cadastro de T�tulos, 02=Pedido de Baixa, 04=Concess�o de Abatimento, 05=Cancelamento de Abatimento, 06=Altera��o de Vencimento, 09=Pedido de Protesto, 18=Sustar protesto e baixar t�tulo, 19=Sustar protesto e manter em carteira, 31=Altera��o de outros dados, 45=Incluir negativa��o, 75=Excluir negativa��o e manter na carteira, 76=Excluir negativa��o e baixar t�tulos',
+      'Cdigo de instruo: 01=Cadastro de Ttulos, 02=Pedido de Baixa, 04=Concesso de Abatimento, 05=Cancelamento de Abatimento, 06=Alterao de Vencimento, 09=Pedido de Protesto, 18=Sustar protesto e baixar ttulo, 19=Sustar protesto e manter em carteira, 31=Alterao de outros dados, 45=Incluir negativao, 75=Excluir negativao e manter na carteira, 76=Excluir negativao e baixar ttulos',
     canonical: null,
   },
   numero_documento: {
@@ -335,7 +335,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Seu n�mero � sem espa�o em branco (ex: "123/4", n�o "123 4")',
+    description: 'Seu nmero  sem espao em branco (ex: "123/4", no "123 4")',
     canonical: 'numeroDocumento',
   },
   vencimento: {
@@ -346,7 +346,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de vencimento � deve ser 7 dias maior que a data de emiss�o (151-156)',
+    description: 'Data de vencimento  deve ser 7 dias maior que a data de emisso (151-156)',
     canonical: 'vencimento',
   },
   valor_titulo: {
@@ -357,7 +357,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do t�tulo',
+    description: 'Valor do ttulo',
     canonical: 'valor',
   },
   brancos_7: {
@@ -380,7 +380,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'Esp�cie do t�tulo: A=Duplicata Mercantil, B=Duplicata Rural, C=Nota Promiss�ria, D=Nota Promiss�ria Rural, E=Nota de Seguros, G=Recibo, H=Letra de C�mbio, I=Nota de D�bito, J=Duplicata de Servi�o, K=Outros, O=Boleto Proposta (n�o permite h�brido)',
+      'Espcie do ttulo: A=Duplicata Mercantil, B=Duplicata Rural, C=Nota Promissria, D=Nota Promissria Rural, E=Nota de Seguros, G=Recibo, H=Letra de Cmbio, I=Nota de Dbito, J=Duplicata de Servio, K=Outros, O=Boleto Proposta (no permite hbrido)',
     canonical: null,
   },
   aceite: {
@@ -391,7 +391,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Aceite do t�tulo: S=Sim, N=N�o',
+    description: 'Aceite do ttulo: S=Sim, N=No',
     canonical: null,
   },
   data_emissao: {
@@ -402,7 +402,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de emiss�o � deve ser 7 dias menor que o vencimento (121-126)',
+    description: 'Data de emisso  deve ser 7 dias menor que o vencimento (121-126)',
     canonical: 'dataEmissao',
   },
   instrucao_protesto_automatico: {
@@ -413,7 +413,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Instru��o de protesto autom�tico: 00=N�o protestar, 06=Protestar',
+    description: 'Instruo de protesto automtico: 00=No protestar, 06=Protestar',
     canonical: null,
   },
   dias_protesto: {
@@ -425,7 +425,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'Dias para protesto autom�tico: m�nimo 03, m�ximo 99 (03-04 dias = �teis, 05+ = corridos)',
+      'Dias para protesto automtico: mnimo 03, mximo 99 (03-04 dias = teis, 05+ = corridos)',
     canonical: null,
   },
   juros_mora: {
@@ -436,7 +436,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Juros por dia de atraso, valor ou percentual conforme tipo_juros (posi��o 19)',
+    description: 'Juros por dia de atraso, valor ou percentual conforme tipo_juros (posio 19)',
     canonical: null,
   },
   data_limite_desconto: {
@@ -447,7 +447,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data limite para desconto � zeros = usa a data de vencimento',
+    description: 'Data limite para desconto  zeros = usa a data de vencimento',
     canonical: 'desconto.dataLimite',
   },
   valor_desconto: {
@@ -458,7 +458,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou percentual de desconto conforme tipo_desconto (posi��o 18)',
+    description: 'Valor ou percentual de desconto conforme tipo_desconto (posio 18)',
     canonical: 'desconto.valor',
   },
   instrucao_negativacao: {
@@ -470,7 +470,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'Instru��o de negativa��o autom�tica: 00=N�o negativar, 06=Negativar (s� benefici�rio PJ; excludente com protesto)',
+      'Instruo de negativao automtica: 00=No negativar, 06=Negativar (s beneficirio PJ; excludente com protesto)',
     canonical: null,
   },
   dias_negativacao: {
@@ -482,7 +482,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'Dias para negativa��o autom�tica: m�nimo 03, m�ximo 99 (03-04 dias = �teis, 05+ = corridos)',
+      'Dias para negativao automtica: mnimo 03, mximo 99 (03-04 dias = teis, 05+ = corridos)',
     canonical: null,
   },
   brancos_8: {
@@ -515,7 +515,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do pagador/sacado: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrio do pagador/sacado: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   brancos_9: {
@@ -537,7 +537,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF/CNPJ do pagador/sacado � deve ser v�lido mesmo em homologa��o',
+    description: 'CPF/CNPJ do pagador/sacado  deve ser vlido mesmo em homologao',
     canonical: 'sacado.documento',
   },
   nome: {
@@ -548,7 +548,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do pagador (padr�o FEBRABAN, 40 posi��es � n�o a variante 37+3 do BB)',
+    description: 'Nome do pagador (padro FEBRABAN, 40 posies  no a variante 37+3 do BB)',
     canonical: 'sacado.nome',
   },
   logradouro: {
@@ -559,7 +559,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do pagador',
+    description: 'Endereo do pagador',
     canonical: 'sacado.endereco.logradouro',
   },
   codigo_pagador_cooperativa: {
@@ -570,7 +570,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do pagador na cooperativa do benefici�rio � zeros se n�o cadastrado',
+    description: 'Cdigo do pagador na cooperativa do beneficirio  zeros se no cadastrado',
     canonical: null,
   },
   brancos_10: {
@@ -603,7 +603,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP do pagador � obrigat�rio ser um CEP v�lido quando informado',
+    description: 'CEP do pagador  obrigatrio ser um CEP vlido quando informado',
     canonical: 'sacado.endereco.cep',
   },
   codigo_pagador_cliente: {
@@ -614,7 +614,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do pagador junto ao cliente � zeros se n�o houver',
+    description: 'Cdigo do pagador junto ao cliente  zeros se no houver',
     canonical: null,
   },
   numero_inscricao_beneficiario_final: {
@@ -626,7 +626,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'CPF/CNPJ do Benefici�rio Final (nomenclatura BACEN 3598/3656/3956, n�o "sacador/avalista") � deve ser diferente do benefici�rio e do pagador; deixar em branco se n�o existir',
+      'CPF/CNPJ do Beneficirio Final (nomenclatura BACEN 3598/3656/3956, no "sacador/avalista")  deve ser diferente do beneficirio e do pagador; deixar em branco se no existir',
     canonical: null,
   },
   nome_beneficiario_final: {
@@ -637,7 +637,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Benefici�rio Final � deixar em branco quando inexistente',
+    description: 'Nome do Beneficirio Final  deixar em branco quando inexistente',
     canonical: null,
   },
   numero_sequencial: {
@@ -648,7 +648,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no arquivo',
+    description: 'Nmero sequencial do registro no arquivo',
     canonical: null,
   },
 }

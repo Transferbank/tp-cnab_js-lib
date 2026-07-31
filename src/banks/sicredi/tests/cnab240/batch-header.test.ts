@@ -6,15 +6,15 @@ import { SICREDI_CNAB240_BATCH_HEADER } from '@banks/sicredi/schemas/cnab240'
 import { FieldType, DateFormat } from '@tp-types/index'
 
 describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
-  describe('Defini��o dos campos - Manual vers�o 29', () => {
-    it('deve ter c�digo do banco na posi��o 1-3 com padr�o "748"', () => {
+  describe('Definio dos campos - Manual verso 29', () => {
+    it('deve ter cdigo do banco na posio 1-3 com padro "748"', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.controle_banco).toMatchObject({
         pos: [1, 3],
         pattern: '748',
       })
     })
 
-    it('deve ter n�mero do lote na posi��o 4-7', () => {
+    it('deve ter nmero do lote na posio 4-7', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.controle_lote).toMatchObject({
         pos: [4, 7],
         type: FieldType.NUM,
@@ -22,35 +22,35 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter tipo de registro "1" (header de lote) na posi��o 8', () => {
+    it('deve ter tipo de registro "1" (header de lote) na posio 8', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.controle_registro).toMatchObject({
         pos: [8, 8],
         pattern: '1',
       })
     })
 
-    it('deve ter tipo de opera��o "R" (remessa) na posi��o 9', () => {
+    it('deve ter tipo de operao "R" (remessa) na posio 9', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.servico_operacao).toMatchObject({
         pos: [9, 9],
         pattern: 'R',
       })
     })
 
-    it('deve ter tipo de servi�o "01" (cobran�a) na posi��o 10-11', () => {
+    it('deve ter tipo de servio "01" (cobrana) na posio 10-11', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.servico_tipo).toMatchObject({
         pos: [10, 11],
         pattern: '01',
       })
     })
 
-    it('deve ter layout do lote "040" na posi��o 14-16', () => {
+    it('deve ter layout do lote "040" na posio 14-16', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.servico_layout).toMatchObject({
         pos: [14, 16],
         pattern: '040',
       })
     })
 
-    it('deve ter tipo de inscri��o do cedente na posi��o 18', () => {
+    it('deve ter tipo de inscrio do cedente na posio 18', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.cedente_inscricao_tipo).toMatchObject({
         pos: [18, 18],
         type: FieldType.NUM,
@@ -58,7 +58,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter CPF/CNPJ do cedente na posi��o 19-33 (15 d�gitos)', () => {
+    it('deve ter CPF/CNPJ do cedente na posio 19-33 (15 dgitos)', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.cedente_inscricao_numero).toMatchObject({
         pos: [19, 33],
         type: FieldType.NUM,
@@ -66,7 +66,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter ag�ncia do cedente na posi��o 54-58', () => {
+    it('deve ter agncia do cedente na posio 54-58', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.cedente_agencia).toMatchObject({
         pos: [54, 58],
         type: FieldType.NUM,
@@ -74,7 +74,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter conta do cedente na posi��o 60-71', () => {
+    it('deve ter conta do cedente na posio 60-71', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.cedente_conta).toMatchObject({
         pos: [60, 71],
         type: FieldType.NUM,
@@ -82,7 +82,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter DV da conta na posi��o 72', () => {
+    it('deve ter DV da conta na posio 72', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.cedente_conta_dv).toMatchObject({
         pos: [72, 72],
         type: FieldType.NUM,
@@ -90,7 +90,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter nome do cedente na posi��o 74-103', () => {
+    it('deve ter nome do cedente na posio 74-103', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.cedente_nome).toMatchObject({
         pos: [74, 103],
         type: FieldType.ALFA,
@@ -98,7 +98,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter sequencial da remessa na posi��o 184-191', () => {
+    it('deve ter sequencial da remessa na posio 184-191', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.remessa_sequencial).toMatchObject({
         pos: [184, 191],
         type: FieldType.NUM,
@@ -106,14 +106,14 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       })
     })
 
-    it('deve ter data de gera��o na posi��o 192-199 com formato DDMMAAAA', () => {
+    it('deve ter data de gerao na posio 192-199 com formato DDMMAAAA', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.data_geracao).toMatchObject({
         pos: [192, 199],
         dateFormat: DateFormat.DDMMAAAA,
       })
     })
 
-    it('deve ter data de cr�dito na posi��o 200-207', () => {
+    it('deve ter data de crdito na posio 200-207', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.data_credito).toMatchObject({
         pos: [200, 207],
         dateFormat: DateFormat.DDMMAAAA,
@@ -121,8 +121,8 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
     })
   })
 
-  describe('Valida��o de estrutura', () => {
-    it('todos os campos devem ter posi��o, tipo e tamanho definidos', () => {
+  describe('Validao de estrutura', () => {
+    it('todos os campos devem ter posio, tipo e tamanho definidos', () => {
       Object.entries(SICREDI_CNAB240_BATCH_HEADER).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -134,7 +134,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       )
     })
 
-    it('tamanhos declarados devem bater com as posi��es', () => {
+    it('tamanhos declarados devem bater com as posies', () => {
       Object.entries(SICREDI_CNAB240_BATCH_HEADER).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           const tamanhoCalculado = fieldDef.pos[1] - fieldDef.pos[0] + 1
@@ -143,7 +143,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       )
     })
 
-    it('n�o deve haver sobreposi��o de posi��es', () => {
+    it('no deve haver sobreposio de posies', () => {
       const campos = Object.entries(SICREDI_CNAB240_BATCH_HEADER).map(
         ([name, def]: [string, any]) => ({
           name,
@@ -161,7 +161,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
       }
     })
 
-    it('deve cobrir todas as 240 posi��es', () => {
+    it('deve cobrir todas as 240 posies', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SICREDI_CNAB240_BATCH_HEADER).forEach((fieldDef: any) => {
@@ -177,7 +177,7 @@ describe('Schema Sicredi CNAB 240 - Header de Lote', () => {
   })
 
   describe('Particularidades do Sicredi', () => {
-    it('data de cr�dito deve ser opcional (usado s� no retorno)', () => {
+    it('data de crdito deve ser opcional (usado s no retorno)', () => {
       expect(SICREDI_CNAB240_BATCH_HEADER.data_credito.required).toBe(false)
     })
 

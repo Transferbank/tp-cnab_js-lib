@@ -6,29 +6,29 @@ import { SICREDI_CNAB240_FILE_TRAILER } from '@banks/sicredi/schemas/cnab240'
 import { FieldType } from '@tp-types/index'
 
 describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
-  describe('Defini��o dos campos - Manual vers�o 29', () => {
-    it('deve ter c�digo do banco na posi��o 1-3 com padr�o "748"', () => {
+  describe('Definio dos campos - Manual verso 29', () => {
+    it('deve ter cdigo do banco na posio 1-3 com padro "748"', () => {
       expect(SICREDI_CNAB240_FILE_TRAILER.controle_banco).toMatchObject({
         pos: [1, 3],
         pattern: '748',
       })
     })
 
-    it('deve ter lote "9999" na posi��o 4-7', () => {
+    it('deve ter lote "9999" na posio 4-7', () => {
       expect(SICREDI_CNAB240_FILE_TRAILER.controle_lote).toMatchObject({
         pos: [4, 7],
         pattern: '9999',
       })
     })
 
-    it('deve ter tipo de registro "9" (trailer) na posi��o 8', () => {
+    it('deve ter tipo de registro "9" (trailer) na posio 8', () => {
       expect(SICREDI_CNAB240_FILE_TRAILER.controle_registro).toMatchObject({
         pos: [8, 8],
         pattern: '9',
       })
     })
 
-    it('deve ter quantidade de lotes na posi��o 18-23', () => {
+    it('deve ter quantidade de lotes na posio 18-23', () => {
       expect(SICREDI_CNAB240_FILE_TRAILER.quantidade_lotes).toMatchObject({
         pos: [18, 23],
         type: FieldType.NUM,
@@ -36,7 +36,7 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
       })
     })
 
-    it('deve ter quantidade de registros na posi��o 24-29', () => {
+    it('deve ter quantidade de registros na posio 24-29', () => {
       expect(SICREDI_CNAB240_FILE_TRAILER.quantidade_registros).toMatchObject({
         pos: [24, 29],
         type: FieldType.NUM,
@@ -44,7 +44,7 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
       })
     })
 
-    it('deve ter quantidade de contas na posi��o 30-35', () => {
+    it('deve ter quantidade de contas na posio 30-35', () => {
       expect(SICREDI_CNAB240_FILE_TRAILER.quantidade_contas).toMatchObject({
         pos: [30, 35],
         type: FieldType.NUM,
@@ -52,7 +52,7 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
       })
     })
 
-    it('deve ter campo CNAB exclusivo cobrindo posi��es 36-240', () => {
+    it('deve ter campo CNAB exclusivo cobrindo posies 36-240', () => {
       expect(SICREDI_CNAB240_FILE_TRAILER.cnab_exclusivo_2).toMatchObject({
         pos: [36, 240],
         type: FieldType.ALFA,
@@ -61,8 +61,8 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
     })
   })
 
-  describe('Valida��o de estrutura', () => {
-    it('todos os campos devem ter posi��o, tipo e tamanho definidos', () => {
+  describe('Validao de estrutura', () => {
+    it('todos os campos devem ter posio, tipo e tamanho definidos', () => {
       Object.entries(SICREDI_CNAB240_FILE_TRAILER).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -74,7 +74,7 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
       )
     })
 
-    it('tamanhos declarados devem bater com as posi��es', () => {
+    it('tamanhos declarados devem bater com as posies', () => {
       Object.entries(SICREDI_CNAB240_FILE_TRAILER).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           const tamanhoCalculado = fieldDef.pos[1] - fieldDef.pos[0] + 1
@@ -83,7 +83,7 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
       )
     })
 
-    it('n�o deve haver sobreposi��o de posi��es', () => {
+    it('no deve haver sobreposio de posies', () => {
       const campos = Object.entries(SICREDI_CNAB240_FILE_TRAILER).map(
         ([name, def]: [string, any]) => ({
           name,
@@ -101,7 +101,7 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
       }
     })
 
-    it('deve cobrir todas as 240 posi��es', () => {
+    it('deve cobrir todas as 240 posies', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SICREDI_CNAB240_FILE_TRAILER).forEach((fieldDef: any) => {
@@ -117,7 +117,7 @@ describe('Schema Sicredi CNAB 240 - Trailer de Arquivo', () => {
   })
 
   describe('Particularidades do Sicredi', () => {
-    it('quantidade de lotes sempre deve ser 000001 (Sicredi permite s� 1 lote)', () => {
+    it('quantidade de lotes sempre deve ser 000001 (Sicredi permite s 1 lote)', () => {
       const descricao = SICREDI_CNAB240_FILE_TRAILER.quantidade_lotes.description
       expect(descricao.toLowerCase()).toContain('000001')
       expect(descricao.toLowerCase()).toContain('1 lote')

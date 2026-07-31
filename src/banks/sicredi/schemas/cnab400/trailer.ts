@@ -1,11 +1,11 @@
 ﻿/**
- * Sicredi (748) � CNAB 400 � Trailer de Arquivo (Remessa)
+ * Sicredi (748)  CNAB 400  Trailer de Arquivo (Remessa)
  * Fonte:
- * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) � �8.8, p.36
+ * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026)  8.8, p.36
  * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Sicredi.php)
  *
- * Diferente do trailer do BB (s� tipo_registro + brancos + sequencial), o Sicredi repete
- * c�digo do banco e c�digo do cliente/cedente no trailer (mesmos campos do header).
+ * Diferente do trailer do BB (s tipo_registro + brancos + sequencial), o Sicredi repete
+ * cdigo do banco e cdigo do cliente/cedente no trailer (mesmos campos do header).
  *
  */
 
@@ -20,7 +20,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identifica��o do registro trailer',
+    description: 'Identificao do registro trailer',
     canonical: null,
   },
   tipo_identificacao_arquivo: {
@@ -31,7 +31,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Identifica��o do arquivo remessa',
+    description: 'Identificao do arquivo remessa',
     canonical: null,
   },
   codigo_banco: {
@@ -42,7 +42,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   codigo_cliente: {
@@ -53,7 +53,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do benefici�rio/cedente (repete o campo do header)',
+    description: 'Cdigo do beneficirio/cedente (repete o campo do header)',
     canonical: null,
   },
   brancos: {
@@ -75,7 +75,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro (total de registros do arquivo)',
+    description: 'Nmero sequencial do registro (total de registros do arquivo)',
     canonical: null,
   },
 }

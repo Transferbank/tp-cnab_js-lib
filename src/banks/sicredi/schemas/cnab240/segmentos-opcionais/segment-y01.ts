@@ -1,13 +1,13 @@
 ﻿/* *
- * Registro opcional para identifica��o do Benefici�rio Final.
- * NOTA: O manual Sicredi j� usa a nomenclatura correta "Benefici�rio Final"
- * conforme Circulares BACEN: 3598, 3656 e 3956, que substitu�ram a
+ * Registro opcional para identificao do Beneficirio Final.
+ * NOTA: O manual Sicredi j usa a nomenclatura correta "Beneficirio Final"
+ * conforme Circulares BACEN: 3598, 3656 e 3956, que substituram a
  * nomenclatura antiga "Sacador/Avalista".
  * Segmento: Y
- * C�digo do registro: 01
+ * Cdigo do registro: 01
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -21,7 +21,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -32,7 +32,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -54,7 +54,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -87,7 +87,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento (vari�vel)',
+    description: 'Cdigo de movimento (varivel)',
     canonical: null,
   },
   codigo_registro: {
@@ -98,7 +98,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo do registro: 01=Benefici�rio Final',
+    description: 'Cdigo do registro: 01=Beneficirio Final',
     canonical: null,
   },
   beneficiario_final_tipo_pessoa: {
@@ -120,7 +120,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF/CNPJ do Benefici�rio Final',
+    description: 'CPF/CNPJ do Beneficirio Final',
     canonical: null,
   },
   beneficiario_final_nome: {
@@ -131,7 +131,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Benefici�rio Final (sem acentua��o)',
+    description: 'Nome do Beneficirio Final (sem acentuao)',
     canonical: null,
   },
   beneficiario_final_endereco: {
@@ -142,7 +142,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do Benefici�rio Final',
+    description: 'Endereo do Beneficirio Final',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -164,7 +164,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (8 d�gitos)',
+    description: 'CEP (8 dgitos)',
     canonical: null,
   },
   beneficiario_final_cidade: {
@@ -175,7 +175,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Cidade do Benefici�rio Final',
+    description: 'Cidade do Beneficirio Final',
     canonical: null,
   },
   beneficiario_final_uf: {
@@ -186,7 +186,7 @@ export const SICREDI_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'UF do Benefici�rio Final',
+    description: 'UF do Beneficirio Final',
     canonical: null,
   },
   cnab_exclusivo_3: {

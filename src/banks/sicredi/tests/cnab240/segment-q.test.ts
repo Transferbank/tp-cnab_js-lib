@@ -6,29 +6,29 @@ import { SICREDI_CNAB240_SEGMENT_Q } from '@banks/sicredi/schemas/cnab240'
 import { FieldType } from '@tp-types/index'
 
 describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
-  describe('Defini��o dos campos - Controle', () => {
-    it('deve ter c�digo do banco na posi��o 1-3 com padr�o "748"', () => {
+  describe('Definio dos campos - Controle', () => {
+    it('deve ter cdigo do banco na posio 1-3 com padro "748"', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.controle_banco).toMatchObject({
         pos: [1, 3],
         pattern: '748',
       })
     })
 
-    it('deve ter tipo de registro "3" (detalhe) na posi��o 8', () => {
+    it('deve ter tipo de registro "3" (detalhe) na posio 8', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.controle_registro).toMatchObject({
         pos: [8, 8],
         pattern: '3',
       })
     })
 
-    it('deve ter identificador do segmento "Q" na posi��o 14', () => {
+    it('deve ter identificador do segmento "Q" na posio 14', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.servico_segmento).toMatchObject({
         pos: [14, 14],
         pattern: 'Q',
       })
     })
 
-    it('deve ter c�digo de movimento VARI�VEL (n�o fixo) na posi��o 16-17', () => {
+    it('deve ter cdigo de movimento VARIVEL (no fixo) na posio 16-17', () => {
       const campo = SICREDI_CNAB240_SEGMENT_Q.servico_codigo_movimento
       expect(campo.pos).toEqual([16, 17])
       expect(campo.pattern).toBeNull()
@@ -37,7 +37,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
   })
 
   describe('Dados do pagador (sacado)', () => {
-    it('deve ter tipo de inscri��o na posi��o 18', () => {
+    it('deve ter tipo de inscrio na posio 18', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.sacado_inscricao_tipo).toMatchObject({
         pos: [18, 18],
         type: FieldType.NUM,
@@ -45,7 +45,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter CPF/CNPJ do pagador na posi��o 19-33 (15 d�gitos)', () => {
+    it('deve ter CPF/CNPJ do pagador na posio 19-33 (15 dgitos)', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.sacado_inscricao_numero).toMatchObject({
         pos: [19, 33],
         type: FieldType.NUM,
@@ -53,7 +53,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter nome do pagador na posi��o 34-73 (40 caracteres)', () => {
+    it('deve ter nome do pagador na posio 34-73 (40 caracteres)', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.sacado_nome).toMatchObject({
         pos: [34, 73],
         type: FieldType.ALFA,
@@ -61,12 +61,12 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('descri��o do nome deve mencionar que n�o deve ter acentua��o', () => {
+    it('descrio do nome deve mencionar que no deve ter acentuao', () => {
       const descricao = SICREDI_CNAB240_SEGMENT_Q.sacado_nome.description
       expect(descricao.toLowerCase()).toContain('sem acent')
     })
 
-    it('deve ter endere�o do pagador na posi��o 74-113 (40 caracteres)', () => {
+    it('deve ter endereo do pagador na posio 74-113 (40 caracteres)', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.sacado_endereco).toMatchObject({
         pos: [74, 113],
         type: FieldType.ALFA,
@@ -74,7 +74,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter CEP na posi��o 129-136 (8 d�gitos)', () => {
+    it('deve ter CEP na posio 129-136 (8 dgitos)', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.sacado_cep).toMatchObject({
         pos: [129, 136],
         type: FieldType.NUM,
@@ -82,7 +82,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter cidade na posi��o 137-151 (15 caracteres)', () => {
+    it('deve ter cidade na posio 137-151 (15 caracteres)', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.sacado_cidade).toMatchObject({
         pos: [137, 151],
         type: FieldType.ALFA,
@@ -90,7 +90,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter UF na posi��o 152-153 (2 caracteres)', () => {
+    it('deve ter UF na posio 152-153 (2 caracteres)', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.sacado_uf).toMatchObject({
         pos: [152, 153],
         type: FieldType.ALFA,
@@ -99,8 +99,8 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
     })
   })
 
-  describe('Benefici�rio Final (nomenclatura BACEN)', () => {
-    it('deve ter tipo de pessoa do Benefici�rio Final na posi��o 154', () => {
+  describe('Beneficirio Final (nomenclatura BACEN)', () => {
+    it('deve ter tipo de pessoa do Beneficirio Final na posio 154', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_tipo).toMatchObject({
         pos: [154, 154],
         type: FieldType.NUM,
@@ -108,7 +108,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter CPF/CNPJ do Benefici�rio Final na posi��o 155-169', () => {
+    it('deve ter CPF/CNPJ do Beneficirio Final na posio 155-169', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_inscricao).toMatchObject({
         pos: [155, 169],
         type: FieldType.NUM,
@@ -116,7 +116,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter nome do Benefici�rio Final na posi��o 170-209 (40 caracteres)', () => {
+    it('deve ter nome do Beneficirio Final na posio 170-209 (40 caracteres)', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_nome).toMatchObject({
         pos: [170, 209],
         type: FieldType.ALFA,
@@ -124,21 +124,21 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('nomenclatura deve ser "Benefici�rio Final" (n�o Sacador/Avalista)', () => {
+    it('nomenclatura deve ser "Beneficirio Final" (no Sacador/Avalista)', () => {
       const descricaoTipo = SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_tipo.description
       const descricaoNome = SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_nome.description
 
-      expect(descricaoTipo).toContain('Benefici�rio Final')
-      expect(descricaoNome).toContain('Benefici�rio Final')
+      expect(descricaoTipo).toContain('Beneficirio Final')
+      expect(descricaoNome).toContain('Beneficirio Final')
     })
 
-    it('descri��o deve mencionar aus�ncia de Benefici�rio Final (tipo 0)', () => {
+    it('descrio deve mencionar ausncia de Beneficirio Final (tipo 0)', () => {
       const descricao = SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_tipo.description
       expect(descricao).toContain('0')
       expect(descricao.toLowerCase()).toContain('sem')
     })
 
-    it('campos do Benefici�rio Final devem ser opcionais', () => {
+    it('campos do Beneficirio Final devem ser opcionais', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_tipo.required).toBe(false)
       expect(SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_inscricao.required).toBe(false)
       expect(SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_nome.required).toBe(false)
@@ -146,14 +146,14 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
   })
 
   describe('Banco correspondente', () => {
-    it('deve ter c�digo do banco correspondente na posi��o 210-212 (n�o utilizado)', () => {
+    it('deve ter cdigo do banco correspondente na posio 210-212 (no utilizado)', () => {
       const campo = SICREDI_CNAB240_SEGMENT_Q.banco_correspondente_codigo
       expect(campo.pos).toEqual([210, 212])
       expect(campo.required).toBe(false)
       expect(campo.description).toContain('000')
     })
 
-    it('deve ter nosso n�mero no banco correspondente na posi��o 213-232 (n�o utilizado)', () => {
+    it('deve ter nosso nmero no banco correspondente na posio 213-232 (no utilizado)', () => {
       const campo = SICREDI_CNAB240_SEGMENT_Q.banco_correspondente_nosso_numero
       expect(campo.pos).toEqual([213, 232])
       expect(campo.required).toBe(false)
@@ -161,7 +161,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
   })
 
   describe('Campo CNAB exclusivo', () => {
-    it('deve ter campo CNAB exclusivo na posi��o 114-128', () => {
+    it('deve ter campo CNAB exclusivo na posio 114-128', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.cnab_exclusivo_2).toMatchObject({
         pos: [114, 128],
         type: FieldType.ALFA,
@@ -169,7 +169,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       })
     })
 
-    it('deve ter campo CNAB exclusivo na posi��o 233-240', () => {
+    it('deve ter campo CNAB exclusivo na posio 233-240', () => {
       expect(SICREDI_CNAB240_SEGMENT_Q.cnab_exclusivo_3).toMatchObject({
         pos: [233, 240],
         type: FieldType.ALFA,
@@ -178,8 +178,8 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
     })
   })
 
-  describe('Valida��o de estrutura', () => {
-    it('todos os campos devem ter posi��o, tipo e tamanho definidos', () => {
+  describe('Validao de estrutura', () => {
+    it('todos os campos devem ter posio, tipo e tamanho definidos', () => {
       Object.entries(SICREDI_CNAB240_SEGMENT_Q).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           expect(fieldDef.pos).toBeDefined()
@@ -191,7 +191,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       )
     })
 
-    it('tamanhos declarados devem bater com as posi��es', () => {
+    it('tamanhos declarados devem bater com as posies', () => {
       Object.entries(SICREDI_CNAB240_SEGMENT_Q).forEach(
         ([_fieldName, fieldDef]: [string, any]) => {
           const tamanhoCalculado = fieldDef.pos[1] - fieldDef.pos[0] + 1
@@ -200,7 +200,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       )
     })
 
-    it('n�o deve haver sobreposi��o de posi��es', () => {
+    it('no deve haver sobreposio de posies', () => {
       const campos = Object.entries(SICREDI_CNAB240_SEGMENT_Q).map(
         ([name, def]: [string, any]) => ({
           name,
@@ -218,7 +218,7 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
       }
     })
 
-    it('deve cobrir todas as 240 posi��es', () => {
+    it('deve cobrir todas as 240 posies', () => {
       const posicoesCoberta = new Set<number>()
 
       Object.values(SICREDI_CNAB240_SEGMENT_Q).forEach((fieldDef: any) => {
@@ -234,9 +234,9 @@ describe('Schema Sicredi CNAB 240 - Segmento Q', () => {
   })
 
   describe('Particularidades do Sicredi', () => {
-    it('j� usa nomenclatura atualizada "Benefici�rio Final" conforme Circulares BACEN', () => {
+    it('j usa nomenclatura atualizada "Beneficirio Final" conforme Circulares BACEN', () => {
       const comentario = SICREDI_CNAB240_SEGMENT_Q.beneficiario_final_tipo.description
-      expect(comentario).toContain('Benefici�rio Final')
+      expect(comentario).toContain('Beneficirio Final')
     })
 
     it('campos do pagador devem ter nomes iniciados com "sacado_"', () => {

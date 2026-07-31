@@ -1,17 +1,17 @@
 /**
  * Testes do Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)
  *
- * Registro opcional para cadastrar 2º e 3º nível de desconto (além do desconto 1 do detalhe).
- * Mutuamente excludente com desconto por dia de antecipação.
+ * Registro opcional para cadastrar 2Âº e 3Âº nÃ­vel de desconto (alÃ©m do desconto 1 do detalhe).
+ * Mutuamente excludente com desconto por dia de antecipaÃ§Ã£o.
  *
- * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) — §8.6, p.34
+ * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) â€” Â§8.6, p.34
  */
 
 import { TYPE7_DISCOUNTS } from '@banks/sicredi/schemas/cnab400/registros-opcionais/type7-discounts/type7-discounts'
 
 describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
   describe('Campos de controle', () => {
-    test('deve ter tipo de registro "7" na posição 1', () => {
+    test('deve ter tipo de registro "7" na posiÃ§Ã£o 1', () => {
       expect(TYPE7_DISCOUNTS.tipo_registro).toBeDefined()
       expect(TYPE7_DISCOUNTS.tipo_registro.pos).toEqual([1, 1])
       expect(TYPE7_DISCOUNTS.tipo_registro.type).toBe('num')
@@ -20,21 +20,21 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
       expect(TYPE7_DISCOUNTS.tipo_registro.required).toBe(true)
     })
 
-    test('deve ter nosso número na posição 2-16', () => {
+    test('deve ter nosso nÃºmero na posiÃ§Ã£o 2-16', () => {
       expect(TYPE7_DISCOUNTS.nosso_numero).toBeDefined()
       expect(TYPE7_DISCOUNTS.nosso_numero.pos).toEqual([2, 16])
       expect(TYPE7_DISCOUNTS.nosso_numero.type).toBe('alfa')
       expect(TYPE7_DISCOUNTS.nosso_numero.size).toBe(15)
     })
 
-    test('deve ter número do documento na posição 17-26', () => {
+    test('deve ter nÃºmero do documento na posiÃ§Ã£o 17-26', () => {
       expect(TYPE7_DISCOUNTS.numero_documento).toBeDefined()
       expect(TYPE7_DISCOUNTS.numero_documento.pos).toEqual([17, 26])
       expect(TYPE7_DISCOUNTS.numero_documento.type).toBe('alfa')
       expect(TYPE7_DISCOUNTS.numero_documento.size).toBe(10)
     })
 
-    test('deve ter número de inscrição do pagador na posição 27-40', () => {
+    test('deve ter nÃºmero de inscriÃ§Ã£o do pagador na posiÃ§Ã£o 27-40', () => {
       expect(TYPE7_DISCOUNTS.numero_inscricao_pagador).toBeDefined()
       expect(TYPE7_DISCOUNTS.numero_inscricao_pagador.pos).toEqual([27, 40])
       expect(TYPE7_DISCOUNTS.numero_inscricao_pagador.type).toBe('num')
@@ -42,7 +42,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
       expect(TYPE7_DISCOUNTS.numero_inscricao_pagador.required).toBe(true)
     })
 
-    test('deve ter número de inscrição do beneficiário final na posição 41-54', () => {
+    test('deve ter nÃºmero de inscriÃ§Ã£o do beneficiÃ¡rio final na posiÃ§Ã£o 41-54', () => {
       expect(TYPE7_DISCOUNTS.numero_inscricao_beneficiario_final).toBeDefined()
       expect(TYPE7_DISCOUNTS.numero_inscricao_beneficiario_final.pos).toEqual([41, 54])
       expect(TYPE7_DISCOUNTS.numero_inscricao_beneficiario_final.type).toBe('num')
@@ -50,8 +50,8 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
     })
   })
 
-  describe('Campos do 2º desconto', () => {
-    test('deve ter data limite do 2º desconto na posição 55-60 com formato DDMMAA', () => {
+  describe('Campos do 2Âº desconto', () => {
+    test('deve ter data limite do 2Âº desconto na posiÃ§Ã£o 55-60 com formato DDMMAA', () => {
       expect(TYPE7_DISCOUNTS.data_limite_desconto_2).toBeDefined()
       expect(TYPE7_DISCOUNTS.data_limite_desconto_2.pos).toEqual([55, 60])
       expect(TYPE7_DISCOUNTS.data_limite_desconto_2.type).toBe('data')
@@ -60,7 +60,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
       expect(TYPE7_DISCOUNTS.data_limite_desconto_2.required).toBe(true)
     })
 
-    test('deve ter valor do 2º desconto na posição 61-73 com 2 decimais', () => {
+    test('deve ter valor do 2Âº desconto na posiÃ§Ã£o 61-73 com 2 decimais', () => {
       expect(TYPE7_DISCOUNTS.valor_desconto_2).toBeDefined()
       expect(TYPE7_DISCOUNTS.valor_desconto_2.pos).toEqual([61, 73])
       expect(TYPE7_DISCOUNTS.valor_desconto_2.type).toBe('num')
@@ -70,8 +70,8 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
     })
   })
 
-  describe('Campos do 3º desconto', () => {
-    test('deve ter data limite do 3º desconto na posição 74-79 com formato DDMMAA', () => {
+  describe('Campos do 3Âº desconto', () => {
+    test('deve ter data limite do 3Âº desconto na posiÃ§Ã£o 74-79 com formato DDMMAA', () => {
       expect(TYPE7_DISCOUNTS.data_limite_desconto_3).toBeDefined()
       expect(TYPE7_DISCOUNTS.data_limite_desconto_3.pos).toEqual([74, 79])
       expect(TYPE7_DISCOUNTS.data_limite_desconto_3.type).toBe('data')
@@ -79,7 +79,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
       expect(TYPE7_DISCOUNTS.data_limite_desconto_3.dateFormat).toBe('DDMMAA')
     })
 
-    test('deve ter valor do 3º desconto na posição 80-92 com 2 decimais', () => {
+    test('deve ter valor do 3Âº desconto na posiÃ§Ã£o 80-92 com 2 decimais', () => {
       expect(TYPE7_DISCOUNTS.valor_desconto_3).toBeDefined()
       expect(TYPE7_DISCOUNTS.valor_desconto_3.pos).toEqual([80, 92])
       expect(TYPE7_DISCOUNTS.valor_desconto_3.type).toBe('num')
@@ -89,14 +89,14 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
   })
 
   describe('Campos finais', () => {
-    test('deve ter brancos na posição 93-394', () => {
+    test('deve ter brancos na posiÃ§Ã£o 93-394', () => {
       expect(TYPE7_DISCOUNTS.brancos).toBeDefined()
       expect(TYPE7_DISCOUNTS.brancos.pos).toEqual([93, 394])
       expect(TYPE7_DISCOUNTS.brancos.type).toBe('alfa')
       expect(TYPE7_DISCOUNTS.brancos.size).toBe(302)
     })
 
-    test('deve ter número sequencial na posição 395-400', () => {
+    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
       expect(TYPE7_DISCOUNTS.numero_sequencial).toBeDefined()
       expect(TYPE7_DISCOUNTS.numero_sequencial.pos).toEqual([395, 400])
       expect(TYPE7_DISCOUNTS.numero_sequencial.type).toBe('num')
@@ -106,7 +106,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
   })
 
   describe('Integridade do schema', () => {
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const campos = Object.keys(TYPE7_DISCOUNTS)
       const posicoes: { campo: string; inicio: number; fim: number }[] = []
 
@@ -130,7 +130,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       const campos = Object.keys(TYPE7_DISCOUNTS)
       campos.forEach((campo) => {
         const fieldDef = TYPE7_DISCOUNTS[campo]
@@ -141,14 +141,14 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
       })
     })
 
-    test('deve ter exatamente 400 posições', () => {
+    test('deve ter exatamente 400 posiÃ§Ãµes', () => {
       const ultimoCampo = TYPE7_DISCOUNTS.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('Características específicas', () => {
-    test('tipo_registro deve ter padrão fixo "7"', () => {
+  describe('CaracterÃ­sticas especÃ­ficas', () => {
+    test('tipo_registro deve ter padrÃ£o fixo "7"', () => {
       expect(TYPE7_DISCOUNTS.tipo_registro.pattern).toBe('7')
     })
 
@@ -161,12 +161,12 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 7 (Descontos 2 e 3)', () => {
       expect(TYPE7_DISCOUNTS.brancos.size).toBe(302)
     })
 
-    test('deve ter campos obrigatórios e opcionais corretos', () => {
-      // 2º desconto é obrigatório
+    test('deve ter campos obrigatÃ³rios e opcionais corretos', () => {
+      // 2Âº desconto Ã© obrigatÃ³rio
       expect(TYPE7_DISCOUNTS.data_limite_desconto_2.required).toBe(true)
       expect(TYPE7_DISCOUNTS.valor_desconto_2.required).toBe(true)
 
-      // 3º desconto é opcional
+      // 3Âº desconto Ã© opcional
       expect(TYPE7_DISCOUNTS.data_limite_desconto_3.required).toBeFalsy()
       expect(TYPE7_DISCOUNTS.valor_desconto_3.required).toBeFalsy()
     })

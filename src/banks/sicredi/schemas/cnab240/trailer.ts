@@ -2,10 +2,10 @@
  * Registro de encerramento do arquivo (tipo 9, lote 9999).
  * Lote: 9999
  * 
- * IMPORTANTE: O Sicredi s� permite 1 lote por arquivo.
+ * IMPORTANTE: O Sicredi s permite 1 lote por arquivo.
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -19,7 +19,7 @@ export const SICREDI_CNAB240_FILE_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -63,7 +63,7 @@ export const SICREDI_CNAB240_FILE_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de Lotes (sempre 000001 - Sicredi s� permite 1 lote por arquivo)',
+    description: 'Quantidade de Lotes (sempre 000001 - Sicredi s permite 1 lote por arquivo)',
     canonical: 'quantidadeLotes',
   },
   quantidade_registros: {
@@ -85,7 +85,7 @@ export const SICREDI_CNAB240_FILE_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de Contas para Concilia��o (sempre 000000)',
+    description: 'Quantidade de Contas para Conciliao (sempre 000000)',
     canonical: null,
   },
   cnab_exclusivo_2: {

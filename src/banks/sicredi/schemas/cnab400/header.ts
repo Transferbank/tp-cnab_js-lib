@@ -1,12 +1,12 @@
 ﻿/**
- * Sicredi (748) � CNAB 400 � Header de Arquivo (Remessa)
+ * Sicredi (748)  CNAB 400  Header de Arquivo (Remessa)
  * Fonte:
- * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) � �8.1, p.25
+ * - Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026)  8.1, p.25
  * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Sicredi.php)
  *
  * Particularidades do Sicredi:
- * - Usa "c�digo do cliente/cedente" (5 d�gitos) em vez de ag�ncia+conta separados.
- * - Data de gera��o no formato AAAAMMDD (8 d�gitos), n�o DDMMAA como a maioria dos bancos.
+ * - Usa "cdigo do cliente/cedente" (5 dgitos) em vez de agncia+conta separados.
+ * - Data de gerao no formato AAAAMMDD (8 dgitos), no DDMMAA como a maioria dos bancos.
  *
  */
 
@@ -21,7 +21,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do registro header',
+    description: 'Identificao do registro header',
     canonical: null,
   },
   tipo_operacao: {
@@ -32,7 +32,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Identifica��o do arquivo: 1=Remessa',
+    description: 'Identificao do arquivo: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
@@ -54,7 +54,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo do servi�o de cobran�a',
+    description: 'Cdigo do servio de cobrana',
     canonical: null,
   },
   literal_servico: {
@@ -65,7 +65,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal do tipo de servi�o',
+    description: 'Literal do tipo de servio',
     canonical: null,
   },
   codigo_cliente: {
@@ -76,7 +76,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do benefici�rio/cedente cadastrado na Cooperativa (n�o � ag�ncia+conta)',
+    description: 'Cdigo do beneficirio/cedente cadastrado na Cooperativa (no  agncia+conta)',
     canonical: null,
   },
   numero_inscricao_cedente: {
@@ -87,7 +87,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF/CNPJ do benefici�rio/cedente',
+    description: 'CPF/CNPJ do beneficirio/cedente',
     canonical: 'cedente.documento',
   },
   brancos_1: {
@@ -109,7 +109,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   nome_banco: {
@@ -131,7 +131,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.AAAAMMDD,
     pattern: null,
-    description: 'Data de gera��o do arquivo (AAAAMMDD � n�o DDMMAA)',
+    description: 'Data de gerao do arquivo (AAAAMMDD  no DDMMAA)',
     canonical: 'dataGeracao',
   },
   brancos_2: {
@@ -153,7 +153,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial da remessa: primeiro arquivo = 0000001, incrementa a cada envio',
+    description: 'Nmero sequencial da remessa: primeiro arquivo = 0000001, incrementa a cada envio',
     canonical: null,
   },
   brancos_3: {
@@ -175,7 +175,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '2.00',
-    description: 'Vers�o do sistema (literal com ponto decimal)',
+    description: 'Verso do sistema (literal com ponto decimal)',
     canonical: null,
   },
   numero_sequencial: {
@@ -186,7 +186,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'N�mero sequencial do registro no arquivo (sempre 000001 no header)',
+    description: 'Nmero sequencial do registro no arquivo (sempre 000001 no header)',
     canonical: null,
   },
 }

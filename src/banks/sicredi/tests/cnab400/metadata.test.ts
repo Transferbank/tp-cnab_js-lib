@@ -1,14 +1,14 @@
 /**
  * Testes de Metadados do Schema Sicredi CNAB 400
  *
- * Verifica informações gerais sobre o schema: código do banco, nome,
- * schemas disponíveis, e campos essenciais.
+ * Verifica informaÃ§Ãµes gerais sobre o schema: cÃ³digo do banco, nome,
+ * schemas disponÃ­veis, e campos essenciais.
  */
 
 import { sicrediCnab400 } from '@banks/sicredi/schemas/cnab400'
 
 describe('Schema Sicredi CNAB 400 - Metadados', () => {
-  test('deve ter código do banco correto (748)', () => {
+  test('deve ter cÃ³digo do banco correto (748)', () => {
     expect(sicrediCnab400.bankCode).toBe('748')
   })
 
@@ -16,7 +16,7 @@ describe('Schema Sicredi CNAB 400 - Metadados', () => {
     expect(sicrediCnab400.bankName).toBe('Sicredi')
   })
 
-  test('deve ter todos os schemas obrigatórios para remessa', () => {
+  test('deve ter todos os schemas obrigatÃ³rios para remessa', () => {
     expect(sicrediCnab400.header).toBeDefined()
     expect(sicrediCnab400.detail).toBeDefined()
     expect(sicrediCnab400.trailer).toBeDefined()
@@ -52,35 +52,35 @@ describe('Schema Sicredi CNAB 400 - Metadados', () => {
   })
 
   describe('Particularidades do Sicredi', () => {
-    test('header deve usar código do cliente em vez de agência+conta', () => {
+    test('header deve usar cÃ³digo do cliente em vez de agÃªncia+conta', () => {
       const header = sicrediCnab400.header!
       expect(header.codigo_cliente).toBeDefined()
       expect(header.agencia).toBeUndefined()
       expect(header.conta).toBeUndefined()
     })
 
-    test('header deve ter código do banco com padrão "748"', () => {
+    test('header deve ter cÃ³digo do banco com padrÃ£o "748"', () => {
       const header = sicrediCnab400.header!
       expect(header.codigo_banco.pattern).toBe('748')
     })
 
-    test('header deve ter data de geração com formato AAAAMMDD', () => {
+    test('header deve ter data de geraÃ§Ã£o com formato AAAAMMDD', () => {
       const header = sicrediCnab400.header!
       expect(header.data_geracao.dateFormat).toBe('AAAAMMDD')
     })
 
-    test('detail deve ter campo tipo_boleto para controlar híbrido', () => {
+    test('detail deve ter campo tipo_boleto para controlar hÃ­brido', () => {
       const detail = sicrediCnab400.detail!
       expect(detail.tipo_boleto).toBeDefined()
     })
 
-    test('detail deve ter campos de Beneficiário Final', () => {
+    test('detail deve ter campos de BeneficiÃ¡rio Final', () => {
       const detail = sicrediCnab400.detail!
       expect(detail.numero_inscricao_beneficiario_final).toBeDefined()
       expect(detail.nome_beneficiario_final).toBeDefined()
     })
 
-    test('trailer não deve ter totalizadores', () => {
+    test('trailer nÃ£o deve ter totalizadores', () => {
       const trailer = sicrediCnab400.trailer!
       expect(trailer.qtd_documentos).toBeUndefined()
       expect(trailer.valor_total).toBeUndefined()

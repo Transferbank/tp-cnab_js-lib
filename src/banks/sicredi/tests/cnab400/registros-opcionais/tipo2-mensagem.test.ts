@@ -1,16 +1,16 @@
 /**
  * Testes do Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)
  *
- * Registro opcional de texto livre para impressão no boleto (até 4 linhas de 80 caracteres).
+ * Registro opcional de texto livre para impressÃ£o no boleto (atÃ© 4 linhas de 80 caracteres).
  *
- * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) — §8.3, p.31
+ * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) â€” Â§8.3, p.31
  */
 
 import { TYPE2_MESSAGE } from '@banks/sicredi/schemas/cnab400/registros-opcionais/type2-message/type2-message'
 
 describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
   describe('Campos de controle', () => {
-    test('deve ter tipo de registro "2" na posição 1', () => {
+    test('deve ter tipo de registro "2" na posiÃ§Ã£o 1', () => {
       expect(TYPE2_MESSAGE.tipo_registro).toBeDefined()
       expect(TYPE2_MESSAGE.tipo_registro.pos).toEqual([1, 1])
       expect(TYPE2_MESSAGE.tipo_registro.type).toBe('num')
@@ -19,14 +19,14 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
       expect(TYPE2_MESSAGE.tipo_registro.required).toBe(true)
     })
 
-    test('deve ter nosso número na posição 13-21', () => {
+    test('deve ter nosso nÃºmero na posiÃ§Ã£o 13-21', () => {
       expect(TYPE2_MESSAGE.nosso_numero).toBeDefined()
       expect(TYPE2_MESSAGE.nosso_numero.pos).toEqual([13, 21])
       expect(TYPE2_MESSAGE.nosso_numero.type).toBe('num')
       expect(TYPE2_MESSAGE.nosso_numero.size).toBe(9)
     })
 
-    test('deve ter número do documento na posição 342-351', () => {
+    test('deve ter nÃºmero do documento na posiÃ§Ã£o 342-351', () => {
       expect(TYPE2_MESSAGE.numero_documento).toBeDefined()
       expect(TYPE2_MESSAGE.numero_documento.pos).toEqual([342, 351])
       expect(TYPE2_MESSAGE.numero_documento.type).toBe('alfa')
@@ -35,28 +35,28 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
   })
 
   describe('Campos de mensagem', () => {
-    test('deve ter instrução linha 1 na posição 22-101 (80 caracteres)', () => {
+    test('deve ter instruÃ§Ã£o linha 1 na posiÃ§Ã£o 22-101 (80 caracteres)', () => {
       expect(TYPE2_MESSAGE.instrucao_linha_1).toBeDefined()
       expect(TYPE2_MESSAGE.instrucao_linha_1.pos).toEqual([22, 101])
       expect(TYPE2_MESSAGE.instrucao_linha_1.type).toBe('alfa')
       expect(TYPE2_MESSAGE.instrucao_linha_1.size).toBe(80)
     })
 
-    test('deve ter instrução linha 2 na posição 102-181 (80 caracteres)', () => {
+    test('deve ter instruÃ§Ã£o linha 2 na posiÃ§Ã£o 102-181 (80 caracteres)', () => {
       expect(TYPE2_MESSAGE.instrucao_linha_2).toBeDefined()
       expect(TYPE2_MESSAGE.instrucao_linha_2.pos).toEqual([102, 181])
       expect(TYPE2_MESSAGE.instrucao_linha_2.type).toBe('alfa')
       expect(TYPE2_MESSAGE.instrucao_linha_2.size).toBe(80)
     })
 
-    test('deve ter instrução linha 3 na posição 182-261 (80 caracteres)', () => {
+    test('deve ter instruÃ§Ã£o linha 3 na posiÃ§Ã£o 182-261 (80 caracteres)', () => {
       expect(TYPE2_MESSAGE.instrucao_linha_3).toBeDefined()
       expect(TYPE2_MESSAGE.instrucao_linha_3.pos).toEqual([182, 261])
       expect(TYPE2_MESSAGE.instrucao_linha_3.type).toBe('alfa')
       expect(TYPE2_MESSAGE.instrucao_linha_3.size).toBe(80)
     })
 
-    test('deve ter instrução linha 4 na posição 262-341 (80 caracteres)', () => {
+    test('deve ter instruÃ§Ã£o linha 4 na posiÃ§Ã£o 262-341 (80 caracteres)', () => {
       expect(TYPE2_MESSAGE.instrucao_linha_4).toBeDefined()
       expect(TYPE2_MESSAGE.instrucao_linha_4.pos).toEqual([262, 341])
       expect(TYPE2_MESSAGE.instrucao_linha_4.type).toBe('alfa')
@@ -65,14 +65,14 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
   })
 
   describe('Campos finais', () => {
-    test('deve ter brancos na posição 352-394', () => {
+    test('deve ter brancos na posiÃ§Ã£o 352-394', () => {
       expect(TYPE2_MESSAGE.brancos_2).toBeDefined()
       expect(TYPE2_MESSAGE.brancos_2.pos).toEqual([352, 394])
       expect(TYPE2_MESSAGE.brancos_2.type).toBe('alfa')
       expect(TYPE2_MESSAGE.brancos_2.size).toBe(43)
     })
 
-    test('deve ter número sequencial na posição 395-400', () => {
+    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
       expect(TYPE2_MESSAGE.numero_sequencial).toBeDefined()
       expect(TYPE2_MESSAGE.numero_sequencial.pos).toEqual([395, 400])
       expect(TYPE2_MESSAGE.numero_sequencial.type).toBe('num')
@@ -82,7 +82,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
   })
 
   describe('Integridade do schema', () => {
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const campos = Object.keys(TYPE2_MESSAGE)
       const posicoes: { campo: string; inicio: number; fim: number }[] = []
 
@@ -106,7 +106,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       const campos = Object.keys(TYPE2_MESSAGE)
       campos.forEach((campo) => {
         const fieldDef = TYPE2_MESSAGE[campo]
@@ -117,7 +117,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
       })
     })
 
-    test('deve ter exatamente 400 posições', () => {
+    test('deve ter exatamente 400 posiÃ§Ãµes', () => {
       const ultimoCampo = TYPE2_MESSAGE.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
@@ -128,8 +128,8 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
     })
   })
 
-  describe('Características específicas', () => {
-    test('tipo_registro deve ter padrão fixo "2"', () => {
+  describe('CaracterÃ­sticas especÃ­ficas', () => {
+    test('tipo_registro deve ter padrÃ£o fixo "2"', () => {
       expect(TYPE2_MESSAGE.tipo_registro.pattern).toBe('2')
     })
 
@@ -140,7 +140,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 2 (Mensagem)', () => {
       expect(TYPE2_MESSAGE.instrucao_linha_4.size).toBe(80)
     })
 
-    test('campo numero_documento deve bater com posições 111-120 do detalhe', () => {
+    test('campo numero_documento deve bater com posiÃ§Ãµes 111-120 do detalhe', () => {
       expect(TYPE2_MESSAGE.numero_documento.description).toContain('111-120')
     })
   })

@@ -1,10 +1,10 @@
 /**
  * Parsing das linhas brutas de SICREDI_cnab_400.CRM com os schemas TS reais
- * (HEADER, DETAIL, TRAILER) – valida que o schema realmente dá conta
- * do arquivo de produção, independente do que está escrito no metadata.json.
+ * (HEADER, DETAIL, TRAILER) â€“ valida que o schema realmente dÃ¡ conta
+ * do arquivo de produÃ§Ã£o, independente do que estÃ¡ escrito no metadata.json.
  *
- * Validação do conteúdo do metadata.json em si fica em `.test.ts`.
- * Pipeline público (`openCnab`) fica em `.e2e.test.ts`.
+ * ValidaÃ§Ã£o do conteÃºdo do metadata.json em si fica em `.test.ts`.
+ * Pipeline pÃºblico (`openCnab`) fica em `.e2e.test.ts`.
  */
 
 import * as fs from 'fs'
@@ -42,7 +42,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       })
     })
 
-    test('não deve haver registros opcionais (tipo 2/5/6/7/8) neste arquivo', () => {
+    test('nÃ£o deve haver registros opcionais (tipo 2/5/6/7/8) neste arquivo', () => {
       const tiposOpcionais = lines.filter((line) => ['2', '5', '6', '7', '8'].includes(line[0]))
       expect(tiposOpcionais.length).toBe(0)
     })
@@ -55,7 +55,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       })
     })
 
-    test('header deve ter código do banco correto (748)', () => {
+    test('header deve ter cÃ³digo do banco correto (748)', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const headerParsed = extractLineFields(lines[0], schema.header || {})
@@ -64,7 +64,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('header deve ter data de geração em formato AAAAMMDD (8 dígitos)', () => {
+    test('header deve ter data de geraÃ§Ã£o em formato AAAAMMDD (8 dÃ­gitos)', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const headerParsed = extractLineFields(lines[0], schema.header || {})
@@ -74,7 +74,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('header deve usar código do cliente (5 dígitos)', () => {
+    test('header deve usar cÃ³digo do cliente (5 dÃ­gitos)', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const headerParsed = extractLineFields(lines[0], schema.header || {})
@@ -84,7 +84,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('todos os registros tipo 1 devem ser parseáveis sem erros', () => {
+    test('todos os registros tipo 1 devem ser parseÃ¡veis sem erros', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')
@@ -106,22 +106,22 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
           // Deve ter documento
           expect(parsed.sacado_numero_inscricao?.raw).toBeTruthy()
 
-          // Deve ter nosso número
+          // Deve ter nosso nÃºmero
           expect(parsed.nosso_numero?.raw).toBeTruthy()
 
-          // Deve ter instrução válida
+          // Deve ter instruÃ§Ã£o vÃ¡lida
           expect(parsed.instrucao?.raw).toBeTruthy()
           expect(parsed.instrucao?.raw).toMatch(/^\d{2}$/)
 
-          // Deve ter espécie
+          // Deve ter espÃ©cie
           expect(parsed.especie?.raw).toBeTruthy()
           expect(parsed.especie?.raw).toMatch(/^[A-Z]$/)
 
-          // Deve ter postagem do título (S ou N)
+          // Deve ter postagem do tÃ­tulo (S ou N)
           expect(parsed.postagem_titulo?.raw).toBeTruthy()
           expect(['S', 'N']).toContain(parsed.postagem_titulo?.raw)
 
-          // Deve ter impressão do boleto (A ou B)
+          // Deve ter impressÃ£o do boleto (A ou B)
           expect(parsed.impressao_boleto?.raw).toBeTruthy()
           expect(['A', 'B']).toContain(parsed.impressao_boleto?.raw)
         })
@@ -153,7 +153,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('todos os valores de vencimento devem usar formato DDMMAA (6 dígitos)', () => {
+    test('todos os valores de vencimento devem usar formato DDMMAA (6 dÃ­gitos)', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')
@@ -168,7 +168,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('trailer deve repetir código do banco e código do cliente', () => {
+    test('trailer deve repetir cÃ³digo do banco e cÃ³digo do cliente', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const trailerParsed = extractLineFields(lines[lines.length - 1], schema.trailer || {})
@@ -178,7 +178,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('todas as instruções devem ser "01" neste arquivo', () => {
+    test('todas as instruÃ§Ãµes devem ser "01" neste arquivo', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')
@@ -190,7 +190,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('todas as espécies devem ser "A" neste arquivo', () => {
+    test('todas as espÃ©cies devem ser "A" neste arquivo', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')
@@ -214,7 +214,7 @@ describe('Integridade TXT ? Schema: SICREDI_cnab_400.CRM', () => {
       }
     })
 
-    test('todas as impressões devem ser "B" neste arquivo', () => {
+    test('todas as impressÃµes devem ser "B" neste arquivo', () => {
       const schema = getBankSchema(BANK_CODES.SICREDI, CNABFormatCode.CNAB400)
       if (schema) {
         const detailLines = lines.filter((line) => line[0] === '1')

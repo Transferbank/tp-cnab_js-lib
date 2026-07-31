@@ -1,16 +1,16 @@
 ﻿/**
- * Sicredi CNAB 240 - Segmento S (Mensagens para impress�o)
- * Registro opcional para mensagens de impress�o no boleto.
+ * Sicredi CNAB 240 - Segmento S (Mensagens para impresso)
+ * Registro opcional para mensagens de impresso no boleto.
  * Possui duas variantes identificadas pelo campo pos 18 (tipo_impressao):
  * - Variante 1 (pos 18 = '1' ou '2'): Frente/Verso do boleto (layout comum)
- * - Variante 2 (pos 18 = '3'): Corpo de instru��es da ficha de compensa��o
+ * - Variante 2 (pos 18 = '3'): Corpo de instrues da ficha de compensao
  * Segmento S (pos 8 = '3', pos 14 = 'S')
  * 
- * NOTA: Manual menciona "Tipo de impress�o" com dom�nio {1=Frente, 2=Verso, 3=Ficha}
- * mas apenas duas estruturas de campos distintas (1 e 2 compartilham, 3 � pr�prio).
+ * NOTA: Manual menciona "Tipo de impresso" com domnio {1=Frente, 2=Verso, 3=Ficha}
+ * mas apenas duas estruturas de campos distintas (1 e 2 compartilham, 3  prprio).
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -23,7 +23,7 @@ export const SICREDI_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -34,7 +34,7 @@ export const SICREDI_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -56,7 +56,7 @@ export const SICREDI_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -67,7 +67,7 @@ export const SICREDI_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'S',
-    description: 'Segmento S = mensagens para impress�o',
+    description: 'Segmento S = mensagens para impresso',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -89,7 +89,7 @@ export const SICREDI_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento Remessa (vari�vel)',
+    description: 'Cdigo de movimento Remessa (varivel)',
     canonical: null,
   },
   tipo_impressao: {
@@ -100,7 +100,7 @@ export const SICREDI_CNAB240_SEGMENT_S: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de Impress�o: 1=Frente do boleto, 2=Verso do boleto, 3=Corpo de instru��es da ficha',
+    description: 'Tipo de Impresso: 1=Frente do boleto, 2=Verso do boleto, 3=Corpo de instrues da ficha',
     canonical: null,
   },
 }
@@ -114,7 +114,7 @@ export const SICREDI_CNAB240_SEGMENT_S_FRONT_BACK: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da linha a ser impressa (01 a 20)',
+    description: 'Nmero da linha a ser impressa (01 a 20)',
     canonical: null,
   },
   mensagem: {
@@ -172,7 +172,7 @@ export const SICREDI_CNAB240_SEGMENT_S_BODY_INSTRUCTIONS: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da linha a ser impressa (01 a 20)',
+    description: 'Nmero da linha a ser impressa (01 a 20)',
     canonical: null,
   },
   mensagem_1: {
@@ -238,7 +238,7 @@ export const SICREDI_CNAB240_SEGMENT_S_BODY_INSTRUCTIONS: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CNAB (n�o documentado no manual, assumido como reservado at� completar 240 bytes)',
+    description: 'CNAB (no documentado no manual, assumido como reservado at completar 240 bytes)',
     canonical: null,
   },
 }

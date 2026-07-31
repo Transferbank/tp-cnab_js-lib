@@ -3,8 +3,8 @@
  * Lote: 0000
  * 
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
@@ -18,7 +18,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -62,7 +62,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o da empresa: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrio da empresa: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   cedente_inscricao_numero: {
@@ -73,7 +73,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF/CNPJ do benefici�rio/cedente',
+    description: 'CPF/CNPJ do beneficirio/cedente',
     canonical: 'cedente.documento',
   },
   convenio: {
@@ -84,7 +84,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Conv�nio (sem preenchimento)',
+    description: 'Convnio (sem preenchimento)',
     canonical: null,
   },
   cedente_agencia: {
@@ -95,7 +95,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia (Conta Corrente) do benefici�rio/cedente',
+    description: 'Agncia (Conta Corrente) do beneficirio/cedente',
     canonical: null,
   },
   cedente_agencia_dv: {
@@ -106,7 +106,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV da ag�ncia (sem preenchimento)',
+    description: 'DV da agncia (sem preenchimento)',
     canonical: null,
   },
   cedente_conta: {
@@ -117,7 +117,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Conta corrente do benefici�rio/cedente',
+    description: 'Conta corrente do beneficirio/cedente',
     canonical: null,
   },
   cedente_conta_dv: {
@@ -139,7 +139,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV adicional (sem preenchimento - "o Sicredi n�o usa esse campo")',
+    description: 'DV adicional (sem preenchimento - "o Sicredi no usa esse campo")',
     canonical: null,
   },
   cedente_nome: {
@@ -150,7 +150,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome da empresa (sem acento gr�fico)',
+    description: 'Nome da empresa (sem acento grfico)',
     canonical: 'cedente.nome',
   },
   nome_do_banco: {
@@ -183,7 +183,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'C�digo do arquivo: 1=Remessa',
+    description: 'Cdigo do arquivo: 1=Remessa',
     canonical: null,
   },
   arquivo_data_de_geracao: {
@@ -194,7 +194,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo',
+    description: 'Data de gerao do arquivo',
     canonical: null,
   },
   arquivo_hora_de_geracao: {
@@ -205,7 +205,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Hora de gera��o do arquivo (HHMMSS)',
+    description: 'Hora de gerao do arquivo (HHMMSS)',
     canonical: null,
   },
   arquivo_sequencial: {
@@ -216,7 +216,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do arquivo de remessa (come�a em 000001)',
+    description: 'Nmero sequencial do arquivo de remessa (comea em 000001)',
     canonical: null,
   },
   arquivo_layout: {
@@ -238,7 +238,7 @@ export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01600',
-    description: 'Densidade de grava��o',
+    description: 'Densidade de gravao',
     canonical: null,
   },
   cnab_exclusivo_3: {

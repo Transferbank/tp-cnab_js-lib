@@ -1,14 +1,14 @@
 ﻿/* *
- * Registro obrigat�rio quando boleto h�brido (QR Code/PIX).
- * IMPORTANTE: Este segmento n�o � opcional condicional simples.
- * � obrigat�rio sempre que o boleto usa QR Code/PIX h�brido.
+ * Registro obrigatrio quando boleto hbrido (QR Code/PIX).
+ * IMPORTANTE: Este segmento no  opcional condicional simples.
+ *  obrigatrio sempre que o boleto usa QR Code/PIX hbrido.
  * Segmento: Y
- * C�digo do registro: 04
- * NOTA: Campo 070-071 tem inconsist�ncia no manual (TAM="01" mas intervalo
- * tem 2 posi��es). Implementado com 2 posi��es conforme os vizinhos 069 e 072.
+ * Cdigo do registro: 04
+ * NOTA: Campo 070-071 tem inconsistncia no manual (TAM="01" mas intervalo
+ * tem 2 posies). Implementado com 2 posies conforme os vizinhos 069 e 072.
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -22,7 +22,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -33,7 +33,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -55,7 +55,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -88,7 +88,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento (dom�nio pode ser restrito a "01" para este segmento - conferir manual)',
+    description: 'Cdigo de movimento (domnio pode ser restrito a "01" para este segmento - conferir manual)',
     canonical: null,
   },
   codigo_registro: {
@@ -99,7 +99,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '04',
-    description: 'C�digo do registro: 04=PIX/QR Code',
+    description: 'Cdigo do registro: 04=PIX/QR Code',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -121,7 +121,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Sem preenchimento (nota: manual declara TAM="01" mas intervalo tem 2 posi��es)',
+    description: 'Sem preenchimento (nota: manual declara TAM="01" mas intervalo tem 2 posies)',
     canonical: null,
   },
   cnab_exclusivo_4: {
@@ -143,7 +143,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de chave PIX (sem preenchimento - Sicredi n�o valida)',
+    description: 'Tipo de chave PIX (sem preenchimento - Sicredi no valida)',
     canonical: null,
   },
   pix_chave: {
@@ -154,7 +154,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Chave PIX aleat�ria gerada pelo Sicredi',
+    description: 'Chave PIX aleatria gerada pelo Sicredi',
     canonical: null,
   },
   pix_txid: {
@@ -165,7 +165,7 @@ export const SICREDI_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'TXID (sem preenchimento - Sicredi gera e vincula ao t�tulo)',
+    description: 'TXID (sem preenchimento - Sicredi gera e vincula ao ttulo)',
     canonical: null,
   },
   cnab_exclusivo_5: {

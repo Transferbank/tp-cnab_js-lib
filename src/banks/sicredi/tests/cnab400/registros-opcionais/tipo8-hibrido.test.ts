@@ -1,18 +1,18 @@
 /**
- * Testes do Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)
+ * Testes do Schema Sicredi CNAB 400 - Registro Tipo 8 (H√≠brido / QR Code)
  *
- * Registro opcional "obrigatÛrio quando emiss„o de boleto hÌbrido" ó condicional ao campo
- * tipo_boleto do detalhe (posiÁ„o 6 = 'H'). Carrega o TXID do QR Code, mas o campo deve ser
- * enviado em branco ó o Sicredi gera e vincula automaticamente.
+ * Registro opcional "obrigat√≥rio quando emiss√£o de boleto h√≠brido" ‚Äî condicional ao campo
+ * tipo_boleto do detalhe (posi√ß√£o 6 = 'H'). Carrega o TXID do QR Code, mas o campo deve ser
+ * enviado em branco ‚Äî o Sicredi gera e vincula automaticamente.
  *
- * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) ó ß8.7, p.36
+ * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) ‚Äî ¬ß8.7, p.36
  */
 
 import { TYPE8_HYBRID } from '@banks/sicredi/schemas/cnab400/registros-opcionais/type8-hybrid/type8-hybrid'
 
-describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => {
+describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (H√≠brido / QR Code)', () => {
   describe('Campos de controle', () => {
-    test('deve ter tipo de registro "8" na posiÁ„o 1', () => {
+    test('deve ter tipo de registro "8" na posi√ß√£o 1', () => {
       expect(TYPE8_HYBRID.tipo_registro).toBeDefined()
       expect(TYPE8_HYBRID.tipo_registro.pos).toEqual([1, 1])
       expect(TYPE8_HYBRID.tipo_registro.type).toBe('num')
@@ -21,21 +21,21 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
       expect(TYPE8_HYBRID.tipo_registro.required).toBe(true)
     })
 
-    test('deve ter nosso n˙mero na posiÁ„o 2-16', () => {
+    test('deve ter nosso n√∫mero na posi√ß√£o 2-16', () => {
       expect(TYPE8_HYBRID.nosso_numero_sicredi_sem_edicao).toBeDefined()
       expect(TYPE8_HYBRID.nosso_numero_sicredi_sem_edicao.pos).toEqual([2, 16])
       expect(TYPE8_HYBRID.nosso_numero_sicredi_sem_edicao.type).toBe('alfa')
       expect(TYPE8_HYBRID.nosso_numero_sicredi_sem_edicao.size).toBe(15)
     })
 
-    test('deve ter brancos na posiÁ„o 17', () => {
+    test('deve ter brancos na posi√ß√£o 17', () => {
       expect(TYPE8_HYBRID.brancos_1).toBeDefined()
       expect(TYPE8_HYBRID.brancos_1.pos).toEqual([17, 17])
       expect(TYPE8_HYBRID.brancos_1.type).toBe('alfa')
       expect(TYPE8_HYBRID.brancos_1.size).toBe(1)
     })
 
-    test('deve ter identificaÁ„o de boleto hÌbrido na posiÁ„o 18', () => {
+    test('deve ter identifica√ß√£o de boleto h√≠brido na posi√ß√£o 18', () => {
       expect(TYPE8_HYBRID.hibrido).toBeDefined()
       expect(TYPE8_HYBRID.hibrido.pos).toEqual([18, 18])
       expect(TYPE8_HYBRID.hibrido.type).toBe('alfa')
@@ -44,7 +44,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
       expect(TYPE8_HYBRID.hibrido.required).toBe(true)
     })
 
-    test('deve ter brancos na posiÁ„o 19-30', () => {
+    test('deve ter brancos na posi√ß√£o 19-30', () => {
       expect(TYPE8_HYBRID.brancos_2).toBeDefined()
       expect(TYPE8_HYBRID.brancos_2.pos).toEqual([19, 30])
       expect(TYPE8_HYBRID.brancos_2.type).toBe('alfa')
@@ -52,16 +52,16 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
     })
   })
 
-  describe('Campos do boleto hÌbrido', () => {
-    test('deve ter n˙mero do documento na posiÁ„o 31-40', () => {
+  describe('Campos do boleto h√≠brido', () => {
+    test('deve ter n√∫mero do documento na posi√ß√£o 31-40', () => {
       expect(TYPE8_HYBRID.numero_documento).toBeDefined()
       expect(TYPE8_HYBRID.numero_documento.pos).toEqual([31, 40])
       expect(TYPE8_HYBRID.numero_documento.type).toBe('alfa')
       expect(TYPE8_HYBRID.numero_documento.size).toBe(10)
-      expect(TYPE8_HYBRID.numero_documento.description).toContain('deve bater com posiÁıes 111-120 do detalhe')
+      expect(TYPE8_HYBRID.numero_documento.description).toContain('deve bater com posi√ß√µes 111-120 do detalhe')
     })
 
-    test('deve ter TXID do QR Code na posiÁ„o 41-75', () => {
+    test('deve ter TXID do QR Code na posi√ß√£o 41-75', () => {
       expect(TYPE8_HYBRID.txid).toBeDefined()
       expect(TYPE8_HYBRID.txid.pos).toEqual([41, 75])
       expect(TYPE8_HYBRID.txid.type).toBe('alfa')
@@ -70,7 +70,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
       expect(TYPE8_HYBRID.txid.description).toContain('Sicredi gera e vincula')
     })
 
-    test('deve ter brancos na posiÁ„o 76-394', () => {
+    test('deve ter brancos na posi√ß√£o 76-394', () => {
       expect(TYPE8_HYBRID.brancos_3).toBeDefined()
       expect(TYPE8_HYBRID.brancos_3.pos).toEqual([76, 394])
       expect(TYPE8_HYBRID.brancos_3.type).toBe('alfa')
@@ -79,7 +79,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
   })
 
   describe('Campos finais', () => {
-    test('deve ter n˙mero sequencial na posiÁ„o 395-400', () => {
+    test('deve ter n√∫mero sequencial na posi√ß√£o 395-400', () => {
       expect(TYPE8_HYBRID.numero_sequencial).toBeDefined()
       expect(TYPE8_HYBRID.numero_sequencial.pos).toEqual([395, 400])
       expect(TYPE8_HYBRID.numero_sequencial.type).toBe('num')
@@ -89,7 +89,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
   })
 
   describe('Integridade do schema', () => {
-    test('n„o deve ter sobreposiÁ„o de posiÁıes', () => {
+    test('n√£o deve ter sobreposi√ß√£o de posi√ß√µes', () => {
       const campos = Object.keys(TYPE8_HYBRID)
       const posicoes: { campo: string; inicio: number; fim: number }[] = []
 
@@ -113,7 +113,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
       }
     })
 
-    test('tamanho declarado deve bater com posiÁıes', () => {
+    test('tamanho declarado deve bater com posi√ß√µes', () => {
       const campos = Object.keys(TYPE8_HYBRID)
       campos.forEach((campo) => {
         const fieldDef = TYPE8_HYBRID[campo]
@@ -124,18 +124,18 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
       })
     })
 
-    test('deve ter exatamente 400 posiÁıes', () => {
+    test('deve ter exatamente 400 posi√ß√µes', () => {
       const ultimoCampo = TYPE8_HYBRID.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('CaracterÌsticas especÌficas', () => {
-    test('tipo_registro deve ter padr„o fixo "8"', () => {
+  describe('Caracter√≠sticas espec√≠ficas', () => {
+    test('tipo_registro deve ter padr√£o fixo "8"', () => {
       expect(TYPE8_HYBRID.tipo_registro.pattern).toBe('8')
     })
 
-    test('identificaÁ„o hÌbrida deve ter padr„o fixo "H"', () => {
+    test('identifica√ß√£o h√≠brida deve ter padr√£o fixo "H"', () => {
       expect(TYPE8_HYBRID.hibrido.pattern).toBe('H')
       expect(TYPE8_HYBRID.hibrido.required).toBe(true)
     })
@@ -149,22 +149,22 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 8 (HÌbrido / QR Code)', () => 
       expect(TYPE8_HYBRID.brancos_3.size).toBe(319)
     })
 
-    test('TXID deve ser enviado em branco conforme documentaÁ„o', () => {
-      // Campo opcional (n„o obrigatÛrio) pois deve ser enviado em branco
+    test('TXID deve ser enviado em branco conforme documenta√ß√£o', () => {
+      // Campo opcional (n√£o obrigat√≥rio) pois deve ser enviado em branco
       expect(TYPE8_HYBRID.txid.required).toBeFalsy()
       expect(TYPE8_HYBRID.txid.size).toBe(35)
     })
 
-    test('numero_documento deve referenciar posiÁıes do detalhe', () => {
+    test('numero_documento deve referenciar posi√ß√µes do detalhe', () => {
       expect(TYPE8_HYBRID.numero_documento.size).toBe(10)
       expect(TYPE8_HYBRID.numero_documento.description).toContain('111-120')
     })
 
-    test('registro È condicional ao tipo_boleto = H no detalhe', () => {
-      // VerificaÁ„o indireta: campo hibrido obrigatÛrio com padr„o 'H'
+    test('registro √© condicional ao tipo_boleto = H no detalhe', () => {
+      // Verifica√ß√£o indireta: campo hibrido obrigat√≥rio com padr√£o 'H'
       expect(TYPE8_HYBRID.hibrido.pattern).toBe('H')
       expect(TYPE8_HYBRID.hibrido.required).toBe(true)
-      expect(TYPE8_HYBRID.hibrido.description).toContain('hÌbrido')
+      expect(TYPE8_HYBRID.hibrido.description).toContain('h√≠brido')
     })
   })
 })

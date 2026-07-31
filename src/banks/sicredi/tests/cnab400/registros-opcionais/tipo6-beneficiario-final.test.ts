@@ -1,17 +1,17 @@
 /**
- * Testes do Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)
+ * Testes do Schema Sicredi CNAB 400 - Registro Tipo 6 (BeneficiÃ¡rio Final)
  *
- * Registro obrigatório quando houver Beneficiário Final para o título. Contém campos
- * de endereço completos (logradouro, cidade, CEP, UF), além de documento e nome.
+ * Registro obrigatÃ³rio quando houver BeneficiÃ¡rio Final para o tÃ­tulo. ContÃ©m campos
+ * de endereÃ§o completos (logradouro, cidade, CEP, UF), alÃ©m de documento e nome.
  *
- * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) — §8.5, p.33
+ * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026) â€” Â§8.5, p.33
  */
 
 import { TYPE6_ENDORSER } from '@banks/sicredi/schemas/cnab400/registros-opcionais/type6-endorser/type6-endorser'
 
-describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () => {
+describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (BeneficiÃ¡rio Final)', () => {
   describe('Campos de controle', () => {
-    test('deve ter tipo de registro "6" na posição 1', () => {
+    test('deve ter tipo de registro "6" na posiÃ§Ã£o 1', () => {
       expect(TYPE6_ENDORSER.tipo_registro).toBeDefined()
       expect(TYPE6_ENDORSER.tipo_registro.pos).toEqual([1, 1])
       expect(TYPE6_ENDORSER.tipo_registro.type).toBe('num')
@@ -20,21 +20,21 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
       expect(TYPE6_ENDORSER.tipo_registro.required).toBe(true)
     })
 
-    test('deve ter nosso número na posição 2-16', () => {
+    test('deve ter nosso nÃºmero na posiÃ§Ã£o 2-16', () => {
       expect(TYPE6_ENDORSER.nosso_numero).toBeDefined()
       expect(TYPE6_ENDORSER.nosso_numero.pos).toEqual([2, 16])
       expect(TYPE6_ENDORSER.nosso_numero.type).toBe('alfa')
       expect(TYPE6_ENDORSER.nosso_numero.size).toBe(15)
     })
 
-    test('deve ter número do documento na posição 17-26', () => {
+    test('deve ter nÃºmero do documento na posiÃ§Ã£o 17-26', () => {
       expect(TYPE6_ENDORSER.numero_documento).toBeDefined()
       expect(TYPE6_ENDORSER.numero_documento.pos).toEqual([17, 26])
       expect(TYPE6_ENDORSER.numero_documento.type).toBe('alfa')
       expect(TYPE6_ENDORSER.numero_documento.size).toBe(10)
     })
 
-    test('deve ter código do pagador junto ao cliente na posição 27-31', () => {
+    test('deve ter cÃ³digo do pagador junto ao cliente na posiÃ§Ã£o 27-31', () => {
       expect(TYPE6_ENDORSER.codigo_pagador_cliente).toBeDefined()
       expect(TYPE6_ENDORSER.codigo_pagador_cliente.pos).toEqual([27, 31])
       expect(TYPE6_ENDORSER.codigo_pagador_cliente.type).toBe('alfa')
@@ -42,8 +42,8 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
     })
   })
 
-  describe('Campos do Beneficiário Final', () => {
-    test('deve ter número de inscrição do Beneficiário Final na posição 32-45', () => {
+  describe('Campos do BeneficiÃ¡rio Final', () => {
+    test('deve ter nÃºmero de inscriÃ§Ã£o do BeneficiÃ¡rio Final na posiÃ§Ã£o 32-45', () => {
       expect(TYPE6_ENDORSER.numero_inscricao_beneficiario_final).toBeDefined()
       expect(TYPE6_ENDORSER.numero_inscricao_beneficiario_final.pos).toEqual([32, 45])
       expect(TYPE6_ENDORSER.numero_inscricao_beneficiario_final.type).toBe('num')
@@ -51,7 +51,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
       expect(TYPE6_ENDORSER.numero_inscricao_beneficiario_final.required).toBe(true)
     })
 
-    test('deve ter nome do Beneficiário Final na posição 46-86', () => {
+    test('deve ter nome do BeneficiÃ¡rio Final na posiÃ§Ã£o 46-86', () => {
       expect(TYPE6_ENDORSER.nome_beneficiario_final).toBeDefined()
       expect(TYPE6_ENDORSER.nome_beneficiario_final.pos).toEqual([46, 86])
       expect(TYPE6_ENDORSER.nome_beneficiario_final.type).toBe('alfa')
@@ -59,7 +59,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
       expect(TYPE6_ENDORSER.nome_beneficiario_final.required).toBe(true)
     })
 
-    test('deve ter endereço do Beneficiário Final na posição 87-131', () => {
+    test('deve ter endereÃ§o do BeneficiÃ¡rio Final na posiÃ§Ã£o 87-131', () => {
       expect(TYPE6_ENDORSER.endereco).toBeDefined()
       expect(TYPE6_ENDORSER.endereco.pos).toEqual([87, 131])
       expect(TYPE6_ENDORSER.endereco.type).toBe('alfa')
@@ -67,21 +67,21 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
       expect(TYPE6_ENDORSER.endereco.required).toBe(true)
     })
 
-    test('deve ter cidade do Beneficiário Final na posição 132-151', () => {
+    test('deve ter cidade do BeneficiÃ¡rio Final na posiÃ§Ã£o 132-151', () => {
       expect(TYPE6_ENDORSER.cidade).toBeDefined()
       expect(TYPE6_ENDORSER.cidade.pos).toEqual([132, 151])
       expect(TYPE6_ENDORSER.cidade.type).toBe('alfa')
       expect(TYPE6_ENDORSER.cidade.size).toBe(20)
     })
 
-    test('deve ter CEP do Beneficiário Final na posição 152-159', () => {
+    test('deve ter CEP do BeneficiÃ¡rio Final na posiÃ§Ã£o 152-159', () => {
       expect(TYPE6_ENDORSER.cep).toBeDefined()
       expect(TYPE6_ENDORSER.cep.pos).toEqual([152, 159])
       expect(TYPE6_ENDORSER.cep.type).toBe('num')
       expect(TYPE6_ENDORSER.cep.size).toBe(8)
     })
 
-    test('deve ter UF do Beneficiário Final na posição 160-161', () => {
+    test('deve ter UF do BeneficiÃ¡rio Final na posiÃ§Ã£o 160-161', () => {
       expect(TYPE6_ENDORSER.uf).toBeDefined()
       expect(TYPE6_ENDORSER.uf.pos).toEqual([160, 161])
       expect(TYPE6_ENDORSER.uf.type).toBe('alfa')
@@ -91,14 +91,14 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
   })
 
   describe('Campos finais', () => {
-    test('deve ter brancos na posição 162-394', () => {
+    test('deve ter brancos na posiÃ§Ã£o 162-394', () => {
       expect(TYPE6_ENDORSER.brancos).toBeDefined()
       expect(TYPE6_ENDORSER.brancos.pos).toEqual([162, 394])
       expect(TYPE6_ENDORSER.brancos.type).toBe('alfa')
       expect(TYPE6_ENDORSER.brancos.size).toBe(233)
     })
 
-    test('deve ter número sequencial na posição 395-400', () => {
+    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
       expect(TYPE6_ENDORSER.numero_sequencial).toBeDefined()
       expect(TYPE6_ENDORSER.numero_sequencial.pos).toEqual([395, 400])
       expect(TYPE6_ENDORSER.numero_sequencial.type).toBe('num')
@@ -108,7 +108,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
   })
 
   describe('Integridade do schema', () => {
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const campos = Object.keys(TYPE6_ENDORSER)
       const posicoes: { campo: string; inicio: number; fim: number }[] = []
 
@@ -132,7 +132,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       const campos = Object.keys(TYPE6_ENDORSER)
       campos.forEach((campo) => {
         const fieldDef = TYPE6_ENDORSER[campo]
@@ -143,20 +143,20 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
       })
     })
 
-    test('deve ter exatamente 400 posições', () => {
+    test('deve ter exatamente 400 posiÃ§Ãµes', () => {
       const ultimoCampo = TYPE6_ENDORSER.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('Características específicas', () => {
-    test('tipo_registro deve ter padrão fixo "6"', () => {
+  describe('CaracterÃ­sticas especÃ­ficas', () => {
+    test('tipo_registro deve ter padrÃ£o fixo "6"', () => {
       expect(TYPE6_ENDORSER.tipo_registro.pattern).toBe('6')
     })
 
-    test('deve usar nomenclatura "Beneficiário Final" (BACEN 3598/3656/3956)', () => {
-      expect(TYPE6_ENDORSER.numero_inscricao_beneficiario_final.description).toContain('Beneficiário Final')
-      expect(TYPE6_ENDORSER.nome_beneficiario_final.description).toContain('Beneficiário Final')
+    test('deve usar nomenclatura "BeneficiÃ¡rio Final" (BACEN 3598/3656/3956)', () => {
+      expect(TYPE6_ENDORSER.numero_inscricao_beneficiario_final.description).toContain('BeneficiÃ¡rio Final')
+      expect(TYPE6_ENDORSER.nome_beneficiario_final.description).toContain('BeneficiÃ¡rio Final')
     })
 
     test('campo brancos deve ser o maior campo do layout', () => {
@@ -168,7 +168,7 @@ describe('Schema Sicredi CNAB 400 - Registro Tipo 6 (Beneficiário Final)', () =>
       expect(TYPE6_ENDORSER.brancos.size).toBe(233)
     })
 
-    test('deve ter campos de endereço completos', () => {
+    test('deve ter campos de endereÃ§o completos', () => {
       expect(TYPE6_ENDORSER.endereco).toBeDefined()
       expect(TYPE6_ENDORSER.cidade).toBeDefined()
       expect(TYPE6_ENDORSER.cep).toBeDefined()

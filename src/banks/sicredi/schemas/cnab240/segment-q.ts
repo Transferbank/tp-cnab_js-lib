@@ -1,13 +1,13 @@
 ﻿/* *
- * Cont�m os dados do pagador (sacado): nome, CPF/CNPJ, endere�o,
+ * Contm os dados do pagador (sacado): nome, CPF/CNPJ, endereo,
  * CEP, cidade, UF, etc.
  * Segmento: Q
  * 
- * IMPORTANTE: O Sicredi j� usa a nomenclatura "Benefici�rio Final"
+ * IMPORTANTE: O Sicredi j usa a nomenclatura "Beneficirio Final"
  * conforme Circulares BACEN 3598, 3656 e 3956.
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -21,7 +21,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -32,7 +32,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -54,7 +54,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Nmero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -87,7 +87,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento (mesma tabela do Segmento P)',
+    description: 'Cdigo de movimento (mesma tabela do Segmento P)',
     canonical: null,
   },
   sacado_inscricao_tipo: {
@@ -120,7 +120,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do pagador (sem acentua��o)',
+    description: 'Nome do pagador (sem acentuao)',
     canonical: 'sacado.nome',
   },
   sacado_endereco: {
@@ -131,7 +131,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do pagador',
+    description: 'Endereo do pagador',
     canonical: 'sacado.endereco.logradouro',
   },
   cnab_exclusivo_2: {
@@ -153,7 +153,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (8 d�gitos)',
+    description: 'CEP (8 dgitos)',
     canonical: 'sacado.endereco.cep',
   },
   sacado_cidade: {
@@ -186,7 +186,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de pessoa (Benefici�rio Final): 0=Sem Benefici�rio Final, 1=CPF, 2=CNPJ',
+    description: 'Tipo de pessoa (Beneficirio Final): 0=Sem Beneficirio Final, 1=CPF, 2=CNPJ',
     canonical: null,
   },
   beneficiario_final_inscricao: {
@@ -197,7 +197,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CPF/CNPJ do Benefici�rio Final (branco se n�o houver)',
+    description: 'CPF/CNPJ do Beneficirio Final (branco se no houver)',
     canonical: null,
   },
   beneficiario_final_nome: {
@@ -208,7 +208,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Benefici�rio Final (sem acentua��o)',
+    description: 'Nome do Beneficirio Final (sem acentuao)',
     canonical: null,
   },
   banco_correspondente_codigo: {
@@ -219,7 +219,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo Banco Correspondente (n�o utilizado, 000)',
+    description: 'Cdigo Banco Correspondente (no utilizado, 000)',
     canonical: null,
   },
   banco_correspondente_nosso_numero: {
@@ -230,7 +230,7 @@ export const SICREDI_CNAB240_SEGMENT_Q: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso N�mero no Banco Correspondente (sem preenchimento)',
+    description: 'Nosso Nmero no Banco Correspondente (sem preenchimento)',
     canonical: null,
   },
   cnab_exclusivo_3: {

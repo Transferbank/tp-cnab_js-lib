@@ -1,11 +1,11 @@
 ﻿/* *
  * Registro de encerramento do lote (tipo 5). *
  * IMPORTANTE: Diferente do Santander, o Sicredi usa a estrutura rica de
- * totalizadores mesmo em remessa (n�o simplifica). Os campos de totaliza��o
- * s�o preenchidos com zeros na remessa e usados apenas no retorno.
+ * totalizadores mesmo em remessa (no simplifica). Os campos de totalizao
+ * so preenchidos com zeros na remessa e usados apenas no retorno.
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -19,7 +19,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -30,7 +30,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -74,7 +74,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade T�tulos Cobran�a Simples (usado s� no retorno; na remessa 000000)',
+    description: 'Quantidade Ttulos Cobrana Simples (usado s no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_simples: {
@@ -85,7 +85,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total T�tulos Cobran�a Simples (usado s� no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total Ttulos Cobrana Simples (usado s no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   totais_quantidade_titulos_vinculados: {
@@ -96,7 +96,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade T�tulos Cobran�a Vinculada (usado s� no retorno; na remessa 000000)',
+    description: 'Quantidade Ttulos Cobrana Vinculada (usado s no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_vinculados: {
@@ -107,7 +107,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total Cobran�a Vinculada (usado s� no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total Cobrana Vinculada (usado s no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   totais_quantidade_titulos_caucionados: {
@@ -118,7 +118,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade T�tulos Cobran�a Caucionada (usado s� no retorno; na remessa 000000)',
+    description: 'Quantidade Ttulos Cobrana Caucionada (usado s no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_caucionados: {
@@ -129,7 +129,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total Cobran�a Caucionada (usado s� no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total Cobrana Caucionada (usado s no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   totais_quantidade_titulos_descontados: {
@@ -140,7 +140,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade T�tulos Cobran�a Descontada (usado s� no retorno; na remessa 000000)',
+    description: 'Quantidade Ttulos Cobrana Descontada (usado s no retorno; na remessa 000000)',
     canonical: null,
   },
   totais_valor_titulos_descontados: {
@@ -151,7 +151,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor Total Cobran�a Descontada (usado s� no retorno; na remessa 00000000000000000)',
+    description: 'Valor Total Cobrana Descontada (usado s no retorno; na remessa 00000000000000000)',
     canonical: null,
   },
   numero_aviso: {
@@ -162,7 +162,7 @@ export const SICREDI_CNAB240_BATCH_TRAILER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do Aviso (n�o utilizado, sem preenchimento)',
+    description: 'Nmero do Aviso (no utilizado, sem preenchimento)',
     canonical: null,
   },
   cnab_exclusivo_2: {

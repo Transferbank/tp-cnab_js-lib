@@ -1,8 +1,8 @@
 ﻿/* *
  * Registro de abertura do lote (tipo 1). *
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
@@ -16,7 +16,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -27,7 +27,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de Servi�o (sequencial, 0001 no primeiro lote)',
+    description: 'Lote de Servio (sequencial, 0001 no primeiro lote)',
     canonical: null,
   },
   controle_registro: {
@@ -49,7 +49,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'R',
-    description: 'Tipo de Opera��o: R=Remessa',
+    description: 'Tipo de Operao: R=Remessa',
     canonical: null,
   },
   servico_tipo: {
@@ -60,7 +60,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'Tipo de Servi�o: 01=Cobran�a',
+    description: 'Tipo de Servio: 01=Cobrana',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -104,7 +104,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o da empresa: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrio da empresa: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   cedente_inscricao_numero: {
@@ -115,7 +115,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de inscri��o da empresa (CPF/CNPJ)',
+    description: 'Nmero de inscrio da empresa (CPF/CNPJ)',
     canonical: null,
   },
   convenio_codigo: {
@@ -126,7 +126,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do Conv�nio (sem preenchimento)',
+    description: 'Cdigo do Convnio (sem preenchimento)',
     canonical: null,
   },
   cedente_agencia: {
@@ -137,7 +137,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia C�digo do benefici�rio/cedente',
+    description: 'Agncia Cdigo do beneficirio/cedente',
     canonical: null,
   },
   cedente_agencia_dv: {
@@ -148,7 +148,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV da ag�ncia (sem preenchimento)',
+    description: 'DV da agncia (sem preenchimento)',
     canonical: null,
   },
   cedente_conta: {
@@ -159,7 +159,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Conta N�mero',
+    description: 'Conta Nmero',
     canonical: null,
   },
   cedente_conta_dv: {
@@ -225,7 +225,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial da remessa (sequencial, 00000001 no primeiro)',
+    description: 'Nmero sequencial da remessa (sequencial, 00000001 no primeiro)',
     canonical: null,
   },
   data_geracao: {
@@ -236,7 +236,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de gera��o',
+    description: 'Data de gerao',
     canonical: null,
   },
   data_credito: {
@@ -247,7 +247,7 @@ export const SICREDI_CNAB240_BATCH_HEADER: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data do Cr�dito (s� usado no retorno; na remessa 00000000)',
+    description: 'Data do Crdito (s usado no retorno; na remessa 00000000)',
     canonical: null,
   },
   cnab_exclusivo_5: {

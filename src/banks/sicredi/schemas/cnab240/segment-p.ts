@@ -1,17 +1,17 @@
 ﻿/* *
- * Cont�m os dados financeiros do t�tulo (boleto): valor, vencimento,
- * nosso n�mero, juros, descontos, etc.
+ * Contm os dados financeiros do ttulo (boleto): valor, vencimento,
+ * nosso nmero, juros, descontos, etc.
  * Segmento: P
  * 
  * IMPORTANTE: O campo valor_titulo (pos 086-100) tem decimais condicionais:
  * - 2 decimais quando moeda corrente (moeda_codigo = '09')
- * - 5 decimais quando moeda vari�vel (qualquer outro c�digo)
- * O schema declara `decimais: 2` fixo (correto s� para moeda corrente) - use
+ * - 5 decimais quando moeda varivel (qualquer outro cdigo)
+ * O schema declara `decimais: 2` fixo (correto s para moeda corrente) - use
  * `resolveTitleAmountSegmentP` de `segment-p-helper.ts` para obter o valor
- * com a precis�o correta em ambos os casos.
+ * com a preciso correta em ambos os casos.
  * Baseado em:
- * - Manual oficial Sicredi CNAB 240, vers�o 29 (se��o 8 - Arquivo de Remessa)
- * - Layout CNAB 240 vers�o 081
+ * - Manual oficial Sicredi CNAB 240, verso 29 (seo 8 - Arquivo de Remessa)
+ * - Layout CNAB 240 verso 081
  */
 
 import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
@@ -25,7 +25,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '748',
-    description: 'C�digo FEBRABAN do Sicredi',
+    description: 'Cdigo FEBRABAN do Sicredi',
     canonical: null,
   },
   controle_lote: {
@@ -36,7 +36,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do lote',
+    description: 'Nmero do lote',
     canonical: null,
   },
   controle_registro: {
@@ -58,7 +58,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote (come�a em 00001)',
+    description: 'Nmero sequencial do registro no lote (comea em 00001)',
     canonical: null,
   },
   servico_segmento: {
@@ -69,7 +69,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'P',
-    description: 'Segmento P = dados do t�tulo',
+    description: 'Segmento P = dados do ttulo',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -91,7 +91,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento (vari�vel: 01,02,04,05,06,07,08,09,10,11,12,13,16,17,31,45,75,76)',
+    description: 'Cdigo de movimento (varivel: 01,02,04,05,06,07,08,09,10,11,12,13,16,17,31,45,75,76)',
     canonical: null,
   },
   cedente_agencia: {
@@ -102,7 +102,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia do benefici�rio/cedente',
+    description: 'Agncia do beneficirio/cedente',
     canonical: null,
   },
   cedente_agencia_dv: {
@@ -113,7 +113,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV da ag�ncia (sem preenchimento)',
+    description: 'DV da agncia (sem preenchimento)',
     canonical: null,
   },
   cedente_conta: {
@@ -124,7 +124,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Conta corrente do benefici�rio/cedente',
+    description: 'Conta corrente do beneficirio/cedente',
     canonical: null,
   },
   cedente_conta_dv: {
@@ -146,7 +146,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV da ag�ncia/Cooperativa (sem preenchimento)',
+    description: 'DV da agncia/Cooperativa (sem preenchimento)',
     canonical: null,
   },
   nosso_numero: {
@@ -157,7 +157,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso N�mero (9 d�gitos reais: formato "AA B XXXXX D" = ano+byte gera��o+sequencial+DV)',
+    description: 'Nosso Nmero (9 dgitos reais: formato "AA B XXXXX D" = ano+byte gerao+sequencial+DV)',
     canonical: 'nossoNumero',
   },
   nosso_numero_complemento: {
@@ -168,7 +168,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Complemento do Nosso N�mero (sem preenchimento - posi��es 47-57 n�o usadas)',
+    description: 'Complemento do Nosso Nmero (sem preenchimento - posies 47-57 no usadas)',
     canonical: null,
   },
   carteira: {
@@ -179,7 +179,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Carteira: 1=Cobran�a Simples',
+    description: 'Carteira: 1=Cobrana Simples',
     canonical: null,
   },
   cadastramento: {
@@ -190,7 +190,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Cadastramento: 1=Cobran�a com registro',
+    description: 'Cadastramento: 1=Cobrana com registro',
     canonical: null,
   },
   tipo_documento: {
@@ -201,7 +201,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de documento: 1=Tradicional, 2=Escritural (Sicredi n�o diferencia)',
+    description: 'Tipo de documento: 1=Tradicional, 2=Escritural (Sicredi no diferencia)',
     canonical: null,
   },
   emissao_boleto: {
@@ -212,7 +212,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Emiss�o Boleto: 1=Sicredi emite, 2=Benefici�rio emite',
+    description: 'Emisso Boleto: 1=Sicredi emite, 2=Beneficirio emite',
     canonical: null,
   },
   distribuicao_boleto: {
@@ -223,7 +223,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Distribui��o/Postagem: 1=Sicredi distribui, 2=Benefici�rio distribui',
+    description: 'Distribuio/Postagem: 1=Sicredi distribui, 2=Beneficirio distribui',
     canonical: null,
   },
   seu_numero: {
@@ -234,7 +234,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Seu N�mero (s� as 10 primeiras posi��es 063-072 s�o validadas pelo Sicredi)',
+    description: 'Seu Nmero (s as 10 primeiras posies 063-072 so validadas pelo Sicredi)',
     canonical: 'numeroDocumento',
   },
   vencimento_titulo: {
@@ -245,7 +245,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de vencimento do t�tulo (deve ser emiss�o+7 dias se emiss�o Sicredi)',
+    description: 'Data de vencimento do ttulo (deve ser emisso+7 dias se emisso Sicredi)',
     canonical: 'vencimento',
   },
   valor_titulo: {
@@ -257,7 +257,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'Valor nominal do t�tulo (decimais condicionais: 2 se moeda corrente, 5 se moeda vari�vel - use resolveTitleAmountSegmentP)',
+      'Valor nominal do ttulo (decimais condicionais: 2 se moeda corrente, 5 se moeda varivel - use resolveTitleAmountSegmentP)',
     canonical: 'valor',
   },
   agencia_cobradora: {
@@ -268,7 +268,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Cooperativa/Ag�ncia Cobradora (n�o usado, 00000)',
+    description: 'Cooperativa/Agncia Cobradora (no usado, 00000)',
     canonical: null,
   },
   agencia_cobradora_dv: {
@@ -279,7 +279,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DV da ag�ncia cobradora (sem preenchimento)',
+    description: 'DV da agncia cobradora (sem preenchimento)',
     canonical: null,
   },
   especie_titulo: {
@@ -290,7 +290,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Esp�cie de T�tulo: 03,05,06,07,12,13,16,17,19,32,99',
+    description: 'Espcie de Ttulo: 03,05,06,07,12,13,16,17,19,32,99',
     canonical: null,
   },
   aceite: {
@@ -312,7 +312,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de emiss�o do t�tulo',
+    description: 'Data de emisso do ttulo',
     canonical: 'dataEmissao',
   },
   juros_mora_codigo: {
@@ -323,7 +323,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de Juros: 1=Valor monet�rio, 2=Taxa mensal, 3=Isento',
+    description: 'Cdigo de Juros: 1=Valor monetrio, 2=Taxa mensal, 3=Isento',
     canonical: {
       field: 'juros.tipo',
       interpret: (value: unknown) => {
@@ -354,7 +354,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Juros (valor monet�rio ou percentual conforme c�digo 118)',
+    description: 'Juros (valor monetrio ou percentual conforme cdigo 118)',
     canonical: 'juros.valor',
   },
   desconto_codigo: {
@@ -365,7 +365,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo desconto 1: 0=Sem, 1=Valor fixo, 2=Percentual, 3=Antecipa��o, 7=Cancelamento',
+    description: 'Cdigo desconto 1: 0=Sem, 1=Valor fixo, 2=Percentual, 3=Antecipao, 7=Cancelamento',
     canonical: null,
   },
   desconto_data: {
@@ -398,7 +398,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor IOF (n�o utilizado pelo Sicredi, sempre 000000000000000)',
+    description: 'Valor IOF (no utilizado pelo Sicredi, sempre 000000000000000)',
     canonical: null,
   },
   abatimento_valor: {
@@ -420,7 +420,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Uso Empresa Benefici�rio (identifica��o do t�tulo na empresa)',
+    description: 'Uso Empresa Beneficirio (identificao do ttulo na empresa)',
     canonical: null,
   },
   protesto_codigo: {
@@ -431,7 +431,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo para Protesto/Negativa��o: 1=Protestar, 3=N�o protestar/negativar, 8=Negativar, 9=Cancelar',
+    description: 'Cdigo para Protesto/Negativao: 1=Protestar, 3=No protestar/negativar, 8=Negativar, 9=Cancelar',
     canonical: null,
   },
   protesto_prazo: {
@@ -442,7 +442,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Prazo para Protesto/Negativa��o (m�nimo 03 dias)',
+    description: 'Prazo para Protesto/Negativao (mnimo 03 dias)',
     canonical: null,
   },
   baixa_codigo: {
@@ -453,7 +453,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'C�digo para Baixa/Devolu��o (sempre 1)',
+    description: 'Cdigo para Baixa/Devoluo (sempre 1)',
     canonical: null,
   },
   baixa_prazo: {
@@ -464,7 +464,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de dias para baixa/devolu��o (n�o utilizado, 000)',
+    description: 'Nmero de dias para baixa/devoluo (no utilizado, 000)',
     canonical: null,
   },
   moeda_codigo: {
@@ -475,7 +475,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '09',
-    description: 'C�digo da Moeda: 09=Real',
+    description: 'Cdigo da Moeda: 09=Real',
     canonical: null,
   },
   contrato_numero: {
@@ -486,7 +486,7 @@ export const SICREDI_CNAB240_SEGMENT_P: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do contrato (n�o utilizado, 0000000000)',
+    description: 'Nmero do contrato (no utilizado, 0000000000)',
     canonical: null,
   },
   cnab_exclusivo_2: {
