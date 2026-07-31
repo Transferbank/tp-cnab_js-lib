@@ -1,7 +1,7 @@
 import { CNABFormatCode, CNABValidationResult, ParsedLine, ValidationError, CNABRecord } from './cnab'
 import { Cnab240SegmentCode } from '../cnab240-record-types'
 import { Cnab400RecordType } from '../cnab400-record-types'
-import { ReadMode, type ReadModeValue } from './read-mode'
+import { ReadMode } from './read-mode'
 import { BankSchema, RecordSchema, CNABProvider } from '@tp-types/bank'
 import { CNABError, CNABInternalInconsistencyError, CNABGroupingError, CNABLazyResolveError } from '@tp-types/errors'
 import { validateCnab240Content } from '@validators/cnab240-content-validator'
@@ -62,7 +62,7 @@ export class CNABFile {
    * uma inconsistência entre os dois registries (schema e grouping), não um caso
    * de uso normal do usuário da lib.
    */
-  private resolveProvider(mode: ReadModeValue): CNABProvider {
+  private resolveProvider(mode: ReadMode): CNABProvider {
     // Lazy import para evitar dependência circular
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { getProvider } = require('@/provider/catalog')

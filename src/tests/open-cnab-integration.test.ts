@@ -6,7 +6,7 @@
  */
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { openCnab } from '../index'
+import { openCnab, ReadMode } from '../index'
 
 interface FixtureCase {
   label: string
@@ -41,9 +41,9 @@ describe('openCnab() - integração com fixtures reais', () => {
       expect(result.bills.length).toBeGreaterThan(0)
     })
 
-    test('read({ mode: "FULL" }) retorna todos os campos do banco sem lançar', () => {
+    test('read({ mode: ReadMode.FULL }) retorna todos os campos do banco sem lançar', () => {
       const cnabFile = openCnab(loadFixture(path))
-      const result = cnabFile.read({ mode: 'FULL' })
+      const result = cnabFile.read({ mode: ReadMode.FULL })
 
       expect(result.bills.length).toBeGreaterThan(0)
       result.bills.forEach((bill) => {

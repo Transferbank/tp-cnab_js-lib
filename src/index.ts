@@ -27,8 +27,7 @@ import {
 export function openCnab(raw: string): CNABFile {
   const rawLines = raw?.split(/\r?\n/).filter((line) => line.length > 0) ?? []
 
-  const isEmpty = rawLines.length === 0
-  if (isEmpty) {
+  if (rawLines.length === 0) {
     throw new CNABEmptyFileError()
   }
 
@@ -36,12 +35,11 @@ export function openCnab(raw: string): CNABFile {
   const bankCode = detectBank(rawLines[0], format)
   const bankSchema = getBankSchema(bankCode, format)
 
-  const hasSchema = bankSchema !== null && bankSchema !== undefined
-  if (hasSchema) {
-    return new CNABFile(format, bankSchema, rawLines)
+  if (bankSchema === null || bankSchema === undefined) {
+    throw new CNABSchemaNotFoundError(bankCode, format)
   }
 
-  throw new CNABSchemaNotFoundError(bankCode, format)
+  return new CNABFile(format, bankSchema, rawLines)
 }
 
 // ========== EXPORTAÇÕES PÚBLICAS ==========
@@ -58,7 +56,6 @@ export type {
   
   // Leitura
   CNABReadResult,
-  ReadModeValue,
   
   // Opções
   ReadOptions,

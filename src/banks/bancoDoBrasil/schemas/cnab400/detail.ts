@@ -1,18 +1,18 @@
 ﻿/**
- * Banco do Brasil (001) � CNAB 400 � Detalhe de Remessa (Registro Tipo 7)
- * PARTICULARIDADE DO BB: tipo_registro = '7' (n�o '1' como padr�o FEBRABAN)
+ * Banco do Brasil (001) — CNAB 400 — Detalhe de Remessa (Registro Tipo 7)
+ * PARTICULARIDADE DO BB: tipo_registro = '7' (não '1' como padrão FEBRABAN)
  *
  * Fonte:
- * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) � �3 p.5-6
- * - Manual oficial BB 2024 (banco_do_brasil_2024_cnab400.pdf, jun/2024) � campos tipo_moeda
- *   e indicador_recebimento_parcial revelados para conv�nios > 1.000.000
+ * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) — §3 p.5-6
+ * - Manual oficial BB 2024 (banco_do_brasil_2024_cnab400.pdf, jun/2024) — campos tipo_moeda
+ *   e indicador_recebimento_parcial revelados para convênios > 1.000.000
  * - brcobranca (remessa/cnab400/banco_brasil.rb)
  * - cnab_yaml (cnab400/001/remessa/detalhe.yml)
  * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Bb.php)
- * Observa��o importante sobre campo "nome" (235-271):
- * O BB usa apenas 37 posi��es para o nome do sacado, seguido de 3 brancos (272-274).
- * Padr�o FEBRABAN s�o 40 posi��es, mas o BB mant�m essa peculiaridade.
- * Confirmado pelo manual oficial e todas as libs de refer�ncia.
+ * Observação importante sobre campo "nome" (235-271):
+ * O BB usa apenas 37 posições para o nome do sacado, seguido de 3 brancos (272-274).
+ * Padrão FEBRABAN são 40 posições, mas o BB mantém essa peculiaridade.
+ * Confirmado pelo manual oficial e todas as libs de referência.
  */
 
 import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
@@ -26,7 +26,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '7',
-    description: 'Tipo do registro detalhe (7 no BB - n�o 1 como padr�o FEBRABAN)',
+    description: 'Tipo do registro detalhe (7 no BB - não 1 como padrão FEBRABAN)',
     canonical: null,
   },
   codigo_inscricao_cedente: {
@@ -37,7 +37,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do cedente: 01=CPF, 02=CNPJ',
+    description: 'Tipo de inscrição do cedente: 01=CPF, 02=CNPJ',
     canonical: null,
   },
   numero_inscricao_cedente: {
@@ -59,7 +59,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Prefixo da ag�ncia do cedente ',
+    description: 'Prefixo da agência do cedente',
     canonical: null,
   },
   agencia_dv: {
@@ -70,7 +70,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia',
+    description: 'Dígito verificador da agência',
     canonical: null,
   },
   conta: {
@@ -81,7 +81,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da conta corrente',
+    description: 'Número da conta corrente',
     canonical: null,
   },
   conta_dv: {
@@ -92,7 +92,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'Dígito verificador da conta',
     canonical: null,
   },
   convenio: {
@@ -103,7 +103,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do conv�nio de cobran�a do cedente',
+    description: 'Número do convênio de cobrança do cedente',
     canonical: null,
   },
   codigo_controle_empresa: {
@@ -114,7 +114,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de controle do participante (uso da empresa)',
+    description: 'Número de controle do participante (uso da empresa)',
     canonical: null,
   },
   nosso_numero: {
@@ -125,7 +125,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo no banco (nosso n�mero)',
+    description: 'Identificação do título no banco (nosso número)',
     canonical: 'nossoNumero',
   },
   numero_prestacao: {
@@ -136,7 +136,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00',
-    description: 'N�mero da presta��o (00 se parcela �nica)',
+    description: 'Número da prestação (00 se parcela única)',
     canonical: null,
   },
   grupo_valor: {
@@ -147,7 +147,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00',
-    description: 'Grupo de valor (00 se n�o utilizado)',
+    description: 'Grupo de valor (00 se não utilizado)',
     canonical: null,
   },
   tipo_moeda: {
@@ -180,7 +180,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Indicativo de mensagem ou benefici�rio final',
+    description: 'Indicativo de mensagem ou beneficiário final',
     canonical: null,
   },
   prefixo_titulo: {
@@ -191,7 +191,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Prefixo do t�tulo (brancos)',
+    description: 'Prefixo do título (brancos)',
     canonical: null,
   },
   variacao_carteira: {
@@ -202,7 +202,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Varia��o da carteira',
+    description: 'Variação da carteira',
     canonical: null,
   },
   conta_caucao: {
@@ -213,7 +213,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0',
-    description: 'Conta cau��o: 0=N�o, outros=Sim',
+    description: 'Conta caução: 0=Não, outros=Sim',
     canonical: null,
   },
   numero_bordero: {
@@ -224,7 +224,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '000000',
-    description: 'N�mero do border� (000000 se n�o utilizado)',
+    description: 'Número do borderô (000000 se não utilizado)',
     canonical: null,
   },
   tipo_cobranca: {
@@ -235,7 +235,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de cobran�a',
+    description: 'Tipo de cobrança',
     canonical: null,
   },
   numero_carteira: {
@@ -246,7 +246,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da carteira',
+    description: 'Número da carteira',
     canonical: null,
   },
   comando: {
@@ -257,7 +257,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de ocorr�ncia/comando (01=Entrada de t�tulo, 02=Pedido de baixa, 04=Concess�o de abatimento, 06=Altera��o de Vencimento)',
+    description: 'Código de ocorrência/comando (01=Entrada de título, 02=Pedido de baixa, 04=Concessão de abatimento, 06=Alteração de Vencimento)',
     canonical: null,
   },
   numero_documento: {
@@ -268,7 +268,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do documento de cobran�a (seu n�mero)',
+    description: 'Número do documento de cobrança (seu número)',
     canonical: 'numeroDocumento',
   },
   vencimento: {
@@ -279,7 +279,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de vencimento do t�tulo',
+    description: 'Data de vencimento do título',
     canonical: 'vencimento',
   },
   valor_titulo: {
@@ -290,7 +290,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do t�tulo (2 decimais impl�citas)',
+    description: 'Valor do título (2 decimais implícitas)',
     canonical: 'valor',
   },
   codigo_banco_cobrador: {
@@ -301,7 +301,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '001',
-    description: 'C�digo do banco cobrador (001 para BB)',
+    description: 'Código do banco cobrador (001 para BB)',
     canonical: null,
   },
   prefixo_agencia_cobradora: {
@@ -312,7 +312,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0000',
-    description: 'Prefixo da ag�ncia cobradora',
+    description: 'Prefixo da agência cobradora',
     canonical: null,
   },
   dv_agencia_cobradora: {
@@ -323,7 +323,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito da ag�ncia cobradora (brancos)',
+    description: 'Dígito da agência cobradora (brancos)',
     canonical: null,
   },
   especie: {
@@ -334,7 +334,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Esp�cie do t�tulo (NOTA 07)',
+    description: 'Espécie do título (NOTA 07)',
     canonical: null,
   },
   aceite: {
@@ -345,7 +345,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'N',
-    description: 'Identifica��o de t�tulo aceito/n�o aceito',
+    description: 'Identificação de título aceito/não aceito',
     canonical: null,
   },
   data_emissao: {
@@ -356,7 +356,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de emiss�o do t�tulo',
+    description: 'Data de emissão do título',
     canonical: 'dataEmissao',
   },
   instrucao_1: {
@@ -367,7 +367,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00',
-    description: 'Primeira instru��o de cobran�a',
+    description: 'Primeira instrução de cobrança',
     canonical: null,
   },
   instrucao_2: {
@@ -378,7 +378,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00',
-    description: 'Segunda instru��o de cobran�a',
+    description: 'Segunda instrução de cobrança',
     canonical: null,
   },
   juros_mora_dia: {
@@ -400,7 +400,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data limite para concess�o de desconto',
+    description: 'Data limite para concessão de desconto',
     canonical: null,
   },
   valor_desconto: {
@@ -444,7 +444,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do sacado: 01=CPF, 02=CNPJ',
+    description: 'Tipo de inscrição do sacado: 01=CPF, 02=CNPJ',
     canonical: null,
   },
   sacado_numero_inscricao: {
@@ -467,7 +467,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      'Nome do sacado (37 chars no BB � padr�o FEBRABAN s�o 40, mas BB usa 37 + 3 brancos)',
+      'Nome do sacado (37 chars no BB — padrão FEBRABAN são 40, mas BB usa 37 + 3 brancos)',
     canonical: 'sacado.nome',
   },
   brancos_2: {
@@ -478,7 +478,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Brancos (complemento do campo nome - BB usa 37+3 em vez de 40 cont�nuos)',
+    description: 'Brancos (complemento do campo nome - BB usa 37+3 em vez de 40 contínuos)',
     canonical: null,
   },
   logradouro: {
@@ -489,7 +489,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do sacado',
+    description: 'Endereço do sacado',
     canonical: 'sacado.endereco.logradouro',
   },
   bairro: {
@@ -511,7 +511,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP do sacado (8 d�gitos sem h�fen)',
+    description: 'CEP do sacado (8 dígitos sem hífen)',
     canonical: 'sacado.endereco.cep',
   },
   cidade: {
@@ -544,7 +544,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do benefici�rio final ou observa��es (nomenclatura atualizada conforme Circulares BACEN 3598, 3656 e 3956)',
+    description: 'Nome do beneficiário final ou observações (nomenclatura atualizada conforme Circulares BACEN 3598, 3656 e 3956)',
     canonical: null,
   },
   prazo_protesto: {
@@ -567,7 +567,7 @@ export const DETAIL: RecordSchema = {
     dateFormat: null,
     pattern: null,
     description:
-      "Indicador de recebimento parcial: 'N'=n�o aceita, 'S'=aceita, branco=conforme cadastro no sistema (revelado no manual 2024)",
+      "Indicador de recebimento parcial: 'N'=não aceita, 'S'=aceita, branco=conforme cadastro no sistema (revelado no manual 2024)",
     canonical: null,
   },
   numero_sequencial: {
@@ -578,7 +578,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no arquivo',
+    description: 'Número sequencial do registro no arquivo',
     canonical: null,
   },
 }

@@ -1,5 +1,5 @@
 /**
- * Validação de integridade: schemas TypeScript conseguem parsear arquivo real do BB
+ * ValidaÃ§Ã£o de integridade: schemas TypeScript conseguem parsear arquivo real do BB
  */
 
 import * as fs from 'fs'
@@ -7,7 +7,7 @@ import * as path from 'path'
 import { openCnab } from '@/index'
 import { CNABFormatCode } from '@tp-types/core'
 
-describe('Integridade: Schemas × Fixture BB CNAB 400', () => {
+describe('Integridade: Schemas â€” Fixture BB CNAB 400', () => {
   const fixtureDir = path.join(__dirname, '../docs')
   const txtPath = path.join(fixtureDir, 'BANCOBRASIL_cnab_400.REM')
   const txtContent = fs.readFileSync(txtPath, 'latin1')
@@ -25,11 +25,11 @@ describe('Integridade: Schemas × Fixture BB CNAB 400', () => {
     const cnabFile = openCnab(txtContent)
     const validationResult = cnabFile.validate(true)
     
-    // Filtrar apenas erros estruturais (não de negócio como vencimento no passado)
+    // Filtrar apenas erros estruturais (nÃ£o de negÃ³cio como vencimento no passado)
     const allErrors = validationResult.feedback?.lines || []
     const structuralErrors = allErrors.filter(
       (error: { message: string }) => 
-        !error.message.includes('anterior à data atual') &&
+        !error.message.includes('anterior Ã  data atual') &&
         !error.message.includes('vencimento')
     )
 
@@ -43,15 +43,15 @@ describe('Integridade: Schemas × Fixture BB CNAB 400', () => {
     expect(structuralErrors).toHaveLength(0)
   })
 
-  test('deve extrair 113 títulos corretamente', () => {
+  test('deve extrair 113 tÃ­tulos corretamente', () => {
     const cnabFile = openCnab(txtContent)
     const readResult = cnabFile.read()
     
     expect(readResult.bills.length).toBe(113)
   })
 
-  test('arquivo deve ter padrão BB: detalhe tipo 7 + multa tipo 5 intercalados', () => {
-    // BB específico: cada título (tipo 7) seguido de multa (tipo 5)
+  test('arquivo deve ter padrÃ£o BB: detalhe tipo 7 + multa tipo 5 intercalados', () => {
+    // BB especÃ­fico: cada tÃ­tulo (tipo 7) seguido de multa (tipo 5)
     const tipo7Count = lines.filter((line) => line[0] === '7').length
     const tipo5Count = lines.filter((line) => line[0] === '5').length
 

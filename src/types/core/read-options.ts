@@ -1,4 +1,4 @@
-import type { ReadModeValue } from './read-mode'
+import type { ReadMode } from './read-mode'
 
 export interface ReadPageOptions {
   start: number
@@ -6,7 +6,7 @@ export interface ReadPageOptions {
 }
 
 export interface ReadOptions {
-  mode?: ReadModeValue
+  mode?: ReadMode
   lazy?: boolean
   page?: ReadPageOptions
 }

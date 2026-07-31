@@ -4,6 +4,7 @@
 
 import {
   openCnab,
+  ReadMode,
   CNABFile,
   CNABEmptyFileError,
   CNABFormatNotRecognizedError,
@@ -647,7 +648,7 @@ describe('CNABFile.read() e readAsync()  modo FULL', () => {
   test('FULL deve devolver todos os campos do schema, incluindo os sem canonical', () => {
     const cnabFile = openCnab(fileContent)
     const simple = cnabFile.read()
-    const full = cnabFile.read({ mode: 'FULL' })
+    const full = cnabFile.read({ mode: ReadMode.FULL })
 
     const simpleKeys = Object.keys(simple.bills[0])
     const fullKeys = Object.keys(full.bills[0])
@@ -663,7 +664,7 @@ describe('CNABFile.read() e readAsync()  modo FULL', () => {
   test('header e trailer continuam canônicos em modo FULL (decisão de escopo)', () => {
     const cnabFile = openCnab(fileContent)
     const simple = cnabFile.read()
-    const full = cnabFile.read({ mode: 'FULL' })
+    const full = cnabFile.read({ mode: ReadMode.FULL })
 
     expect(full.header).toEqual(simple.header)
     expect(full.trailer).toEqual(simple.trailer)
@@ -671,20 +672,20 @@ describe('CNABFile.read() e readAsync()  modo FULL', () => {
 
   test('readAsync FULL produz resultado idêntico a read FULL', async () => {
     const cnabFile = openCnab(fileContent)
-    const sync = cnabFile.read({ mode: 'FULL' })
-    const async = await cnabFile.readAsync({ mode: 'FULL' })
+    const sync = cnabFile.read({ mode: ReadMode.FULL })
+    const async = await cnabFile.readAsync({ mode: ReadMode.FULL })
 
     expect(async).toEqual(sync)
   })
 
-  test('read() sem options é equivalente a read({ mode: "SIMPLE" })', () => {
+  test('read() sem options é equivalente a read({ mode: ReadMode.SIMPLE })', () => {
     const cnabFile = openCnab(fileContent)
-    expect(cnabFile.read()).toEqual(cnabFile.read({ mode: 'SIMPLE' }))
+    expect(cnabFile.read()).toEqual(cnabFile.read({ mode: ReadMode.SIMPLE }))
   })
 
   test('LIMITAÇÃO CONHECIDA v1: campos identificadores numéricos perdem zero à esquerda em modo FULL', () => {
     const cnabFile = openCnab(fileContent)
-    const full = cnabFile.read({ mode: 'FULL' })
+    const full = cnabFile.read({ mode: ReadMode.FULL })
 
     // sacado_numero_inscricao sai como number (não string)  zero à esquerda
     // seria perdido se o documento real tivesse. Ver extract-full.ts para o
@@ -728,8 +729,8 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
   test('resolve() de um LazyBillItem FULL produz resultado equivalente ao modo eager FULL', async () => {
     const cnabFile = openCnab(fileContent)
     
-    const eager = cnabFile.read({ mode: 'FULL' })
-    const lazy = cnabFile.read({ mode: 'FULL', lazy: true })
+    const eager = cnabFile.read({ mode: ReadMode.FULL })
+    const lazy = cnabFile.read({ mode: ReadMode.FULL, lazy: true })
 
     expect(lazy.bills.length).toBe(eager.bills.length)
     
@@ -740,7 +741,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     expect(lazyBill).toEqual(eagerBill)
   })
 
-  test('readAsync({ lazy: true, mode: "SIMPLE" }) produz LazyBillItem equivalente a read()', async () => {
+  test('readAsync({ lazy: true, mode: ReadMode.SIMPLE }) produz LazyBillItem equivalente a read()', async () => {
     const cnabFile = openCnab(fileContent)
     
     const syncLazy = cnabFile.read({ lazy: true })
@@ -757,11 +758,11 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     expect(asyncResolved).toEqual(syncResolved)
   })
 
-  test('readAsync({ lazy: true, mode: "FULL" }) produz LazyBillItem equivalente a read()', async () => {
+  test('readAsync({ lazy: true, mode: ReadMode.FULL }) produz LazyBillItem equivalente a read()', async () => {
     const cnabFile = openCnab(fileContent)
     
-    const syncLazy = cnabFile.read({ mode: 'FULL', lazy: true })
-    const asyncLazy = await cnabFile.readAsync({ mode: 'FULL', lazy: true })
+    const syncLazy = cnabFile.read({ mode: ReadMode.FULL, lazy: true })
+    const asyncLazy = await cnabFile.readAsync({ mode: ReadMode.FULL, lazy: true })
 
     expect(asyncLazy.bills.length).toBe(syncLazy.bills.length)
     expect(asyncLazy.header).toEqual(syncLazy.header)
@@ -846,13 +847,13 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     }
   })
 
-  test('CNABLazyResolveError ao falhar resolve() em read({ lazy: true, mode: "FULL" })', async () => {
+  test('CNABLazyResolveError ao falhar resolve() em read({ lazy: true, mode: ReadMode.FULL })', async () => {
     const mockError = new Error('Mock full extraction error')
     const catalog = require('../provider/catalog')
     
     const cnabFile = openCnab(fileContent)
     const originalGetProvider = catalog.getProvider
-    const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, 'FULL')
+    const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, ReadMode.FULL)
     
     // Mock extractBillFull to throw error
     const mockProvider = {
@@ -864,14 +865,14 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     
     // Mock getProvider to return our mocked provider
     catalog.getProvider = jest.fn((bankCode, format, mode) => {
-      if (mode === 'FULL') {
+      if (mode === ReadMode.FULL) {
         return mockProvider
       }
       return originalGetProvider(bankCode, format, mode)
     })
     
     try {
-      const lazy = cnabFile.read({ mode: 'FULL', lazy: true })
+      const lazy = cnabFile.read({ mode: ReadMode.FULL, lazy: true })
       
       // resolve() deve rejeitar com CNABLazyResolveError
       await expect(lazy.bills[0].resolve()).rejects.toThrow('Falha ao resolver boleto lazy')
@@ -936,13 +937,13 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     }
   })
 
-  test('CNABLazyResolveError ao falhar resolve() em readAsync({ lazy: true, mode: "FULL" })', async () => {
+  test('CNABLazyResolveError ao falhar resolve() em readAsync({ lazy: true, mode: ReadMode.FULL })', async () => {
     const mockError = new Error('Mock async full extraction error')
     const catalog = require('../provider/catalog')
     
     const cnabFile = openCnab(fileContent)
     const originalGetProvider = catalog.getProvider
-    const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, 'FULL')
+    const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, ReadMode.FULL)
     
     // Mock extractBillFull to throw error
     const mockProvider = {
@@ -954,14 +955,14 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     
     // Mock getProvider to return our mocked provider
     catalog.getProvider = jest.fn((bankCode, format, mode) => {
-      if (mode === 'FULL') {
+      if (mode === ReadMode.FULL) {
         return mockProvider
       }
       return originalGetProvider(bankCode, format, mode)
     })
     
     try {
-      const lazy = await cnabFile.readAsync({ mode: 'FULL', lazy: true })
+      const lazy = await cnabFile.readAsync({ mode: ReadMode.FULL, lazy: true })
       
       // resolve() deve rejeitar com CNABLazyResolveError
       await expect(lazy.bills[0].resolve()).rejects.toThrow('Falha ao resolver boleto lazy')

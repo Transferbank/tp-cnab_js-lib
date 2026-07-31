@@ -8,8 +8,3 @@ export enum ReadMode {
   SIMPLE = 'SIMPLE',
   FULL = 'FULL',
 }
-
-/**
- * Permite backward compatibility com código existente que usa 'SIMPLE' | 'FULL'.
- */
-export type ReadModeValue = ReadMode | 'SIMPLE' | 'FULL'

@@ -1,12 +1,12 @@
 ﻿/**
- * Banco do Brasil (001) � CNAB 400 � Trailer de Arquivo (Remessa)
+ * Banco do Brasil (001) — CNAB 400 — Trailer de Arquivo (Remessa)
  * Fonte:
- * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) � �3 p.8
+ * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) — §3 p.8
  * - brcobranca (remessa/cnab400/banco_brasil.rb)
- * - cnab_yaml (cnab400/001/remessa - n�o tem trailer espec�fico)
+ * - cnab_yaml (cnab400/001/remessa - não tem trailer específico)
  * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Bb.php)
  * Layout extremamente simples: apenas tipo de registro e sequencial,
- * todo o resto s�o brancos (filler).
+ * todo o resto são brancos (filler).
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -20,7 +20,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identifica��o do registro trailer',
+    description: 'Identificação do registro trailer',
     canonical: null,
   },
   brancos: {
@@ -42,7 +42,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro (�ltimo do arquivo)',
+    description: 'Número sequencial do registro (último do arquivo)',
     canonical: null,
   },
 }

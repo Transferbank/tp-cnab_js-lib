@@ -1,13 +1,13 @@
 ﻿/**
- * Banco do Brasil (001) � CNAB 400 � Header de Arquivo (Remessa)
+ * Banco do Brasil (001) — CNAB 400 — Header de Arquivo (Remessa)
  * Fonte:
- * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) � �3 p.4
+ * - Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012) — §3 p.4
  * - brcobranca (remessa/cnab400/banco_brasil.rb)
  * - cnab_yaml (cnab400/001/remessa/header_arquivo.yml)
  * - laravel-boleto (Cnab/Remessa/Cnab400/Banco/Bb.php)
  * Todas as fontes concordam byte a byte.
  *
- * Aten��o: campo "numero_sequencial" aparece em DUAS posi��es diferentes:
+ * Atenção: campo "numero_sequencial" aparece em DUAS posições diferentes:
  * - 101-107: sequencial da remessa (controle do cliente)
  * - 395-400: sequencial do registro (sempre '000001' no header)
  */
@@ -23,7 +23,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do registro header',
+    description: 'Identificação do registro header',
     canonical: null,
   },
   tipo_operacao: {
@@ -34,7 +34,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de opera��o: 1=Remessa',
+    description: 'Tipo de operação: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
@@ -56,7 +56,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo do servi�o: 01=Cobran�a',
+    description: 'Código do serviço: 01=Cobrança',
     canonical: null,
   },
   literal_servico: {
@@ -67,7 +67,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal do tipo de servi�o',
+    description: 'Literal do tipo de serviço',
     canonical: null,
   },
   agencia: {
@@ -78,7 +78,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Prefixo da ag�ncia do cedente',
+    description: 'Prefixo da agência do cedente',
     canonical: null,
   },
   agencia_dv: {
@@ -89,7 +89,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia',
+    description: 'Dígito verificador da agência',
     canonical: null,
   },
   conta: {
@@ -100,7 +100,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da conta corrente',
+    description: 'Número da conta corrente',
     canonical: null,
   },
   conta_dv: {
@@ -111,7 +111,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'Dígito verificador da conta',
     canonical: null,
   },
   zeros: {
@@ -133,7 +133,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Raz�o social do cedente',
+    description: 'Razão social do cedente',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
@@ -144,7 +144,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '001',
-    description: 'C�digo FEBRABAN do Banco do Brasil',
+    description: 'Código FEBRABAN do Banco do Brasil',
     canonical: null,
   },
   nome_banco: {
@@ -166,7 +166,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo',
+    description: 'Data de geração do arquivo',
     canonical: 'dataGeracao',
   },
   sequencial_remessa: {
@@ -177,7 +177,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0000001',
-    description: 'N�mero sequencial da remessa (controle do cliente)',
+    description: 'Número sequencial da remessa (controle do cliente)',
     canonical: null,
   },
   brancos_1: {
@@ -199,7 +199,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0000000',
-    description: 'N�mero do conv�nio l�der',
+    description: 'Número do convênio líder',
     canonical: null,
   },
   brancos_2: {
@@ -221,7 +221,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'N�mero sequencial do registro no arquivo (sempre 000001 no header)',
+    description: 'Número sequencial do registro no arquivo (sempre 000001 no header)',
     canonical: null,
   },
 }

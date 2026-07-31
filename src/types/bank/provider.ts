@@ -3,12 +3,12 @@ import type { GroupingRule, BillGroup, GroupingError } from '@tp-types/processin
 import type { ParsedLine } from '@tp-types/core'
 import type { CNABHeader, CNABTrailer, CNABData } from '@tp-types/read'
 import type { CNABFormatCode } from '@tp-types/core'
-import type { ReadModeValue } from '@tp-types/core'
+import type { ReadMode } from '@tp-types/core'
 
 export interface CNABProvider {
   bankCode: string
   format: CNABFormatCode
-  mode: ReadModeValue
+  mode: ReadMode
 
   schema: BankSchema
   groupingRule: GroupingRule

@@ -13,41 +13,34 @@ const LINE_LENGTH = {
 } as const
 
 export function detectFormat(lines: string[]): CNABFormatCode {
-  const hasLines = lines && lines.length > 0
-  if (!hasLines) {
+  if ( lines == null || lines.length == 0) {
     throw new CNABNoLinesProvidedError()
   }
 
   const len = lines[0].length
 
-  const isCnab240 = len === LINE_LENGTH.CNAB_240
-  if (isCnab240) return CNABFormatCode.CNAB240
+  if (len == LINE_LENGTH.CNAB_240) return CNABFormatCode.CNAB240
 
-  const isCnab400 = len === LINE_LENGTH.CNAB_400
-  if (isCnab400) return CNABFormatCode.CNAB400
+  if (len == LINE_LENGTH.CNAB_400) return CNABFormatCode.CNAB400
 
   throw new CNABFormatNotRecognizedError(len)
 }
 
-export function detectBank(headerLine: string, format: CNABFormatCode): string {
-  const hasHeader = headerLine !== undefined && headerLine !== null && headerLine.length > 0
-  if (!hasHeader) {
-    throw new CNABInvalidHeaderError(headerLine)
+export function detectBank(header: string, format: CNABFormatCode): string {
+  if (header == null || header.length == 0) {
+    throw new CNABInvalidHeaderError(header)
   }
 
-  const isCnab400 = format === CNABFormatCode.CNAB400
-  if (isCnab400) {
-    const bankCode = getCnab400BankCode(headerLine) || ''
+  if (format === CNABFormatCode.CNAB400) {
+    const bankCode = getCnab400BankCode(header) || ''
     const found = bankCode.length > 0
     if (found) return bankCode
     throw new CNABBankNotFoundError(format)
   }
 
-  const isCnab240 = format === CNABFormatCode.CNAB240
-  if (isCnab240) {
-    const bankCode = getCnab240BankCode(headerLine) || ''
-    const found = bankCode.length > 0
-    if (found) return bankCode
+  if (format === CNABFormatCode.CNAB240) {
+    const bankCode = getCnab240BankCode(header) || ''
+    if (bankCode.length > 0) return bankCode
     throw new CNABBankNotFoundError(format)
   }
 

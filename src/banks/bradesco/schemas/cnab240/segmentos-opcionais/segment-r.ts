@@ -1,10 +1,10 @@
-﻿/**
+/**
  * Bradesco CNAB 240 - Segmento R
  * Segmento R (pos 8 = '3', pos 14 = 'R')
- * Descontos adicionais (2� e 3� descontos), multa, informa��es ao sacado
- * e dados de d�bito autom�tico em conta corrente.
- * Este segmento � opcional e aparece quando h� descontos adicionais al�m do primeiro,
- * multa configurada, ou quando o t�tulo est� vinculado a d�bito autom�tico.
+ * Descontos adicionais (2? e 3? descontos), multa, informações ao sacado
+ * e dados de débito autom?tico em conta corrente.
+ * Este segmento é opcional e aparece quando ha descontos adicionais além do primeiro,
+ * multa configurada, ou quando o título está vinculado a débito automático.
  * Fonte do layout: pycnab240 + laravel-boleto + manual oficial Bradesco
  */
 
@@ -30,7 +30,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de servi�o',
+    description: 'Lote de serviço',
     canonical: null,
   },
   controle_registro: {
@@ -52,7 +52,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'n�mero sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -63,7 +63,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'R',
-    description: 'Segmento R = descontos/multa/d�bito autom�tico',
+    description: 'Segmento R = descontos/multa/d?bito autom?tico',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -182,7 +182,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data de in�cio da cobran�a de multa',
+    description: 'Data de in?cio da cobran�a de multa',
     canonical: 'multa.vigenciaAPartirDe',
   },
   multa_valor: {
@@ -204,7 +204,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Informa��o ao sacado (linha 1)',
+    description: 'Informa�o ao sacado (linha 1)',
     canonical: null,
   },
   informacao_sacado_2: {
@@ -215,7 +215,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Informa��o ao sacado (linha 2)',
+    description: 'Informa�o ao sacado (linha 2)',
     canonical: null,
   },
   informacao_sacado_3: {
@@ -226,7 +226,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Informa��o ao sacado (linha 3)',
+    description: 'Informa�o ao sacado (linha 3)',
     canonical: null,
   },
   cnab_exclusivo_2: {
@@ -248,7 +248,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de ocorr�ncia do d�bito autom�tico',
+    description: 'C�digo de ocorr�ncia do d?bito autom?tico',
     canonical: null,
   },
   debito_automatico_banco: {
@@ -259,7 +259,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Banco para d�bito autom�tico',
+    description: 'Banco para d?bito autom?tico',
     canonical: null,
   },
   debito_automatico_agencia: {
@@ -270,7 +270,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia para d�bito autom�tico',
+    description: 'Ag?ncia para d?bito autom?tico',
     canonical: null,
   },
   debito_automatico_agencia_dv: {
@@ -281,7 +281,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia',
+    description: 'D?gito verificador da ag?ncia',
     canonical: null,
   },
   debito_automatico_conta: {
@@ -292,7 +292,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Conta corrente para d�bito autom�tico',
+    description: 'Conta corrente para d?bito autom?tico',
     canonical: null,
   },
   debito_automatico_conta_dv: {
@@ -303,7 +303,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'D?gito verificador da conta',
     canonical: null,
   },
   debito_automatico_agencia_conta_dv: {
@@ -314,7 +314,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia/conta',
+    description: 'D?gito verificador da ag?ncia/conta',
     canonical: null,
   },
   aviso_debito_automatico: {
@@ -325,7 +325,7 @@ export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Aviso para d�bito autom�tico: 0=N�o, 1=Sim',
+    description: 'Aviso para d?bito autom?tico: 0=N�o, 1=Sim',
     canonical: null,
   },
   cnab_exclusivo_3: {

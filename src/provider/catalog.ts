@@ -1,6 +1,6 @@
 import type { CNABProvider } from '@tp-types/bank/provider'
 import { CNABFormatCode } from '@tp-types/core'
-import type { ReadModeValue } from '@tp-types/core'
+import type { ReadMode } from '@tp-types/core'
 import { getBankSchema } from '@schemas/index'
 import { getGroupingRule } from '@/grouping/grouping-rules'
 import { groupLines } from '@/grouping/group-lines'
@@ -9,7 +9,7 @@ import { extractHeader, extractTrailer, extractBill, extractBillFull } from '@/r
 export function createProvider(
   bankCode: string,
   format: CNABFormatCode,
-  mode: ReadModeValue,
+  mode: ReadMode,
 ): CNABProvider | null {
   const schema = getBankSchema(bankCode, format)
   const groupingRule = getGroupingRule(bankCode, format)
@@ -40,7 +40,7 @@ export function createProvider(
 export function getProvider(
   bankCode: string,
   format: CNABFormatCode,
-  mode: ReadModeValue,
+  mode: ReadMode,
 ): CNABProvider | null {
   return createProvider(bankCode, format, mode)
 }
