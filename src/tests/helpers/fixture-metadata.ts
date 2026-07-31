@@ -34,7 +34,6 @@ export function loadFixtureMetadata(
   format: CNABFormatCode.CNAB240 | CNABFormatCode.CNAB400 = CNABFormatCode.CNAB240,
   baseDir: string = path.join(__dirname, '../../banks')
 ): FixtureMetadata {
-  // Construir path do arquivo JSON
   const jsonPath = path.join(
     baseDir,
     bankName,
@@ -43,7 +42,6 @@ export function loadFixtureMetadata(
     `${fixtureName}.json`
   )
 
-  // Verificar se arquivo existe
   if (!fs.existsSync(jsonPath)) {
     throw new Error(
       `Arquivo de metadados não encontrado: ${jsonPath}\n` +
@@ -51,7 +49,6 @@ export function loadFixtureMetadata(
     )
   }
 
-  // Ler e parsear JSON
   let rawData: string
   try {
     rawData = fs.readFileSync(jsonPath, 'utf8')
@@ -73,7 +70,6 @@ export function loadFixtureMetadata(
     )
   }
 
-  // Validar schema e retornar tipado
   validateMetadataSchema(data, jsonPath)
   return data as FixtureMetadata
 }
@@ -88,7 +84,6 @@ export function loadFixtureMetadata(
  * @internal
  */
 function validateMetadataSchema(data: unknown, filePath: string): asserts data is FixtureMetadata {
-  // Validar que é um objeto (não array, não primitivo)
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     const receivedType = Array.isArray(data) ? 'array' : typeof data
     throw new Error(
@@ -100,7 +95,6 @@ function validateMetadataSchema(data: unknown, filePath: string): asserts data i
 
   const obj = data as Record<string, unknown>
 
-  // Validar campos obrigatórios de primeiro nível
   validateRequiredField(obj, 'description', 'string', filePath)
   validateRequiredField(obj, 'bankCode', 'string', filePath)
   validateRequiredField(obj, 'bankName', 'string', filePath)
@@ -109,7 +103,6 @@ function validateMetadataSchema(data: unknown, filePath: string): asserts data i
   validateRequiredField(obj, 'records', 'array', filePath)
   validateRequiredField(obj, 'totals', 'object', filePath)
 
-  // Validar formato CNAB
   const validFormats = [CNABFormatCode.CNAB240, CNABFormatCode.CNAB400]
   if (!validFormats.includes(obj.format as CNABFormatCode)) {
     throw new Error(
@@ -119,16 +112,10 @@ function validateMetadataSchema(data: unknown, filePath: string): asserts data i
     )
   }
 
-  // Validar estrutura
   validateStructure(obj.structure as Record<string, unknown>, filePath)
-
-  // Validar records
   validateRecords(obj.records as unknown[], filePath)
-
-  // Validar totais
   validateTotals(obj.totals as Record<string, unknown>, filePath)
 
-  // Validar header (se existir)
   if (obj.header !== undefined) {
     validateHeader(obj.header as Record<string, unknown>, filePath)
   }
@@ -143,7 +130,6 @@ function validateRequiredField(
   expectedType: 'string' | 'number' | 'object' | 'array',
   filePath: string
 ): void {
-  // Verificar se campo existe
   if (!(fieldName in obj) || obj[fieldName] == null) {
     throw new Error(
       `Campo obrigatório ausente: "${fieldName}" em ${filePath}\n` +
@@ -151,7 +137,6 @@ function validateRequiredField(
     )
   }
 
-  // Verificar tipo
   const actualType = Array.isArray(obj[fieldName]) ? 'array' : typeof obj[fieldName]
   if (actualType !== expectedType) {
     throw new Error(
@@ -171,7 +156,6 @@ function validateStructure(structure: Record<string, unknown>, filePath: string)
   validateRequiredField(structure, 'detailLines', 'number', filePath)
   validateRequiredField(structure, 'trailerLines', 'number', filePath)
 
-  // Validar que são números positivos
   const numbers = ['totalLines', 'headerLines', 'detailLines', 'trailerLines']
   for (const field of numbers) {
     const value = structure[field] as number
@@ -202,7 +186,6 @@ function validateRecords(records: unknown[], filePath: string): void {
     )
   }
 
-  // Validar cada record
   records.forEach((record, index) => {
     if (!record || typeof record !== 'object') {
       throw new Error(
@@ -222,7 +205,6 @@ function validateRecords(records: unknown[], filePath: string): void {
     validateRequiredField(rec, 'amount', 'number', recordPath)
     validateRequiredField(rec, 'dueDate', 'string', recordPath)
 
-    // Validar documentType
     const validDocTypes: DocumentType[] = ['CPF', 'CNPJ']
     if (!validDocTypes.includes(rec.documentType as DocumentType)) {
       throw new Error(
@@ -232,7 +214,6 @@ function validateRecords(records: unknown[], filePath: string): void {
       )
     }
 
-    // Validar que amount é positivo
     if (typeof rec.amount === 'number' && rec.amount < 0) {
       throw new Error(
         `Campo "amount" deve ser não-negativo em: ${recordPath}\n` +
@@ -249,7 +230,6 @@ function validateTotals(totals: Record<string, unknown>, filePath: string): void
   validateRequiredField(totals, 'recordCount', 'number', filePath)
   validateRequiredField(totals, 'totalAmount', 'number', filePath)
 
-  // Validar que são não-negativos
   if ((totals.recordCount as number) < 0) {
     throw new Error(
       `Campo "totals.recordCount" deve ser não-negativo em: ${filePath}\n` +
