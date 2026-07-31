@@ -29,7 +29,7 @@ function getFieldByPosition(line: ParsedLine, position: number): ParsedField | u
  * Identifica tipo de registro para agrupamento.
  * CNAB 400: posição 1 | CNAB 240: posição 14 (segmento) ou 8 (estruturais)
  */
-function identifyRecordType(line: ParsedLine, format: CNABFormatCode): string {
+function getRecordTypeForGrouping(line: ParsedLine, format: CNABFormatCode): string {
   if (format === CNABFormatCode.CNAB400) {
     const recordTypeField = getFieldByPosition(line, 1)
     return recordTypeField != null ? String(recordTypeField.value) : 'u'
@@ -130,7 +130,7 @@ export function groupLines(
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     const lineNumber = fileStartLine + i
-    const type = identifyRecordType(line, format)
+    const type = getRecordTypeForGrouping(line, format)
     const classification = classifyRecordType(type, rule)
     
     if (classification === 'structural') {

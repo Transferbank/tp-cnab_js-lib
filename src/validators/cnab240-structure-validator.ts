@@ -22,7 +22,7 @@ type MachineState =
   | 'pareamento_interrompido'
   | 'arquivo_fechado'
 
-function identifyRecordKind(line: string): Cnab240RecordKind | 'desconhecido' {
+function identifyRecordKindFromRawLine(line: string): Cnab240RecordKind | 'desconhecido' {
   if (line.length !== LINE_LENGTH) {
     return 'desconhecido'
   }
@@ -108,7 +108,7 @@ export function validateCnab240Structure(
       continue
     }
 
-    const kind = identifyRecordKind(line)
+    const kind = identifyRecordKindFromRawLine(line)
 
     if (kind === 'desconhecido') {
       errors.push({
