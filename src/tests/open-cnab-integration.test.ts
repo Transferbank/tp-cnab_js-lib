@@ -1,12 +1,10 @@
-/**
- * Teste de integração: percorre os fixtures reais disponíveis (um arquivo de
- * remessa por banco cadastrado) e verifica que openCnab() + read() /
- * read({ lazy: true }) / readAsync() / validate() funcionam ponta-a-ponta,
- * sem lançar exceções inesperadas.
- */
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { openCnab, ReadMode } from '../index'
+import { openCnabFromLines, ReadMode } from '../index'
+
+function stringToLines(content: string): string[] {
+  return content.split(/\r?\n/).filter((line) => line.length > 0)
+}
 
 interface FixtureCase {
   label: string
@@ -32,7 +30,7 @@ function loadFixture(relativePath: string): string {
 describe('openCnab() - integração com fixtures reais', () => {
   describe.each(FIXTURES)('$label', ({ path }) => {
     test('read() (SIMPLE, eager) retorna header/trailer/bills sem lançar', () => {
-      const cnabFile = openCnab(loadFixture(path))
+      const cnabFile = openCnabFromLines(stringToLines(loadFixture(path)))
       const result = cnabFile.read()
 
       expect(result.header).toBeDefined()
@@ -42,7 +40,7 @@ describe('openCnab() - integração com fixtures reais', () => {
     })
 
     test('read({ mode: ReadMode.FULL }) retorna todos os campos do banco sem lançar', () => {
-      const cnabFile = openCnab(loadFixture(path))
+      const cnabFile = openCnabFromLines(stringToLines(loadFixture(path)))
       const result = cnabFile.read({ mode: ReadMode.FULL })
 
       expect(result.bills.length).toBeGreaterThan(0)
@@ -53,7 +51,7 @@ describe('openCnab() - integração com fixtures reais', () => {
     })
 
     test('read({ lazy: true }).resolve() produz o mesmo resultado que o modo eager', async () => {
-      const cnabFile = openCnab(loadFixture(path))
+      const cnabFile = openCnabFromLines(stringToLines(loadFixture(path)))
       const eager = cnabFile.read()
       const lazy = cnabFile.read({ lazy: true })
 
@@ -64,7 +62,7 @@ describe('openCnab() - integração com fixtures reais', () => {
     })
 
     test('readAsync() (eager) produz o mesmo resultado que read()', async () => {
-      const cnabFile = openCnab(loadFixture(path))
+      const cnabFile = openCnabFromLines(stringToLines(loadFixture(path)))
       const sync = cnabFile.read()
       const asyncResult = await cnabFile.readAsync()
 
@@ -72,7 +70,7 @@ describe('openCnab() - integração com fixtures reais', () => {
     })
 
     test('readAsync({ lazy: true }).resolve() produz o mesmo resultado que o modo eager', async () => {
-      const cnabFile = openCnab(loadFixture(path))
+      const cnabFile = openCnabFromLines(stringToLines(loadFixture(path)))
       const eager = cnabFile.read()
       const lazy = await cnabFile.readAsync({ lazy: true })
 
@@ -83,7 +81,7 @@ describe('openCnab() - integração com fixtures reais', () => {
     })
 
     test('validate() não lança e não reporta erros além de "Data de vencimento"', () => {
-      const cnabFile = openCnab(loadFixture(path))
+      const cnabFile = openCnabFromLines(stringToLines(loadFixture(path)))
       const result = cnabFile.validate(true)
 
       expect(typeof result.isValid).toBe('boolean')

@@ -7,22 +7,28 @@ import * as path from 'path'
 import { openCnab } from '@/index'
 import { CNABFormatCode } from '@tp-types/core'
 
+function createFileFromString(content: string, filename = 'test.rem'): File {
+  const encoder = new TextEncoder()
+  const bytes = encoder.encode(content)
+  return new File([bytes], filename, { type: 'text/plain' })
+}
+
 describe('Integridade: Schemas — Fixture BB CNAB 400', () => {
   const fixtureDir = path.join(__dirname, '../docs')
   const txtPath = path.join(fixtureDir, 'BANCOBRASIL_cnab_400.REM')
   const txtContent = fs.readFileSync(txtPath, 'latin1')
   const lines = txtContent.split(/\r?\n/).filter((line) => line.trim().length > 0)
 
-  test('deve abrir arquivo e detectar banco/formato corretamente', () => {
-    const cnabFile = openCnab(txtContent)
+  test('deve abrir arquivo e detectar banco/formato corretamente', async () => {
+    const cnabFile = await openCnab(createFileFromString(txtContent))
     
     expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
     expect(cnabFile.bankCode).toBe('001')
     expect(cnabFile.bankName).toBe('Banco do Brasil')
   })
 
-  test('schemas devem parsear arquivo sem erros estruturais', () => {
-    const cnabFile = openCnab(txtContent)
+  test('schemas devem parsear arquivo sem erros estruturais', async () => {
+    const cnabFile = await openCnab(createFileFromString(txtContent))
     const validationResult = cnabFile.validate(true)
     
     // Filtrar apenas erros estruturais (não de negócio como vencimento no passado)
@@ -43,8 +49,8 @@ describe('Integridade: Schemas — Fixture BB CNAB 400', () => {
     expect(structuralErrors).toHaveLength(0)
   })
 
-  test('deve extrair 113 títulos corretamente', () => {
-    const cnabFile = openCnab(txtContent)
+  test('deve extrair 113 títulos corretamente', async () => {
+    const cnabFile = await openCnab(createFileFromString(txtContent))
     const readResult = cnabFile.read()
     
     expect(readResult.bills.length).toBe(113)

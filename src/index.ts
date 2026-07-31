@@ -9,13 +9,17 @@ import { getBankSchema } from '@schemas/index'
 import { CNABFile } from '@tp-types/core'
 import { readCnabFile } from '@/utils/file-reader'
 
-export async function openCnab(file: File): Promise<CNABFile> {
-  const rawLines = await readCnabFile(file)
+export function openCnabFromLines(rawLines: string[]): CNABFile {
   const format = detectFormat(rawLines)
   const bankCode = detectBank(rawLines[0], format)
   const bankSchema = getBankSchema(bankCode, format)
 
   return new CNABFile(format, bankSchema, rawLines)
+}
+
+export async function openCnab(file: File): Promise<CNABFile> {
+  const rawLines = await readCnabFile(file)
+  return openCnabFromLines(rawLines)
 }
 
 // ========== EXPORTAÇÕES PÚBLICAS ==========

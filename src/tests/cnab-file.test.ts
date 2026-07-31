@@ -4,6 +4,7 @@
 
 import {
   openCnab,
+  openCnabFromLines,
   ReadMode,
   CNABFile,
   CNABEmptyFileError,
@@ -11,18 +12,16 @@ import {
   CNABBankNotFoundError,
   CNABSchemaNotFoundError,
 } from '../index'
-import { readFileSync } from 'fs'
-import { join } from 'path'
 import { CNABFormatCode } from '@tp-types/index'
+import { loadFixtureAsFile, stringToLines } from './helpers/file-helpers'
 
 describe('openCnab', () => {
   describe('Validação de entrada', () => {
     test('deve lançar erro para arquivo vazio', () => {
-      expect(() => openCnab('')).toThrow('Arquivo CNAB vazio')
+      expect(() => openCnabFromLines(stringToLines(''))).toThrow('Arquivo CNAB vazio')
       
-      // Verificar tipo da exception
       try {
-        openCnab('')
+        openCnabFromLines(stringToLines(''))
       } catch (error) {
         expect(error).toBeInstanceOf(CNABEmptyFileError)
         expect((error as CNABEmptyFileError).code).toBe('EMPTY_FILE')
@@ -30,15 +29,14 @@ describe('openCnab', () => {
     })
 
     test('deve lançar erro para arquivo só com espaços', () => {
-      expect(() => openCnab('   \n   \n   ')).toThrow(/Arquivo CNAB vazio|Formato CNAB não reconhecido/)
+      expect(() => openCnabFromLines(stringToLines('   \n   \n   '))).toThrow(/Arquivo CNAB vazio|Formato CNAB não reconhecido/)
     })
 
     test('deve lançar erro para arquivo só com linhas vazias', () => {
-      expect(() => openCnab('\n\n\n')).toThrow('Arquivo CNAB vazio')
+      expect(() => openCnabFromLines(stringToLines('\n\n\n'))).toThrow('Arquivo CNAB vazio')
       
-      // Verificar tipo da exception
       try {
-        openCnab('\n\n\n')
+        openCnabFromLines(stringToLines('\n\n\n'))
       } catch (error) {
         expect(error).toBeInstanceOf(CNABEmptyFileError)
         expect((error as CNABEmptyFileError).code).toBe('EMPTY_FILE')
@@ -46,13 +44,12 @@ describe('openCnab', () => {
     })
 
     test('deve lançar erro para formato não reconhecido', () => {
-      const invalidFile = 'X'.repeat(300) // 300 caracteres - nem 240 nem 400
-      expect(() => openCnab(invalidFile)).toThrow(/Formato CNAB não reconhecido/)
-      expect(() => openCnab(invalidFile)).toThrow(/300 caracteres/)
+      const invalidFile = 'X'.repeat(300)
+      expect(() => openCnabFromLines(stringToLines(invalidFile))).toThrow(/Formato CNAB não reconhecido/)
+      expect(() => openCnabFromLines(stringToLines(invalidFile))).toThrow(/300 caracteres/)
       
-      // Verificar tipo da exception e campo lineLength
       try {
-        openCnab(invalidFile)
+        openCnabFromLines(stringToLines(invalidFile))
       } catch (error) {
         expect(error).toBeInstanceOf(CNABFormatNotRecognizedError)
         expect((error as CNABFormatNotRecognizedError).code).toBe('FORMAT_NOT_RECOGNIZED')
@@ -61,13 +58,11 @@ describe('openCnab', () => {
     })
 
     test('deve lançar erro quando código do banco não é encontrado', () => {
-      // CNAB 400 com código do banco vazio nas posições 77-79
-      const line = 'X'.repeat(76) + '   ' + 'X'.repeat(321) // Total 400 chars
-      expect(() => openCnab(line)).toThrow(/Código do banco não encontrado/)
+      const line = 'X'.repeat(76) + '   ' + 'X'.repeat(321)
+      expect(() => openCnabFromLines(stringToLines(line))).toThrow(/Código do banco não encontrado/)
       
-      // Verificar tipo da exception e campo format
       try {
-        openCnab(line)
+        openCnabFromLines(stringToLines(line))
       } catch (error) {
         expect(error).toBeInstanceOf(CNABBankNotFoundError)
         expect((error as CNABBankNotFoundError).code).toBe('BANK_NOT_FOUND')
@@ -77,11 +72,8 @@ describe('openCnab', () => {
   })
 
   describe('Detecção de formato e banco - CNAB 400', () => {
-    test('deve detectar CNAB 400 do Bradesco', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-
-      const cnabFile = openCnab(fileContent)
+    test('deve detectar CNAB 400 do Bradesco', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('237')
@@ -89,11 +81,8 @@ describe('openCnab', () => {
       expect(cnabFile.lineCount).toBeGreaterThan(0)
     })
 
-    test('deve detectar CNAB 400 do Banco do Brasil', () => {
-      const fixturePath = join(__dirname, '../banks/bancoDoBrasil/docs/BANCOBRASIL_cnab_400.REM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-
-      const cnabFile = openCnab(fileContent)
+    test('deve detectar CNAB 400 do Banco do Brasil', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bancoDoBrasil/docs/BANCOBRASIL_cnab_400.REM'))
 
       expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('001')
@@ -101,11 +90,8 @@ describe('openCnab', () => {
       expect(cnabFile.lineCount).toBeGreaterThan(0)
     })
 
-    test('deve detectar CNAB 400 do Itaú', () => {
-      const fixturePath = join(__dirname, '../banks/itau/docs/cnab400/ITAU_cnab_400.REM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-
-      const cnabFile = openCnab(fileContent)
+    test('deve detectar CNAB 400 do Itaú', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/itau/docs/cnab400/ITAU_cnab_400.REM'))
 
       expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('341')
@@ -113,11 +99,8 @@ describe('openCnab', () => {
       expect(cnabFile.lineCount).toBeGreaterThan(0)
     })
 
-    test('deve detectar CNAB 400 do Santander', () => {
-      const fixturePath = join(__dirname, '../banks/santander/docs/cnab400/SANTANDER_cnab_400_140.REM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-
-      const cnabFile = openCnab(fileContent)
+    test('deve detectar CNAB 400 do Santander', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/santander/docs/cnab400/SANTANDER_cnab_400_140.REM'))
 
       expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('033')
@@ -125,11 +108,8 @@ describe('openCnab', () => {
       expect(cnabFile.lineCount).toBeGreaterThan(0)
     })
 
-    test('deve detectar CNAB 400 do Sicredi', () => {
-      const fixturePath = join(__dirname, '../banks/sicredi/docs/cnab400/SICREDI_cnab_400.CRM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-
-      const cnabFile = openCnab(fileContent)
+    test('deve detectar CNAB 400 do Sicredi', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/sicredi/docs/cnab400/SICREDI_cnab_400.CRM'))
 
       expect(cnabFile.type).toBe(CNABFormatCode.CNAB400)
       expect(cnabFile.bankCode).toBe('748')
@@ -139,11 +119,8 @@ describe('openCnab', () => {
   })
 
   describe('Detecção de formato e banco - CNAB 240', () => {
-    test('deve detectar CNAB 240 do Bradesco', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab240/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-
-      const cnabFile = openCnab(fileContent)
+    test('deve detectar CNAB 240 do Bradesco', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab240/remessa-multipla.txt'))
 
       expect(cnabFile.type).toBe(CNABFormatCode.CNAB240)
       expect(cnabFile.bankCode).toBe('237')
@@ -153,19 +130,20 @@ describe('openCnab', () => {
   })
 
   describe('Contagem de linhas', () => {
-    test('deve contar corretamente linhas em arquivo CNAB 400', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
+    test('deve contar corretamente linhas em arquivo CNAB 400', async () => {
+      const file = loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt')
+      const cnabFile = await openCnab(file)
 
-      const cnabFile = openCnab(fileContent)
-
-      // Contar manualmente as linhas não-vazias
-      const manualCount = fileContent.split(/\r?\n/).filter(l => l.length > 0).length
+      // Contar manualmente as linhas não-vazias no arquivo
+      const arrayBuffer = await file.arrayBuffer()
+      const decoder = new TextDecoder('latin1')
+      const content = decoder.decode(arrayBuffer)
+      const manualCount = content.split(/\r?\n/).filter(l => l.length > 0).length
 
       expect(cnabFile.lineCount).toBe(manualCount)
     })
 
-    test('deve ignorar linhas vazias ao contar', () => {
+    test('deve ignorar linhas vazias ao contar', async () => {
       // CNAB 400 do Bradesco com linhas vazias adicionadas
       const header = '0'.padEnd(400, ' ')
       const detail = '1'.padEnd(400, ' ')
@@ -176,7 +154,7 @@ describe('openCnab', () => {
 
       const fileWithEmptyLines = headerWithBank + '\n\n' + detail + '\n' + trailer + '\n\n'
 
-      const cnabFile = openCnab(fileWithEmptyLines)
+      const cnabFile = openCnabFromLines(stringToLines(fileWithEmptyLines))
 
       expect(cnabFile.lineCount).toBe(3) // Apenas header, detail e trailer
     })
@@ -187,12 +165,12 @@ describe('openCnab', () => {
       // CNAB 400 com código de banco não cadastrado (999)
       const header = '0'.repeat(76) + '999' + '0'.repeat(321)
 
-      expect(() => openCnab(header)).toThrow(/não possui schema cadastrado/)
-      expect(() => openCnab(header)).toThrow(/Banco 999/)
+      expect(() => openCnabFromLines(stringToLines(header))).toThrow(/não possui schema cadastrado/)
+      expect(() => openCnabFromLines(stringToLines(header))).toThrow(/Banco 999/)
       
       // Verificar tipo da exception e campos bankCode e format
       try {
-        openCnab(header)
+        openCnabFromLines(stringToLines(header))
       } catch (error) {
         expect(error).toBeInstanceOf(CNABSchemaNotFoundError)
         expect((error as CNABSchemaNotFoundError).code).toBe('SCHEMA_NOT_FOUND')
@@ -205,13 +183,12 @@ describe('openCnab', () => {
   describe('Propriedades e métodos do CNABFile', () => {
     let cnabFile: CNABFile
 
-    beforeAll(() => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      cnabFile = openCnab(fileContent)
+    beforeAll(async () => {
+      const file = loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt')
+      cnabFile = await openCnab(file)
     })
 
-    test('deve ter propriedade type readonly', () => {
+    test('deve ter propriedade type readonly', async () => {
       expect(cnabFile.type).toBeDefined()
       
       // TypeScript impede modificação em tempo de compilação
@@ -220,19 +197,19 @@ describe('openCnab', () => {
       expect(typeof cnabFile.type).toBe('string')
     })
 
-    test('deve ter getter bankCode conveniente', () => {
+    test('deve ter getter bankCode conveniente', async () => {
       expect(cnabFile.bankCode).toBeDefined()
       expect(cnabFile.bankCode).toBe('237')
       expect(typeof cnabFile.bankCode).toBe('string')
     })
 
-    test('deve ter getter bankName conveniente', () => {
+    test('deve ter getter bankName conveniente', async () => {
       expect(cnabFile.bankName).toBeDefined()
       expect(cnabFile.bankName).toBe('Bradesco')
       expect(typeof cnabFile.bankName).toBe('string')
     })
 
-    test('deve ter propriedade lineCount readonly', () => {
+    test('deve ter propriedade lineCount readonly', async () => {
       expect(cnabFile.lineCount).toBeDefined()
       expect(typeof cnabFile.lineCount).toBe('number')
       expect(cnabFile.lineCount).toBeGreaterThan(0)
@@ -240,7 +217,7 @@ describe('openCnab', () => {
       // TypeScript impede modificação em tempo de compilação
     })
 
-    test('deve ter método toString()', () => {
+    test('deve ter método toString()', async () => {
       const str = cnabFile.toString()
 
       expect(str).toContain('CNABFile')
@@ -249,7 +226,7 @@ describe('openCnab', () => {
       expect(str).toContain('237')
     })
 
-    test('deve ter método getLines() retornando array readonly', () => {
+    test('deve ter método getLines() retornando array readonly', async () => {
       const lines = cnabFile.getLines()
 
       expect(Array.isArray(lines)).toBe(true)
@@ -259,13 +236,13 @@ describe('openCnab', () => {
   })
 
   describe('Compatibilidade com quebras de linha', () => {
-    test('deve aceitar quebras de linha Unix (\\n)', () => {
+    test('deve aceitar quebras de linha Unix (\\n)', async () => {
       const header = '0'.repeat(76) + '237' + '0'.repeat(321)
       const detail = '1'.padEnd(400, '0')
       const trailer = '9'.padEnd(400, '0')
       const fileUnix = [header, detail, trailer].join('\n')
 
-      const cnabFile = openCnab(fileUnix)
+      const cnabFile = openCnabFromLines(stringToLines(fileUnix))
 
       expect(cnabFile.lineCount).toBe(3)
     })
@@ -276,7 +253,7 @@ describe('openCnab', () => {
       const trailer = '9'.padEnd(400, '0')
       const fileWindows = [header, detail, trailer].join('\r\n')
 
-      const cnabFile = openCnab(fileWindows)
+      const cnabFile = openCnabFromLines(stringToLines(fileWindows))
 
       expect(cnabFile.lineCount).toBe(3)
     })
@@ -285,10 +262,8 @@ describe('openCnab', () => {
 
 describe('CNABFile.validate(true)', () => {
   describe('Validação básica', () => {
-    test('deve validar arquivo CNAB 400 do Bradesco sem erros estruturais', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve validar arquivo CNAB 400 do Bradesco sem erros estruturais', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       const result = cnabFile.validate(true)
 
@@ -300,10 +275,8 @@ describe('CNABFile.validate(true)', () => {
       expect(nonDateErrors).toHaveLength(0)
     })
 
-    test('deve validar arquivo CNAB 240 do Bradesco', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab240/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve validar arquivo CNAB 240 do Bradesco', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab240/remessa-multipla.txt'))
 
       const result = cnabFile.validate(true)
 
@@ -313,10 +286,8 @@ describe('CNABFile.validate(true)', () => {
       expect(typeof result.isValid).toBe('boolean')
     })
 
-    test('deve validar arquivo CNAB 400 do Banco do Brasil sem erros estruturais', () => {
-      const fixturePath = join(__dirname, '../banks/bancoDoBrasil/docs/BANCOBRASIL_cnab_400.REM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve validar arquivo CNAB 400 do Banco do Brasil sem erros estruturais', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bancoDoBrasil/docs/BANCOBRASIL_cnab_400.REM'))
 
       const result = cnabFile.validate(true)
 
@@ -328,10 +299,8 @@ describe('CNABFile.validate(true)', () => {
       expect(nonDateErrors).toHaveLength(0)
     })
 
-    test('deve validar arquivo CNAB 400 do Itaú sem erros estruturais', () => {
-      const fixturePath = join(__dirname, '../banks/itau/docs/cnab400/ITAU_cnab_400.REM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve validar arquivo CNAB 400 do Itaú sem erros estruturais', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/itau/docs/cnab400/ITAU_cnab_400.REM'))
 
       const result = cnabFile.validate(true)
 
@@ -343,10 +312,8 @@ describe('CNABFile.validate(true)', () => {
       expect(nonDateErrors).toHaveLength(0)
     })
 
-    test('deve validar arquivo CNAB 400 do Santander sem erros estruturais', () => {
-      const fixturePath = join(__dirname, '../banks/santander/docs/cnab400/SANTANDER_cnab_400_140.REM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve validar arquivo CNAB 400 do Santander sem erros estruturais', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/santander/docs/cnab400/SANTANDER_cnab_400_140.REM'))
 
       const result = cnabFile.validate(true)
 
@@ -358,10 +325,8 @@ describe('CNABFile.validate(true)', () => {
       expect(nonDateErrors).toHaveLength(0)
     })
 
-    test('deve validar arquivo CNAB 400 do Sicredi sem erros estruturais', () => {
-      const fixturePath = join(__dirname, '../banks/sicredi/docs/cnab400/SICREDI_cnab_400.CRM')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve validar arquivo CNAB 400 do Sicredi sem erros estruturais', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/sicredi/docs/cnab400/SICREDI_cnab_400.CRM'))
 
       const result = cnabFile.validate(true)
 
@@ -381,8 +346,8 @@ describe('CNABFile.validate(true)', () => {
       const invalidDetail = '1'.repeat(350) // 350 chars - INCORRETO
       const trailer = '9'.repeat(400) // 400 chars - correto
 
-      const fileContent = [header, invalidDetail, trailer].join('\n')
-      const cnabFile = openCnab(fileContent)
+      const file = [header, invalidDetail, trailer].join('\n')
+      const cnabFile = openCnabFromLines(stringToLines(file))
 
       const result = cnabFile.validate(true)
 
@@ -399,8 +364,8 @@ describe('CNABFile.validate(true)', () => {
       const invalidDetail = ' '.repeat(400) // Linha toda em branco - tipo de registro vazio
       const trailer = '9'.repeat(400)
 
-      const fileContent = [header, invalidDetail, trailer].join('\n')
-      const cnabFile = openCnab(fileContent)
+      const file = [header, invalidDetail, trailer].join('\n')
+      const cnabFile = openCnabFromLines(stringToLines(file))
 
       const result = cnabFile.validate(true)
 
@@ -410,10 +375,8 @@ describe('CNABFile.validate(true)', () => {
   })
 
   describe('Estrutura do resultado', () => {
-    test('resultado deve ter estrutura CNABFileValidationResult correta', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('resultado deve ter estrutura CNABFileValidationResult correta', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       const result = cnabFile.validate(true)
 
@@ -429,10 +392,8 @@ describe('CNABFile.validate(true)', () => {
       expect(Array.isArray(result.feedback.lines)).toBe(true)
     })
 
-    test('isValid deve ser consistente com feedback.lines', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('isValid deve ser consistente com feedback.lines', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       const result = cnabFile.validate(true)
 
@@ -449,8 +410,8 @@ describe('CNABFile.validate(true)', () => {
       const invalidDetail = '1'.repeat(350) // Tamanho incorreto
       const trailer = '9'.repeat(400)
 
-      const fileContent = [header, invalidDetail, trailer].join('\n')
-      const cnabFile = openCnab(fileContent)
+      const file = [header, invalidDetail, trailer].join('\n')
+      const cnabFile = openCnabFromLines(stringToLines(file))
 
       const result = cnabFile.validate(true)
 
@@ -468,26 +429,20 @@ describe('CNABFile.validate(true)', () => {
   })
 
   describe('Opções de validação', () => {
-    test('deve funcionar sem opções (modo padrão)', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve funcionar sem opções (modo padrão)', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       expect(() => cnabFile.validate(true)).not.toThrow()
     })
 
-    test('deve funcionar com withFeedback: false', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve funcionar com withFeedback: false', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       expect(() => cnabFile.validate(true)).not.toThrow()
     })
 
-    test('deve funcionar com withFeedback: true e retornar feedback completo (não fail-fast)', () => {
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+    test('deve funcionar com withFeedback: true e retornar feedback completo (não fail-fast)', async () => {
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       expect(() => cnabFile.validate(true)).not.toThrow()
 
@@ -507,8 +462,8 @@ describe('CNABFile.validate(true)', () => {
       const headerInMiddle = '0'.repeat(76) + '237' + '0'.repeat(321) // Header no meio - ERRO ESTRUTURAL
       const trailer = '9'.padEnd(400, '0')
 
-      const fileContent = [header, detail, headerInMiddle, detail, trailer].join('\n')
-      const cnabFile = openCnab(fileContent)
+      const file = [header, detail, headerInMiddle, detail, trailer].join('\n')
+      const cnabFile = openCnabFromLines(stringToLines(file))
 
       const result = cnabFile.validate(true)
 
@@ -520,7 +475,7 @@ describe('CNABFile.validate(true)', () => {
       expect(structuralErrors.length).toBeGreaterThan(0)
     })
 
-    test('deve detectar erro puramente estrutural em CNAB 240 (segmento P sem Q correspondente)', () => {
+    test('deve detectar erro puramente estrutural em CNAB 240 (segmento P sem Q correspondente)', async () => {
       // Problema estrutural: Segmento P sem Q seguinte (par incompleto)
       // A mensagem real gerada é "Trailer de Lote com Segmento P pendente (sem Segmento Q correspondente)"
       // na coluna "Trailer de Lote"  não um erro genérico de "arquivo sem detalhe".
@@ -535,7 +490,7 @@ describe('CNABFile.validate(true)', () => {
 
       // Arquivo só com P, sem Q algum - deve gerar erro estrutural
       const fileOnlyP = [headerArquivo, headerLote, segP2OrfaoSemQ, trailerLote, trailerArquivo].join('\n')
-      const cnabFileOnlyP = openCnab(fileOnlyP)
+      const cnabFileOnlyP = openCnabFromLines(stringToLines(fileOnlyP))
       const resultOnlyP = cnabFileOnlyP.validate(true)
 
       // Deve detectar erro estrutural: P pendente sem Q
@@ -550,7 +505,7 @@ describe('CNABFile.validate(true)', () => {
       expect(structuralErrors.length).toBeGreaterThan(0)
     })
 
-    test('deve validar linhas boas mesmo quando uma linha tem erro estrutural', () => {
+    test('deve validar linhas boas mesmo quando uma linha tem erro estrutural', async () => {
       // Uma linha ruim no meio não deve impedir validação das demais
       const header = '0'.repeat(76) + '237' + '0'.repeat(321)
       
@@ -565,8 +520,8 @@ describe('CNABFile.validate(true)', () => {
       
       const trailer = '9'.repeat(400)
 
-      const fileContent = [header, detailBadCPF, detailBadSize, detailBadName, trailer].join('\n')
-      const cnabFile = openCnab(fileContent)
+      const file = [header, detailBadCPF, detailBadSize, detailBadName, trailer].join('\n')
+      const cnabFile = openCnabFromLines(stringToLines(file))
 
       // withFeedback: true é necessário para ver todos os erros mesclados —
       // o padrão fail-fast retorna só o primeiro erro encontrado.
@@ -585,15 +540,15 @@ describe('CNABFile.validate(true)', () => {
       // campos de detail - ele só existe no CNAB 240)
     })
 
-    test('deve dedupinar erros quando ambas as camadas reportam mesma (linha, coluna)', () => {
+    test('deve dedupinar erros quando ambas as camadas reportam mesma (linha, coluna)', async () => {
       // Criar cenário onde estrutural e negócio reportam o mesmo erro
       const header = '0'.repeat(76) + '237' + '0'.repeat(321)
       const detail = '1'.padEnd(400, '0')
       // Trailer com tipo ERRADO - ambos validadores detectam isso
       const trailerBadType = '5'.repeat(400) // Tipo 5 em vez de 9
 
-      const fileContent = [header, detail, trailerBadType].join('\n')
-      const cnabFile = openCnab(fileContent)
+      const file = [header, detail, trailerBadType].join('\n')
+      const cnabFile = openCnabFromLines(stringToLines(file))
 
       const result = cnabFile.validate(true)
 
@@ -607,7 +562,7 @@ describe('CNABFile.validate(true)', () => {
       expect(trailerErrors.length).toBe(1)
     })
 
-    test('deve combinar erros estruturais e de negócio em CNAB 240', () => {
+    test('deve combinar erros estruturais e de negócio em CNAB 240', async () => {
       // Código do banco '237' (Bradesco) nas posições 1-3
       const headerArquivo = '237' + ' '.repeat(4) + '0' + ' '.repeat(232)
       const headerLote = '237' + ' '.repeat(4) + '1' + ' '.repeat(232)
@@ -626,8 +581,8 @@ describe('CNABFile.validate(true)', () => {
       const trailerLote = '237' + ' '.repeat(4) + '5' + ' '.repeat(232)
       const trailerArquivo = '237' + ' '.repeat(4) + '9' + ' '.repeat(232)
 
-      const fileContent = [headerArquivo, headerLote, segP, segQBadDoc, trailerLote, trailerArquivo].join('\n')
-      const cnabFile = openCnab(fileContent)
+      const file = [headerArquivo, headerLote, segP, segQBadDoc, trailerLote, trailerArquivo].join('\n')
+      const cnabFile = openCnabFromLines(stringToLines(file))
 
       // withFeedback: true é necessário para ver os erros mesclados de ambas as camadas
       const result = cnabFile.validate(true)
@@ -642,11 +597,10 @@ describe('CNABFile.validate(true)', () => {
 
 
 describe('CNABFile.read() e readAsync()  modo FULL', () => {
-  const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-  const fileContent = readFileSync(fixturePath, 'latin1')
+  const file = loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt')
 
-  test('FULL deve devolver todos os campos do schema, incluindo os sem canonical', () => {
-    const cnabFile = openCnab(fileContent)
+  test('FULL deve devolver todos os campos do schema, incluindo os sem canonical', async () => {
+    const cnabFile = await openCnab(file)
     const simple = cnabFile.read()
     const full = cnabFile.read({ mode: ReadMode.FULL })
 
@@ -661,8 +615,8 @@ describe('CNABFile.read() e readAsync()  modo FULL', () => {
     expect(simple.bills[0]).not.toHaveProperty('carteira_codigo')
   })
 
-  test('header e trailer continuam canônicos em modo FULL (decisão de escopo)', () => {
-    const cnabFile = openCnab(fileContent)
+  test('header e trailer continuam canônicos em modo FULL (decisão de escopo)', async () => {
+    const cnabFile = await openCnab(file)
     const simple = cnabFile.read()
     const full = cnabFile.read({ mode: ReadMode.FULL })
 
@@ -671,20 +625,20 @@ describe('CNABFile.read() e readAsync()  modo FULL', () => {
   })
 
   test('readAsync FULL produz resultado idêntico a read FULL', async () => {
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     const sync = cnabFile.read({ mode: ReadMode.FULL })
     const async = await cnabFile.readAsync({ mode: ReadMode.FULL })
 
     expect(async).toEqual(sync)
   })
 
-  test('read() sem options é equivalente a read({ mode: ReadMode.SIMPLE })', () => {
-    const cnabFile = openCnab(fileContent)
+  test('read() sem options é equivalente a read({ mode: ReadMode.SIMPLE })', async () => {
+    const cnabFile = await openCnab(file)
     expect(cnabFile.read()).toEqual(cnabFile.read({ mode: ReadMode.SIMPLE }))
   })
 
-  test('LIMITAÇÃO CONHECIDA v1: campos identificadores numéricos perdem zero à esquerda em modo FULL', () => {
-    const cnabFile = openCnab(fileContent)
+  test('LIMITAÇÃO CONHECIDA v1: campos identificadores numéricos perdem zero à esquerda em modo FULL', async () => {
+    const cnabFile = await openCnab(file)
     const full = cnabFile.read({ mode: ReadMode.FULL })
 
     // sacado_numero_inscricao sai como number (não string)  zero à esquerda
@@ -697,11 +651,10 @@ describe('CNABFile.read() e readAsync()  modo FULL', () => {
 
 
 describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
-  const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-  const fileContent = readFileSync(fixturePath, 'latin1')
+  const file = loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt')
 
-  test('lazy: true não chama extractBill até resolve() ser chamado', () => {
-    const cnabFile = openCnab(fileContent)
+  test('lazy: true não chama extractBill até resolve() ser chamado', async () => {
+    const cnabFile = await openCnab(file)
     const result = cnabFile.read({ lazy: true })
 
     // No modo lazy, bills deve conter LazyBillItem[]
@@ -712,7 +665,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
   })
 
   test('resolve() de um LazyBillItem SIMPLE produz resultado equivalente ao modo eager SIMPLE', async () => {
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     
     const eager = cnabFile.read()
     const lazy = cnabFile.read({ lazy: true })
@@ -727,7 +680,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
   })
 
   test('resolve() de um LazyBillItem FULL produz resultado equivalente ao modo eager FULL', async () => {
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     
     const eager = cnabFile.read({ mode: ReadMode.FULL })
     const lazy = cnabFile.read({ mode: ReadMode.FULL, lazy: true })
@@ -742,7 +695,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
   })
 
   test('readAsync({ lazy: true, mode: ReadMode.SIMPLE }) produz LazyBillItem equivalente a read()', async () => {
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     
     const syncLazy = cnabFile.read({ lazy: true })
     const asyncLazy = await cnabFile.readAsync({ lazy: true })
@@ -759,7 +712,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
   })
 
   test('readAsync({ lazy: true, mode: ReadMode.FULL }) produz LazyBillItem equivalente a read()', async () => {
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     
     const syncLazy = cnabFile.read({ mode: ReadMode.FULL, lazy: true })
     const asyncLazy = await cnabFile.readAsync({ mode: ReadMode.FULL, lazy: true })
@@ -775,8 +728,8 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     expect(asyncResolved).toEqual(syncResolved)
   })
 
-  test('LazyBillItem.startLine aponta para linha física correta', () => {
-    const cnabFile = openCnab(fileContent)
+  test('LazyBillItem.startLine aponta para linha física correta', async () => {
+    const cnabFile = await openCnab(file)
     const lazy = cnabFile.read({ lazy: true })
 
     // Primeiro boleto deve começar na linha 2 (após o header na linha 1)
@@ -789,7 +742,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
   })
 
   test('chamar resolve() múltiplas vezes reprocessa (sem cache)', async () => {
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     const lazy = cnabFile.read({ lazy: true })
 
     const firstCall = await lazy.bills[0].resolve()
@@ -806,7 +759,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     const mockError = new Error('Mock extraction error')
     const catalog = require('../provider/catalog')
     
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     const originalGetProvider = catalog.getProvider
     const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, 'SIMPLE')
     
@@ -851,7 +804,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     const mockError = new Error('Mock full extraction error')
     const catalog = require('../provider/catalog')
     
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     const originalGetProvider = catalog.getProvider
     const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, ReadMode.FULL)
     
@@ -896,7 +849,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     const mockError = new Error('Mock async extraction error')
     const catalog = require('../provider/catalog')
     
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     const originalGetProvider = catalog.getProvider
     const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, 'SIMPLE')
     
@@ -941,7 +894,7 @@ describe('CNABFile.read() e readAsync()  modo lazy: true', () => {
     const mockError = new Error('Mock async full extraction error')
     const catalog = require('../provider/catalog')
     
-    const cnabFile = openCnab(fileContent)
+    const cnabFile = await openCnab(file)
     const originalGetProvider = catalog.getProvider
     const originalProvider = originalGetProvider(cnabFile.bankCode, cnabFile.type, ReadMode.FULL)
     
@@ -1002,9 +955,7 @@ describe('CNABFile.read() e readAsync()  modo lazy não embrulha CNABError', (
         }
       })
 
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       const lazy = cnabFile.read({ lazy: true })
 
@@ -1045,9 +996,7 @@ describe('CNABFile.read() e readAsync()  modo lazy não embrulha CNABError', (
         }
       })
 
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       const lazy = await cnabFile.readAsync({ lazy: true })
 
@@ -1087,9 +1036,7 @@ describe('CNABFile.read() e readAsync()  modo lazy não embrulha CNABError', (
         }
       })
 
-      const fixturePath = join(__dirname, '../banks/bradesco/docs/cnab400/remessa-multipla.txt')
-      const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+      const cnabFile = await openCnab(loadFixtureAsFile('banks/bradesco/docs/cnab400/remessa-multipla.txt'))
 
       const lazy = cnabFile.read({ lazy: true })
 
@@ -1109,5 +1056,6 @@ describe('CNABFile.read() e readAsync()  modo lazy não embrulha CNABError', (
     }
   })
 })
+
 
 
