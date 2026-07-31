@@ -38,8 +38,19 @@ const DOCUMENT_FIELDS = new Set<CanonicalField>([
   'cedente.documento',
 ])
 
+/**
+ * Cache de path.split('.') para evitar re-processar os mesmos paths canônicos.
+ * Paths como 'sacado.endereco.cep' são strings literais fixas no schema.
+ */
+const PATH_SPLIT_CACHE = new Map<string, string[]>()
+
 function setNestedValue(obj: CanonicalObject, path: string, value: unknown): void {
-  const parts = path.split('.')
+  let parts = PATH_SPLIT_CACHE.get(path)
+  if (parts == null) {
+    parts = path.split('.')
+    PATH_SPLIT_CACHE.set(path, parts)
+  }
+  
   let current: CanonicalObject = obj
   
   for (let i = 0; i < parts.length - 1; i++) {
