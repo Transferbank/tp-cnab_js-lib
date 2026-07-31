@@ -98,6 +98,38 @@ if (bankSchema?.bankCode === BANK_CODES.MEU_BANCO) {
 
 Padrão: `tests/schemas/banks/<banco>/<formato>/`, um arquivo por registro + `integrity.test.ts` contra fixture real quando disponível. Descrições em português começando com "deve". Fluxo completo (`openCnab` → `read`/`validate`): `tests/open-cnab-integration.test.ts`.
 
+### Testando com a nova API
+
+Use `openCnabFromLines()` nos testes para evitar criar objetos `File`:
+
+```typescript
+import { openCnabFromLines } from '@/index'
+
+function stringToLines(content: string): string[] {
+  return content.split(/\r?\n/).filter((line) => line.length > 0)
+}
+
+test('deve validar arquivo do banco', () => {
+  const fileContent = fs.readFileSync('fixture.rem', 'latin1')
+  const cnabFile = openCnabFromLines(stringToLines(fileContent))
+  
+  expect(cnabFile.bankCode).toBe('999')
+  expect(cnabFile.validate()).toBe(true)
+})
+```
+
+Para testes end-to-end com `openCnab()` real:
+
+```typescript
+test('deve processar arquivo via openCnab', async () => {
+  const buffer = fs.readFileSync('fixture.rem')
+  const file = new File([buffer], 'fixture.rem')
+  
+  const cnabFile = await openCnab(file)
+  expect(cnabFile.validate()).toBe(true)
+})
+```
+
 ## Checklist para Novo Banco
 
 - [ ] Obter layout oficial do banco
