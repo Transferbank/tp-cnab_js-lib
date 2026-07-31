@@ -7,27 +7,10 @@
 import { detectFormat, detectBank } from '@parser/format-detector'
 import { getBankSchema } from '@schemas/index'
 import { CNABFile } from '@tp-types/core'
-import { CNABEmptyFileError } from '@tp-types/errors'
+import { readCnabFile } from '@/utils/file-reader'
 
-/**
- * Abre um arquivo CNAB e retorna um objeto CNABFile com metadados detectados.
- * @param raw - Conteúdo bruto do arquivo (decodificado em Latin-1)
- * @returns Instância de CNABFile com schema disponível
- * @throws {CNABEmptyFileError} se arquivo vazio ou contém apenas linhas em branco
- * @throws {CNABFormatNotRecognizedError} se formato não é CNAB 240 nem CNAB 400
- * @throws {CNABNoLinesProvidedError} se nenhuma linha fornecida (array vazio/null)
- * @throws {CNABInvalidHeaderError} se header vazio, null ou undefined
- * @throws {CNABBankNotFoundError} se código do banco não encontrado no header
- * @throws {CNABSchemaNotFoundError} se banco+formato não possui schema cadastrado
- * @throws {CNABUnknownFieldCodeError} (via read/readAsync) se código de campo não reconhecido durante extração canônica
- */
-export function openCnab(raw: string): CNABFile {
-  const rawLines = raw?.split(/\r?\n/).filter((line) => line.length > 0) ?? []
-
-  if (rawLines.length === 0) {
-    throw new CNABEmptyFileError()
-  }
-
+export async function openCnab(file: File): Promise<CNABFile> {
+  const rawLines = await readCnabFile(file)
   const format = detectFormat(rawLines)
   const bankCode = detectBank(rawLines[0], format)
   const bankSchema = getBankSchema(bankCode, format)
