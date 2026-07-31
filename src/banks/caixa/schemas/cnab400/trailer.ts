@@ -1,8 +1,8 @@
 ﻿/**
- * Caixa Econ�mica Federal (104) � CNAB 400 � Trailer de Arquivo (Remessa)
- * Usa sistema SIGCB, nosso n�mero de 17 posi��es (2 d�gitos modalidade + 15 d�gitos livres).
+ * Caixa Econômica Federal (104) é CNAB 400 é Trailer de Arquivo (Remessa)
+ * Usa sistema SIGCB, nosso número de 17 posições (2 dígitos modalidade + 15 dígitos livres).
  *
- * Trailer simples, sem totalizadores � mesmo padr�o do Sicredi e do BB.
+ * Trailer simples, sem totalizadores é mesmo padrão do Sicredi e do BB.
  * Fontes:
  * - Manual oficial Caixa CNAB 400 (caixa_layout_CNAB_400_2024.pdf, 2024)
  * - laravel-boleto (PHP) - fonte original, concordante
@@ -20,7 +20,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identifica��o do trailer',
+    description: 'Identificação do trailer',
     canonical: null,
   },
   uso_exclusivo: {
@@ -42,7 +42,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: '�ltimo sequencial do arquivo',
+    description: 'último sequencial do arquivo',
     canonical: null,
   },
 }

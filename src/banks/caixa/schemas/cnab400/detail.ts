@@ -1,10 +1,10 @@
 ﻿/**
- * Caixa Econ�mica Federal (104) � CNAB 400 � Detalhe de Remessa (Registro Tipo 1)
- * Usa sistema SIGCB, nosso n�mero de 17 posi��es (2 d�gitos modalidade + 15 d�gitos livres).
+ * Caixa Econômica Federal (104) é CNAB 400 é Detalhe de Remessa (Registro Tipo 1)
+ * Usa sistema SIGCB, nosso número de 17 posições (2 dígitos modalidade + 15 dígitos livres).
  *
- * Particularidade: Caixa usa "c�digo do benefici�rio" de 7 d�gitos (posi��o 21-27) em vez de
- * ag�ncia+conta separados. Tamb�m tem campo de ag�ncia pr�prio (18-20, hoje zeros) al�m do
- * c�digo do benefici�rio � n�o � substituto, � complementar.
+ * Particularidade: Caixa usa "código do beneficiário" de 7 dígitos (posição 21-27) em vez de
+ * agência+conta separados. Também tem campo de agência próprio (18-20, hoje zeros) além do
+ * código do beneficiário é não é substituto, é complementar.
  * Fontes:
  * - Manual oficial Caixa CNAB 400 (caixa_layout_CNAB_400_2024.pdf, 2024)
  * - laravel-boleto (PHP) - fonte original, concordante
@@ -33,7 +33,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do benefici�rio: 1=CPF, 2=CNPJ (NE011)',
+    description: 'Tipo de inscrição do beneficiário: 1=CPF, 2=CNPJ (NE011)',
     canonical: null,
   },
   numero_inscricao_empresa: {
@@ -44,7 +44,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF ou CNPJ do benefici�rio (NE012)',
+    description: 'CPF ou CNPJ do beneficiário (NE012)',
     canonical: null,
   },
   uso_exclusivo_1: {
@@ -55,7 +55,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0',
-    description: 'Zeros - campo antes usava c�digo da ag�ncia, hoje � ignorado pela CAIXA',
+    description: 'Zeros - campo antes usava código da agência, hoje é ignorado pela CAIXA',
     canonical: null,
   },
   codigo_beneficiario: {
@@ -66,7 +66,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o da empresa na CAIXA (NE004)',
+    description: 'Identificação da empresa na CAIXA (NE004)',
     canonical: null,
   },
   id_emissao: {
@@ -77,7 +77,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o da emiss�o do boleto (NE027)',
+    description: 'Identificação da emissão do boleto (NE027)',
     canonical: null,
   },
   id_postagem: {
@@ -88,7 +88,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o da entrega/distribui��o do boleto (NE028)',
+    description: 'Identificação da entrega/distribuição do boleto (NE028)',
     canonical: null,
   },
   taxa_permanencia: {
@@ -99,7 +99,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0',
-    description: 'Comiss�o de perman�ncia - preencher com zeros',
+    description: 'Comissão de permanência - preencher com zeros',
     canonical: null,
   },
   uso_empresa_beneficiario: {
@@ -110,7 +110,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo na empresa (NE014)',
+    description: 'Identificação do título na empresa (NE014)',
     canonical: null,
   },
   nosso_numero_modalidade: {
@@ -121,7 +121,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Modalidade do nosso n�mero: 11=registrado emiss�o CAIXA, 14=registrado emiss�o benefici�rio (NE015)',
+    description: 'Modalidade do nosso número: 11=registrado emissão CAIXA, 14=registrado emissão beneficiário (NE015)',
     canonical: null,
   },
   nosso_numero: {
@@ -132,7 +132,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo na CAIXA - n�mero livre, n�o pode repetir (NE015)',
+    description: 'Identificação do título na CAIXA - número livre, não pode repetir (NE015)',
     canonical: 'nossoNumero',
   },
   brancos_1: {
@@ -143,7 +143,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaços em branco',
     canonical: null,
   },
   uso_livre_pagamento_parcial: {
@@ -154,7 +154,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Uso livre banco/empresa ou autoriza��o de pagamento parcial (NE055)',
+    description: 'Uso livre banco/empresa ou autorização de pagamento parcial (NE055)',
     canonical: null,
   },
   codigo_juros: {
@@ -165,7 +165,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do tipo de juros (NE066): 1=Valor dias corridos, 3=% ao m�s dias corridos, 5=Isento, 6=Valor dia �til, 8=% ao m�s dias �teis',
+    description: 'Código do tipo de juros (NE066): 1=Valor dias corridos, 3=% ao mês dias corridos, 5=Isento, 6=Valor dia útil, 8=% ao mês dias úteis',
     canonical: {
       field: 'juros.tipo',
       interpret: (value: unknown) => {
@@ -185,7 +185,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de in�cio de juros (NE063)',
+    description: 'Data de início de juros (NE063)',
     canonical: 'juros.vigenciaAPartirDe',
   },
   codigo_desconto: {
@@ -196,7 +196,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do tipo de desconto (NE061)',
+    description: 'Código do tipo de desconto (NE061)',
     canonical: null,
   },
   brancos_2: {
@@ -207,7 +207,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaços em branco',
     canonical: null,
   },
   carteira: {
@@ -218,7 +218,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da carteira - 000=Cess�o de Direitos Credit�rios (NE016)',
+    description: 'Código da carteira - 000=Cessão de Direitos Creditórios (NE016)',
     canonical: null,
   },
   codigo_ocorrencia: {
@@ -229,7 +229,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento: 01=Entrada de T�tulo, 02=Pedido de Baixa, 03=Concess�o de Abatimento, 04=Cancelamento de Abatimento, 05=Altera��o de Vencimento, 06=Altera��o do uso da Empresa, 07=Altera��o do Prazo de Protesto, 08=Altera��o do Prazo de Devolu��o, 09=Altera��o de outros dados, 10=Altera��o de dados com emiss�o/emiss�o de boleto, 11=Altera��o da op��o de Protesto para Devolu��o, 12=Altera��o da op��o de Devolu��o para Protesto, 13=Altera��o do valor nominal do t�tulo, 14=Altera��o da carteira (NE017)',
+    description: 'Código de movimento: 01=Entrada de Título, 02=Pedido de Baixa, 03=Concessão de Abatimento, 04=Cancelamento de Abatimento, 05=Alteração de Vencimento, 06=Alteração do uso da Empresa, 07=Alteração do Prazo de Protesto, 08=Alteração do Prazo de Devolução, 09=Alteração de outros dados, 10=Alteração de dados com emissão/emissão de boleto, 11=Alteração da opção de Protesto para Devolução, 12=Alteração da opção de Devolução para Protesto, 13=Alteração do valor nominal do título, 14=Alteração da carteira (NE017)',
     canonical: null,
   },
   numero_documento: {
@@ -240,7 +240,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Seu n�mero - obrigat�rio (NE018)',
+    description: 'Seu número - obrigatório (NE018)',
     canonical: 'numeroDocumento',
   },
   vencimento: {
@@ -262,7 +262,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do t�tulo (2 decimais impl�citas) (NE020)',
+    description: 'Valor do título (2 decimais implícitas) (NE020)',
     canonical: 'valor',
   },
   codigo_banco_cobrador: {
@@ -273,7 +273,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '104',
-    description: 'C�digo do banco cobrador (NE006) - obrigatorio:false por consist�ncia com o mesmo campo em BB/Ita�, para n�o rejeitar arquivos reais com o campo em branco ou correspondente diferente',
+    description: 'Código do banco cobrador (NE006) - obrigatorio:false por consistência com o mesmo campo em BB/Itaú, para não rejeitar arquivos reais com o campo em branco ou correspondente diferente',
     canonical: null,
   },
   agencia_cobradora: {
@@ -284,7 +284,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia encarregada da cobran�a (NE021)',
+    description: 'Agência encarregada da cobrança (NE021)',
     canonical: null,
   },
   especie_titulo: {
@@ -295,7 +295,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Esp�cie do t�tulo (NE022)',
+    description: 'Espécie do título (NE022)',
     canonical: null,
   },
   aceite: {
@@ -306,7 +306,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Aceite do t�tulo (NE023)',
+    description: 'Aceite do título (NE023)',
     canonical: null,
   },
   data_emissao: {
@@ -317,7 +317,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de emiss�o do t�tulo (NE056)',
+    description: 'Data de emissão do título (NE056)',
     canonical: 'dataEmissao',
   },
   instrucao_1: {
@@ -328,7 +328,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Primeira instru��o de cobran�a (NE024)',
+    description: 'Primeira instrução de cobrança (NE024)',
     canonical: null,
   },
   instrucao_2: {
@@ -339,7 +339,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Segunda instru��o de cobran�a',
+    description: 'Segunda instrução de cobrança',
     canonical: null,
   },
   juros_mora: {
@@ -350,7 +350,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Juros de mora por dia/valor (2 decimais impl�citas) (NE064)',
+    description: 'Juros de mora por dia/valor (2 decimais implícitas) (NE064)',
     canonical: 'juros.valor',
   },
   data_desconto: {
@@ -361,7 +361,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data limite para concess�o do desconto (NE057)',
+    description: 'Data limite para concessão do desconto (NE057)',
     canonical: null,
   },
   valor_desconto: {
@@ -372,7 +372,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou percentual do desconto (2 decimais impl�citas) (NE062)',
+    description: 'Valor ou percentual do desconto (2 decimais implícitas) (NE062)',
     canonical: 'desconto.valor',
   },
   valor_iof: {
@@ -383,7 +383,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do IOF a recolher (2 decimais impl�citas)',
+    description: 'Valor do IOF a recolher (2 decimais implícitas)',
     canonical: null,
   },
   abatimento: {
@@ -394,7 +394,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do abatimento a conceder/cancelar (2 decimais impl�citas)',
+    description: 'Valor do abatimento a conceder/cancelar (2 decimais implícitas)',
     canonical: null,
   },
   sacado_codigo_inscricao: {
@@ -405,7 +405,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do pagador: 1=CPF, 2=CNPJ (NE011)',
+    description: 'Tipo de inscrição do pagador: 1=CPF, 2=CNPJ (NE011)',
     canonical: null,
   },
   sacado_numero_inscricao: {
@@ -438,7 +438,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do pagador (NE058)',
+    description: 'Endereço do pagador (NE058)',
     canonical: 'sacado.endereco.logradouro',
   },
   bairro: {
@@ -493,7 +493,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Defini��o da data para pagamento de multa (NE059)',
+    description: 'Definição da data para pagamento de multa (NE059)',
     canonical: null,
   },
   valor_multa: {
@@ -515,7 +515,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do Sacador/Avalista (assim rotulado no manual oficial da Caixa 2024 - diferente de BB/Bradesco/Sicredi, que j� usam "Benefici�rio Final"; campo tamb�m mais curto: 22 caracteres, contra 30-60 nos outros bancos)',
+    description: 'Nome do Sacador/Avalista (assim rotulado no manual oficial da Caixa 2024 - diferente de BB/Bradesco/Sicredi, que já usam "Beneficiário Final"; campo também mais curto: 22 caracteres, contra 30-60 nos outros bancos)',
     canonical: null,
   },
   instrucao_3: {
@@ -526,7 +526,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Terceira instru��o de cobran�a (NE029)',
+    description: 'Terceira instrução de cobrança (NE029)',
     canonical: null,
   },
   prazo: {
@@ -537,7 +537,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero de dias para in�cio do protesto/devolu��o (NE025)',
+    description: 'Número de dias para início do protesto/devolução (NE025)',
     canonical: null,
   },
   codigo_moeda: {
@@ -548,7 +548,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da moeda (NE026)',
+    description: 'Código da moeda (NE026)',
     canonical: null,
   },
   numero_sequencial: {
@@ -559,7 +559,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro',
+    description: 'Número sequencial do registro',
     canonical: null,
   },
 }

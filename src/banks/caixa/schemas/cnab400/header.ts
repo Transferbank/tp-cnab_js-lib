@@ -1,6 +1,6 @@
 ﻿/**
- * Caixa Econ�mica Federal (104) � CNAB 400 � Header de Arquivo (Remessa)
- * Usa sistema SIGCB, nosso n�mero de 17 posi��es (2 d�gitos modalidade + 15 d�gitos livres).
+ * Caixa Econômica Federal (104) é CNAB 400 é Header de Arquivo (Remessa)
+ * Usa sistema SIGCB, nosso número de 17 posições (2 dígitos modalidade + 15 dígitos livres).
  *
  * Fontes:
  * - Manual oficial Caixa CNAB 400 (caixa_layout_CNAB_400_2024.pdf, 2024)
@@ -19,7 +19,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do header',
+    description: 'Identificação do header',
     canonical: null,
   },
   codigo_remessa: {
@@ -30,7 +30,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de opera��o: 1=Remessa',
+    description: 'Tipo de operação: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
@@ -52,7 +52,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de servi�o',
+    description: 'Código de serviço',
     canonical: null,
   },
   literal_servico: {
@@ -63,7 +63,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal de servi�o (NE002)',
+    description: 'Literal de serviço (NE002)',
     canonical: null,
   },
   codigo_agencia: {
@@ -74,7 +74,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da ag�ncia de vincula��o do benefici�rio (NE003)',
+    description: 'Código da agência de vinculação do beneficiário (NE003)',
     canonical: null,
   },
   codigo_beneficiario: {
@@ -118,7 +118,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '104',
-    description: 'C�digo FEBRABAN da Caixa (NE006)',
+    description: 'Código FEBRABAN da Caixa (NE006)',
     canonical: null,
   },
   nome_banco: {
@@ -140,7 +140,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo (NE008)',
+    description: 'Data de geração do arquivo (NE008)',
     canonical: 'dataGeracao',
   },
   versao_layout: {
@@ -151,7 +151,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da vers�o do layout (NE065) - campo que s� existe tamb�m no Sicredi entre os bancos do projeto',
+    description: 'Número da versão do layout (NE065) - campo que só existe também no Sicredi entre os bancos do projeto',
     canonical: null,
   },
   uso_exclusivo_2: {
@@ -173,7 +173,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do arquivo remessa (NE009)',
+    description: 'Número sequencial do arquivo remessa (NE009)',
     canonical: null,
   },
   numero_sequencial: {
@@ -184,7 +184,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro (NE010)',
+    description: 'Número sequencial do registro (NE010)',
     canonical: null,
   },
 }
