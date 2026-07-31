@@ -13,21 +13,21 @@ const LINE_LENGTH = {
 } as const
 
 export function detectFormat(lines: string[]): CNABFormatCode {
-  if ( lines == null || lines.length == 0) {
+  if (lines == null || lines.length === 0) {
     throw new CNABNoLinesProvidedError()
   }
 
   const len = lines[0].length
 
-  if (len == LINE_LENGTH.CNAB_240) return CNABFormatCode.CNAB240
+  if (len === LINE_LENGTH.CNAB_240) return CNABFormatCode.CNAB240
 
-  if (len == LINE_LENGTH.CNAB_400) return CNABFormatCode.CNAB400
+  if (len === LINE_LENGTH.CNAB_400) return CNABFormatCode.CNAB400
 
   throw new CNABFormatNotRecognizedError(len)
 }
 
 export function detectBank(header: string, format: CNABFormatCode): string {
-  if (header == null || header.length == 0) {
+  if (header == null || header.length === 0) {
     throw new CNABInvalidHeaderError(header)
   }
 
