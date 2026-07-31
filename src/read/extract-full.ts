@@ -2,12 +2,17 @@ import type { BillGroup } from '@tp-types/processing/grouping'
 import { getAllLines } from '@tp-types/processing/grouping'
 
 /**
- * Extrai todos os campos do schema (modo FULL), não só canônicos.
- * 
- * Known issue: campos NUM que são IDs (nossoNumero, CEP, documento) perdem
- * zero à esquerda. Solução aplicada em extract-canonical (RAW_STRING_FIELDS)
- * não estendida aqui. Resolver pontualmente se consumidor FULL precisar.
+ * Campos numéricos que devem manter zeros à esquerda e ser retornados como string.
+ * Exemplos: nossoNumero (pode exceder 16 dígitos do JS), CEP (zero significativo),
+ * documentos com padding.
  */
+const RAW_STRING_FIELDS = new Set<string>([
+  'nossoNumero',
+  'numeroDocumento',
+  'sacadoCep',
+  'cedenteCep',
+])
+
 export function extractBillFull(group: BillGroup): Record<string, unknown> {
   const result: Record<string, unknown> = {}
   const allLines = getAllLines(group)
@@ -16,7 +21,12 @@ export function extractBillFull(group: BillGroup): Record<string, unknown> {
     for (const [fieldName, field] of Object.entries(line)) {
       if (field == null || typeof field !== 'object') continue
       
-      result[fieldName] = field.value
+      if (RAW_STRING_FIELDS.has(fieldName)) {
+        const raw = field.raw?.trim()
+        result[fieldName] = (raw != null && raw.length > 0) ? raw : field.value
+      } else {
+        result[fieldName] = field.value
+      }
     }
   }
 
