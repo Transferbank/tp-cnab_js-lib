@@ -1,21 +1,12 @@
 import { extractLineFields } from '@parser/field-extractor'
 import { RecordSchema, ValidationError } from '@tp-types/index'
+import { collectFieldErrors } from './collect-field-errors'
 
 export function validateHeader(headerLine: string, headerSchema: RecordSchema | undefined): ValidationError[] {
-  const errors: ValidationError[] = []
-
-  if (headerSchema) {
-    const parsedHeader = extractLineFields(headerLine, headerSchema)
-    for (const [field, data] of Object.entries(parsedHeader)) {
-      if (data.error) {
-        errors.push({ 
-          line: 1, 
-          field: (data.descricao as string) || field, 
-          message: data.error 
-        })
-      }
-    }
+  if (!headerSchema) {
+    return []
   }
 
-  return errors
+  const parsedHeader = extractLineFields(headerLine, headerSchema)
+  return collectFieldErrors(parsedHeader, 1)
 }

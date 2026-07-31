@@ -6,6 +6,7 @@ import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
 import { validatePayerDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'
 import { validateHeader } from '@validators/validate-header'
+import { collectFieldErrors } from '@validators/collect-field-errors'
 
 export function validateCnab240Content(
   lines: string[],
@@ -75,22 +76,9 @@ function validateSegmentP(
   errors: ValidationError[]
   pendingData: { amount: number; dueDate: string }
 } {
-  const errors: ValidationError[] = []
   const parsed = segPSchema ? extractLineFields(line, segPSchema) : null
   const fieldsWithError = new Set<string>()
-
-  if (parsed) {
-    for (const [field, data] of Object.entries(parsed)) {
-      if (data.error) {
-        errors.push({ 
-          line: lineNumber, 
-          field: (data.descricao as string) || field, 
-          message: data.error 
-        })
-        fieldsWithError.add(field)
-      }
-    }
-  }
+  const errors = collectFieldErrors(parsed, lineNumber, fieldsWithError)
 
   const amountRaw = parsed?.valor_titulo?.raw?.trim() || extractPositionTrimmed(line, CNAB240_SEGMENT_P_POSITIONS.VALOR_TITULO)
   const dueDateRaw = parsed?.vencimento_titulo?.raw?.trim() || extractPositionTrimmed(line, CNAB240_SEGMENT_P_POSITIONS.VENCIMENTO_TITULO)
@@ -158,19 +146,7 @@ function validateSegmentQ(
 
   const parsed = segQSchema ? extractLineFields(line, segQSchema) : null
   const fieldsWithError = new Set<string>()
-
-  if (parsed) {
-    for (const [field, data] of Object.entries(parsed)) {
-      if (data.error) {
-        errors.push({ 
-          line: lineNumber, 
-          field: (data.descricao as string) || field, 
-          message: data.error 
-        })
-        fieldsWithError.add(field)
-      }
-    }
-  }
+  errors.push(...collectFieldErrors(parsed, lineNumber, fieldsWithError))
 
   const payerDocument = parsed?.sacado_inscricao_numero?.raw || extractPosition(line, CNAB240_SEGMENT_Q_POSITIONS.SACADO_INSCRICAO_NUMERO)
   const payerName = parsed?.sacado_nome?.value || extractPositionTrimmed(line, CNAB240_SEGMENT_Q_POSITIONS.SACADO_NOME)

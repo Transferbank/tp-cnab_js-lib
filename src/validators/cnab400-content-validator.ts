@@ -6,6 +6,7 @@ import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
 import { validatePayerDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'
 import { validateHeader } from '@validators/validate-header'
+import { collectFieldErrors } from '@validators/collect-field-errors'
 
 export function validateCnab400Content(
   lines: string[],
@@ -53,22 +54,9 @@ function validateDetailLine(
   errors: ValidationError[]
   record: CNABRecord
 } {
-  const errors: ValidationError[] = []
   const parsed = detailSchema ? extractLineFields(line, detailSchema) : null
   const fieldsWithError = new Set<string>()
-
-  if (parsed) {
-    for (const [field, data] of Object.entries(parsed)) {
-      if (data.error) {
-        errors.push({ 
-          line: lineNumber, 
-          field: (data.descricao as string) || field, 
-          message: data.error 
-        })
-        fieldsWithError.add(field)
-      }
-    }
-  }
+  const errors = collectFieldErrors(parsed, lineNumber, fieldsWithError)
 
   const payerName = parsed?.nome?.value || extractPositionTrimmed(line, CNAB400_DETAIL_POSITIONS.SACADO_NOME)
   const payerDocument = parsed?.sacado_numero_inscricao?.raw || extractPosition(line, CNAB400_DETAIL_POSITIONS.SACADO_DOCUMENTO)
