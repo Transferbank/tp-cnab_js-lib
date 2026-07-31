@@ -1,21 +1,21 @@
 ﻿/**
  * Bradesco CNAB 240 - Segmento Y-04
- * Registro Detalhe - Segmento Y-04 (Informa��es de Contato e PIX)
+ * Registro Detalhe - Segmento Y-04 (Informações de Contato e PIX)
  * 
- * Registro opcional (Remessa/Retorno) que traz informa��es de contato do destinat�rio
+ * Registro opcional (Remessa/Retorno) que traz informações de contato do destinatério
  * (e-mail e celular) e dados de PIX para pagamento alternativo.
- * IMPORTANTE: Este segmento � o mais recente adicionado ao manual oficial Bradesco
- * (vers�o 04, dez/2024) e inclui os campos de PIX (tipo de chave, chave/URL do QR Code,
- * TXID). Este registro N�O existe em vers�es antigas do manual nem no pycnab240 vendorizado
+ * IMPORTANTE: Este segmento é o mais recente adicionado ao manual oficial Bradesco
+ * (versão 04, dez/2024) e inclui os campos de PIX (tipo de chave, chave/URL do QR Code,
+ * TXID). Este registro NÃO existe em versões antigas do manual nem no pycnab240 vendorizado
  * no projeto.
  * Estrutura:
  *   - Controle: banco (237), lote, registro tipo 3 (detalhe), segmento 'Y'
- *   - C�digo de registro opcional: '03' (identifica que � o Y-04, nomenclatura Bradesco)
- *   - Dados de contato: e-mail, celular (DDD + n�mero)
- *   - Dados PIX: tipo de chave (1=CPF/CNPJ, 2=Email, 3=Celular, 4=Aleat�ria),
+ *   - Código de registro opcional: '03' (identifica que é o Y-04, nomenclatura Bradesco)
+ *   - Dados de contato: e-mail, celular (DDD + número)
+ *   - Dados PIX: tipo de chave (1=CPF/CNPJ, 2=Email, 3=Celular, 4=Aleatéria),
  *                chave PIX ou URL do QR Code, TXID
- * Fonte: Manual oficial Bradesco CNAB 240, vers�o 04, dez/2024
- * Se��o: "Registro Detalhe - Segmento Y-04"
+ * Fonte: Manual oficial Bradesco CNAB 240, versão 04, dez/2024
+ * Seção: "Registro Detalhe - Segmento Y-04"
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -29,7 +29,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -40,7 +40,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de servi�o',
+    description: 'Lote de serviço',
     canonical: null,
   },
   controle_registro: {
@@ -62,7 +62,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Número sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -95,7 +95,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa',
+    description: 'Código de movimento da remessa',
     canonical: null,
   },
   codigo_registro_opcional: {
@@ -106,7 +106,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '03',
-    description: 'C�digo do registro opcional: 03=Y-04 (informa��es de contato e PIX)',
+    description: 'Código do registro opcional: 03=Y-04 (informações de contato e PIX)',
     canonical: null,
   },
   destinatario_email: {
@@ -117,7 +117,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o de e-mail do destinat�rio/pagador',
+    description: 'Endereço de e-mail do destinatério/pagador',
     canonical: null,
   },
   destinatario_celular_ddd: {
@@ -128,7 +128,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'DDD do celular do destinat�rio/pagador',
+    description: 'DDD do celular do destinatério/pagador',
     canonical: null,
   },
   destinatario_celular_numero: {
@@ -139,7 +139,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do celular do destinat�rio/pagador (9 d�gitos)',
+    description: 'Número do celular do destinatério/pagador (9 dígitos)',
     canonical: null,
   },
   pix_tipo_chave: {
@@ -150,7 +150,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de chave PIX: 0=N�o informado, 1=CPF/CNPJ, 2=Email, 3=Celular, 4=Chave aleat�ria',
+    description: 'Tipo de chave PIX: 0=Não informado, 1=CPF/CNPJ, 2=Email, 3=Celular, 4=Chave aleatéria',
     canonical: null,
   },
   pix_chave_ou_url: {
@@ -172,7 +172,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y04: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'TXID (identificador da transa��o PIX)',
+    description: 'TXID (identificador da transação PIX)',
     canonical: null,
   },
   cnab_exclusivo_2: {

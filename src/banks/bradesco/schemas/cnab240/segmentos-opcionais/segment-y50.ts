@@ -1,29 +1,29 @@
 ﻿/**
  * Bradesco CNAB 240 - Segmento Y-50
- * Registro Detalhe - Segmento Y-50 (Rateio de Cr�dito)
+ * Registro Detalhe - Segmento Y-50 (Rateio de Crédito)
  * 
- * Registro opcional (Remessa/Retorno) que define o rateio de cr�dito de um t�tulo
- * entre m�ltiplas contas. Pode ocorrer v�rias vezes por t�tulo, permitindo distribuir
- * o valor entre diferentes benefici�rios.
- * Este segmento permite que o valor de um t�tulo seja automaticamente dividido e
- * creditado em diferentes contas banc�rias conforme percentuais ou valores fixos
+ * Registro opcional (Remessa/Retorno) que define o rateio de crédito de um título
+ * entre múltiplas contas. Pode ocorrer várias vezes por título, permitindo distribuir
+ * o valor entre diferentes beneficiários.
+ * Este segmento permite que o valor de um título seja automaticamente dividido e
+ * creditado em diferentes contas bancárias conforme percentuais ou valores fixos
  * definidos.
  * Estrutura:
  *   - Controle: banco (237), lote, registro tipo 3 (detalhe), segmento 'Y'
- *   - C�digo de registro opcional: '50' (identifica que � o Y-50)
- *   - Dados da conta de rateio: ag�ncia, conta e d�gitos verificadores
- *   - Identifica��o do t�tulo: mesmo padr�o do Segmento P (produto+zeros+nosso n�mero+d�gito)
+ *   - Código de registro opcional: '50' (identifica que é o Y-50)
+ *   - Dados da conta de rateio: agência, conta e dígitos verificadores
+ *   - Identificação do título: mesmo padrão do Segmento P (produto+zeros+nosso número+dígito)
  *   - Tipo de rateio: por valor ou por percentual
- *   - Dados do cr�dito: banco destino, ag�ncia, conta
- *   - Informa��es adicionais: nome do benefici�rio, data de cr�dito, floating
- * Observa��o sobre valor_ou_percentual_rateio:
- * Segundo o manual, este campo tem formato vari�vel conforme tipo_valor_informado:
- * - Se tipo = valor: formato 13.2 (13 d�gitos inteiros, 2 decimais)
- * - Se tipo = percentual: formato 12.3 (12 d�gitos inteiros, 3 decimais)
- * Para simplicidade do schema, mantemos decimais=2 como padr�o.
- * A aplica��o deve tratar a exce��o do percentual internamente se necess�rio.
- * Fonte: Manual oficial Bradesco CNAB 240, vers�o 04, dez/2024
- * Se��o: "Registro Detalhe - Segmento Y-50"
+ *   - Dados do crédito: banco destino, agência, conta
+ *   - Informações adicionais: nome do beneficiário, data de crédito, floating
+ * Observação sobre valor_ou_percentual_rateio:
+ * Segundo o manual, este campo tem formato variável conforme tipo_valor_informado:
+ * - Se tipo = valor: formato 13.2 (13 dígitos inteiros, 2 decimais)
+ * - Se tipo = percentual: formato 12.3 (12 dígitos inteiros, 3 decimais)
+ * Para simplicidade do schema, mantemos decimais=2 como padrão.
+ * A aplicação deve tratar a exceção do percentual internamente se necessário.
+ * Fonte: Manual oficial Bradesco CNAB 240, versão 04, dez/2024
+ * Seção: "Registro Detalhe - Segmento Y-50"
  */
 
 import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
@@ -37,7 +37,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -48,7 +48,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de servi�o',
+    description: 'Lote de serviço',
     canonical: null,
   },
   controle_registro: {
@@ -70,7 +70,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Número sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -103,7 +103,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa',
+    description: 'Código de movimento da remessa',
     canonical: null,
   },
   codigo_registro_opcional: {
@@ -114,7 +114,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '50',
-    description: 'C�digo do registro opcional: 50=Rateio de cr�dito',
+    description: 'Código do registro opcional: 50=Rateio de crédito',
     canonical: null,
   },
   rateio_agencia: {
@@ -125,7 +125,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia da conta de rateio',
+    description: 'Agência da conta de rateio',
     canonical: null,
   },
   rateio_agencia_dv: {
@@ -136,7 +136,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia',
+    description: 'Dígito verificador da agência',
     canonical: null,
   },
   rateio_conta: {
@@ -158,7 +158,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta',
+    description: 'Dígito verificador da conta',
     canonical: null,
   },
   rateio_agencia_conta_dv: {
@@ -169,7 +169,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia/conta',
+    description: 'Dígito verificador da agência/conta',
     canonical: null,
   },
   identificacao_titulo_banco: {
@@ -180,7 +180,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o completa do t�tulo no banco (carteira + produto + nosso n�mero + d�gito). Mesmo padr�o do Segmento P: pode ser decomposto em carteira/produto(3), zeros(5), nosso n�mero(12)',
+    description: 'Identificação completa do título no banco (carteira + produto + nosso número + dígito). Mesmo padrão do Segmento P: pode ser decomposto em carteira/produto(3), zeros(5), nosso número(12)',
     canonical: null,
   },
   codigo_calculo_rateio: {
@@ -191,7 +191,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de c�lculo do rateio: 1=Valor informado, 2=Percentual informado',
+    description: 'Código de cálculo do rateio: 1=Valor informado, 2=Percentual informado',
     canonical: null,
   },
   tipo_valor_informado: {
@@ -213,7 +213,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor ou percentual do rateio. Formato: 13.2 se valor fixo, 12.3 se percentual (schema usa decimais=2 por padr�o, aplica��o deve ajustar para percentual)',
+    description: 'Valor ou percentual do rateio. Formato: 13.2 se valor fixo, 12.3 se percentual (schema usa decimais=2 por padrão, aplicação deve ajustar para percentual)',
     canonical: null,
   },
   codigo_banco_credito: {
@@ -224,7 +224,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo FEBRABAN do banco de cr�dito (destino do rateio)',
+    description: 'Código FEBRABAN do banco de crédito (destino do rateio)',
     canonical: null,
   },
   rateio_credito_agencia: {
@@ -235,7 +235,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia do cr�dito de rateio',
+    description: 'Agência do crédito de rateio',
     canonical: null,
   },
   rateio_credito_agencia_dv: {
@@ -246,7 +246,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia de cr�dito',
+    description: 'Dígito verificador da agência de crédito',
     canonical: null,
   },
   rateio_credito_conta: {
@@ -257,7 +257,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Conta corrente de cr�dito do rateio',
+    description: 'Conta corrente de crédito do rateio',
     canonical: null,
   },
   rateio_credito_conta_dv: {
@@ -268,7 +268,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da conta de cr�dito',
+    description: 'Dígito verificador da conta de crédito',
     canonical: null,
   },
   rateio_credito_agencia_conta_dv: {
@@ -279,7 +279,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador da ag�ncia/conta de cr�dito',
+    description: 'Dígito verificador da agência/conta de crédito',
     canonical: null,
   },
   nome_beneficiario_rateio: {
@@ -290,7 +290,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do benefici�rio do rateio',
+    description: 'Nome do beneficiário do rateio',
     canonical: null,
   },
   identificacao_parcela: {
@@ -301,7 +301,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o da parcela (formato: parcela atual / total de parcelas)',
+    description: 'Identificação da parcela (formato: parcela atual / total de parcelas)',
     canonical: null,
   },
   floating_dias_credito: {
@@ -312,7 +312,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Quantidade de dias para floating (posterga��o) do cr�dito',
+    description: 'Quantidade de dias para floating (postergação) do crédito',
     canonical: null,
   },
   data_credito: {
@@ -323,7 +323,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAAAA,
     pattern: null,
-    description: 'Data efetiva do cr�dito do rateio',
+    description: 'Data efetiva do crédito do rateio',
     canonical: null,
   },
   motivo_ocorrencia: {
@@ -334,7 +334,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y50: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de motivo da ocorr�ncia (retorno)',
+    description: 'Código de motivo da ocorrência (retorno)',
     canonical: null,
   },
   cnab_exclusivo_2: {

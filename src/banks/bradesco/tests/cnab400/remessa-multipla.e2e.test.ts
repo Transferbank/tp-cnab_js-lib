@@ -1,8 +1,8 @@
 /**
- * Pipeline público de ponta a ponta para Bradesco CNAB 400 remessa-multipla.txt:
- * exercita `openCnab()`, o caminho que um consumidor real da lib usa – conteúdo
- * bruto do arquivo, sem pré-separar linhas nem escolher schema manualmente
- * (detecção de formato/banco incluída).
+ * Pipeline pÃºblico de ponta a ponta para Bradesco CNAB 400 remessa-multipla.txt:
+ * exercita `openCnab()`, o caminho que um consumidor real da lib usa â€“ conteÃºdo
+ * bruto do arquivo, sem prÃ©-separar linhas nem escolher schema manualmente
+ * (detecÃ§Ã£o de formato/banco incluÃ­da).
  */
 
 import * as fs from 'fs'
@@ -12,7 +12,7 @@ import { CNABFormatCode } from '@tp-types/core'
 import type { CNABReadResult } from '@tp-types/core/read-result'
 import type { CNABData } from '@tp-types/read'
 
-describe('openCnab – pipeline público de ponta a ponta: Bradesco CNAB 400 remessa-multipla', () => {
+describe('openCnab â€“ pipeline pÃºblico de ponta a ponta: Bradesco CNAB 400 remessa-multipla', () => {
   const fixtureDir = path.join(__dirname, '../../docs/cnab400')
   const txtPath = path.join(fixtureDir, 'remessa-multipla.txt')
   const jsonPath = path.join(fixtureDir, 'remessa-multipla.json')
@@ -42,13 +42,13 @@ describe('openCnab – pipeline público de ponta a ponta: Bradesco CNAB 400 remess
     expect(readResult.bills.length).toBe(metadata.totals.recordCount)
   })
 
-  test('não deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
-    // Este arquivo real tem títulos com vencimento anterior à data atual
-    // – isso é esperado e não é responsabilidade do schema/parser.
+  test('nÃ£o deve ter erros de parsing/schema (exceto vencimento no passado)', () => {
+    // Este arquivo real tem tÃ­tulos com vencimento anterior Ã  data atual
+    // â€“ isso Ã© esperado e nÃ£o Ã© responsabilidade do schema/parser.
     const lines = validationResult.feedback?.lines || []
     const errosDeParsing = lines.filter(
       (error: { field: string; message: string }) =>
-        !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual')),
+        !(error.field === 'Data de vencimento' && error.message.includes('anterior Ã  data atual')),
     )
 
     if (errosDeParsing.length > 0) {
@@ -61,7 +61,7 @@ describe('openCnab – pipeline público de ponta a ponta: Bradesco CNAB 400 remess
     expect(errosDeParsing).toEqual([])
   })
 
-  test('deve extrair dados do primeiro título corretamente', () => {
+  test('deve extrair dados do primeiro tÃ­tulo corretamente', () => {
     const records = validationResult.feedback?.records || []
     expect(records.length).toBeGreaterThan(0)
     
@@ -71,7 +71,7 @@ describe('openCnab – pipeline público de ponta a ponta: Bradesco CNAB 400 remess
     expect(primeiro.name?.trim()).toBe(esperado.name)
     expect(primeiro.amount).toBeCloseTo(esperado.amount, 2)
     expect(primeiro.dueDate).toBe(esperado.dueDate)
-    // Documento: parser remove zeros à esquerda
+    // Documento: parser remove zeros Ã  esquerda
     expect(primeiro.document).toBe(esperado.document.replace(/^0+/, ''))
   })
 })

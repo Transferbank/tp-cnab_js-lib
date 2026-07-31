@@ -1,21 +1,21 @@
 ﻿/**
  * Bradesco CNAB 240 - Segmento S
  * Segmento S (pos 8 = '3', pos 14 = 'S')
- * Mensagens para impress�o no boleto. Este segmento � opcional e aparece apenas
- * em arquivos de remessa (n�o existe em retorno).
+ * Mensagens para impressão no boleto. Este segmento é opcional e aparece apenas
+ * em arquivos de remessa (não existe em retorno).
  * O Segmento S possui duas variantes mutuamente exclusivas, dependendo do campo
- * `tipo_impressao` (posi��o 18):
- * - Variante A (tipo 1 ou 2): mensagem livre de at� 140 caracteres
- * - Variante B (tipo 3): cinco blocos de informa��o de 40 caracteres cada
+ * `tipo_impressao` (posição 18):
+ * - Variante A (tipo 1 ou 2): mensagem livre de até 140 caracteres
+ * - Variante B (tipo 3): cinco blocos de informação de 40 caracteres cada
  * As duas variantes ocupam a mesma faixa de bytes (18-240) mas com layouts diferentes.
- * Use a fun��o `parseSegmentS` para parsear corretamente conforme a variante.
- * Fonte do layout: Manual oficial Bradesco FEBRABAN 240 Posi��es V6.0
+ * Use a função `parseSegmentS` para parsear corretamente conforme a variante.
+ * Fonte do layout: Manual oficial Bradesco FEBRABAN 240 Posições V6.0
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
 
 /**
- * Schema base do Segmento S (posi��es 1-18)
+ * Schema base do Segmento S (posições 1-18)
  * Campos comuns a todas as variantes
  */
 export const BRADESCO_CNAB240_SEGMENT_S_BASE: RecordSchema = {
@@ -27,7 +27,7 @@ export const BRADESCO_CNAB240_SEGMENT_S_BASE: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -38,7 +38,7 @@ export const BRADESCO_CNAB240_SEGMENT_S_BASE: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de servi�o',
+    description: 'Lote de serviço',
     canonical: null,
   },
   controle_registro: {
@@ -60,7 +60,7 @@ export const BRADESCO_CNAB240_SEGMENT_S_BASE: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Número sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -71,7 +71,7 @@ export const BRADESCO_CNAB240_SEGMENT_S_BASE: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'S',
-    description: 'Segmento S = mensagem para impress�o no boleto',
+    description: 'Segmento S = mensagem para impressão no boleto',
     canonical: null,
   },
   cnab_exclusivo_1: {
@@ -93,7 +93,7 @@ export const BRADESCO_CNAB240_SEGMENT_S_BASE: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa',
+    description: 'Código de movimento da remessa',
     canonical: null,
   },
   tipo_impressao: {
@@ -104,14 +104,14 @@ export const BRADESCO_CNAB240_SEGMENT_S_BASE: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o da impress�o: 1 ou 2=mensagem livre, 3=blocos de informa��o fixos',
+    description: 'Identificação da impressão: 1 ou 2=mensagem livre, 3=blocos de informação fixos',
     canonical: null,
   },
 }
 
 /**
- * Variante A - Tipo de impress�o 1 ou 2
- * Mensagem livre de at� 140 caracteres com controle de linha e fonte
+ * Variante A - Tipo de impressão 1 ou 2
+ * Mensagem livre de até 140 caracteres com controle de linha e fonte
  */
 export const BRADESCO_CNAB240_SEGMENT_S_MESSAGE: RecordSchema = {
   ...BRADESCO_CNAB240_SEGMENT_S_BASE,
@@ -123,7 +123,7 @@ export const BRADESCO_CNAB240_SEGMENT_S_MESSAGE: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da linha a ser impressa no boleto',
+    description: 'Número da linha a ser impressa no boleto',
     canonical: null,
   },
   mensagem: {
@@ -162,8 +162,8 @@ export const BRADESCO_CNAB240_SEGMENT_S_MESSAGE: RecordSchema = {
 }
 
 /**
- * Variante B - Tipo de impress�o 3
- * Cinco blocos de informa��o fixos de 40 caracteres cada
+ * Variante B - Tipo de impressão 3
+ * Cinco blocos de informação fixos de 40 caracteres cada
  */
 export const BRADESCO_CNAB240_SEGMENT_S_INFO: RecordSchema = {
   ...BRADESCO_CNAB240_SEGMENT_S_BASE,

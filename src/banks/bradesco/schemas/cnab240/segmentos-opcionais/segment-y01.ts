@@ -1,18 +1,18 @@
 ﻿/**
  * Bradesco CNAB 240 - Segmento Y-01
- * Registro Detalhe - Segmento Y-01 (Benefici�rio Final)
+ * Registro Detalhe - Segmento Y-01 (Beneficiário Final)
  * 
- * Registro opcional (Remessa/Retorno) que traz as informa��es completas do Benefici�rio Final,
- * incluindo endere�o completo. Este registro � diferente do Segmento Q, que apenas cont�m
- * tipo/n�mero/nome do sacador/avalista (que pode ser o benefici�rio final).
- * O Segmento Y-01 � usado quando h� necessidade de identificar o benefici�rio final da transa��o
- * com dados completos de endere�o, conforme exig�ncias regulat�rias ou contratuais.
+ * Registro opcional (Remessa/Retorno) que traz as informações completas do Beneficiário Final,
+ * incluindo endereço completo. Este registro é diferente do Segmento Q, que apenas contém
+ * tipo/número/nome do sacador/avalista (que pode ser o beneficiário final).
+ * O Segmento Y-01 é usado quando há necessidade de identificar o beneficiário final da transação
+ * com dados completos de endereço, conforme exigências regulatérias ou contratuais.
  * Estrutura:
  *   - Controle: banco (237), lote, registro tipo 3 (detalhe), segmento 'Y'
- *   - C�digo de registro opcional: '01' (identifica que � o Y-01)
- *   - Dados do benefici�rio final: tipo/n�mero inscri��o, nome completo, endere�o completo
- * Fonte: Manual oficial Bradesco CNAB 240, vers�o 04, dez/2024
- * Se��o: "Registro Detalhe - Segmento Y-01"
+ *   - Código de registro opcional: '01' (identifica que é o Y-01)
+ *   - Dados do beneficiário final: tipo/número inscrição, nome completo, endereço completo
+ * Fonte: Manual oficial Bradesco CNAB 240, versão 04, dez/2024
+ * Seção: "Registro Detalhe - Segmento Y-01"
  */
 
 import { RecordSchema, FieldType } from '@tp-types/index'
@@ -26,7 +26,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '237',
-    description: 'C�digo FEBRABAN do Bradesco',
+    description: 'Código FEBRABAN do Bradesco',
     canonical: null,
   },
   controle_lote: {
@@ -37,7 +37,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Lote de servi�o',
+    description: 'Lote de serviço',
     canonical: null,
   },
   controle_registro: {
@@ -59,7 +59,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero sequencial do registro no lote',
+    description: 'Número sequencial do registro no lote',
     canonical: null,
   },
   servico_segmento: {
@@ -92,7 +92,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de movimento da remessa',
+    description: 'Código de movimento da remessa',
     canonical: null,
   },
   codigo_registro_opcional: {
@@ -103,7 +103,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo do registro opcional: 01=Benefici�rio Final',
+    description: 'Código do registro opcional: 01=Beneficiário Final',
     canonical: null,
   },
   beneficiario_final_inscricao_tipo: {
@@ -114,7 +114,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o: 1=CPF, 2=CNPJ',
+    description: 'Tipo de inscrição: 1=CPF, 2=CNPJ',
     canonical: null,
   },
   beneficiario_final_inscricao_numero: {
@@ -125,7 +125,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'CPF ou CNPJ do benefici�rio final',
+    description: 'CPF ou CNPJ do beneficiário final',
     canonical: null,
   },
   beneficiario_final_nome: {
@@ -136,7 +136,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do benefici�rio final',
+    description: 'Nome do beneficiário final',
     canonical: null,
   },
   beneficiario_final_endereco: {
@@ -147,7 +147,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do benefici�rio final',
+    description: 'Endereço do beneficiário final',
     canonical: null,
   },
   beneficiario_final_bairro: {
@@ -158,7 +158,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Bairro do benefici�rio final',
+    description: 'Bairro do beneficiário final',
     canonical: null,
   },
   beneficiario_final_cep: {
@@ -169,7 +169,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP (5 d�gitos)',
+    description: 'CEP (5 dígitos)',
     canonical: null,
   },
   beneficiario_final_cep_sufixo: {
@@ -180,7 +180,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'CEP sufixo (3 d�gitos)',
+    description: 'CEP sufixo (3 dígitos)',
     canonical: null,
   },
   beneficiario_final_cidade: {
@@ -191,7 +191,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Cidade do benefici�rio final',
+    description: 'Cidade do beneficiário final',
     canonical: null,
   },
   beneficiario_final_uf: {
@@ -202,7 +202,7 @@ export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'UF do benefici�rio final',
+    description: 'UF do beneficiário final',
     canonical: null,
   },
   cnab_exclusivo_2: {
