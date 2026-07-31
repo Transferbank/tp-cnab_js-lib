@@ -144,7 +144,7 @@ export class CNABFile {
     line: string, 
     bankSchema: BankSchema,
     optionalMap: Map<string, OptionalRecordSchema>
-  ): ParsedLine | undefined {
+  ): ParsedLine {
     if (this.type === CNABFormatCode.CNAB400) {
       return this.parseCnab400Line(line, bankSchema, optionalMap)
     } else {
@@ -156,7 +156,7 @@ export class CNABFile {
     line: string, 
     bankSchema: BankSchema,
     optionalMap: Map<string, OptionalRecordSchema>
-  ): ParsedLine | undefined {
+  ): ParsedLine {
     const recordType = getCnab400RecordType(line)
     
     if (recordType === Cnab400RecordType.DETAIL_STANDARD || recordType === Cnab400RecordType.DETAIL_BB) {
@@ -183,7 +183,7 @@ export class CNABFile {
     line: string, 
     bankSchema: BankSchema,
     optionalMap: Map<string, OptionalRecordSchema>
-  ): ParsedLine | undefined {
+  ): ParsedLine {
     const recordType = getCnab240RecordType(line)
     
     if (recordType === '3') {
@@ -234,9 +234,7 @@ export class CNABFile {
     const trailerParsed = trailerSchema ? extractLineFields(trailerLine, trailerSchema) : undefined
 
     const optionalMap = buildOptionalMap(bankSchema)
-    const bodyParsed = bodyLines
-      .map((line) => this.parseBodyLine(line, bankSchema, optionalMap))
-      .filter((parsed): parsed is ParsedLine => parsed !== undefined)
+    const bodyParsed = bodyLines.map((line) => this.parseBodyLine(line, bankSchema, optionalMap))
 
     return { headerParsed, trailerParsed, bodyParsed }
   }
