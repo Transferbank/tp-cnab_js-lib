@@ -5,26 +5,26 @@
  *
  * PARTICULARIDADE ESTRUTURAL DO SICOOB (achado exclusivo):
  * Diferente de todos os outros bancos do projeto, o Sicoob embute 5 blocos de mensagem
- * de 40 caracteres cada DIRETAMENTE NO TRAILER (posições 195-394), em vez de usar
+ * de 40 caracteres cada DIRETAMENTE NO TRAILER (posiÃ§Ãµes 195-394), em vez de usar
  * registros opcionais separados (tipo 2/5/etc.).
  *
- * Essas mensagens só são preenchidas quando instrucao_1=01 E instrucao_2=01 no detalhe
- * (ambos simultaneamente) — caso contrário, ficam em branco.
+ * Essas mensagens sÃ³ sÃ£o preenchidas quando instrucao_1=01 E instrucao_2=01 no detalhe
+ * (ambos simultaneamente) â€” caso contrÃ¡rio, ficam em branco.
  *
  * IMPORTANTE: Estes testes focam APENAS no PARSING do schema:
- * - Posições corretas dos campos
+ * - PosiÃ§Ãµes corretas dos campos
  * - Tipos de dados corretos
- * - Valores padrão
- * - Campos obrigatórios
+ * - Valores padrÃ£o
+ * - Campos obrigatÃ³rios
  *
- * Posições validadas conforme planilha oficial Sicoob (Layout_Cobranca_CNAB400 (1).xls, mai/2025).
+ * PosiÃ§Ãµes validadas conforme planilha oficial Sicoob (Layout_Cobranca_CNAB400 (1).xls, mai/2025).
  */
 
 import { sicoobCnab400 } from '@banks/sicoob/schemas/cnab400'
 
 describe('Schema Sicoob CNAB 400 - Trailer', () => {
-  describe('Definição dos campos', () => {
-    test('deve ter tipo_registro "9" (trailer) na posição 1', () => {
+  describe('DefiniÃ§Ã£o dos campos', () => {
+    test('deve ter tipo_registro "9" (trailer) na posiÃ§Ã£o 1', () => {
       const field = sicoobCnab400.trailer!.tipo_registro
 
       expect(field.pos).toEqual([1, 1])
@@ -33,7 +33,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(field.required).toBe(true)
     })
 
-    test('deve ter brancos na posição 2-194', () => {
+    test('deve ter brancos na posiÃ§Ã£o 2-194', () => {
       const field = sicoobCnab400.trailer!.brancos
 
       expect(field.pos).toEqual([2, 194])
@@ -42,7 +42,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter mensagem_responsabilidade_1 na posição 195-234', () => {
+    test('deve ter mensagem_responsabilidade_1 na posiÃ§Ã£o 195-234', () => {
       const field = sicoobCnab400.trailer!.mensagem_responsabilidade_1
 
       expect(field.pos).toEqual([195, 234])
@@ -51,7 +51,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter mensagem_responsabilidade_2 na posição 235-274', () => {
+    test('deve ter mensagem_responsabilidade_2 na posiÃ§Ã£o 235-274', () => {
       const field = sicoobCnab400.trailer!.mensagem_responsabilidade_2
 
       expect(field.pos).toEqual([235, 274])
@@ -60,7 +60,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter mensagem_responsabilidade_3 na posição 275-314', () => {
+    test('deve ter mensagem_responsabilidade_3 na posiÃ§Ã£o 275-314', () => {
       const field = sicoobCnab400.trailer!.mensagem_responsabilidade_3
 
       expect(field.pos).toEqual([275, 314])
@@ -69,7 +69,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter mensagem_responsabilidade_4 na posição 315-354', () => {
+    test('deve ter mensagem_responsabilidade_4 na posiÃ§Ã£o 315-354', () => {
       const field = sicoobCnab400.trailer!.mensagem_responsabilidade_4
 
       expect(field.pos).toEqual([315, 354])
@@ -78,7 +78,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter mensagem_responsabilidade_5 na posição 355-394', () => {
+    test('deve ter mensagem_responsabilidade_5 na posiÃ§Ã£o 355-394', () => {
       const field = sicoobCnab400.trailer!.mensagem_responsabilidade_5
 
       expect(field.pos).toEqual([355, 394])
@@ -87,7 +87,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(field.required).toBe(false)
     })
 
-    test('deve ter numero_sequencial na posição 395-400', () => {
+    test('deve ter numero_sequencial na posiÃ§Ã£o 395-400', () => {
       const field = sicoobCnab400.trailer!.numero_sequencial
 
       expect(field.pos).toEqual([395, 400])
@@ -113,7 +113,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(trailer.mensagem_responsabilidade_5.size).toBe(40)
     })
 
-    test('mensagens devem ocupar posições 195-394 (200 caracteres = 5 blocos * 40)', () => {
+    test('mensagens devem ocupar posiÃ§Ãµes 195-394 (200 caracteres = 5 blocos * 40)', () => {
       expect(trailer.mensagem_responsabilidade_1.pos[0]).toBe(195)
       expect(trailer.mensagem_responsabilidade_5.pos[1]).toBe(394)
 
@@ -142,7 +142,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       )
     })
 
-    test('descrições das mensagens devem mencionar condicionalidade (instrucao_1=01 E instrucao_2=01)', () => {
+    test('descriÃ§Ãµes das mensagens devem mencionar condicionalidade (instrucao_1=01 E instrucao_2=01)', () => {
       expect(trailer.mensagem_responsabilidade_1.description).toContain('instrucao_1=01')
       expect(trailer.mensagem_responsabilidade_1.description).toContain('instrucao_2=01')
       expect(trailer.mensagem_responsabilidade_2.description).toContain('instrucao_1=01')
@@ -155,7 +155,7 @@ describe('Schema Sicoob CNAB 400 - Trailer', () => {
       expect(trailer.mensagem_responsabilidade_5.description).toContain('instrucao_2=01')
     })
 
-    test('não deve ter campos de totalização (diferente de outros bancos)', () => {
+    test('nÃ£o deve ter campos de totalizaÃ§Ã£o (diferente de outros bancos)', () => {
       const campos = Object.keys(trailer)
       expect(campos).not.toContain('qtd_documentos')
       expect(campos).not.toContain('valor_total')

@@ -1,6 +1,6 @@
 ﻿/**
- * Sicoob / Bancoob (756) � CNAB 400 � Header de Arquivo (Remessa)
- * Cooperativa de cr�dito, nosso n�mero 12 d�gitos (com DV).
+ * Sicoob / Bancoob (756)  CNAB 400  Header de Arquivo (Remessa)
+ * Cooperativa de crdito, nosso nmero 12 dgitos (com DV).
  *
  * Fontes:
  * - Planilha oficial Sicoob (Layout_Cobranca_CNAB400 (1).xls, mai/2025)
@@ -19,7 +19,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do header',
+    description: 'Identificao do header',
     canonical: null,
   },
   tipo_operacao: {
@@ -30,7 +30,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de opera��o: 1=Remessa',
+    description: 'Tipo de operao: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
@@ -52,7 +52,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo de servi�o',
+    description: 'Cdigo de servio',
     canonical: null,
   },
   literal_servico: {
@@ -63,7 +63,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal de servi�o',
+    description: 'Literal de servio',
     canonical: null,
   },
   brancos_1: {
@@ -74,7 +74,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaos em branco',
     canonical: null,
   },
   prefixo_cooperativa: {
@@ -96,7 +96,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador do prefixo (espa�os em branco)',
+    description: 'Dgito verificador do prefixo (espaos em branco)',
     canonical: null,
   },
   codigo_cliente_beneficiario: {
@@ -107,7 +107,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo do cliente/benefici�rio (ver planilha Contracapa)',
+    description: 'Cdigo do cliente/beneficirio (ver planilha Contracapa)',
     canonical: null,
   },
   dv_codigo_cliente: {
@@ -118,7 +118,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito verificador do c�digo do cliente (ver planilha Contracapa)',
+    description: 'Dgito verificador do cdigo do cliente (ver planilha Contracapa)',
     canonical: null,
   },
   numero_convenio_lider: {
@@ -129,7 +129,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do conv�nio l�der (espa�os em branco - campo existe mas n�o � usado)',
+    description: 'Nmero do convnio lder (espaos em branco - campo existe mas no  usado)',
     canonical: null,
   },
   nome_beneficiario: {
@@ -140,7 +140,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nome do benefici�rio (ver planilha Contracapa)',
+    description: 'Nome do beneficirio (ver planilha Contracapa)',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
@@ -151,7 +151,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '756',
-    description: 'C�digo FEBRABAN do Sicoob',
+    description: 'Cdigo FEBRABAN do Sicoob',
     canonical: null,
   },
   nome_banco: {
@@ -162,7 +162,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'BANCOOBCED',
-    description: 'Nome do banco (campo �nico combinado c�digo+nome na planilha original: 756BANCOOBCED)',
+    description: 'Nome do banco (campo nico combinado cdigo+nome na planilha original: 756BANCOOBCED)',
     canonical: null,
   },
   data_gravacao: {
@@ -173,7 +173,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de grava��o do arquivo',
+    description: 'Data de gravao do arquivo',
     canonical: 'dataGeracao',
   },
   sequencial_remessa: {
@@ -195,7 +195,7 @@ export const HEADER: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Espa�os em branco',
+    description: 'Espaos em branco',
     canonical: null,
   },
   numero_sequencial: {
@@ -206,7 +206,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '000001',
-    description: 'N�mero sequencial do registro no arquivo (000001 no header)',
+    description: 'Nmero sequencial do registro no arquivo (000001 no header)',
     canonical: null,
   },
 }

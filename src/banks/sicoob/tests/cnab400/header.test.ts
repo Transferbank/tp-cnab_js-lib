@@ -5,10 +5,10 @@
 import { sicoobCnab400 } from '@banks/sicoob/schemas/cnab400'
 
 describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
-  describe('Definição dos campos', () => {
+  describe('DefiniÃ§Ã£o dos campos', () => {
     const header = sicoobCnab400.header!
 
-    test('deve ter tipo_registro "0" (header) na posição 1', () => {
+    test('deve ter tipo_registro "0" (header) na posiÃ§Ã£o 1', () => {
       expect(header.tipo_registro).toBeDefined()
       expect(header.tipo_registro.pos).toEqual([1, 1])
       expect(header.tipo_registro.type).toBe('num')
@@ -17,7 +17,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.tipo_registro.required).toBe(true)
     })
 
-    test('deve ter tipo_operacao "1" (remessa) na posição 2', () => {
+    test('deve ter tipo_operacao "1" (remessa) na posiÃ§Ã£o 2', () => {
       expect(header.tipo_operacao).toBeDefined()
       expect(header.tipo_operacao.pos).toEqual([2, 2])
       expect(header.tipo_operacao.type).toBe('num')
@@ -25,7 +25,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.tipo_operacao.required).toBe(true)
     })
 
-    test('deve ter literal_remessa "REMESSA" na posição 3-9', () => {
+    test('deve ter literal_remessa "REMESSA" na posiÃ§Ã£o 3-9', () => {
       expect(header.literal_remessa).toBeDefined()
       expect(header.literal_remessa.pos).toEqual([3, 9])
       expect(header.literal_remessa.type).toBe('alfa')
@@ -34,7 +34,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.literal_remessa.required).toBe(true)
     })
 
-    test('deve ter codigo_servico na posição 10-11', () => {
+    test('deve ter codigo_servico na posiÃ§Ã£o 10-11', () => {
       expect(header.codigo_servico).toBeDefined()
       expect(header.codigo_servico.pos).toEqual([10, 11])
       expect(header.codigo_servico.type).toBe('num')
@@ -43,7 +43,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.codigo_servico.required).toBe(true)
     })
 
-    test('deve ter literal_servico "COBRANCA" na posição 12-19', () => {
+    test('deve ter literal_servico "COBRANCA" na posiÃ§Ã£o 12-19', () => {
       expect(header.literal_servico).toBeDefined()
       expect(header.literal_servico.pos).toEqual([12, 19])
       expect(header.literal_servico.type).toBe('alfa')
@@ -52,7 +52,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.literal_servico.required).toBe(true)
     })
 
-    test('deve ter brancos_1 na posição 20-26', () => {
+    test('deve ter brancos_1 na posiÃ§Ã£o 20-26', () => {
       expect(header.brancos_1).toBeDefined()
       expect(header.brancos_1.pos).toEqual([20, 26])
       expect(header.brancos_1.type).toBe('alfa')
@@ -60,7 +60,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.brancos_1.required).toBe(false)
     })
 
-    test('deve ter prefixo_cooperativa na posição 27-30 (4 dígitos)', () => {
+    test('deve ter prefixo_cooperativa na posiÃ§Ã£o 27-30 (4 dÃ­gitos)', () => {
       expect(header.prefixo_cooperativa).toBeDefined()
       expect(header.prefixo_cooperativa.pos).toEqual([27, 30])
       expect(header.prefixo_cooperativa.type).toBe('num')
@@ -68,7 +68,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.prefixo_cooperativa.required).toBe(true)
     })
 
-    test('deve ter dv_prefixo na posição 31', () => {
+    test('deve ter dv_prefixo na posiÃ§Ã£o 31', () => {
       expect(header.dv_prefixo).toBeDefined()
       expect(header.dv_prefixo.pos).toEqual([31, 31])
       expect(header.dv_prefixo.type).toBe('alfa')
@@ -76,7 +76,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.dv_prefixo.required).toBe(false)
     })
 
-    test('deve ter codigo_cliente_beneficiario na posição 32-39 (8 dígitos)', () => {
+    test('deve ter codigo_cliente_beneficiario na posiÃ§Ã£o 32-39 (8 dÃ­gitos)', () => {
       expect(header.codigo_cliente_beneficiario).toBeDefined()
       expect(header.codigo_cliente_beneficiario.pos).toEqual([32, 39])
       expect(header.codigo_cliente_beneficiario.type).toBe('num')
@@ -84,7 +84,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.codigo_cliente_beneficiario.required).toBe(true)
     })
 
-    test('deve ter dv_codigo_cliente na posição 40', () => {
+    test('deve ter dv_codigo_cliente na posiÃ§Ã£o 40', () => {
       expect(header.dv_codigo_cliente).toBeDefined()
       expect(header.dv_codigo_cliente.pos).toEqual([40, 40])
       expect(header.dv_codigo_cliente.type).toBe('alfa')
@@ -92,7 +92,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.dv_codigo_cliente.required).toBe(true)
     })
 
-    test('deve ter numero_convenio_lider na posição 41-46', () => {
+    test('deve ter numero_convenio_lider na posiÃ§Ã£o 41-46', () => {
       expect(header.numero_convenio_lider).toBeDefined()
       expect(header.numero_convenio_lider.pos).toEqual([41, 46])
       expect(header.numero_convenio_lider.type).toBe('alfa')
@@ -100,7 +100,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.numero_convenio_lider.required).toBe(false)
     })
 
-    test('deve ter nome_beneficiario na posição 47-76', () => {
+    test('deve ter nome_beneficiario na posiÃ§Ã£o 47-76', () => {
       expect(header.nome_beneficiario).toBeDefined()
       expect(header.nome_beneficiario.pos).toEqual([47, 76])
       expect(header.nome_beneficiario.type).toBe('alfa')
@@ -108,7 +108,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.nome_beneficiario.required).toBe(true)
     })
 
-    test('deve ter codigo_banco na posição 77-79 com padrão "756"', () => {
+    test('deve ter codigo_banco na posiÃ§Ã£o 77-79 com padrÃ£o "756"', () => {
       expect(header.codigo_banco).toBeDefined()
       expect(header.codigo_banco.pos).toEqual([77, 79])
       expect(header.codigo_banco.type).toBe('num')
@@ -117,7 +117,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.codigo_banco.required).toBe(true)
     })
 
-    test('deve ter nome_banco na posição 80-94 com padrão "BANCOOBCED"', () => {
+    test('deve ter nome_banco na posiÃ§Ã£o 80-94 com padrÃ£o "BANCOOBCED"', () => {
       expect(header.nome_banco).toBeDefined()
       expect(header.nome_banco.pos).toEqual([80, 94])
       expect(header.nome_banco.type).toBe('alfa')
@@ -126,7 +126,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.nome_banco.required).toBe(true)
     })
 
-    test('deve ter data_gravacao na posição 95-100 com formato DDMMAA', () => {
+    test('deve ter data_gravacao na posiÃ§Ã£o 95-100 com formato DDMMAA', () => {
       expect(header.data_gravacao).toBeDefined()
       expect(header.data_gravacao.pos).toEqual([95, 100])
       expect(header.data_gravacao.type).toBe('data')
@@ -135,7 +135,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.data_gravacao.required).toBe(true)
     })
 
-    test('deve ter sequencial_remessa na posição 101-107', () => {
+    test('deve ter sequencial_remessa na posiÃ§Ã£o 101-107', () => {
       expect(header.sequencial_remessa).toBeDefined()
       expect(header.sequencial_remessa.pos).toEqual([101, 107])
       expect(header.sequencial_remessa.type).toBe('num')
@@ -143,7 +143,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.sequencial_remessa.required).toBe(false)
     })
 
-    test('deve ter brancos_2 na posição 108-394 (filler grande)', () => {
+    test('deve ter brancos_2 na posiÃ§Ã£o 108-394 (filler grande)', () => {
       expect(header.brancos_2).toBeDefined()
       expect(header.brancos_2.pos).toEqual([108, 394])
       expect(header.brancos_2.type).toBe('alfa')
@@ -151,7 +151,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(header.brancos_2.required).toBe(false)
     })
 
-    test('deve ter numero_sequencial na posição 395-400', () => {
+    test('deve ter numero_sequencial na posiÃ§Ã£o 395-400', () => {
       expect(header.numero_sequencial).toBeDefined()
       expect(header.numero_sequencial.pos).toEqual([395, 400])
       expect(header.numero_sequencial.type).toBe('num')
@@ -161,7 +161,7 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
     })
   })
 
-  describe('Características específicas', () => {
+  describe('CaracterÃ­sticas especÃ­ficas', () => {
     const header = sicoobCnab400.header!
 
     test('deve ter 18 campos no total', () => {
@@ -169,15 +169,15 @@ describe('Schema Sicoob CNAB 400 - Header de Arquivo', () => {
       expect(campos.length).toBe(18)
     })
 
-    test('prefixo_cooperativa deve ter descrição mencionando a planilha Contracapa', () => {
+    test('prefixo_cooperativa deve ter descriÃ§Ã£o mencionando a planilha Contracapa', () => {
       expect(header.prefixo_cooperativa.description).toContain('Contracapa')
     })
 
-    test('codigo_cliente_beneficiario deve ter descrição mencionando a planilha Contracapa', () => {
+    test('codigo_cliente_beneficiario deve ter descriÃ§Ã£o mencionando a planilha Contracapa', () => {
       expect(header.codigo_cliente_beneficiario.description).toContain('Contracapa')
     })
 
-    test('campos obrigatórios devem incluir identificação e datas', () => {
+    test('campos obrigatÃ³rios devem incluir identificaÃ§Ã£o e datas', () => {
       expect(header.tipo_registro.required).toBe(true)
       expect(header.tipo_operacao.required).toBe(true)
       expect(header.literal_remessa.required).toBe(true)
