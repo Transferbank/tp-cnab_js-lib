@@ -1,5 +1,6 @@
 import type { GroupingRule } from '@tp-types/processing/grouping'
 import { CNABFormatCode } from '@tp-types/core'
+import { CNABInternalInconsistencyError } from '@tp-types/errors'
 import { BANK_CODES } from '@tp-types/bank'
 
 export const CNAB400_GROUPING_RULES: Record<string, GroupingRule> = {
@@ -70,7 +71,13 @@ export const CNAB240_GROUPING_RULES: Record<string, GroupingRule> = {
 export function getGroupingRule(
   bankCode: string,
   format: CNABFormatCode,
-): GroupingRule | undefined {
+): GroupingRule {
   const rules = format === CNABFormatCode.CNAB240 ? CNAB240_GROUPING_RULES : CNAB400_GROUPING_RULES
-  return rules[bankCode]
+  const rule = rules[bankCode]
+  
+  if (rule == null) {
+    throw new CNABInternalInconsistencyError(bankCode, format)
+  }
+  
+  return rule
 }

@@ -3,7 +3,7 @@ import { Cnab240SegmentCode } from '../cnab240-record-types'
 import { Cnab400RecordType } from '../cnab400-record-types'
 import { ReadMode } from './read-mode'
 import { BankSchema, RecordSchema, CNABProvider } from '@tp-types/bank'
-import { CNABError, CNABInternalInconsistencyError, CNABGroupingError, CNABLazyResolveError } from '@tp-types/errors'
+import { CNABError, CNABGroupingError, CNABLazyResolveError } from '@tp-types/errors'
 import { validateCnab240Content } from '@validators/cnab240-content-validator'
 import { validateCnab400Content } from '@validators/cnab400-content-validator'
 import { validateCnab240Structure } from '@validators/cnab240-structure-validator'
@@ -55,24 +55,9 @@ export class CNABFile {
     return `CNABFile { type: ${formatLabel}, bank: ${this.bankName} (${this.bankCode}), lines: ${this.lineCount} }`
   }
 
-  /**
-   * Como this.bankSchema já existe (resolvido em openCnab() via getBankSchema),
-   * o provider deveria sempre existir. Se getProvider retorna null mesmo assim,
-   * é porque a regra de agrupamento não tem entrada para esse banco+formato —
-   * uma inconsistência entre os dois registries (schema e grouping), não um caso
-   * de uso normal do usuário da lib.
-   */
   private resolveProvider(mode: ReadMode): CNABProvider {
-    // Lazy import para evitar dependência circular
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { getProvider } = require('@/provider/catalog')
-    
-    const provider = getProvider(this.bankCode, this.type, mode)
-    if (provider == null) {
-      throw new CNABInternalInconsistencyError(this.bankCode, this.type)
-    }
-    
-    return provider
+    return getProvider(this.bankCode, this.type, mode)
   }
 
   validate(): boolean

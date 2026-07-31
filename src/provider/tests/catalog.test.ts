@@ -13,7 +13,7 @@ import { groupLines } from '@/grouping/group-lines'
 import { getGroupingRule } from '@/grouping/grouping-rules'
 import { extractLineFields } from '@parser/field-extractor'
 import { getBankSchema } from '@schemas/index'
-import { CNABFormatCode } from '@tp-types/index'
+import { CNABFormatCode, ReadMode } from '@tp-types/index'
 
 describe('Provider Catalog', () => {
   describe('getProvider - bancos CNAB 400 cadastrados', () => {
@@ -29,12 +29,12 @@ describe('Provider Catalog', () => {
 
     bancosCnab400.forEach(({ code, name }) => {
       test(`deve resolver provider para ${name} (${code}) CNAB 400`, () => {
-        const provider = getProvider(code, CNABFormatCode.CNAB400, 'SIMPLE')
+        const provider = getProvider(code, CNABFormatCode.CNAB400, ReadMode.SIMPLE)
 
         expect(provider).not.toBeNull()
         expect(provider?.bankCode).toBe(code)
         expect(provider?.format).toBe(CNABFormatCode.CNAB400)
-        expect(provider?.mode).toBe('SIMPLE')
+        expect(provider?.mode).toBe(ReadMode.SIMPLE)
         expect(provider?.schema).toBeDefined()
         expect(provider?.groupingRule).toBeDefined()
         expect(typeof provider?.group).toBe('function')
@@ -54,12 +54,12 @@ describe('Provider Catalog', () => {
 
     bancosCnab240.forEach(({ code, name }) => {
       test(`deve resolver provider para ${name} (${code}) CNAB 240`, () => {
-        const provider = getProvider(code, CNABFormatCode.CNAB240, 'SIMPLE')
+        const provider = getProvider(code, CNABFormatCode.CNAB240, ReadMode.SIMPLE)
 
         expect(provider).not.toBeNull()
         expect(provider?.bankCode).toBe(code)
         expect(provider?.format).toBe(CNABFormatCode.CNAB240)
-        expect(provider?.mode).toBe('SIMPLE')
+        expect(provider?.mode).toBe(ReadMode.SIMPLE)
         expect(provider?.schema).toBeDefined()
         expect(provider?.groupingRule).toBeDefined()
       })
@@ -67,22 +67,22 @@ describe('Provider Catalog', () => {
   })
 
   describe('getProvider - combinações não cadastradas', () => {
-    test('deve retornar null para Banco do Brasil CNAB 240 (não cadastrado)', () => {
-      const provider = getProvider('001', CNABFormatCode.CNAB240, 'SIMPLE')
-
-      expect(provider).toBeNull()
+    test('deve lançar erro para Banco do Brasil CNAB 240 (não cadastrado)', () => {
+      expect(() => {
+        getProvider('001', CNABFormatCode.CNAB240, ReadMode.SIMPLE)
+      }).toThrow()
     })
 
-    test('deve retornar null para banco totalmente inexistente', () => {
-      const provider = getProvider('999', CNABFormatCode.CNAB400, 'SIMPLE')
-
-      expect(provider).toBeNull()
+    test('deve lançar erro para banco totalmente inexistente', () => {
+      expect(() => {
+        getProvider('999', CNABFormatCode.CNAB400, ReadMode.SIMPLE)
+      }).toThrow()
     })
 
-    test('deve retornar null para Itaú CNAB 240 (não cadastrado)', () => {
-      const provider = getProvider('341', CNABFormatCode.CNAB240, 'SIMPLE')
-
-      expect(provider).toBeNull()
+    test('deve lançar erro para Itaú CNAB 240 (não cadastrado)', () => {
+      expect(() => {
+        getProvider('341', CNABFormatCode.CNAB240, ReadMode.SIMPLE)
+      }).toThrow()
     })
   })
 
@@ -103,7 +103,7 @@ describe('Provider Catalog', () => {
         .map(line => extractLineFields(line, schema.detail!))
 
       // Obter provider
-      const provider = getProvider('237', CNABFormatCode.CNAB400, 'SIMPLE')!
+      const provider = getProvider('237', CNABFormatCode.CNAB400, ReadMode.SIMPLE)
 
       // Comparar resultados
       const resultProvider = provider.group(parsedLines)
@@ -130,7 +130,7 @@ describe('Provider Catalog', () => {
         .map(line => extractLineFields(line, schema.detail!))
 
       // Obter provider
-      const provider = getProvider('033', CNABFormatCode.CNAB400, 'SIMPLE')!
+      const provider = getProvider('033', CNABFormatCode.CNAB400, ReadMode.SIMPLE)
 
       // Comparar resultados
       const resultProvider = provider.group(parsedLines)
@@ -144,7 +144,7 @@ describe('Provider Catalog', () => {
 
   describe('provider.extract* são as funções importadas', () => {
     test('extractHeader/Trailer/Bill são as mesmas funções de extract-canonical', () => {
-      const provider = getProvider('237', CNABFormatCode.CNAB400, 'SIMPLE')!
+      const provider = getProvider('237', CNABFormatCode.CNAB400, ReadMode.SIMPLE)
 
       // Testar que as funções existem e são invocáveis
       expect(typeof provider.extractHeader).toBe('function')

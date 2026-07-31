@@ -10,11 +10,9 @@ export function createProvider(
   bankCode: string,
   format: CNABFormatCode,
   mode: ReadMode,
-): CNABProvider | null {
+): CNABProvider {
   const schema = getBankSchema(bankCode, format)
   const groupingRule = getGroupingRule(bankCode, format)
-  
-  if (schema == null || groupingRule == null) return null
 
   return {
     bankCode,
@@ -30,14 +28,10 @@ export function createProvider(
   }
 }
 
-/**
- * Sem cache — schema/regra já são estáticos, reconstruir Provider é barato.
- * Se custo mudar, cachear aqui é mudança local, não espalhada pelos callers.
- */
 export function getProvider(
   bankCode: string,
   format: CNABFormatCode,
   mode: ReadMode,
-): CNABProvider | null {
+): CNABProvider {
   return createProvider(bankCode, format, mode)
 }

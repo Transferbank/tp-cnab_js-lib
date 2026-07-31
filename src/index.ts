@@ -7,10 +7,7 @@
 import { detectFormat, detectBank } from '@parser/format-detector'
 import { getBankSchema } from '@schemas/index'
 import { CNABFile } from '@tp-types/core'
-import {
-  CNABEmptyFileError,
-  CNABSchemaNotFoundError,
-} from '@tp-types/errors'
+import { CNABEmptyFileError } from '@tp-types/errors'
 
 /**
  * Abre um arquivo CNAB e retorna um objeto CNABFile com metadados detectados.
@@ -34,10 +31,6 @@ export function openCnab(raw: string): CNABFile {
   const format = detectFormat(rawLines)
   const bankCode = detectBank(rawLines[0], format)
   const bankSchema = getBankSchema(bankCode, format)
-
-  if (bankSchema == null) {
-    throw new CNABSchemaNotFoundError(bankCode, format)
-  }
 
   return new CNABFile(format, bankSchema, rawLines)
 }

@@ -50,8 +50,8 @@ describe('cnab240Banks', () => {
 })
 
 describe('getBankSchema', () => {
-  test('retorna null para banco não cadastrado', () => {
-    expect(getBankSchema('999', CNABFormatCode.CNAB400)).toBeNull()
-    expect(getBankSchema('999', CNABFormatCode.CNAB240)).toBeNull()
+  test('lança erro para banco não cadastrado', () => {
+    expect(() => getBankSchema('999', CNABFormatCode.CNAB400)).toThrow()
+    expect(() => getBankSchema('999', CNABFormatCode.CNAB240)).toThrow()
   })
 })

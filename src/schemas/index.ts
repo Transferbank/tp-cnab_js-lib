@@ -1,4 +1,5 @@
 import { BankSchema, CNABFormatCode, BANK_CODES, BankCode } from '@tp-types/index'
+import { CNABSchemaNotFoundError } from '@tp-types/errors'
 
 import { bancoDoBrasilCnab400 } from '@banks/bancoDoBrasil/schemas/cnab400'
 import { bradescoCnab400 } from '@banks/bradesco/schemas/cnab400'
@@ -28,9 +29,14 @@ export const cnab240Banks: Partial<Record<BankCode, BankSchema>> = {
   [BANK_CODES.SICREDI]: sicrediCnab240,
 }
 
-export function getBankSchema(bankCode: string, format: CNABFormatCode): BankSchema | null {
-  if (format === CNABFormatCode.CNAB240) {
-    return cnab240Banks[bankCode as BankCode] || null
+export function getBankSchema(bankCode: string, format: CNABFormatCode): BankSchema {
+  const schema = format === CNABFormatCode.CNAB240
+    ? cnab240Banks[bankCode as BankCode]
+    : cnab400Banks[bankCode as BankCode]
+
+  if (schema == null) {
+    throw new CNABSchemaNotFoundError(bankCode, format)
   }
-  return cnab400Banks[bankCode as BankCode] || null
+
+  return schema
 }

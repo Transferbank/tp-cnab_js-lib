@@ -12,7 +12,7 @@ import { CNABFormatCode, FieldType } from '@tp-types/index'
 describe('validateCnab400Structure', () => {
   describe('Guards iniciais', () => {
     test('deve rejeitar arquivo com menos de 3 linhas', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = ['X'.repeat(400)]
 
       const result = validateCnab400Structure(lines, bradesco)
@@ -88,7 +88,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Validação de tamanho de linha', () => {
     test('deve rejeitar linha com tamanho incorreto', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400), // Header
         '1'.repeat(250), // LINHA INCORRETA - 250 chars
@@ -107,7 +107,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar múltiplas linhas com tamanho incorreto', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(350), // Header incorreto
         '1'.repeat(400),
@@ -136,7 +136,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Posicionamento de Header', () => {
     test('deve aceitar Header na primeira linha', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400), // Header na primeira linha
         '1'.repeat(400),
@@ -150,7 +150,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar Header com tipo incorreto na primeira linha', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '1'.repeat(400), // Tipo errado (1 ao invés de 0)
         '1'.repeat(400),
@@ -169,7 +169,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar Header no meio do arquivo', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -192,7 +192,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Posicionamento de Trailer', () => {
     test('deve aceitar Trailer na última linha', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -206,7 +206,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar Trailer com tipo incorreto na última linha', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -225,7 +225,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar Trailer no meio do arquivo', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '9'.repeat(400), // Trailer no meio
@@ -247,7 +247,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Registros de Detalhe', () => {
     test('deve contar detalhes corretamente', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -262,7 +262,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar arquivo sem detalhes', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '5'.repeat(400), // Tipo desconhecido - não conta como detail
@@ -282,7 +282,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve aceitar arquivo com apenas 1 detalhe', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400), // Apenas 1 detalhe
@@ -297,7 +297,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar tipo de registro desconhecido no meio', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400),
@@ -321,7 +321,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Leitura de tipo_registro.pattern do schema', () => {
     test('deve ler tipo de detail do Banco do Brasil (tipo 7)', () => {
-      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '7'.repeat(400), // BB usa tipo 7 para detail
@@ -337,7 +337,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar tipo 1 quando banco usa tipo 7 (Banco do Brasil)', () => {
-      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         '1'.repeat(400), // Tipo errado para BB
@@ -359,7 +359,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Validação de quantidade de documentos no trailer', () => {
     test('deve aceitar quando quantidade no trailer bate com detailCount', () => {
-      const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
+      const santander = getBankSchema('033', CNABFormatCode.CNAB400)
       
       // Criar trailer com quantidade = 3 na posição correta do Santander (2-7, 6 dígitos)
       const trailerLine = '9' + '000003' + '0'.repeat(393)
@@ -380,7 +380,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve rejeitar quando quantidade no trailer não bate', () => {
-      const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
+      const santander = getBankSchema('033', CNABFormatCode.CNAB400)
       
       // Trailer declara 5, mas arquivo tem apenas 3 detalhes (posição 2-7, 6 dígitos)
       const trailerLine = '9' + '000005' + '0'.repeat(393)
@@ -405,7 +405,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve ignorar validação quando banco não define qtd_documentos', () => {
-      const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+      const itau = getBankSchema('341', CNABFormatCode.CNAB400)
       
       const lines = [
         '0'.repeat(400),
@@ -428,7 +428,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../../banks/bradesco/docs/cnab400/remessa-multipla.txt')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
 
       const result = validateCnab400Structure(lines, bradesco)
 
@@ -448,7 +448,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../../banks/bancoDoBrasil/docs/BANCOBRASIL_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)
 
       const result = validateCnab400Structure(lines, bb)
 
@@ -475,7 +475,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../../banks/bancoDoBrasil/docs/BANCOBRASIL_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
+      const bb = getBankSchema('001', CNABFormatCode.CNAB400)
 
       const result = validateCnab400Structure(lines, bb)
 
@@ -501,7 +501,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../../banks/itau/docs/cnab400/ITAU_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+      const itau = getBankSchema('341', CNABFormatCode.CNAB400)
 
       const result = validateCnab400Structure(lines, itau)
 
@@ -528,7 +528,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../../banks/santander/docs/cnab400/SANTANDER_cnab_400_140.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
+      const santander = getBankSchema('033', CNABFormatCode.CNAB400)
 
       const result = validateCnab400Structure(lines, santander)
 
@@ -546,7 +546,7 @@ describe('validateCnab400Structure', () => {
       const fixturePath = join(__dirname, '../../banks/sicredi/docs/cnab400/SICREDI_cnab_400.CRM')
       const fileContent = readFileSync(fixturePath, 'latin1')
       const lines = fileContent.split(/\r?\n/).filter(l => l.length > 0)
-      const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
+      const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)
 
       const result = validateCnab400Structure(lines, sicredi)
 
@@ -564,7 +564,7 @@ describe('validateCnab400Structure', () => {
   describe('Cobertura de registros opcionais CNAB 400', () => {
     describe('Banco do Brasil - registros tipo 5', () => {
       test('deve reconhecer tipo 5 com tipo_servico 99 (multa)', () => {
-        const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
+        const bb = getBankSchema('001', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400), // Header
           '7'.repeat(400), // Detalhe tipo 7 (BB usa 7, não 1)
@@ -582,7 +582,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 5 com tipo_servico 07 (descontos 2 e 3)', () => {
-        const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
+        const bb = getBankSchema('001', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '7'.repeat(400),
@@ -600,7 +600,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 5 com tipo_servico 08 (agente negativador)', () => {
-        const bb = getBankSchema('001', CNABFormatCode.CNAB400)!
+        const bb = getBankSchema('001', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '7'.repeat(400),
@@ -620,7 +620,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Bradesco - registros tipo 2 e 6', () => {
       test('deve reconhecer tipo 2 (mensagens e descontos)', () => {
-        const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -638,7 +638,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 6 (transferência de carteira)', () => {
-        const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+        const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -658,7 +658,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Itaú - registros tipo 2, 4, 5 e 6 (variantes)', () => {
       test('deve reconhecer tipo 2 (multa)', () => {
-        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -676,7 +676,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 4 (rateio de crédito)', () => {
-        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -694,7 +694,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 5 (e-mail sacador/avalista)', () => {
-        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -712,7 +712,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 6 com codigo_layout 1 (dados do título)', () => {
-        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -730,7 +730,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 6 com codigo_layout 2 (instruções 1-5)', () => {
-        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -748,7 +748,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 6 com codigo_layout 3 (instruções 6-9)', () => {
-        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -766,7 +766,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 6 com codigo_layout 4 (sacador/avalista)', () => {
-        const itau = getBankSchema('341', CNABFormatCode.CNAB400)!
+        const itau = getBankSchema('341', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -786,7 +786,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Sicredi - registros tipo 2, 5, 6, 7, 8', () => {
       test('deve reconhecer tipo 2 (mensagem)', () => {
-        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -804,7 +804,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 5 (informativo)', () => {
-        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -822,7 +822,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 6 (beneficiário final)', () => {
-        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -840,7 +840,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 7 (descontos 2 e 3)', () => {
-        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -858,7 +858,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 8 (híbrido/QR Code)', () => {
-        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)!
+        const sicredi = getBankSchema('748', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -878,7 +878,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Caixa - registros tipo 2, 3, 4', () => {
       test('deve reconhecer tipo 2 (mensagens do título)', () => {
-        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)!
+        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -896,7 +896,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 3 (e-mail/SMS)', () => {
-        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)!
+        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -914,7 +914,7 @@ describe('validateCnab400Structure', () => {
       })
 
       test('deve reconhecer tipo 4 (tipo de pagamento e rateio)', () => {
-        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)!
+        const caixa = getBankSchema('104', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -934,7 +934,7 @@ describe('validateCnab400Structure', () => {
 
     describe('Santander - registro tipo 8', () => {
       test('deve reconhecer tipo 8 (PIX)', () => {
-        const santander = getBankSchema('033', CNABFormatCode.CNAB400)!
+        const santander = getBankSchema('033', CNABFormatCode.CNAB400)
         const lines = [
           '0'.repeat(400),
           '1'.repeat(400),
@@ -955,7 +955,7 @@ describe('validateCnab400Structure', () => {
 
   describe('Casos de borda', () => {
     test('deve processar arquivo grande (muitos detalhes) sem problemas', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '0'.repeat(400),
         ...Array(1000).fill('1'.repeat(400)), // 1000 detalhes
@@ -969,7 +969,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve acumular múltiplos erros em arquivo mal-formado', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = [
         '1'.repeat(400), // Erro: deveria ser Header
         '0'.repeat(400), // Erro: Header no meio
@@ -985,7 +985,7 @@ describe('validateCnab400Structure', () => {
     })
 
     test('deve retornar sem processar linhas quando guard inicial falha', () => {
-      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)!
+      const bradesco = getBankSchema('237', CNABFormatCode.CNAB400)
       const lines = ['X'] // Menos de 3 linhas
 
       const result = validateCnab400Structure(lines, bradesco)
