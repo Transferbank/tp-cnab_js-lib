@@ -15,6 +15,10 @@ import type {
  * 
  * Note: Similar a getRecordTypePattern (field-extractor.ts), mas opera em
  * ParsedLine (dados) vs RecordSchema (definição).
+ * 
+ * TODO(perf): Varredura linear O(n campos). Chamada até 3x por linha em CNAB 240.
+ * Possível otimização: cache Map<posição, fieldName> por linha (requer cuidado
+ * com estruturas heterogêneas entre tipos de registro).
  */
 function getFieldByPosition(line: ParsedLine, position: number): ParsedField | undefined {
   for (const field of Object.values(line)) {
