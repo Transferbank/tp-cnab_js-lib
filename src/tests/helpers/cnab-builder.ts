@@ -77,9 +77,3 @@ export function buildLine240(
 ): string {
   return buildCnabLine(schema, values, 240)
 }
-
-/**
- * Alias para buildLine400 (retrocompatibilidade)
- * @deprecated Use buildLine400 explicitamente
- */
-export const buildLine = buildLine400
