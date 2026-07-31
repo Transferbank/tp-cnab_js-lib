@@ -6,7 +6,7 @@ import { getGroupingRule } from '@/grouping/grouping-rules'
 import { groupLines } from '@/grouping/group-lines'
 import { extractHeader, extractTrailer, extractBill, extractBillFull } from '@/read'
 
-export function createProvider(
+export function getProvider(
   bankCode: string,
   format: CNABFormatCode,
   mode: ReadMode,
@@ -26,12 +26,4 @@ export function createProvider(
     extractBill,
     extractBillFull,
   }
-}
-
-export function getProvider(
-  bankCode: string,
-  format: CNABFormatCode,
-  mode: ReadMode,
-): CNABProvider {
-  return createProvider(bankCode, format, mode)
 }

@@ -1,1 +1,1 @@
-export { createProvider, getProvider } from './catalog'
+export { getProvider } from './catalog'
