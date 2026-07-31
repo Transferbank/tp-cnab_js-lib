@@ -7,10 +7,14 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab, CNABFile } from '@/index'
+import { openCnabFromLines, CNABFile } from '@/index'
 import { CNABFormatCode } from '@tp-types/core'
 import type { CNABReadResult } from '@tp-types/core/read-result'
 import type { CNABData } from '@tp-types/read'
+
+function stringToLines(content: string): string[] {
+  return content.split(/\r?\n/).filter((line) => line.length > 0)
+}
 
 describe('openCnab – pipeline público de ponta a ponta: Bradesco CNAB 240 remessa-multipla', () => {
   const fixtureDir = path.join(__dirname, '../../docs/cnab240')
@@ -26,7 +30,7 @@ describe('openCnab – pipeline público de ponta a ponta: Bradesco CNAB 240 rem
   beforeAll(() => {
     const jsonContent = fs.readFileSync(jsonPath, 'utf8')
     metadata = JSON.parse(jsonContent)
-    cnabFile = openCnab(txtContent)
+    cnabFile = openCnabFromLines(stringToLines(txtContent))
     readResult = cnabFile.read()
     validationResult = cnabFile.validate(true)
   })

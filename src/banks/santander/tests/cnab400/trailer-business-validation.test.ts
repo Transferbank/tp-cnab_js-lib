@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Testes de validação CNAB 400 — Santander (033)
  * 
  * Testa a validação completa de arquivos CNAB 400 do Santander incluindo:
@@ -6,10 +6,14 @@
  * - Validação de múltiplos detalhes
  */
 
-import { openCnab } from '@/index'
+import { openCnabFromLines } from '@/index'
 import { santanderCnab400 } from '../../schemas/cnab400'
 import { buildLine400 } from '@/tests/helpers/cnab-builder'
 
+
+function stringToLines(content: string): string[] {
+  return content.split(/\r?\n/).filter((line) => line.length > 0)
+}
 describe('openCnab + CNABFile.validate(true) — Santander (033) CNAB 400', () => {
   describe('Checagem cruzada do trailer', () => {
     const header = buildLine400(santanderCnab400.header!, {
@@ -34,7 +38,7 @@ describe('openCnab + CNABFile.validate(true) — Santander (033) CNAB 400', () =
         numero_sequencial: '3',
       })
 
-      const cnabFile = openCnab([header, detail, trailer].join('\n'))
+      const cnabFile = openCnabFromLines(stringToLines([header, detail, trailer].join('\n')))
       const result = cnabFile.validate(true)
 
       expect(result.feedback.lines).toContainEqual(
@@ -48,7 +52,7 @@ describe('openCnab + CNABFile.validate(true) — Santander (033) CNAB 400', () =
         numero_sequencial: '3',
       })
 
-      const cnabFile = openCnab([header, detail, trailer].join('\n'))
+      const cnabFile = openCnabFromLines(stringToLines([header, detail, trailer].join('\n')))
       const result = cnabFile.validate(true)
 
       expect(result.feedback.lines.filter((e) => e.field === 'Quantidade no Trailer')).toEqual([])
@@ -82,7 +86,7 @@ describe('openCnab + CNABFile.validate(true) — Santander (033) CNAB 400', () =
         numero_sequencial: '4',
       })
 
-      const cnabFile = openCnab([header, detail1, detail2, trailer].join('\n'))
+      const cnabFile = openCnabFromLines(stringToLines([header, detail1, detail2, trailer].join('\n')))
       const result = cnabFile.validate(true)
 
       expect(result.feedback.lines.filter((e) => e.field === 'Quantidade no Trailer')).toEqual([])

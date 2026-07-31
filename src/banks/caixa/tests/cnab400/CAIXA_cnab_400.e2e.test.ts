@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Pipeline público de ponta a ponta para CAIXA_cnab_400.REM: exercita
  * `openCnab()`, o caminho que um consumidor real da lib usa – conteúdo
  * bruto do arquivo, sem pré-separar linhas nem escolher schema manualmente
@@ -7,11 +7,15 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab, CNABFile } from '@/index'
+import { openCnabFromLines, CNABFile } from '@/index'
 import { CNABFormatCode } from '@tp-types/core'
 import type { CNABReadResult } from '@tp-types/core/read-result'
 import type { CNABData } from '@tp-types/read'
 
+
+function stringToLines(content: string): string[] {
+  return content.split(/\r?\n/).filter((line) => line.length > 0)
+}
 describe('openCnab – pipeline público de ponta a ponta: CAIXA_cnab_400.REM', () => {
   const fixtureDir = path.join(__dirname, '../../docs/cnab400')
   const txtPath = path.join(fixtureDir, 'CAIXA_cnab_400.REM')
@@ -22,7 +26,7 @@ describe('openCnab – pipeline público de ponta a ponta: CAIXA_cnab_400.REM', 
   let validationResult: { isValid: boolean; feedback?: { lines?: any[]; records?: any[] } }
 
   beforeAll(() => {
-    cnabFile = openCnab(txtContent)
+    cnabFile = openCnabFromLines(stringToLines(txtContent))
     readResult = cnabFile.read()
     validationResult = cnabFile.validate(true)
   })

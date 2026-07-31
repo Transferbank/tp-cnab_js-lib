@@ -3,10 +3,14 @@
  * Validando o lançamento de exceção para códigos não mapeados em interpret()
  */
 
-import { openCnab, CNABUnknownFieldCodeError } from '@/index'
+import { openCnabFromLines, CNABUnknownFieldCodeError } from '@/index'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
+
+function stringToLines(content: string): string[] {
+  return content.split(/\r?\n/).filter((line) => line.length > 0)
+}
 describe('CNABUnknownFieldCodeError', () => {
   describe('Casos onde NÃO deve lançar (valores esperados)', () => {
     test('campo com código zero (não preenchido) não deve lançar', () => {
@@ -14,7 +18,7 @@ describe('CNABUnknownFieldCodeError', () => {
       // A fixture pode conter códigos válidos ou código 0 (zero-fill, não preenchido)
       const fixturePath = join(__dirname, '../../banks/caixa/docs/cnab400/CAIXA_cnab_400.REM')
       const fileContent = readFileSync(fixturePath, 'latin1')
-      const cnabFile = openCnab(fileContent)
+      const cnabFile = openCnabFromLines(stringToLines(fileContent))
 
       // Não deve lançar exceção
       expect(() => cnabFile.read()).not.toThrow()
@@ -42,7 +46,7 @@ describe('CNABUnknownFieldCodeError', () => {
         fileContent = lines.join('\n')
       }
 
-      const cnabFile = openCnab(fileContent)
+      const cnabFile = openCnabFromLines(stringToLines(fileContent))
 
       // Não deve lançar exceção
       expect(() => cnabFile.read()).not.toThrow()
@@ -68,7 +72,7 @@ describe('CNABUnknownFieldCodeError', () => {
         fileContent = lines.join('\n')
       }
 
-      const cnabFile = openCnab(fileContent)
+      const cnabFile = openCnabFromLines(stringToLines(fileContent))
 
       // Deve lançar CNABUnknownFieldCodeError
       expect(() => cnabFile.read()).toThrow(CNABUnknownFieldCodeError)
@@ -102,7 +106,7 @@ describe('CNABUnknownFieldCodeError', () => {
         fileContent = lines.join('\n')
       }
 
-      const cnabFile = openCnab(fileContent)
+      const cnabFile = openCnabFromLines(stringToLines(fileContent))
 
       // Deve lançar CNABUnknownFieldCodeError
       await expect(cnabFile.readAsync()).rejects.toThrow(CNABUnknownFieldCodeError)
@@ -144,7 +148,7 @@ describe('CNABUnknownFieldCodeError', () => {
         const [bank, fileName] = fixture.split('/')
         const fixturePath = bankFixturePath('cnab400', bank, fileName)
         const fileContent = readFileSync(fixturePath, 'latin1')
-        const cnabFile = openCnab(fileContent)
+        const cnabFile = openCnabFromLines(stringToLines(fileContent))
 
         // Não deve lançar exceção
         expect(() => cnabFile.read()).not.toThrow()
@@ -160,7 +164,7 @@ describe('CNABUnknownFieldCodeError', () => {
         const [bank, fileName] = fixture.split('/')
         const fixturePath = bankFixturePath('cnab240', bank, fileName)
         const fileContent = readFileSync(fixturePath, 'latin1')
-        const cnabFile = openCnab(fileContent)
+        const cnabFile = openCnabFromLines(stringToLines(fileContent))
 
         // Não deve lançar exceção
         expect(() => cnabFile.read()).not.toThrow()

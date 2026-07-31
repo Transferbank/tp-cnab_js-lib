@@ -16,7 +16,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { openCnab } from '@/index'
+import { openCnabFromLines } from '@/index'
 import { CNABFormatCode } from '@tp-types/index'
 import type { CNABFile, CNABReadResult } from '@tp-types/core'
 import type { CNABData } from '@tp-types/read'
@@ -41,6 +41,10 @@ function readData(cnabFile: CNABFile): CNABReadResult<CNABData> {
   return cnabFile.read() as CNABReadResult<CNABData>
 }
 
+
+function stringToLines(content: string): string[] {
+  return content.split(/\r?\n/).filter((line) => line.length > 0)
+}
 describe('Extração de campos canônicos - Cobertura completa', () => {
   // ========== CNAB 400 - TODOS OS BANCOS ==========
   
@@ -48,7 +52,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     const fixture = () => loadFixture('cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
     
     test('deve extrair campos de ouro dos boletos', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.bills.length).toBeGreaterThan(0)
@@ -71,7 +75,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair header com cedente', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.header.cedente).toBeDefined()
@@ -81,7 +85,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve ter trailer sem totalizadores (BB só tem campos estruturais)', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.trailer).toBeDefined()
@@ -91,7 +95,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair endereço do sacado', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -106,7 +110,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     const fixture = () => loadFixture('cnab400/bradesco/remessa-multipla.txt')
     
     test('deve extrair campos de ouro dos boletos', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.bills.length).toBeGreaterThan(0)
@@ -120,7 +124,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair header e trailer', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.header.cedente.nome).toBeDefined()
@@ -132,7 +136,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     const fixture = () => loadFixture('cnab400/itau/ITAU_cnab_400.REM')
     
     test('deve extrair campos de ouro dos boletos', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.bills.length).toBeGreaterThan(0)
@@ -149,7 +153,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair header com cedente', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.header.cedente.nome).toBeDefined()
@@ -157,7 +161,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve ter trailer sem totalizadores (Itaú só tem campos estruturais)', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.trailer).toBeDefined()
@@ -166,7 +170,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair endereço completo do sacado', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -183,7 +187,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     const fixture = () => loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
     
     test('deve extrair campos de ouro dos boletos', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.bills.length).toBeGreaterThan(0)
@@ -201,7 +205,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair header com cedente', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.header.cedente.nome).toBeDefined()
@@ -210,7 +214,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair trailer com totalizadores', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.trailer).toBeDefined()
@@ -223,7 +227,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair endereço completo do sacado', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -241,7 +245,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     const fixture = () => loadFixture('cnab400/sicredi/SICREDI_cnab_400.CRM')
     
     test('deve extrair campos de ouro dos boletos', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.bills.length).toBeGreaterThan(0)
@@ -259,7 +263,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair header com cedente.documento', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       // Sicredi CNAB 400 não tem cedente.nome no header (só documento e data)
@@ -270,7 +274,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve ter trailer sem totalizadores (Sicredi só tem campos estruturais)', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.trailer).toBeDefined()
@@ -279,7 +283,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair endereço parcial do sacado (Sicredi não tem bairro/cidade/estado)', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -301,7 +305,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     const fixture = () => loadFixture('cnab240/bradesco/remessa-multipla.txt')
     
     test('deve extrair campos de ouro dos boletos (Segmento P)', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.bills.length).toBeGreaterThan(0)
@@ -321,7 +325,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair campos do sacado (Segmento Q)', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -340,7 +344,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair header com cedente', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.header.cedente.nome).toBeDefined()
@@ -351,7 +355,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair trailer com totalizadores', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       expect(result.trailer).toBeDefined()
@@ -360,7 +364,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
     
     test('deve extrair campos financeiros opcionais', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -407,7 +411,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     fixtures.forEach(({ nome, path: fixturePath }) => {
       test(`${nome}: campos obrigatórios devem ser não-nulos`, () => {
         const fixture = loadFixture(fixturePath)
-        const cnabFile = openCnab(fixture)
+        const cnabFile = openCnabFromLines(stringToLines(fixture))
         const result = readData(cnabFile)
         
         expect(result.bills.length).toBeGreaterThan(0)
@@ -451,7 +455,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
   describe('Paginação', () => {
     test('deve retornar apenas boletos da página solicitada', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       
       // Lê tudo para saber quantos boletos há
       const todos = readData(cnabFile)
@@ -473,7 +477,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('deve retornar header e trailer em todas as páginas', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       
       const todos = readData(cnabFile)
       const totalBills = todos.bills.length
@@ -511,7 +515,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       
       const fixture = [header, headerLote, segP, segR, segQ, trailerLote, trailer].join('\n')
       
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       
       // Deve lançar erro (modo estrito no read())
       expect(() => readData(cnabFile)).toThrow(/Erro de agrupamento/)
@@ -596,7 +600,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
   describe('Campos com interpretar()', () => {
     test('deve interpretar juros.tipo corretamente (Bradesco CNAB 240 Segmento P)', () => {
       const fixture = loadFixture('cnab240/bradesco/remessa-multipla.txt')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -613,7 +617,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       ]
       
       fixtures.forEach(({ path: fixturePath }) => {
-        const cnabFile = openCnab(loadFixture(fixturePath))
+        const cnabFile = openCnabFromLines(stringToLines(loadFixture(fixturePath)))
         const result = readData(cnabFile)
         
         // Nem todos os boletos têm juros.vigenciaAPartirDe, mas se tiver deve ser string
@@ -635,7 +639,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
   describe('Cobertura de endereço do sacado', () => {
     test('BB CNAB 400: deve ter logradouro, bairro, cep, cidade, estado', () => {
       const fixture = loadFixture('cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -648,7 +652,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('Sicredi CNAB 400: deve ter apenas logradouro e cep (sem bairro/cidade/estado)', () => {
       const fixture = loadFixture('cnab400/sicredi/SICREDI_cnab_400.CRM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -669,7 +673,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
   describe('Campos opcionais - desconto e abatimento', () => {
     test('deve extrair desconto.valor quando presente', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       // Nem todos os boletos têm desconto, mas deve estar mapeado quando presente
@@ -682,7 +686,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('deve extrair abatimento.valor quando presente', () => {
       const fixture = loadFixture('cnab400/bradesco/remessa-multipla.txt')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       // Nem todos os boletos têm abatimento, mas deve estar mapeado quando presente
@@ -699,7 +703,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
   describe('Campos do cedente', () => {
     test('cedente.documento deve estar presente em Sicredi CNAB 400', () => {
       const fixture = loadFixture('cnab400/sicredi/SICREDI_cnab_400.CRM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       expect(result.header.cedente.documento).toBeDefined()
@@ -709,7 +713,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('cedente.documento deve estar presente em CNAB 240', () => {
       const fixture = loadFixture('cnab240/bradesco/remessa-multipla.txt')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       expect(result.header.cedente.documento).toBeDefined()
@@ -724,7 +728,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       ]
       
       fixtures.forEach(fixturePath => {
-        const cnabFile = openCnab(loadFixture(fixturePath))
+        const cnabFile = openCnabFromLines(stringToLines(loadFixture(fixturePath)))
         const result = readData(cnabFile)
         
         // Outros bancos CNAB 400 não expõem cedente.documento
@@ -738,7 +742,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
   describe('Tipos de dados corretos', () => {
     test('valor deve ser number com decimais', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -750,7 +754,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('vencimento deve ser string (formato varia por banco)', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -764,7 +768,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('numeroDocumento deve ser string', () => {
       const fixture = loadFixture('cnab400/bradesco/remessa-multipla.txt')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -777,7 +781,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('sacado.nome deve ser string não-vazia', () => {
       const fixture = loadFixture('cnab400/itau/ITAU_cnab_400.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -799,7 +803,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       
       const fixture = [header, trailer].join('\n')
       
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       expect(result.bills).toHaveLength(0)
@@ -809,7 +813,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('deve retornar array vazio para página além do total', () => {
       const fixture = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       
       const todos = readData(cnabFile)
       const totalBills = todos.bills.length
@@ -824,7 +828,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     
     test('deve lidar com campos opcionais ausentes', () => {
       const fixture = loadFixture('cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       const primeiroBoleto = result.bills[0]
@@ -846,7 +850,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       const fixture = () => loadFixture('cnab240/bradesco/remessa-multipla.txt')
       
       test('deve extrair juros.tipo corretamente (código 3 = percentual na fixture)', () => {
-        const cnabFile = openCnab(fixture())
+        const cnabFile = openCnabFromLines(stringToLines(fixture()))
         const result = readData(cnabFile)
         
         expect(result.bills.length).toBeGreaterThan(0)
@@ -859,7 +863,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       })
       
       test('deve extrair juros.valor quando juros.tipo não é dispensado', () => {
-        const cnabFile = openCnab(fixture())
+        const cnabFile = openCnabFromLines(stringToLines(fixture()))
         const result = readData(cnabFile)
         
         const firstBoleto = result.bills[0]
@@ -871,7 +875,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       })
       
       test('deve extrair juros.vigenciaAPartirDe quando presente', () => {
-        const cnabFile = openCnab(fixture())
+        const cnabFile = openCnabFromLines(stringToLines(fixture()))
         const result = readData(cnabFile)
         
         const firstBoleto = result.bills[0]
@@ -911,7 +915,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
         const trailer = '033' + '9999' + '9' + ' '.repeat(233)
         
         const fixture = [header, headerLote, segP, segQ, trailerLote, trailer].join('\n')
-        const cnabFile = openCnab(fixture)
+        const cnabFile = openCnabFromLines(stringToLines(fixture))
         const result = readData(cnabFile)
         
         expect(result.bills).toHaveLength(1)
@@ -952,7 +956,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
         const trailer = '033' + '9999' + '9' + ' '.repeat(233)
         
         const fixture = [header, headerLote, segP, segQ, trailerLote, trailer].join('\n')
-        const cnabFile = openCnab(fixture)
+        const cnabFile = openCnabFromLines(stringToLines(fixture))
         const result = readData(cnabFile)
         
         const bill = result.bills[0]
@@ -989,7 +993,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
         const trailer = '033' + '9999' + '9' + ' '.repeat(233)
         
         const fixture = [header, headerLote, segP, segQ, trailerLote, trailer].join('\n')
-        const cnabFile = openCnab(fixture)
+        const cnabFile = openCnabFromLines(stringToLines(fixture))
         const result = readData(cnabFile)
         
         const bill = result.bills[0]
@@ -1028,7 +1032,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
         const trailer = '748' + '9999' + '9' + ' '.repeat(233)
         
         const fixture = [header, headerLote, segP, segQ, trailerLote, trailer].join('\n')
-        const cnabFile = openCnab(fixture)
+        const cnabFile = openCnabFromLines(stringToLines(fixture))
         const result = readData(cnabFile)
         
         const bill = result.bills[0]
@@ -1063,7 +1067,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
         const trailer = '748' + '9999' + '9' + ' '.repeat(233)
         
         const fixture = [header, headerLote, segP, segQ, trailerLote, trailer].join('\n')
-        const cnabFile = openCnab(fixture)
+        const cnabFile = openCnabFromLines(stringToLines(fixture))
         const result = readData(cnabFile)
         
         const bill = result.bills[0]
@@ -1100,7 +1104,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
         const trailer = '748' + '9999' + '9' + ' '.repeat(233)
         
         const fixture = [header, headerLote, segP, segQ, trailerLote, trailer].join('\n')
-        const cnabFile = openCnab(fixture)
+        const cnabFile = openCnabFromLines(stringToLines(fixture))
         const result = readData(cnabFile)
         
         const bill = result.bills[0]
@@ -1121,7 +1125,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
           '237' + '0001' + '5' + ' '.repeat(233) + '\n' +
           '237' + '9999' + '9' + ' '.repeat(233)
         
-        const resultBradesco = readData(openCnab(fixtureBradesco))
+        const resultBradesco = readData(openCnabFromLines(stringToLines(fixtureBradesco)))
         expect(resultBradesco.bills[0].juros?.tipo).toBe('dispensado')
         
         // Sicredi uses code 3 for waived interest (different from other banks)
@@ -1132,7 +1136,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
           '748' + '0001' + '5' + ' '.repeat(233) + '\n' +
           '748' + '9999' + '9' + ' '.repeat(233)
         
-        const resultSicredi = readData(openCnab(fixtureSicredi))
+        const resultSicredi = readData(openCnabFromLines(stringToLines(fixtureSicredi)))
         expect(resultSicredi.bills[0].juros?.tipo).toBe('dispensado')
       })
     })
@@ -1150,7 +1154,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       ]
       
       fixtures.forEach(({ path: fixturePath }) => {
-        const cnabFile = openCnab(loadFixture(fixturePath))
+        const cnabFile = openCnabFromLines(stringToLines(loadFixture(fixturePath)))
         const result = readData(cnabFile)
         
         if (result.bills.length > 0) {
@@ -1181,7 +1185,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       
       const fixture = [header, headerLote, segP, segQ, segR, trailerLote, trailer].join('\n')
       
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       // Multa com data zerada deve ter vigenciaAPartirDe === undefined
@@ -1193,7 +1197,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     test('nossoNumero deve preservar precisão (string, não number)', () => {
       // BB tem casos com 17 dígitos que excedem Number.MAX_SAFE_INTEGER
       const fixture = loadFixture('cnab400/bancodobrasil/BANCOBRASIL_cnab_400.REM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       if (result.bills.length > 0) {
@@ -1217,7 +1221,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       
       // Teste com Santander que tem CEP como campo único
       const fixtureSantander = loadFixture('cnab400/santander/SANTANDER_cnab_400_140.REM')
-      const cnabFileSantander = openCnab(fixtureSantander)
+      const cnabFileSantander = openCnabFromLines(stringToLines(fixtureSantander))
       const resultSantander = readData(cnabFileSantander)
       
       if (resultSantander.bills.length > 0 && resultSantander.bills[0].sacado?.endereco?.cep) {
@@ -1236,7 +1240,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       ]
       
       fixtures.forEach(fixturePath => {
-        const cnabFile = openCnab(loadFixture(fixturePath))
+        const cnabFile = openCnabFromLines(stringToLines(loadFixture(fixturePath)))
         const result = readData(cnabFile)
         
         if (result.bills.length > 0) {
@@ -1252,7 +1256,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     test('documento (CPF/CNPJ) deve remover zeros à esquerda (consistência com CNABRecord)', () => {
       // Sicredi tem cedente.documento no header
       const fixture = loadFixture('cnab400/sicredi/SICREDI_cnab_400.CRM')
-      const cnabFile = openCnab(fixture)
+      const cnabFile = openCnabFromLines(stringToLines(fixture))
       const result = readData(cnabFile)
       
       // Documento deve ser string sem zeros à esquerda
@@ -1275,14 +1279,14 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
       // Bug: Caixa usa "codigo_registro", não "tipo_registro"
       // identifyRecordType buscava por lista fixa de nomes, não por posição
       // Resultado: agrupamento falhava silenciosamente, retornando 0 boletos
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
 
       expect(result.bills.length).toBe(10)
     })
 
     test('deve extrair campos de ouro dos boletos', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
 
       const firstBill = result.bills[0]
@@ -1298,7 +1302,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
 
     test('deve extrair juros com tipo interpretado', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       const firstBill = result.bills[0]
@@ -1322,14 +1326,14 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     test('deve continuar funcionando após correção de identifyRecordType', () => {
       // Sicoob já funcionava (usa "tipo_registro"), mas serve como regressão
       // pra garantir que a correção não quebrou bancos que já funcionavam
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
 
       expect(result.bills.length).toBe(10)
     })
 
     test('deve extrair campos de ouro dos boletos', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
 
       const firstBill = result.bills[0]
@@ -1345,7 +1349,7 @@ describe('Extração de campos canônicos - Cobertura completa', () => {
     })
 
     test('deve extrair cedente.nome do header', () => {
-      const cnabFile = openCnab(fixture())
+      const cnabFile = openCnabFromLines(stringToLines(fixture()))
       const result = readData(cnabFile)
       
       // Gap de mapeamento fechado: Sicoob agora expõe cedente.nome
