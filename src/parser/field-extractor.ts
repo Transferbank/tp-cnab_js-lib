@@ -36,24 +36,23 @@ function getFieldValue(rawValue: string, fieldDef: FieldDefinition): string | nu
 
 function checkFieldFormat(rawValue: string, fieldDef: FieldDefinition): string | null {
   const { type: fieldType, required: isRequired, pattern: expectedPattern } = fieldDef
+  const trimmedValue = rawValue.trim()
 
   if (expectedPattern != null && isRequired) {
-    const actual = rawValue.trim()
-    const patternMatches = actual === String(expectedPattern)
+    const patternMatches = trimmedValue === String(expectedPattern)
     
-    if (actual.length > 0 && !patternMatches) {
-      return `Esperado "${expectedPattern}", encontrado "${actual}"`
+    if (trimmedValue.length > 0 && !patternMatches) {
+      return `Esperado "${expectedPattern}", encontrado "${trimmedValue}"`
     }
-    if (actual.length === 0) {
+    if (trimmedValue.length === 0) {
       return `Campo obrigatório vazio, esperado "${expectedPattern}"`
     }
   }
 
-  if (isRequired && (rawValue == null || rawValue.trim().length === 0)) {
+  if (isRequired && (rawValue == null || trimmedValue.length === 0)) {
     return 'Campo obrigatório não preenchido'
   }
 
-  const trimmedValue = rawValue.trim()
   if (fieldType === FieldType.NUM && trimmedValue.length > 0) {
     if (!/^\d+$/.test(trimmedValue)) {
       return `Campo numérico contém caracteres inválidos: "${trimmedValue}"`
