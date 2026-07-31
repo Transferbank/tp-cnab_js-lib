@@ -20,6 +20,8 @@ import type { CNABReadResult } from './read-result'
 import type { LazyBillItem } from './lazy-bill'
 import { ValidationResult } from '@/validators/types'
 
+let cachedGetProvider: typeof import('@/provider/catalog').getProvider | undefined
+
 export class CNABFile {
   public readonly type: CNABFormatCode
   private readonly bankSchema: BankSchema
@@ -57,9 +59,11 @@ export class CNABFile {
   }
 
   private resolveProvider(mode: ReadMode): CNABProvider {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { getProvider } = require('@/provider/catalog')
-    return getProvider(this.bankCode, this.type, mode)
+    if (cachedGetProvider == null) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      cachedGetProvider = require('@/provider/catalog').getProvider
+    }
+    return cachedGetProvider!(this.bankCode, this.type, mode)
   }
 
   validate(): boolean
