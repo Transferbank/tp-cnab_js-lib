@@ -1,8 +1,9 @@
-import { BankSchema, ValidationError } from '@tp-types/index'
+import { BankSchema, ValidationError, OptionalRecordSchema } from '@tp-types/index'
 import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { getCnab240SegmentYVariant } from '@parser/cnab-positions'
 import type { Cnab240RecordKind, Cnab240MandatoryRecordKey } from '@tp-types/cnab240-record-types'
 import { Cnab240SegmentCode } from '@tp-types/cnab240-record-types'
+import { buildOptionalMap } from './build-optional-map'
 
 const LINE_LENGTH = 240
 
@@ -79,9 +80,7 @@ export function validateCnab240Structure(
     return { errors, batchCount, billCount }
   }
 
-  const optionalByIdentifier = new Map(
-    (bankSchema.optionalRecords ?? []).map(r => [r.identifier, r])
-  )
+  const optionalByIdentifier = buildOptionalMap(bankSchema)
 
   let state: MachineState = 'aguardando_header_arquivo'
   let sawFileHeader = false
@@ -192,7 +191,7 @@ function validateRecordExistsInSchema(
   kind: Cnab240RecordKind,
   lineNumber: number,
   bankSchema: BankSchema,
-  optionalByIdentifier: Map<string, any>
+  optionalByIdentifier: Map<string, OptionalRecordSchema>
 ): ValidationError | null {
   if (typeof kind === 'string') {
     if (bankSchema[kind] == null) {

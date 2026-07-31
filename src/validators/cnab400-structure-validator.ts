@@ -1,7 +1,8 @@
-import { BankSchema, ValidationError } from '@tp-types/index'
+import { BankSchema, ValidationError, OptionalRecordSchema } from '@tp-types/index'
 import { getRecordTypePattern } from '@parser/field-extractor'
 import { getCnab400RecordType } from '@parser/position-reader'
 import { getCnab400OptionalSuffix1, getCnab400OptionalSuffix2 } from '@parser/cnab-positions'
+import { buildOptionalMap } from './build-optional-map'
 
 const LINE_LENGTH = 400
 
@@ -37,9 +38,7 @@ export function validateCnab400Structure(
   const detailType = String(getRecordTypePattern(bankSchema.detail!, 1) ?? '1')
   const trailerType = String(getRecordTypePattern(bankSchema.trailer!, 1) ?? '9')
 
-  const optionalByIdentifier = new Map(
-    (bankSchema.optionalRecords ?? []).map(r => [r.identifier, r])
-  )
+  const optionalByIdentifier = buildOptionalMap(bankSchema)
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
@@ -168,7 +167,7 @@ function validateMiddleLine(
   headerType: string,
   detailType: string,
   trailerType: string,
-  optionalByIdentifier: Map<string, any>
+  optionalByIdentifier: Map<string, OptionalRecordSchema>
 ): { error: ValidationError | null; isDetail: boolean } {
   if (recordType === detailType) {
     return { error: null, isDetail: true }
