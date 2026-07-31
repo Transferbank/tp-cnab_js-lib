@@ -87,16 +87,14 @@ export function extractSegmentSMessages(line: string): string[] {
   if (variant === 'formulario') {
     // Variante 1: apenas uma mensagem (pos 22-121)
     const msg = fields.mensagem_impressa?.value
-    const msgIsValid = msg !== null && msg !== undefined && typeof msg === 'string' && msg.trim().length > 0
-    if (msgIsValid) {
+    if (msg != null && typeof msg === 'string' && msg.trim().length > 0) {
       messages.push(msg.trim())
     }
   } else {
     // Variante 2: mensagens 5-9 (pos 19-218)
     for (let i = 5; i <= 9; i++) {
       const msg = fields[`mensagem_${i}`]?.value
-      const msgIsValid = msg !== null && msg !== undefined && typeof msg === 'string' && msg.trim().length > 0
-      if (msgIsValid) {
+      if (msg != null && typeof msg === 'string' && msg.trim().length > 0) {
         messages.push(msg.trim())
       }
     }

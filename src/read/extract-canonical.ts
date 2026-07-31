@@ -45,8 +45,7 @@ function setNestedValue(obj: CanonicalObject, path: string, value: unknown): voi
   
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i]
-    const partExists = current[part] !== null && current[part] !== undefined
-    if (!partExists) {
+    if (current[part] == null) {
       current[part] = {}
     }
     current = current[part] as CanonicalObject
@@ -62,14 +61,12 @@ function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): 
       continue
     }
     
-    const fieldIsInvalid = field === null || field === undefined || typeof field !== 'object'
-    if (fieldIsInvalid) {
+    if (field == null || typeof field !== 'object') {
       continue
     }
     
     const canonical = field.canonical
-    const hasCanonical = canonical !== null && canonical !== undefined
-    if (!hasCanonical) {
+    if (canonical == null) {
       continue
     }
     
@@ -93,18 +90,15 @@ function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): 
     
     if (DATE_FIELDS.has(canonical)) {
       const dateFormat = field.dateFormat
-      const hasValidDateFormat = dateFormat !== null && dateFormat !== undefined && typeof dateFormat === 'string'
-      if (hasValidDateFormat) {
+      if (dateFormat != null && typeof dateFormat === 'string') {
         const parsed = parseDate(field.raw?.trim() ?? '', dateFormat as DateFormat)
-        const hasValidParsedDate = parsed !== null && parsed !== undefined
-        value = hasValidParsedDate ? formatDateBR(parsed) : undefined
+        value = parsed != null ? formatDateBR(parsed) : undefined
       } else {
         value = undefined
       }
     } else if (RAW_STRING_FIELDS.has(canonical)) {
       const raw = field.raw?.trim()
-      const hasRawValue = raw !== null && raw !== undefined && raw.length > 0
-      value = hasRawValue ? raw : undefined
+      value = (raw != null && raw.length > 0) ? raw : undefined
     } else if (DOCUMENT_FIELDS.has(canonical)) {
       const raw = field.raw?.trim().replace(/^0+/, '') ?? ''
       const hasRawValue = raw.length > 0
@@ -113,7 +107,7 @@ function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): 
       value = field.value
     }
     
-    if (value === undefined || value === null) {
+    if (value == null) {
       continue
     }
     
@@ -122,8 +116,7 @@ function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): 
 }
 
 export function extractHeader(headerLine: ParsedLine | undefined): CNABHeader {
-  const hasHeaderLine = headerLine !== null && headerLine !== undefined
-  if (!hasHeaderLine) {
+  if (headerLine == null) {
     return {
       cedente: {},
     }
@@ -139,8 +132,7 @@ export function extractHeader(headerLine: ParsedLine | undefined): CNABHeader {
 }
 
 export function extractTrailer(trailerLine: ParsedLine | undefined): CNABTrailer {
-  const hasTrailerLine = trailerLine !== null && trailerLine !== undefined
-  if (!hasTrailerLine) {
+  if (trailerLine == null) {
     return {}
   }
   

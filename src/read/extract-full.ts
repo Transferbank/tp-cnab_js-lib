@@ -13,8 +13,7 @@ export function extractBillFull(group: BillGroup): Record<string, unknown> {
 
   for (const line of allLines) {
     for (const [fieldName, field] of Object.entries(line)) {
-      const fieldIsInvalid = field === null || field === undefined || typeof field !== 'object'
-      if (fieldIsInvalid) continue
+      if (field == null || typeof field !== 'object') continue
       
       result[fieldName] = field.value
     }

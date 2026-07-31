@@ -14,10 +14,7 @@ export function createProvider(
   const schema = getBankSchema(bankCode, format)
   const groupingRule = getGroupingRule(bankCode, format)
   
-  const hasSchema = schema !== null && schema !== undefined
-  const hasGroupingRule = groupingRule !== null && groupingRule !== undefined
-  
-  if (!hasSchema || !hasGroupingRule) return null
+  if (schema == null || groupingRule == null) return null
 
   return {
     bankCode,

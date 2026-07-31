@@ -68,8 +68,7 @@ export class CNABFile {
     const { getProvider } = require('@/provider/catalog')
     
     const provider = getProvider(this.bankCode, this.type, mode)
-    const hasProvider = provider !== null && provider !== undefined
-    if (!hasProvider) {
+    if (provider == null) {
       throw new CNABInternalInconsistencyError(this.bankCode, this.type)
     }
     
@@ -200,23 +199,20 @@ export class CNABFile {
       } 
       else if (segment === Cnab240SegmentCode.R && bankSchema.optionalRecords) {
         const optR = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'R')
-        const hasOptR = optR !== null && optR !== undefined
-        if (hasOptR) {
+        if (optR != null) {
           return extractLineFields(line, optR.schema)
         }
       } 
       else if (segment === Cnab240SegmentCode.S && bankSchema.optionalRecords) {
         const optS = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === 'S')
-        const hasOptS = optS !== null && optS !== undefined
-        if (hasOptS) {
+        if (optS != null) {
           return extractLineFields(line, optS.schema)
         }
       } 
       else if (segment === Cnab240SegmentCode.Y && bankSchema.optionalRecords) {
         const subVariant = getCnab240SegmentYVariant(line)
         const optY = bankSchema.optionalRecords.find((o: { identifier: string; schema: RecordSchema }) => o.identifier === `Y${subVariant}`)
-        const hasOptY = optY !== null && optY !== undefined
-        if (hasOptY) {
+        if (optY != null) {
           return extractLineFields(line, optY.schema)
         }
       }

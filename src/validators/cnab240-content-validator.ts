@@ -128,8 +128,7 @@ function validateSegmentP(
 
   const dueDate = parseDate(dueDateRaw, dateFormat)
   if (!fieldsWithError.has('vencimento_titulo')) {
-    const dueDateIsInvalid = dueDate === null || dueDate === undefined
-    if (dueDateIsInvalid) {
+    if (dueDate == null) {
       errors.push({
         line: lineNumber,
         field: 'Data de vencimento',
@@ -144,14 +143,14 @@ function validateSegmentP(
     }
   }
 
-  const amountIsValid = amountRaw !== null && amountRaw !== undefined && /^\d+$/.test(amountRaw)
+  const amountIsValid = amountRaw != null && /^\d+$/.test(amountRaw)
   const amountValue = amountIsValid ? parseInt(amountRaw) / Math.pow(10, decimals) : 0
   
   return {
     errors,
     pendingData: {
       amount: amountValue,
-      dueDate: dueDate !== null && dueDate !== undefined ? formatDateBR(dueDate) : '—',
+      dueDate: dueDate != null ? formatDateBR(dueDate) : '—',
     },
   }
 }
@@ -167,8 +166,7 @@ function validateSegmentQ(
 } {
   const errors: ValidationError[] = []
 
-  const hasPendingP = pendingP !== null && pendingP !== undefined
-  if (!hasPendingP) {
+  if (pendingP == null) {
     errors.push({
       line: lineNumber,
       field: 'Segmento Q',
@@ -205,7 +203,7 @@ function validateSegmentQ(
     })
   }
 
-  const payerNameIsEmpty = payerName === null || payerName === undefined || (payerName as string).length < 3
+  const payerNameIsEmpty = payerName == null || (payerName as string).length < 3
   if (!fieldsWithError.has('sacado_nome') && payerNameIsEmpty) {
     errors.push({
       line: lineNumber,

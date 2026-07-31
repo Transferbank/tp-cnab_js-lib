@@ -70,8 +70,7 @@ export interface ParsedSegmentS {
  * ```
  */
 export function isSegmentS(line: string): boolean {
-  const lineIsInvalid = line === null || line === undefined || line.length !== 240
-  if (lineIsInvalid) {
+  if (line == null || line.length !== 240) {
     return false
   }
 
@@ -98,8 +97,7 @@ export function isSegmentS(line: string): boolean {
  */
 export function identifySegmentSVariant(line: string): SegmentSVariantInfo {
   // Validações básicas
-  const lineIsInvalid = line === null || line === undefined || line.length !== 240
-  if (lineIsInvalid) {
+  if (line == null || line.length !== 240) {
     return {
       tipoImpressao: '',
       variante: 'A',
@@ -229,8 +227,7 @@ export function extractSegmentSMessages(line: string): string[] {
   if (parsed.variant.variante === 'A') {
     // Variante A: uma única mensagem
     const mensagem = parsed.fields.mensagem?.value
-    const mensagemIsValid = mensagem !== null && mensagem !== undefined && typeof mensagem === 'string' && mensagem.trim().length > 0
-    if (mensagemIsValid) {
+    if (mensagem != null && typeof mensagem === 'string' && mensagem.trim().length > 0) {
       messages.push(mensagem.trim())
     }
   } else {
@@ -238,8 +235,7 @@ export function extractSegmentSMessages(line: string): string[] {
     for (let i = 5; i <= 9; i++) {
       const campo = `informacao_${i}`
       const info = parsed.fields[campo]?.value
-      const infoIsValid = info !== null && info !== undefined && typeof info === 'string' && info.trim().length > 0
-      if (infoIsValid) {
+      if (info != null && typeof info === 'string' && info.trim().length > 0) {
         messages.push(info.trim())
       }
     }

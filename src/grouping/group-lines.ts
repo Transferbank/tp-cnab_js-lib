@@ -15,8 +15,7 @@ import type {
  */
 function getFieldByPosition(line: ParsedLine, position: number): ParsedField | undefined {
   for (const field of Object.values(line)) {
-    const fieldIsValid = field !== null && field !== undefined && typeof field === 'object'
-    if (fieldIsValid) {
+    if (field != null && typeof field === 'object') {
       const fieldWithPos = field as { pos?: [number, number] }
       if (Array.isArray(fieldWithPos.pos) && fieldWithPos.pos[0] === position) {
         return field as ParsedField
@@ -33,19 +32,16 @@ function getFieldByPosition(line: ParsedLine, position: number): ParsedField | u
 function identifyRecordType(line: ParsedLine, format: CNABFormatCode): string {
   if (format === CNABFormatCode.CNAB400) {
     const recordTypeField = getFieldByPosition(line, 1)
-    const hasRecordTypeField = recordTypeField !== null && recordTypeField !== undefined
-    return hasRecordTypeField ? String(recordTypeField.value) : 'u'
+    return recordTypeField != null ? String(recordTypeField.value) : 'u'
   }
   
   const recordTypeField = getFieldByPosition(line, 8)
   const segmentField = getFieldByPosition(line, 14)
   
-  const hasRecordTypeField = recordTypeField !== null && recordTypeField !== undefined
-  if (hasRecordTypeField) {
+  if (recordTypeField != null) {
     const recordType = String(recordTypeField.value)
     
-    const hasSegmentField = segmentField !== null && segmentField !== undefined
-    if (recordType === '3' && hasSegmentField) {
+    if (recordType === '3' && segmentField != null) {
       const segment = String(segmentField.value)
       
       /**
@@ -54,8 +50,7 @@ function identifyRecordType(line: ParsedLine, format: CNABFormatCode): string {
        */
       if (segment === Cnab240SegmentCode.Y) {
         const subVariantField = getFieldByPosition(line, 18)
-        const hasSubVariantField = subVariantField !== null && subVariantField !== undefined
-        if (hasSubVariantField) {
+        if (subVariantField != null) {
           return `Y${subVariantField.value}`
         }
       }

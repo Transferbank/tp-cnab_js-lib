@@ -144,7 +144,7 @@ function validateRequiredField(
   filePath: string
 ): void {
   // Verificar se campo existe
-  if (!(fieldName in obj) || obj[fieldName] === undefined || obj[fieldName] === null) {
+  if (!(fieldName in obj) || obj[fieldName] == null) {
     throw new Error(
       `Campo obrigatório ausente: "${fieldName}" em ${filePath}\n` +
       `Adicione o campo "${fieldName}" ao JSON de metadados.`

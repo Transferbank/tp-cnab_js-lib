@@ -195,8 +195,7 @@ function validateRecordExistsInSchema(
   optionalByIdentifier: Map<string, any>
 ): ValidationError | null {
   if (typeof kind === 'string') {
-    const schemaExists = bankSchema[kind] !== null && bankSchema[kind] !== undefined
-    if (!schemaExists) {
+    if (bankSchema[kind] == null) {
       return {
         line: lineNumber,
         field: 'Tipo de registro',
@@ -205,8 +204,7 @@ function validateRecordExistsInSchema(
     }
   } else {
     const optionalRecord = optionalByIdentifier.get(kind.identifier)
-    const recordExists = optionalRecord !== null && optionalRecord !== undefined
-    if (!recordExists) {
+    if (optionalRecord == null) {
       return {
         line: lineNumber,
         field: `Segmento ${kind.identifier}`,

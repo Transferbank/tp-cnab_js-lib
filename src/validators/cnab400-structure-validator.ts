@@ -104,7 +104,7 @@ export function validateCnab400Structure(
 function validateRequiredSchemas(bankSchema: BankSchema): ValidationError[] {
   const errors: ValidationError[] = []
 
-  if (!bankSchema.header) {
+  if (bankSchema.header == null) {
     errors.push({
       line: 1,
       field: 'Schema',
@@ -112,7 +112,7 @@ function validateRequiredSchemas(bankSchema: BankSchema): ValidationError[] {
     })
   }
 
-  if (!bankSchema.detail) {
+  if (bankSchema.detail == null) {
     errors.push({
       line: 1,
       field: 'Schema',
@@ -120,7 +120,7 @@ function validateRequiredSchemas(bankSchema: BankSchema): ValidationError[] {
     })
   }
 
-  if (!bankSchema.trailer) {
+  if (bankSchema.trailer == null) {
     errors.push({
       line: 1,
       field: 'Schema',
@@ -205,8 +205,7 @@ function validateMiddleLine(
     optionalByIdentifier.get(`${recordType}-${suffix1}`) ||
     optionalByIdentifier.get(recordType)
 
-  const hasOptionalRecord = optionalRecord !== null && optionalRecord !== undefined
-  if (!hasOptionalRecord) {
+  if (optionalRecord == null) {
     return {
       error: {
         line: lineNumber,

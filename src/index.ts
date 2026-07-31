@@ -35,7 +35,7 @@ export function openCnab(raw: string): CNABFile {
   const bankCode = detectBank(rawLines[0], format)
   const bankSchema = getBankSchema(bankCode, format)
 
-  if (bankSchema === null || bankSchema === undefined) {
+  if (bankSchema == null) {
     throw new CNABSchemaNotFoundError(bankCode, format)
   }
 
