@@ -306,8 +306,23 @@ export class CNABFile {
     }
   }
 
+  /**
+   * @deprecated Método readAsync não faz processamento verdadeiramente assíncrono.
+   * Todo o trabalho pesado (parse, grouping, extraction) é síncrono e bloqueia a thread.
+   * O batchSize/onProgress apenas dispara callbacks, mas não particiona o trabalho real.
+   * 
+   * Para arquivos grandes:
+   * - Use read({ lazy: true }) para adiar extração de bills
+   * - Considere processar o arquivo em chunks menores antes de chamar openCnab()
+   * 
+   * Este método será removido ou reimplementado com processamento verdadeiramente
+   * assíncrono em uma versão futura.
+   */
   async readAsync(options: ReadAsyncOptions & { lazy: true }): Promise<CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>>
 
+  /**
+   * @deprecated Ver sobrecarga acima para detalhes sobre as limitações deste método.
+   */
   async readAsync(options?: ReadAsyncOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>>>
 
   async readAsync(options?: ReadAsyncOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>> | CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>> {
