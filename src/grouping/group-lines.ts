@@ -12,6 +12,9 @@ import type {
 /**
  * Busca campo por posição CNAB (não por nome, que varia entre bancos).
  * Ex: tipo_registro, codigo_registro, controle_registro todos na posição 1.
+ * 
+ * Note: Similar a getRecordTypePattern (field-extractor.ts), mas opera em
+ * ParsedLine (dados) vs RecordSchema (definição).
  */
 function getFieldByPosition(line: ParsedLine, position: number): ParsedField | undefined {
   for (const field of Object.values(line)) {

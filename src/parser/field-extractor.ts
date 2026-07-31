@@ -85,6 +85,9 @@ export function extractLineFields(line: string, schema: RecordSchema): ParsedLin
 /**
  * Busca pattern do campo tipo_registro por POSIÇÃO (não por nome, que varia entre bancos).
  * CNAB 400: posição 1 | CNAB 240: posição 8
+ * 
+ * Note: Similar a getFieldByPosition (group-lines.ts), mas opera em
+ * RecordSchema (definição) vs ParsedLine (dados).
  */
 export function getRecordTypePattern(
   schema: RecordSchema | undefined,
