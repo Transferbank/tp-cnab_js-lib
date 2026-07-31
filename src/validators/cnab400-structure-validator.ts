@@ -1,7 +1,7 @@
 import { BankSchema, ValidationError, OptionalRecordSchema } from '@tp-types/index'
 import { getRecordTypePattern } from '@parser/field-extractor'
 import { getCnab400RecordType } from '@parser/position-reader'
-import { getCnab400OptionalSuffix1, getCnab400OptionalSuffix2 } from '@parser/cnab-positions'
+import { getCnab400OptionalSuffix1, getCnab400OptionalSuffix2, extractPositionTrimmed } from '@parser/cnab-positions'
 import { buildOptionalMap } from './build-optional-map'
 
 const LINE_LENGTH = 400
@@ -239,9 +239,7 @@ function validateFinalConstraints(
 
     if (trailerLine.length === LINE_LENGTH) {
       const pos = trailerSchema.qtd_documentos.pos
-      const startIdx = pos[0] - 1
-      const endIdx = pos[1]
-      const rawValue = trailerLine.substring(startIdx, endIdx).trim()
+      const rawValue = extractPositionTrimmed(trailerLine, { start: pos[0] - 1, end: pos[1] })
 
       if (rawValue !== '') {
         const declaredCount = parseInt(rawValue, 10)
