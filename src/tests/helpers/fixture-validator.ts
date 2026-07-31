@@ -10,6 +10,7 @@ import { BankSchema } from '@tp-types/bank'
 import { validateCnab240Content } from '@validators/cnab240-content-validator'
 import { validateCnab400Content } from '@validators/cnab400-content-validator'
 import { extractLineFields } from '@parser/field-extractor'
+import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { CNABFormatCode } from '@tp-types/index'
 
 /**
@@ -235,8 +236,8 @@ export function validateFixtureIntegrity(
     // Localiza as linhas de Segmento P/Q pelo conteúdo (pos 8 = '3', pos 14 = 'P'/'Q'),
     // não por índice fixo  o arquivo pode ter Header de Lote e Segmentos R/S entre os
     // títulos (ex.: fixtures com estrutura completa por título: P, Q, R, S).
-    const segPLines = lines.filter((line) => line.length === 240 && line.charAt(7) === '3' && line.charAt(13) === 'P')
-    const segQLines = lines.filter((line) => line.length === 240 && line.charAt(7) === '3' && line.charAt(13) === 'Q')
+    const segPLines = lines.filter((line) => line.length === 240 && getCnab240RecordType(line) === '3' && getCnab240SegmentCode(line) === 'P')
+    const segQLines = lines.filter((line) => line.length === 240 && getCnab240RecordType(line) === '3' && getCnab240SegmentCode(line) === 'Q')
 
     metadata.records.forEach((expectedRecord, index) => {
       if (index < segPLines.length && schema.segmentoP) {
