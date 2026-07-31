@@ -1,14 +1,14 @@
 /**
- * Testes do Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)
+ * Testes do Schema ItaÃº CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)
  *
  * Registro opcional que informa e-mail do pagador e/ou complementa dados do sacador/avalista.
  */
 
 import { TYPE5_EMAIL_ENDORSER } from '@banks/itau/schemas/cnab400/registros-opcionais/type5-email-endorser/type5-email-endorser'
 
-describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', () => {
+describe('Schema ItaÃº CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', () => {
   describe('Campo de controle', () => {
-    test('deve ter tipo de registro "5" na posição 1', () => {
+    test('deve ter tipo de registro "5" na posiÃ§Ã£o 1', () => {
       const field = TYPE5_EMAIL_ENDORSER.tipo_registro
 
       expect(field.pos).toEqual([1, 1])
@@ -20,7 +20,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
   })
 
   describe('E-mail do pagador', () => {
-    test('deve ter e-mail do pagador na posição 2-121', () => {
+    test('deve ter e-mail do pagador na posiÃ§Ã£o 2-121', () => {
       const field = TYPE5_EMAIL_ENDORSER.email_pagador
 
       expect(field.pos).toEqual([2, 121])
@@ -29,8 +29,8 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('e-mail do pagador deve ser o maior campo de conteúdo do layout (120 caracteres)', () => {
-      // Filtrar apenas campos de conteúdo (excluir brancos/filler)
+    test('e-mail do pagador deve ser o maior campo de conteÃºdo do layout (120 caracteres)', () => {
+      // Filtrar apenas campos de conteÃºdo (excluir brancos/filler)
       const camposPorTamanho = Object.entries(TYPE5_EMAIL_ENDORSER)
         .filter(([name, field]) => field.type === 'alfa' && name !== 'brancos')
         .map(([name, field]) => ({ name, size: field.size }))
@@ -42,7 +42,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
   })
 
   describe('Dados do sacador/avalista', () => {
-    test('deve ter tipo de inscrição do sacador na posição 122-123', () => {
+    test('deve ter tipo de inscriÃ§Ã£o do sacador na posiÃ§Ã£o 122-123', () => {
       const field = TYPE5_EMAIL_ENDORSER.sacador_codigo_inscricao
 
       expect(field.pos).toEqual([122, 123])
@@ -51,7 +51,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('deve ter número de inscrição (CPF/CNPJ) do sacador na posição 124-137', () => {
+    test('deve ter nÃºmero de inscriÃ§Ã£o (CPF/CNPJ) do sacador na posiÃ§Ã£o 124-137', () => {
       const field = TYPE5_EMAIL_ENDORSER.sacador_numero_inscricao
 
       expect(field.pos).toEqual([124, 137])
@@ -60,7 +60,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('deve ter logradouro do sacador na posição 138-177', () => {
+    test('deve ter logradouro do sacador na posiÃ§Ã£o 138-177', () => {
       const field = TYPE5_EMAIL_ENDORSER.sacador_logradouro
 
       expect(field.pos).toEqual([138, 177])
@@ -69,7 +69,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('deve ter bairro do sacador na posição 178-189', () => {
+    test('deve ter bairro do sacador na posiÃ§Ã£o 178-189', () => {
       const field = TYPE5_EMAIL_ENDORSER.sacador_bairro
 
       expect(field.pos).toEqual([178, 189])
@@ -78,7 +78,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('deve ter CEP do sacador na posição 190-197', () => {
+    test('deve ter CEP do sacador na posiÃ§Ã£o 190-197', () => {
       const field = TYPE5_EMAIL_ENDORSER.sacador_cep
 
       expect(field.pos).toEqual([190, 197])
@@ -87,7 +87,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('deve ter cidade do sacador na posição 198-212', () => {
+    test('deve ter cidade do sacador na posiÃ§Ã£o 198-212', () => {
       const field = TYPE5_EMAIL_ENDORSER.sacador_cidade
 
       expect(field.pos).toEqual([198, 212])
@@ -96,7 +96,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('deve ter estado (UF) do sacador na posição 213-214', () => {
+    test('deve ter estado (UF) do sacador na posiÃ§Ã£o 213-214', () => {
       const field = TYPE5_EMAIL_ENDORSER.sacador_estado
 
       expect(field.pos).toEqual([213, 214])
@@ -107,7 +107,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
   })
 
   describe('Campos finais', () => {
-    test('deve ter brancos na posição 215-394', () => {
+    test('deve ter brancos na posiÃ§Ã£o 215-394', () => {
       const field = TYPE5_EMAIL_ENDORSER.brancos
 
       expect(field.pos).toEqual([215, 394])
@@ -116,7 +116,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(field.required).toBe(false)
     })
 
-    test('deve ter número sequencial na posição 395-400', () => {
+    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
       const field = TYPE5_EMAIL_ENDORSER.numero_sequencial
 
       expect(field.pos).toEqual([395, 400])
@@ -127,7 +127,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
   })
 
   describe('Integridade do schema', () => {
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const fields = Object.entries(TYPE5_EMAIL_ENDORSER).sort(
         (a, b) => a[1].pos[0] - b[1].pos[0],
       )
@@ -143,29 +143,29 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       Object.entries(TYPE5_EMAIL_ENDORSER).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)
       })
     })
 
-    test('deve ter exatamente 400 posições', () => {
+    test('deve ter exatamente 400 posiÃ§Ãµes', () => {
       const ultimoCampo = TYPE5_EMAIL_ENDORSER.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('Características específicas', () => {
-    test('tipo_registro deve ter padrão "5" fixo', () => {
+  describe('CaracterÃ­sticas especÃ­ficas', () => {
+    test('tipo_registro deve ter padrÃ£o "5" fixo', () => {
       const field = TYPE5_EMAIL_ENDORSER.tipo_registro
 
       expect(field.pattern).toBe('5')
       expect(field.required).toBe(true)
     })
 
-    test('todos os campos de endereço do sacador devem estar presentes', () => {
-      // Verificar que todos os campos de endereço completo estão definidos
+    test('todos os campos de endereÃ§o do sacador devem estar presentes', () => {
+      // Verificar que todos os campos de endereÃ§o completo estÃ£o definidos
       expect(TYPE5_EMAIL_ENDORSER.sacador_logradouro).toBeDefined()
       expect(TYPE5_EMAIL_ENDORSER.sacador_bairro).toBeDefined()
       expect(TYPE5_EMAIL_ENDORSER.sacador_cep).toBeDefined()
@@ -173,7 +173,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(TYPE5_EMAIL_ENDORSER.sacador_estado).toBeDefined()
     })
 
-    test('campos de identificação do sacador devem estar completos (tipo e número)', () => {
+    test('campos de identificaÃ§Ã£o do sacador devem estar completos (tipo e nÃºmero)', () => {
       expect(TYPE5_EMAIL_ENDORSER.sacador_codigo_inscricao).toBeDefined()
       expect(TYPE5_EMAIL_ENDORSER.sacador_numero_inscricao).toBeDefined()
 
@@ -181,7 +181,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 5 (E-mail / Sacador-Avalista)', (
       expect(TYPE5_EMAIL_ENDORSER.sacador_numero_inscricao.size).toBe(14)
     })
 
-    test('não deve ter campo sacador_nome (não existe no schema)', () => {
+    test('nÃ£o deve ter campo sacador_nome (nÃ£o existe no schema)', () => {
       expect(TYPE5_EMAIL_ENDORSER.sacador_nome).toBeUndefined()
     })
 

@@ -1,5 +1,5 @@
 ﻿/**
- * Ita� (341) � CNAB 400 � Header de Arquivo (Remessa)
+ * Itaú (341) é CNAB 400 é Header de Arquivo (Remessa)
  * Fonte do layout: laravel-boleto + brcobranca
  */
 
@@ -14,7 +14,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '0',
-    description: 'Identifica��o do header',
+    description: 'Identificação do header',
     canonical: null,
   },
   tipo_operacao: {
@@ -25,7 +25,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '1',
-    description: 'Tipo de opera��o: 1=Remessa',
+    description: 'Tipo de operação: 1=Remessa',
     canonical: null,
   },
   literal_remessa: {
@@ -47,7 +47,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '01',
-    description: 'C�digo de servi�o: 01=Cobran�a',
+    description: 'Código de serviço: 01=Cobrança',
     canonical: null,
   },
   literal_servico: {
@@ -58,7 +58,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: 'COBRANCA',
-    description: 'Literal de servi�o',
+    description: 'Literal de serviço',
     canonical: null,
   },
   agencia: {
@@ -69,7 +69,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia mantenedora da conta',
+    description: 'Agência mantenedora da conta',
     canonical: null,
   },
   zeros: {
@@ -91,7 +91,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da conta corrente',
+    description: 'Número da conta corrente',
     canonical: null,
   },
   dac: {
@@ -102,7 +102,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito de auto confer�ncia da ag�ncia/conta',
+    description: 'Dígito de auto conferência da agência/conta',
     canonical: null,
   },
   brancos_1: {
@@ -124,7 +124,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Raz�o social do cedente',
+    description: 'Razão social do cedente',
     canonical: 'cedente.nome',
   },
   codigo_banco: {
@@ -135,7 +135,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '341',
-    description: 'C�digo FEBRABAN do Ita�',
+    description: 'Código FEBRABAN do Itaú',
     canonical: null,
   },
   nome_banco: {
@@ -157,7 +157,7 @@ export const HEADER: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de gera��o do arquivo',
+    description: 'Data de geração do arquivo',
     canonical: 'dataGeracao',
   },
   brancos_2: {

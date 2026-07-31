@@ -1,15 +1,15 @@
 /**
- * Testes do Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)
+ * Testes do Schema ItaÃº CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)
  *
- * Registro para emissão física de boleto pelo cedente (fluxo paralelo ao tipo 1).
- * Layout 4 contém a extensão de dados do sacador/avalista.
+ * Registro para emissÃ£o fÃ­sica de boleto pelo cedente (fluxo paralelo ao tipo 1).
+ * Layout 4 contÃ©m a extensÃ£o de dados do sacador/avalista.
  */
 
 import { TYPE6_LAYOUT4_ENDORSER } from '@banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout4-endorser'
 
-describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', () => {
-  describe('Campos de identificação', () => {
-    test('deve ter tipo de registro "6" na posição 1', () => {
+describe('Schema ItaÃº CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', () => {
+  describe('Campos de identificaÃ§Ã£o', () => {
+    test('deve ter tipo de registro "6" na posiÃ§Ã£o 1', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.tipo_registro
 
       expect(field.pos).toEqual([1, 1])
@@ -19,7 +19,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.pattern).toBe('6')
     })
 
-    test('deve ter código de layout "4" na posição 2', () => {
+    test('deve ter cÃ³digo de layout "4" na posiÃ§Ã£o 2', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.codigo_layout
 
       expect(field.pos).toEqual([2, 2])
@@ -30,8 +30,8 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
     })
   })
 
-  describe('Dados de identificação do sacador/avalista', () => {
-    test('deve ter código de inscrição na posição 3-4', () => {
+  describe('Dados de identificaÃ§Ã£o do sacador/avalista', () => {
+    test('deve ter cÃ³digo de inscriÃ§Ã£o na posiÃ§Ã£o 3-4', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.codigo_inscricao
 
       expect(field.pos).toEqual([3, 4])
@@ -40,7 +40,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('deve ter número de inscrição (CPF/CNPJ) na posição 5-18', () => {
+    test('deve ter nÃºmero de inscriÃ§Ã£o (CPF/CNPJ) na posiÃ§Ã£o 5-18', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.numero_inscricao
 
       expect(field.pos).toEqual([5, 18])
@@ -49,7 +49,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('número de inscrição deve suportar CPF (11) e CNPJ (14)', () => {
+    test('nÃºmero de inscriÃ§Ã£o deve suportar CPF (11) e CNPJ (14)', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.numero_inscricao
 
       expect(field.size).toBe(14)
@@ -58,8 +58,8 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
     })
   })
 
-  describe('Endereço completo do sacador/avalista', () => {
-    test('deve ter logradouro na posição 19-58', () => {
+  describe('EndereÃ§o completo do sacador/avalista', () => {
+    test('deve ter logradouro na posiÃ§Ã£o 19-58', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.logradouro
 
       expect(field.pos).toEqual([19, 58])
@@ -68,7 +68,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('deve ter bairro na posição 59-70', () => {
+    test('deve ter bairro na posiÃ§Ã£o 59-70', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.bairro
 
       expect(field.pos).toEqual([59, 70])
@@ -77,7 +77,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('deve ter CEP na posição 71-78', () => {
+    test('deve ter CEP na posiÃ§Ã£o 71-78', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.cep
 
       expect(field.pos).toEqual([71, 78])
@@ -86,7 +86,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('deve ter cidade na posição 79-93', () => {
+    test('deve ter cidade na posiÃ§Ã£o 79-93', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.cidade
 
       expect(field.pos).toEqual([79, 93])
@@ -95,7 +95,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('deve ter estado (UF) na posição 94-95', () => {
+    test('deve ter estado (UF) na posiÃ§Ã£o 94-95', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.estado
 
       expect(field.pos).toEqual([94, 95])
@@ -104,7 +104,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('todos os campos de endereço devem estar presentes', () => {
+    test('todos os campos de endereÃ§o devem estar presentes', () => {
       expect(TYPE6_LAYOUT4_ENDORSER.logradouro).toBeDefined()
       expect(TYPE6_LAYOUT4_ENDORSER.bairro).toBeDefined()
       expect(TYPE6_LAYOUT4_ENDORSER.cep).toBeDefined()
@@ -114,7 +114,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
   })
 
   describe('Campos finais', () => {
-    test('deve ter brancos na posição 96-394', () => {
+    test('deve ter brancos na posiÃ§Ã£o 96-394', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.brancos
 
       expect(field.pos).toEqual([96, 394])
@@ -123,7 +123,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       expect(field.required).toBe(false)
     })
 
-    test('deve ter número sequencial na posição 395-400', () => {
+    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
       const field = TYPE6_LAYOUT4_ENDORSER.numero_sequencial
 
       expect(field.pos).toEqual([395, 400])
@@ -134,7 +134,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
   })
 
   describe('Integridade do schema', () => {
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const fields = Object.entries(TYPE6_LAYOUT4_ENDORSER).sort(
         (a, b) => a[1].pos[0] - b[1].pos[0],
       )
@@ -150,21 +150,21 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       Object.entries(TYPE6_LAYOUT4_ENDORSER).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)
       })
     })
 
-    test('deve ter exatamente 400 posições', () => {
+    test('deve ter exatamente 400 posiÃ§Ãµes', () => {
       const ultimoCampo = TYPE6_LAYOUT4_ENDORSER.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('Características específicas', () => {
-    test('tipo_registro e codigo_layout devem ter padrões fixos', () => {
+  describe('CaracterÃ­sticas especÃ­ficas', () => {
+    test('tipo_registro e codigo_layout devem ter padrÃµes fixos', () => {
       expect(TYPE6_LAYOUT4_ENDORSER.tipo_registro.pattern).toBe('6')
       expect(TYPE6_LAYOUT4_ENDORSER.codigo_layout.pattern).toBe('4')
     })
@@ -174,7 +174,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 4 (Sacador/Avalista)', 
 
       expect(field.size).toBe(299)
 
-      // Verificar se é o maior campo
+      // Verificar se Ã© o maior campo
       const camposPorTamanho = Object.entries(TYPE6_LAYOUT4_ENDORSER)
         .map(([name, field]) => ({ name, size: field.size }))
         .sort((a, b) => b.size - a.size)

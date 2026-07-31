@@ -1,15 +1,15 @@
 /**
- * Testes do Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Dados do Título)
+ * Testes do Schema ItaÃº CNAB 400 - Registro Tipo 6, Layout 1 (Dados do TÃ­tulo)
  *
- * Registro para emissão física de boleto pelo cedente (fluxo paralelo ao tipo 1).
- * Layout 1 contém os dados principais do título.
+ * Registro para emissÃ£o fÃ­sica de boleto pelo cedente (fluxo paralelo ao tipo 1).
+ * Layout 1 contÃ©m os dados principais do tÃ­tulo.
  */
 
 import { TYPE6_LAYOUT1_TITLE } from '@banks/itau/schemas/cnab400/registros-opcionais/type6-boleto-emission/layout1-title'
 
-describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Título)', () => {
-  describe('Campos de identificação', () => {
-    test('deve ter tipo de registro "6" na posição 1', () => {
+describe('Schema ItaÃº CNAB 400 - Registro Tipo 6, Layout 1 (TÃ­tulo)', () => {
+  describe('Campos de identificaÃ§Ã£o', () => {
+    test('deve ter tipo de registro "6" na posiÃ§Ã£o 1', () => {
       const field = TYPE6_LAYOUT1_TITLE.tipo_registro
 
       expect(field.pos).toEqual([1, 1])
@@ -19,7 +19,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Título)', () => {
       expect(field.pattern).toBe('6')
     })
 
-    test('deve ter código de layout "1" na posição 2', () => {
+    test('deve ter cÃ³digo de layout "1" na posiÃ§Ã£o 2', () => {
       const field = TYPE6_LAYOUT1_TITLE.codigo_layout
 
       expect(field.pos).toEqual([2, 2])
@@ -31,7 +31,7 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Título)', () => {
   })
 
   describe('Integridade do schema', () => {
-    test('não deve ter sobreposição de posições', () => {
+    test('nÃ£o deve ter sobreposiÃ§Ã£o de posiÃ§Ãµes', () => {
       const fields = Object.entries(TYPE6_LAYOUT1_TITLE).sort((a, b) => a[1].pos[0] - b[1].pos[0])
 
       for (let i = 0; i < fields.length - 1; i++) {
@@ -45,29 +45,29 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Título)', () => {
       }
     })
 
-    test('tamanho declarado deve bater com posições', () => {
+    test('tamanho declarado deve bater com posiÃ§Ãµes', () => {
       Object.entries(TYPE6_LAYOUT1_TITLE).forEach(([, field]) => {
         const tamanhoCalculado = field.pos[1] - field.pos[0] + 1
         expect(field.size).toBe(tamanhoCalculado)
       })
     })
 
-    test('deve ter exatamente 400 posições', () => {
+    test('deve ter exatamente 400 posiÃ§Ãµes', () => {
       const ultimoCampo = TYPE6_LAYOUT1_TITLE.numero_sequencial
       expect(ultimoCampo.pos[1]).toBe(400)
     })
   })
 
-  describe('Características específicas do layout 1', () => {
-    test('deve ter campo valor_titulo com 2 decimais (fixo, sem lógica condicional para moeda variável)', () => {
+  describe('CaracterÃ­sticas especÃ­ficas do layout 1', () => {
+    test('deve ter campo valor_titulo com 2 decimais (fixo, sem lÃ³gica condicional para moeda variÃ¡vel)', () => {
       const field = TYPE6_LAYOUT1_TITLE.valor_titulo
 
       expect(field.decimals).toBe(2)
       expect(field.size).toBe(13)
-      expect(field.description).toContain('moeda variável')
+      expect(field.description).toContain('moeda variÃ¡vel')
     })
 
-    test('deve ter nosso_numero obrigatório', () => {
+    test('deve ter nosso_numero obrigatÃ³rio', () => {
       const field = TYPE6_LAYOUT1_TITLE.nosso_numero
 
       expect(field.required).toBe(true)
@@ -83,12 +83,12 @@ describe('Schema Itaú CNAB 400 - Registro Tipo 6, Layout 1 (Título)', () => {
       expect(TYPE6_LAYOUT1_TITLE.estado).toBeDefined()
     })
 
-    test('tipo_registro e codigo_layout devem ter padrões fixos', () => {
+    test('tipo_registro e codigo_layout devem ter padrÃµes fixos', () => {
       expect(TYPE6_LAYOUT1_TITLE.tipo_registro.pattern).toBe('6')
       expect(TYPE6_LAYOUT1_TITLE.codigo_layout.pattern).toBe('1')
     })
 
-    test('deve ter número sequencial na posição 395-400', () => {
+    test('deve ter nÃºmero sequencial na posiÃ§Ã£o 395-400', () => {
       const field = TYPE6_LAYOUT1_TITLE.numero_sequencial
 
       expect(field.pos).toEqual([395, 400])

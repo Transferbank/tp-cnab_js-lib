@@ -1,5 +1,5 @@
 ﻿/**
- * Ita� (341) � CNAB 400 � Registro Detalhe (Remessa)
+ * Itaú (341) é CNAB 400 é Registro Detalhe (Remessa)
  * Fonte do layout: laravel-boleto + brcobranca
  */
 
@@ -25,7 +25,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Tipo de inscri��o do cedente: 01=CPF, 02=CNPJ',
+    description: 'Tipo de inscrição do cedente: 01=CPF, 02=CNPJ',
     canonical: null,
   },
   numero_inscricao: {
@@ -47,7 +47,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Ag�ncia mantenedora da conta',
+    description: 'Agência mantenedora da conta',
     canonical: null,
   },
   zeros: {
@@ -69,7 +69,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da conta corrente',
+    description: 'Número da conta corrente',
     canonical: null,
   },
   dac: {
@@ -80,7 +80,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'D�gito de auto confer�ncia da ag�ncia/conta',
+    description: 'Dígito de auto conferência da agência/conta',
     canonical: null,
   },
   brancos_1: {
@@ -102,7 +102,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '0000',
-    description: 'Instru��o para cancelamento de registros',
+    description: 'Instrução para cancelamento de registros',
     canonical: null,
   },
   numero_controle: {
@@ -113,7 +113,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Identifica��o do t�tulo no sistema do cedente',
+    description: 'Identificação do título no sistema do cedente',
     canonical: null,
   },
   nosso_numero: {
@@ -124,7 +124,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Nosso n�mero (identifica��o do t�tulo no banco)',
+    description: 'Nosso número (identificação do título no banco)',
     canonical: 'nossoNumero',
   },
   qtde_moeda: {
@@ -146,7 +146,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero da carteira',
+    description: 'Número da carteira',
     canonical: null,
   },
   uso_banco: {
@@ -168,7 +168,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo da carteira (I=Cobran�a Simples)',
+    description: 'Código da carteira (I=Cobrança Simples)',
     canonical: null,
   },
   codigo_ocorrencia: {
@@ -179,7 +179,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'C�digo de ocorr�ncia (01=Remessa, 02=Pedido de baixa, etc)',
+    description: 'Código de ocorrência (01=Remessa, 02=Pedido de baixa, etc)',
     canonical: null,
   },
   numero_documento: {
@@ -190,7 +190,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'N�mero do documento de cobran�a (NF, Duplicata, etc)',
+    description: 'Número do documento de cobrança (NF, Duplicata, etc)',
     canonical: 'numeroDocumento',
   },
   vencimento: {
@@ -212,7 +212,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Valor do t�tulo (2 decimais impl�citas)',
+    description: 'Valor do título (2 decimais implícitas)',
     canonical: 'valor',
   },
   codigo_banco_cobrador: {
@@ -223,7 +223,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '341',
-    description: 'C�digo do banco cobrador',
+    description: 'Código do banco cobrador',
     canonical: null,
   },
   agencia_cobradora: {
@@ -234,7 +234,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00000',
-    description: 'Ag�ncia cobradora',
+    description: 'Agência cobradora',
     canonical: null,
   },
   especie: {
@@ -245,7 +245,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: 'Esp�cie do t�tulo (01=Duplicata Mercantil)',
+    description: 'Espécie do título (01=Duplicata Mercantil)',
     canonical: null,
   },
   aceite: {
@@ -255,12 +255,12 @@ export const DETAIL: RecordSchema = {
     decimals: 0,
     required: true,
     dateFormat: null,
-    // Campo de neg�cio real, varia por t�tulo (manual: "A=ACEITE N=N�O ACEITE") � n�o
-    // � fixo como em outros bancos (ex: Bradesco, cujo manual diz "Sempre = N" pra essa
-    // mesma posi��o). N�o travar em 'N' via padrao, sen�o t�tulos reais com aceite='A'
-    // seriam rejeitados como erro de valida��o.
+    // Campo de negócio real, varia por título (manual: "A=ACEITE N=NÃO ACEITE") é não
+    // é fixo como em outros bancos (ex: Bradesco, cujo manual diz "Sempre = N" pra essa
+    // mesma posição). Não travar em 'N' via padrao, senão títulos reais com aceite='A'
+    // seriam rejeitados como erro de validação.
     pattern: null,
-    description: 'Identifica��o de t�tulo aceito ou n�o aceito: A=Aceite, N=N�o aceite',
+    description: 'Identificação de título aceito ou não aceito: A=Aceite, N=Não aceite',
     canonical: null,
   },
   data_emissao: {
@@ -271,7 +271,7 @@ export const DETAIL: RecordSchema = {
     required: true,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de emiss�o do t�tulo',
+    description: 'Data de emissão do título',
     canonical: 'dataEmissao',
   },
   instrucao_1: {
@@ -282,7 +282,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00',
-    description: 'Primeira instru��o de cobran�a',
+    description: 'Primeira instrução de cobrança',
     canonical: null,
   },
   instrucao_2: {
@@ -293,7 +293,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: '00',
-    description: 'Segunda instru��o de cobran�a',
+    description: 'Segunda instrução de cobrança',
     canonical: null,
   },
   juros_1dia: {
@@ -315,7 +315,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data limite para concess�o de desconto',
+    description: 'Data limite para concessão de desconto',
     canonical: null,
   },
   valor_desconto: {
@@ -392,7 +392,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: null,
     pattern: null,
-    description: 'Endere�o do pagador',
+    description: 'Endereço do pagador',
     canonical: 'sacado.endereco.logradouro',
   },
   bairro: {
@@ -469,7 +469,7 @@ export const DETAIL: RecordSchema = {
     required: false,
     dateFormat: DateFormat.DDMMAA,
     pattern: null,
-    description: 'Data de in�cio de cobran�a de juros',
+    description: 'Data de início de cobrança de juros',
     canonical: 'juros.vigenciaAPartirDe',
   },
   prazo: {

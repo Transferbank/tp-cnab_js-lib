@@ -1,5 +1,5 @@
 ﻿/**
- * Ita� (341) � CNAB 400 � Trailer de Arquivo (Remessa)
+ * Itaú (341) é CNAB 400 é Trailer de Arquivo (Remessa)
  * Fonte do layout: laravel-boleto + brcobranca
  */
 
@@ -14,7 +14,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: '9',
-    description: 'Identifica��o do trailer',
+    description: 'Identificação do trailer',
     canonical: null,
   },
   brancos: {
@@ -36,7 +36,7 @@ export const TRAILER: RecordSchema = {
     required: true,
     dateFormat: null,
     pattern: null,
-    description: '�ltimo sequencial',
+    description: 'último sequencial',
     canonical: null,
   },
 }
