@@ -83,6 +83,36 @@ function classifyRecordType(
   return 'structural'  // Unknown: trata como structural para não quebrar grouping
 }
 
+/**
+ * Fecha o núcleo atual, verificando se está completo.
+ * Se completo, adiciona ao array de grupos; caso contrário, registra erro.
+ */
+function closeCurrentCore(
+  currentCore: ParsedLine[],
+  currentSatellites: ParsedLine[],
+  groupStartLine: number,
+  rule: GroupingRule,
+  groups: BillGroup[],
+  errors: GroupingError[],
+  errorMessage?: string,
+): void {
+  if (currentCore.length === 0) return
+  
+  if (currentCore.length === rule.mandatoryCore.length) {
+    groups.push({
+      core: currentCore,
+      satellites: currentSatellites,
+      startLine: groupStartLine,
+    })
+  } else {
+    errors.push({
+      line: groupStartLine,
+      field: 'Núcleo',
+      message: errorMessage || `Núcleo incompleto: esperado ${rule.mandatoryCore.length} linha(s), encontrado ${currentCore.length}`,
+    })
+  }
+}
+
 export function groupLines(
   lines: ParsedLine[],
   rule: GroupingRule,
@@ -104,25 +134,11 @@ export function groupLines(
     const classification = classifyRecordType(type, rule)
     
     if (classification === 'structural') {
-      if (currentCore.length > 0) {
-        if (currentCore.length === rule.mandatoryCore.length) {
-          groups.push({
-            core: currentCore,
-            satellites: currentSatellites,
-            startLine: groupStartLine,
-          })
-        } else {
-          errors.push({
-            line: groupStartLine,
-            field: 'Núcleo',
-            message: `Núcleo incompleto: esperado ${rule.mandatoryCore.length} linha(s), encontrado ${currentCore.length}`,
-          })
-        }
-        
-        currentCore = []
-        currentSatellites = []
-        expectedCoreIndex = 0
-      }
+      closeCurrentCore(currentCore, currentSatellites, groupStartLine, rule, groups, errors)
+      
+      currentCore = []
+      currentSatellites = []
+      expectedCoreIndex = 0
       
       continue
     }
@@ -144,19 +160,7 @@ export function groupLines(
         
         if (type === expectedType) {
           if (expectedCoreIndex === 0 && currentCore.length > 0) {
-            if (currentCore.length === rule.mandatoryCore.length) {
-              groups.push({
-                core: currentCore,
-                satellites: currentSatellites,
-                startLine: groupStartLine,
-              })
-            } else {
-              errors.push({
-                line: groupStartLine,
-                field: 'Núcleo',
-                message: `Núcleo incompleto: esperado ${rule.mandatoryCore.length} linha(s), encontrado ${currentCore.length}`,
-              })
-            }
+            closeCurrentCore(currentCore, currentSatellites, groupStartLine, rule, groups, errors)
             
             currentCore = []
             currentSatellites = []
@@ -223,21 +227,15 @@ export function groupLines(
     }
   }
   
-  if (currentCore.length > 0) {
-    if (currentCore.length === rule.mandatoryCore.length) {
-      groups.push({
-        core: currentCore,
-        satellites: currentSatellites,
-        startLine: groupStartLine,
-      })
-    } else {
-      errors.push({
-        line: groupStartLine,
-        field: 'Núcleo',
-        message: `Núcleo incompleto ao fim do arquivo: esperado ${rule.mandatoryCore.length} linha(s), encontrado ${currentCore.length}`,
-      })
-    }
-  }
+  closeCurrentCore(
+    currentCore, 
+    currentSatellites, 
+    groupStartLine, 
+    rule, 
+    groups, 
+    errors,
+    `Núcleo incompleto ao fim do arquivo: esperado ${rule.mandatoryCore.length} linha(s), encontrado ${currentCore.length}`
+  )
   
   return { groups, errors }
 }
