@@ -19,26 +19,9 @@ import { getCnab240SegmentYVariant } from '@parser/cnab-positions'
 import type { CNABData } from '@/types/read/read-types'
 import type { BillGroup } from '@/types/processing/grouping'
 import { ValidationResult } from '@/validators/types'
+import type { getProvider as GetProviderType } from '@/provider/catalog'
 
-let cachedGetProvider: typeof import('@/provider/catalog').getProvider | undefined
-let providerModulePromise: Promise<typeof import('@/provider/catalog')> | undefined
-
-async function loadProviderModule(): Promise<void> {
-  if (cachedGetProvider != null) return
-  
-  if (providerModulePromise == null) {
-    providerModulePromise = import('@/provider/catalog')
-  }
-  
-  const module = await providerModulePromise
-  cachedGetProvider = module.getProvider
-}
-
-function loadProviderModuleSync(): void {
-  if (cachedGetProvider != null) return
-  const module = require('@/provider/catalog')
-  cachedGetProvider = module.getProvider
-}
+let cachedGetProvider: typeof GetProviderType | undefined
 
 export class CNABFile {
   public readonly type: CNABFormatCode
@@ -76,25 +59,19 @@ export class CNABFile {
     return `CNABFile { type: ${formatLabel}, bank: ${this.bankName} (${this.bankCode}), lines: ${this.lineCount} }`
   }
 
-  private async resolveProviderAsync(mode: ReadMode): Promise<CNABProvider> {
-    await loadProviderModule()
-    return cachedGetProvider!(this.bankCode, this.type, mode)
+  private async resolveProvider(mode: ReadMode): Promise<CNABProvider> {
+    if (cachedGetProvider == null) {
+      const module = await import('@/provider/catalog')
+      cachedGetProvider = module.getProvider
+    }
+    return cachedGetProvider(this.bankCode, this.type, mode)
   }
 
-  private resolveProvider(mode: ReadMode): CNABProvider {
-    loadProviderModuleSync()
-    return cachedGetProvider!(this.bankCode, this.type, mode)
-  }
-
-  static async initializeProvider(): Promise<void> {
-    await loadProviderModule()
-  }
-
-  validate(): boolean
-  validate(withFeedback: false): boolean
-  validate(withFeedback: true): CNABValidationResult
-  validate(withFeedback?: boolean): boolean | CNABValidationResult {
-    const provider = this.resolveProvider(ReadMode.SIMPLE)
+  async validate(): Promise<boolean>
+  async validate(withFeedback: false): Promise<boolean>
+  async validate(withFeedback: true): Promise<CNABValidationResult>
+  async validate(withFeedback?: boolean): Promise<boolean | CNABValidationResult> {
+    const provider = await this.resolveProvider(ReadMode.SIMPLE)
     const bankSchema = provider.schema
 
     if (withFeedback !== true) {
@@ -267,16 +244,15 @@ export class CNABFile {
   }
 
 
-  read(options: ReadOptions & { lazy: true }): CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>
+  async read(options: ReadOptions & { lazy: true }): Promise<CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>>
 
+  async read(options?: ReadOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>>>
 
-  read(options?: ReadOptions): CNABReadResult<CNABData | Record<string, unknown>>
-
-  read(options?: ReadOptions): CNABReadResult<CNABData | Record<string, unknown>> | CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>> {
+  async read(options?: ReadOptions): Promise<CNABReadResult<CNABData | Record<string, unknown>> | CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>> {
     const mode = options?.mode ?? ReadMode.SIMPLE
     const lazy = options?.lazy ?? false
 
-    const provider = this.resolveProvider(mode)
+    const provider = await this.resolveProvider(mode)
     const bankSchema = provider.schema
 
     const { headerParsed, trailerParsed, bodyParsed } = this.parseFile(bankSchema)
@@ -348,7 +324,7 @@ export class CNABFile {
     const mode = options?.mode ?? ReadMode.SIMPLE
     const lazy = options?.lazy ?? false
 
-    const provider = await this.resolveProviderAsync(mode)
+    const provider = await this.resolveProvider(mode)
     const bankSchema = provider.schema
 
     const { headerParsed, trailerParsed, bodyParsed } = this.parseFile(bankSchema)
