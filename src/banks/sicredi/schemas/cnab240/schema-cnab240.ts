@@ -4,7 +4,7 @@
  * Estrutura modular seguindo o padrão do Bradesco e Santander.
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 
 export { SICREDI_CNAB240_FILE_HEADER } from './header'
 export { SICREDI_CNAB240_BATCH_HEADER } from './batch-header'

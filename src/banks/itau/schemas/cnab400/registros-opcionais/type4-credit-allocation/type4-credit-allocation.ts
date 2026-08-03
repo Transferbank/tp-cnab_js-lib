@@ -23,7 +23,7 @@
  * Fonte: Manual oficial Itaú, layout_cobranca_400bytes_cnab_itau.pdf, p.10-11
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE4_CREDIT_ALLOCATION: RecordSchema = {
   

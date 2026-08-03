@@ -13,7 +13,7 @@
  * Fonte: Manual oficial Sicredi CNAB 400 (2026_03_12_manual_cnab_400_30.pdf, v3.0, fev/2026)
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'
@@ -23,14 +23,14 @@ import {
   TYPE6_ENDORSER,
   TYPE7_DISCOUNTS,
   TYPE8_HYBRID,
-} from './registros-opcionais'
+} from './registros-opcionais/optional-records'
 
 export { HEADER } from './header'
 export { DETAIL } from './detail'
 export { TRAILER } from './trailer'
 
 // Registros opcionais
-export * from './registros-opcionais'
+export * from './registros-opcionais/optional-records'
 
 export const sicrediCnab400: BankSchema = {
   bankCode: BANK_CODES.SICREDI,

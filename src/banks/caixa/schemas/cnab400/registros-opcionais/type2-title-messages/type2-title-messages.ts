@@ -23,7 +23,7 @@
  *   mensagens, sugerindo que o registro é auto-suficiente para localizar o título.
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE2_TITLE_MESSAGES: RecordSchema = {
   codigo_registro: {

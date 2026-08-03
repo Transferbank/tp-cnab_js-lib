@@ -1,4 +1,4 @@
-import type { BankSchema, OptionalRecordSchema } from '@tp-types/index'
+import type { BankSchema, OptionalRecordSchema } from '@/types/all-types'
 
 export function buildOptionalMap(bankSchema: BankSchema): Map<string, OptionalRecordSchema> {
   return new Map(

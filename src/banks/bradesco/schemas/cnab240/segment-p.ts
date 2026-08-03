@@ -7,7 +7,7 @@
  * Fonte do layout: pycnab240 + cnab_yaml generic FEBRABAN
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB240_SEGMENT_P: RecordSchema = {
   controle_banco: {

@@ -7,7 +7,7 @@
  */
 
 import { extractLineFields } from '@parser/field-extractor'
-import { ParsedLine, Cnab240RecordType, Cnab240SegmentCode } from '@tp-types/index'
+import { ParsedLine, Cnab240RecordType, Cnab240SegmentCode } from '@/types/all-types'
 import {
   SANTANDER_CNAB240_SEGMENT_S,
   SANTANDER_CNAB240_SEGMENT_S_FORM,

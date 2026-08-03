@@ -8,7 +8,7 @@
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const SANTANDER_CNAB240_FILE_HEADER: RecordSchema = {
   controle_banco: {

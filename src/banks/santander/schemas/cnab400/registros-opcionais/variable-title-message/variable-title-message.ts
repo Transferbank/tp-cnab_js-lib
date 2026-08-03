@@ -30,7 +30,7 @@
  *   no manual de 2009, que errou a estrutura ao não reconhecer os blocos 2 e 3)
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const VARIABLE_TITLE_MESSAGE: RecordSchema = {
   codigo_registro: {

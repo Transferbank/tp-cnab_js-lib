@@ -9,7 +9,7 @@
  * todo o resto são brancos (filler).
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TRAILER: RecordSchema = {
   tipo_registro: {

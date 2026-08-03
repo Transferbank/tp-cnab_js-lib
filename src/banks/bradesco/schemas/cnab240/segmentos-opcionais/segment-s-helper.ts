@@ -6,7 +6,7 @@
  * o schema correto para parsing das posições 19-240.
  */
 
-import { RecordSchema, ParsedField } from '@tp-types/index'
+import { RecordSchema, ParsedField } from '@/types/all-types'
 import { extractLineFields } from '@parser/field-extractor'
 import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import {

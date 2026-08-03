@@ -12,7 +12,7 @@
  * Fonte do layout: Manual oficial Bradesco FEBRABAN 240 Posições V6.0
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 /**
  * Schema base do Segmento S (posições 1-18)

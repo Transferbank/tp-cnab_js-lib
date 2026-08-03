@@ -1,4 +1,4 @@
-import { extractPosition } from './cnab-positions'
+import { extractPosition } from '@parser/cnab-positions'
 
 const CNAB400_RECORD_TYPE_POS = { start: 0, end: 1 } as const
 const CNAB240_RECORD_TYPE_POS = { start: 7, end: 8 } as const

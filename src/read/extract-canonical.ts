@@ -1,10 +1,10 @@
-import type { ParsedLine } from '@tp-types/core'
-import type { CNABHeader, CNABData, CNABTrailer, CanonicalField } from '@tp-types/read'
+import type { ParsedLine } from '@/types/core/core-types'
+import type { CNABHeader, CNABData, CNABTrailer, CanonicalField } from '@/types/read/read-types'
 import type { BillGroup } from '@tp-types/processing/grouping'
 import { getAllLines } from '@tp-types/processing/grouping'
-import type { DateFormat } from '@tp-types/bank'
+import type { DateFormat } from '@/types/bank/bank-types'
 import { parseDate, formatDateBR } from '@utils/date-parser'
-import { CNABUnknownFieldCodeError } from '@tp-types/errors'
+import { CNABUnknownFieldCodeError } from '@/types/errors/error-types'
 
 /**
  * Tipo auxiliar para objetos canônicos em construção. 

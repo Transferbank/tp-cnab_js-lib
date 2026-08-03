@@ -6,11 +6,11 @@
  * Fonte do layout: laravel-boleto
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'
-import { TYPE2_TITLE_MESSAGES, TYPE3_EMAIL_SMS, TYPE4_PAYMENT_ALLOCATION } from './registros-opcionais'
+import { TYPE2_TITLE_MESSAGES, TYPE3_EMAIL_SMS, TYPE4_PAYMENT_ALLOCATION } from './registros-opcionais/optional-records'
 
 export const caixaCnab400: BankSchema = {
   bankCode: BANK_CODES.CAIXA,
@@ -26,4 +26,4 @@ export const caixaCnab400: BankSchema = {
 }
 
 export { HEADER, DETAIL, TRAILER }
-export * from './registros-opcionais'
+export * from './registros-opcionais/optional-records'

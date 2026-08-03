@@ -12,7 +12,7 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo5/tipo5-informativo.md
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE5_INFORMATIVE: RecordSchema = {
   tipo_registro: {

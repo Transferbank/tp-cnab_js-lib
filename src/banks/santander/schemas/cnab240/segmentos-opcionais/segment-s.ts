@@ -9,7 +9,7 @@
  * Fonte do layout: Manual "MANUAL DO CLIENTE DE COBRANA", cdigo H7815, Verso 6, Fevereiro/2023
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 export const SANTANDER_CNAB240_SEGMENT_S: RecordSchema = {
   controle_banco: {
     pos: [1, 3],

@@ -14,7 +14,7 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo8/tipo8-hibrido.md
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE8_HYBRID: RecordSchema = {
   tipo_registro: {

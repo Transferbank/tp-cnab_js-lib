@@ -1,6 +1,6 @@
 import { detectFormat, detectBank } from '@parser/format-detector'
-import { getBankSchema } from '@schemas/index'
-import { CNABFile } from '@tp-types/core'
+import { getBankSchema } from '@/schemas/bank-registry'
+import { CNABFile } from '@/types/core/core-types'
 import { readCnabFile } from '@/utils/file-reader'
 
 export function extractCnabFile(txt: string[]): CNABFile {
@@ -16,7 +16,7 @@ export async function openCnab(file: File): Promise<CNABFile> {
   return extractCnabFile(rawText)
 }
 
-export { CNABFile } from '@tp-types/core'
+export { CNABFile } from '@/types/core/core-types'
 
 export type {
   CNABValidationResult,
@@ -26,15 +26,15 @@ export type {
   ReadOptions,
   ReadAsyncOptions,
   LazyBillItem,
-} from './types/core'
+} from './types/core/core-types'
 
 export type {
   CNABData,
   CNABHeader,
   CNABTrailer,
-} from './types/read'
+} from './types/read/read-types'
 
-export { CNABFormatCode } from './types/core'
+export { CNABFormatCode } from './types/core/core-types'
 export { ReadMode } from './types/core/read-mode'
 
 export {
@@ -49,4 +49,4 @@ export {
   CNABGroupingError,
   CNABUnknownFieldCodeError,
   CNABLazyResolveError,
-} from './types/errors'
+} from './types/errors/error-types'

@@ -31,7 +31,7 @@
  *   bytes) — essa é a faixa que fecha a soma total em exatos 400 bytes.
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE4_PAYMENT_ALLOCATION: RecordSchema = {
   codigo_registro: {

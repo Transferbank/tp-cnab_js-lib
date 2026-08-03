@@ -25,7 +25,7 @@ export interface ParsedField {
   raw: string
   value: string | number
   error: string | null
-  canonical: import('../bank').FieldDefinition['canonical']
+  canonical: import('../bank/bank-types').FieldDefinition['canonical']
   [key: string]: unknown
 }
 

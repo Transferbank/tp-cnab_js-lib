@@ -8,7 +8,7 @@
  * Fonte: Manual "MANUAL DO CLIENTE DE COBRANA", cdigo H7815, Verso 6, Fevereiro/2023
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const SANTANDER_CNAB240_BATCH_TRAILER: RecordSchema = {
   controle_banco: {

@@ -3,7 +3,7 @@
  * Fonte do layout: laravel-boleto + brcobranca
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const HEADER: RecordSchema = {
   tipo_registro: {

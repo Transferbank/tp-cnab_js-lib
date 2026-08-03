@@ -1,4 +1,4 @@
-import { CNABEmptyFileError } from '@tp-types/errors'
+import { CNABEmptyFileError } from '@/types/errors/error-types'
 
 
 export function splitAndValidateLines(content: string): string[] {

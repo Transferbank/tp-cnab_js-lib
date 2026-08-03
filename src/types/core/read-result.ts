@@ -1,4 +1,4 @@
-import type { CNABHeader, CNABTrailer, CNABData } from '@tp-types/read'
+import type { CNABHeader, CNABTrailer, CNABData } from '@/types/read/read-types'
 
 export interface CNABReadResult<T = CNABData> {
   header: CNABHeader

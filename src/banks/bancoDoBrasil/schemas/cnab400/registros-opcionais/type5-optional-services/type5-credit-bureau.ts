@@ -22,7 +22,7 @@
  *   Se necessário, conferir visualmente p.8-9 do PDF para confirmação definitiva.
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE5_CREDIT_BUREAU: RecordSchema = {
   tipo_registro: {

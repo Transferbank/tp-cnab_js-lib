@@ -15,7 +15,7 @@
  * Fonte: Manual oficial Itaú, layout_cobranca_400bytes_cnab_itau.pdf, §6, p.46-47
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE6_LAYOUT4_ENDORSER: RecordSchema = {
   tipo_registro: {

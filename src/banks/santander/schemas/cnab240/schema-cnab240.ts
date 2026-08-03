@@ -8,7 +8,7 @@
  * - pycnab240, laravel-boleto, brcobranca, cnab_yaml
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { SANTANDER_CNAB240_FILE_HEADER } from './header'
 import { SANTANDER_CNAB240_BATCH_HEADER } from './batch-header'
 import { SANTANDER_CNAB240_SEGMENT_P } from './segment-p'

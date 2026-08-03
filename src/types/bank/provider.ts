@@ -1,9 +1,9 @@
-import type { BankSchema } from './bank-schema'
-import type { GroupingRule, BillGroup, GroupingError } from '@tp-types/processing'
-import type { ParsedLine } from '@tp-types/core'
-import type { CNABHeader, CNABTrailer, CNABData } from '@tp-types/read'
-import type { CNABFormatCode } from '@tp-types/core'
-import type { ReadMode } from '@tp-types/core'
+import type { BankSchema } from '@/types/bank/bank-types'
+import type { GroupingRule, BillGroup, GroupingError } from '@/types/processing/processing-types'
+import type { ParsedLine } from '@/types/core/core-types'
+import type { CNABHeader, CNABTrailer, CNABData } from '@/types/read/read-types'
+import type { CNABFormatCode } from '@/types/core/core-types'
+import type { ReadMode } from '@/types/core/core-types'
 
 export interface CNABProvider {
   bankCode: string

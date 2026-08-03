@@ -14,7 +14,7 @@
  * Ver anlise completa (incluindo notas sobre inconsistncias do prprio PDF do manual) em:
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const DETAIL: RecordSchema = {
   tipo_registro: {

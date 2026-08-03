@@ -13,7 +13,7 @@ umero_remessa_retorno` do
  * - pycnab240 (header_arquivo.json)
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB240_HEADER: RecordSchema = {
   controle_banco: {

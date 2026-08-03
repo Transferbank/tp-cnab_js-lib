@@ -7,7 +7,7 @@
  * - Layout CNAB 240 verso 081
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const SICREDI_CNAB240_FILE_HEADER: RecordSchema = {
   controle_banco: {

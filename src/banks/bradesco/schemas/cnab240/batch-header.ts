@@ -14,7 +14,7 @@ umero_remessa_retorno` (pos 184-191) é o campo autoritativo
  * - pycnab240 (header_lote_cobranca.json)
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB240_BATCH_HEADER: RecordSchema = {
   controle_banco: {

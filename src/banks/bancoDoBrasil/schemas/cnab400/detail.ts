@@ -15,7 +15,7 @@
  * Confirmado pelo manual oficial e todas as libs de referência.
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const DETAIL: RecordSchema = {
   tipo_registro: {

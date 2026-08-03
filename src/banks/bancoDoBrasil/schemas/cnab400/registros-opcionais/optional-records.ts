@@ -15,4 +15,4 @@
  * - Tipo 5: Diversos (bloqueto e-mail, cheque, seu número)
  */
 
-export * from './type5-optional-services'
+export * from './type5-optional-services/type5-services'

@@ -9,7 +9,7 @@
  * - pycnab240 (trailer_lote_cobranca.json)
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB240_BATCH_TRAILER: RecordSchema = {
   controle_banco: {

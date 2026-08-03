@@ -1,10 +1,10 @@
-import { CNABFormatCode } from '@tp-types/index'
+import { CNABFormatCode } from '@/types/all-types'
 import {
   CNABNoLinesProvidedError,
   CNABInvalidHeaderError,
   CNABFormatNotRecognizedError,
   CNABBankNotFoundError,
-} from '@tp-types/errors'
+} from '@/types/errors/error-types'
 import { getCnab400BankCode, getCnab240BankCode } from '@parser/cnab-positions'
 
 const LINE_LENGTH = {

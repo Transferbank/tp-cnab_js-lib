@@ -8,7 +8,7 @@
  *
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const HEADER: RecordSchema = {
   codigo_registro: {

@@ -6,7 +6,7 @@
  * e qualquer tipo de arquivo (remessa, retorno, múltiplos lotes).
  */
 
-import type { CNABFormatCode } from '../core'
+import type { CNABFormatCode } from '../core/core-types'
 
 export type DocumentType = 'CPF' | 'CNPJ'
 

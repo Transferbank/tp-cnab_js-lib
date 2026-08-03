@@ -24,7 +24,7 @@
  * Ver: src/schemas/banks/bradesco/cnab400/registros-opcionais/tipo2/tipo2-mensagem-descontos-adicionais.md
  */
 
-import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat, FieldType } from '@/types/all-types'
 
 export const TYPE2_MESSAGES_DISCOUNTS: RecordSchema = {
   tipo_registro: {

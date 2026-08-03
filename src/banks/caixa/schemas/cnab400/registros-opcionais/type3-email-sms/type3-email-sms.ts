@@ -22,7 +22,7 @@
  *   lógica que dependa do valor exato desse campo.
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE3_EMAIL_SMS: RecordSchema = {
   codigo_registro: {

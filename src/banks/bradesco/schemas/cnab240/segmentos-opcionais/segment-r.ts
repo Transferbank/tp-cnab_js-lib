@@ -8,7 +8,7 @@
  * Fonte do layout: pycnab240 + laravel-boleto + manual oficial Bradesco
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB240_SEGMENT_R: RecordSchema = {
   controle_banco: {

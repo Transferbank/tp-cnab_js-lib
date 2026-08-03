@@ -17,7 +17,7 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo6/tipo6-beneficiario-final.md
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE6_ENDORSER: RecordSchema = {
   tipo_registro: {

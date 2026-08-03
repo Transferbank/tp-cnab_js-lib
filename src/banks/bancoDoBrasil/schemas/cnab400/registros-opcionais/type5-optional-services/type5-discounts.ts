@@ -22,7 +22,7 @@
  * - Usar zeros nas datas/valores quando não houver o respectivo desconto
  */
 
-import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat, FieldType } from '@/types/all-types'
 
 export const TYPE5_DISCOUNTS: RecordSchema = {
   tipo_registro: {

@@ -1,8 +1,8 @@
-import { BankSchema, ValidationError, OptionalRecordSchema } from '@tp-types/index'
+import { BankSchema, ValidationError, OptionalRecordSchema } from '@/types/all-types'
 import { getRecordTypePattern } from '@parser/field-extractor'
 import { getCnab400RecordType } from '@parser/position-reader'
 import { getCnab400OptionalSuffix1, getCnab400OptionalSuffix2, extractPositionTrimmed } from '@parser/cnab-positions'
-import { buildOptionalMap } from './build-optional-map'
+import { buildOptionalMap } from '@validators/build-optional-map'
 
 const LINE_LENGTH = 400
 

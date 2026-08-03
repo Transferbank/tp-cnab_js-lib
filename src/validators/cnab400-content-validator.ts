@@ -1,7 +1,7 @@
 import { extractLineFields, getRecordTypePattern } from '@parser/field-extractor'
 import { getCnab400RecordType } from '@parser/position-reader'
 import { CNAB400_DETAIL_POSITIONS, extractPosition, extractPositionTrimmed } from '@parser/cnab-positions'
-import { BankSchema, CNABRecord, ValidationError, DateFormat, BANK_CODES, RecordSchema } from '@tp-types/index'
+import { BankSchema, CNABRecord, ValidationError, DateFormat, BANK_CODES, RecordSchema } from '@/types/all-types'
 import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
 import { validatePayerDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'

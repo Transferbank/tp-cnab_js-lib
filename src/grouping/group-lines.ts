@@ -1,5 +1,5 @@
-import type { ParsedLine, ParsedField } from '@tp-types/core'
-import { CNABFormatCode } from '@tp-types/core'
+import type { ParsedLine, ParsedField } from '@/types/core/core-types'
+import { CNABFormatCode } from '@/types/core/core-types'
 import { Cnab240SegmentCode } from '@tp-types/cnab240-record-types'
 import type {
   GroupingRule,

@@ -1,5 +1,5 @@
-import { FieldDefinition, RecordSchema, FieldType } from '@tp-types/index'
-import { ParsedLine, ParsedField } from '@tp-types/core'
+import { FieldDefinition, RecordSchema, FieldType } from '@/types/all-types'
+import { ParsedLine, ParsedField } from '@/types/core/core-types'
 
 
 function getFieldRaw(line: string, start: number, end: number): string {

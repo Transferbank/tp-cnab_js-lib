@@ -1,9 +1,9 @@
-import { BankSchema, ValidationError, OptionalRecordSchema } from '@tp-types/index'
+import { BankSchema, ValidationError, OptionalRecordSchema } from '@/types/all-types'
 import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { getCnab240SegmentYVariant } from '@parser/cnab-positions'
 import type { Cnab240RecordKind, Cnab240MandatoryRecordKey } from '@tp-types/cnab240-record-types'
 import { Cnab240SegmentCode } from '@tp-types/cnab240-record-types'
-import { buildOptionalMap } from './build-optional-map'
+import { buildOptionalMap } from '@validators/build-optional-map'
 
 const LINE_LENGTH = 240
 

@@ -9,18 +9,18 @@
  * Fonte: Manual oficial BB remessa (Doc2627CBR641Pos7.pdf, abril/2012)
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'
-import { TYPE5_FINE, TYPE5_DISCOUNTS, TYPE5_CREDIT_BUREAU } from './registros-opcionais'
+import { TYPE5_FINE, TYPE5_DISCOUNTS, TYPE5_CREDIT_BUREAU } from './registros-opcionais/optional-records'
 
 export { HEADER } from './header'
 export { DETAIL } from './detail'
 export { TRAILER } from './trailer'
 
 // Registros opcionais
-export * from './registros-opcionais'
+export * from './registros-opcionais/optional-records'
 
 export const bancoDoBrasilCnab400: BankSchema = {
   bankCode: BANK_CODES.BANCO_DO_BRASIL,

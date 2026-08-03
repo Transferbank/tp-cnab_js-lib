@@ -1,4 +1,4 @@
-import { ParsedLine, ValidationError } from '@tp-types/index'
+import { ParsedLine, ValidationError } from '@/types/all-types'
 
 export function collectFieldErrors(
   parsed: ParsedLine | null,

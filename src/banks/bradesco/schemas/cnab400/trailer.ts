@@ -6,7 +6,7 @@
  * - brcobranca, cnab_yaml, laravel-boleto
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB400_TRAILER: RecordSchema = {
   tipo_registro: {

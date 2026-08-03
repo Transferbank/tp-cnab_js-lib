@@ -1,10 +1,10 @@
 import type { CNABProvider } from '@tp-types/bank/provider'
-import { CNABFormatCode } from '@tp-types/core'
-import type { ReadMode } from '@tp-types/core'
-import { getBankSchema } from '@schemas/index'
+import { CNABFormatCode } from '@/types/core/core-types'
+import type { ReadMode } from '@/types/core/core-types'
+import { getBankSchema } from '@/schemas/bank-registry'
 import { getGroupingRule } from '@/grouping/grouping-rules'
 import { groupLines } from '@/grouping/group-lines'
-import { extractHeader, extractTrailer, extractBill, extractBillFull } from '@/read'
+import { extractHeader, extractTrailer, extractBill, extractBillFull } from '@/read/extractors'
 
 export function getProvider(
   bankCode: string,

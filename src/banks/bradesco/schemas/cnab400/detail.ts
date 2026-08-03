@@ -9,7 +9,7 @@
  *   revelou 2 campos nas posições 105 e 107-108
  */
 
-import { RecordSchema, DateFormat , FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat , FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB400_DETAIL: RecordSchema = {
   tipo_registro: {

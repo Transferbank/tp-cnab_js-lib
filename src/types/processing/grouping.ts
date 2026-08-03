@@ -6,7 +6,7 @@
  * - CNAB 240: 2 linhas núcleo (P+Q obrigatórios) + 0-N linhas satélite (R, S, Y*)
  */
 
-import type { ParsedLine } from '@tp-types/core'
+import type { ParsedLine } from '@/types/core/core-types'
 
 export type GroupingRecordType = 'core' | 'satellite' | 'structural'
 

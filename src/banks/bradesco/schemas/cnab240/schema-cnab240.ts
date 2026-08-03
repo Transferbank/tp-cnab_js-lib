@@ -5,7 +5,7 @@
  * Fonte: pycnab240, cnab_yaml FEBRABAN, Manual oficial Bradesco
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { BRADESCO_CNAB240_HEADER } from './header'
 import { BRADESCO_CNAB240_BATCH_HEADER } from './batch-header'
 import { BRADESCO_CNAB240_SEGMENT_P } from './segment-p'

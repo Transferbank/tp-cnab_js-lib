@@ -14,7 +14,7 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo7/tipo7-descontos.md
  */
 
-import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat, FieldType } from '@/types/all-types'
 
 export const TYPE7_DISCOUNTS: RecordSchema = {
   tipo_registro: {

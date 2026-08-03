@@ -11,7 +11,7 @@
  * Fonte: Manual oficial Itaú (layout_cobranca_400bytes_cnab_itau.pdf)
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'
@@ -23,7 +23,7 @@ import {
   TYPE6_LAYOUT2_INSTRUCTIONS_1_5,
   TYPE6_LAYOUT3_INSTRUCTIONS_6_9,
   TYPE6_LAYOUT4_ENDORSER,
-} from './registros-opcionais'
+} from './registros-opcionais/optional-records'
 
 export const itauCnab400: BankSchema = {
   bankCode: BANK_CODES.ITAU,
@@ -43,4 +43,4 @@ export const itauCnab400: BankSchema = {
 }
 
 export { HEADER, DETAIL, TRAILER }
-export * from './registros-opcionais'
+export * from './registros-opcionais/optional-records'

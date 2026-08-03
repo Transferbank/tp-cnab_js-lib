@@ -1,4 +1,4 @@
-import { ValidationError, CNABRecord } from '@tp-types/index'
+import { ValidationError, CNABRecord } from '@/types/all-types'
 
 export interface ValidationResult {
   errors: ValidationError[]

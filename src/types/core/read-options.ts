@@ -1,4 +1,4 @@
-import type { ReadMode } from './read-mode'
+import type { ReadMode } from '@/types/core/read-mode'
 
 export interface ReadPageOptions {
   start: number

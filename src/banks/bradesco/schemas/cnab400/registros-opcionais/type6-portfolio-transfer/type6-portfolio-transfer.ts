@@ -20,7 +20,7 @@
  * Ver: src/schemas/banks/bradesco/cnab400/registros-opcionais/tipo6/tipo6-transferencia-carteira.md
  */
 
-import { RecordSchema, DateFormat, FieldType } from '@tp-types/index'
+import { RecordSchema, DateFormat, FieldType } from '@/types/all-types'
 
 export const TYPE6_PORTFOLIO_TRANSFER: RecordSchema = {
   tipo_registro: {

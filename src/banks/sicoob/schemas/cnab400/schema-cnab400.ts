@@ -4,7 +4,7 @@
  * Fonte: Planilha oficial Sicoob (Layout_Cobranca_CNAB400.xls, mai/2025)
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { HEADER } from './header'
 import { DETAIL } from './detail'
 import { TRAILER } from './trailer'

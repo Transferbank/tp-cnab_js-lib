@@ -17,11 +17,11 @@
  * - brcobranca, cnab_yaml, laravel-boleto
  */
 
-import { BankSchema, BANK_CODES } from '@tp-types/index'
+import { BankSchema, BANK_CODES } from '@/types/all-types'
 import { BRADESCO_CNAB400_HEADER_REMESSA } from './header'
 import { BRADESCO_CNAB400_DETAIL } from './detail'
 import { BRADESCO_CNAB400_TRAILER } from './trailer'
-import { TYPE2_MESSAGES_DISCOUNTS, TYPE6_PORTFOLIO_TRANSFER } from './registros-opcionais'
+import { TYPE2_MESSAGES_DISCOUNTS, TYPE6_PORTFOLIO_TRANSFER } from './registros-opcionais/optional-records'
 
 export {
   BRADESCO_CNAB400_HEADER_REMESSA,
@@ -32,7 +32,7 @@ export { BRADESCO_CNAB400_DETAIL } from './detail'
 export { BRADESCO_CNAB400_TRAILER } from './trailer'
 
 // Registros opcionais
-export * from './registros-opcionais'
+export * from './registros-opcionais/optional-records'
 
 export const bradescoCnab400: BankSchema = {
   bankCode: BANK_CODES.BRADESCO,

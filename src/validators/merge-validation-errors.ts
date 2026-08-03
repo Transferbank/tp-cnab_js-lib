@@ -1,4 +1,4 @@
-import { ValidationError } from '@tp-types/index'
+import { ValidationError } from '@/types/all-types'
 
 /**
  * Mescla erros estruturais e de negócio, removendo duplicatas.

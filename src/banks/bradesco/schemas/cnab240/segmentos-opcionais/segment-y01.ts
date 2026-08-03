@@ -15,7 +15,7 @@
  * Seção: "Registro Detalhe - Segmento Y-01"
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const BRADESCO_CNAB240_SEGMENT_Y01: RecordSchema = {
   controle_banco: {

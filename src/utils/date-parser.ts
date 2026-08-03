@@ -1,4 +1,4 @@
-import { DateFormat } from '@tp-types/index'
+import { DateFormat } from '@/types/all-types'
 
 function isValidDate(date: Date, year: number, month: number, day: number): boolean {
   return (

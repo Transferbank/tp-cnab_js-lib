@@ -23,7 +23,7 @@
  * - Este registro é emitido imediatamente após o detalhe (tipo 1) do título
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE8_PIX: RecordSchema = {
   codigo_registro: {

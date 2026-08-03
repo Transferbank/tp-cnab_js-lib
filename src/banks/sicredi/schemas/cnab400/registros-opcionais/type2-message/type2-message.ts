@@ -13,7 +13,7 @@
  * Ver: src/schemas/banks/sicredi/cnab400/registros-opcionais/tipo2/tipo2-mensagem.md
  */
 
-import { RecordSchema, FieldType } from '@tp-types/index'
+import { RecordSchema, FieldType } from '@/types/all-types'
 
 export const TYPE2_MESSAGE: RecordSchema = {
   tipo_registro: {
