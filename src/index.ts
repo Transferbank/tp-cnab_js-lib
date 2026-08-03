@@ -3,6 +3,10 @@ import { getBankSchema } from '@/schemas/bank-registry'
 import { CNABFile } from '@/types/core/core-types'
 import { readCnabFile } from '@/utils/file-reader'
 
+CNABFile.initializeProvider().catch(() => {
+  // Provider initialization failed, will be required on first use
+})
+
 export function extractCnabFile(txt: string[]): CNABFile {
   const format = detectFormat(txt)
   const bankCode = detectBank(txt[0], format)
