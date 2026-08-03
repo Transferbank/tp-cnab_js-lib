@@ -1,7 +1,3 @@
-/**
- * Testes de registro dos schemas de banco (cobertura de regressão pro port JS → TS)
- */
-
 import { getBankSchema, cnab400Banks } from '../index'
 import { CNABFormatCode } from '@tp-types/index'
 

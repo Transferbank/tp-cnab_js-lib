@@ -1,7 +1,3 @@
-/**
- * Testes para date-parser
- */
-
 import {
   parseDateDDMMAA,
   parseDateDDMMAAAA,

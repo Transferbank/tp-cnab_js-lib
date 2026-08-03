@@ -59,10 +59,6 @@ export function isValidCpfCnpj(document: string): boolean {
   return false
 }
 
-/**
- * Valida documento CNAB com padding de zeros à esquerda.
- * Remove padding, normaliza para 11 (CPF) ou 14 (CNPJ) dígitos, valida.
- */
 export function validatePayerDocument(rawDocument: string): boolean {
   const cleaned = rawDocument.trim().replace(/^0+/, '')
   if (cleaned.length === 0) return false

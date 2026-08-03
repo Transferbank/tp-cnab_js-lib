@@ -1,7 +1,3 @@
-/**
- * Tipos principais para processamento CNAB
- */
-
 export type CNABFormat = 'CNAB 240' | 'CNAB 400'
 
 

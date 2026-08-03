@@ -1,8 +1,6 @@
 import { CNABEmptyFileError } from '@tp-types/errors'
 
-/**
- * Divide conteúdo em linhas, filtra vazias e valida arquivo não-vazio.
- */
+
 export function splitAndValidateLines(content: string): string[] {
   const lines = content.split(/\r?\n/).filter((line) => line.length > 0)
   

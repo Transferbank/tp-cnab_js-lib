@@ -1,7 +1,3 @@
-/**
- * Dados canônicos de um título/boleto.
- * Abstrai diferenças entre CNAB 240/400 e entre bancos.
- */
 export interface CNABData {
   valor?: number
   vencimento?: string 
@@ -11,7 +7,7 @@ export interface CNABData {
   
   sacado?: {
     nome?: string
-    documento?: string // CPF/CNPJ sem formatação
+    documento?: string
     endereco?: {
       logradouro?: string
       bairro?: string

@@ -32,9 +32,6 @@ export function parseDateDDMMAAAA(str: string): Date | null {
   return isValidDate(date, year, month, day) ? date : null
 }
 
-/**
- * Formato AAAAMMDD usado pelo Sicredi (diferente do DDMMAAAA padrão).
- */
 export function parseDateAAAAMMDD(str: string): Date | null {
   if (str == null || str.length !== 8 || !/^\d{8}$/.test(str)) return null
 

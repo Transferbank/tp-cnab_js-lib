@@ -1,6 +1,3 @@
-/**
- * Testes para validação de documentos
- */
 
 import { isValidCPF, isValidCNPJ, isValidCpfCnpj, validatePayerDocument } from '../string-utils'
 

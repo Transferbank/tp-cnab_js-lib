@@ -49,7 +49,7 @@ export class CNABFile {
     return this.bankSchema.bankName
   }
 
-  getLines(): readonly string[] {
+  getRawLines(): readonly string[] {
     return this.rawLines
   }
 
@@ -73,8 +73,7 @@ export class CNABFile {
     const provider = this.resolveProvider(ReadMode.SIMPLE)
     const bankSchema = provider.schema
 
-    const shouldFailFast = withFeedback !== true
-    if (shouldFailFast) {
+    if (withFeedback !== true) {
       const result = this.validateFailFast(bankSchema)
       return result.isValid
     }
@@ -243,14 +242,10 @@ export class CNABFile {
     return { headerParsed, trailerParsed, bodyParsed }
   }
 
-  /**
-   * Use para arquivos grandes quando não precisa carregar tudo de uma vez.
-   */
+
   read(options: ReadOptions & { lazy: true }): CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>>
 
-  /**
-   * Use para arquivos pequenos ou quando precisa de todos os dados de uma vez.
-   */
+
   read(options?: ReadOptions): CNABReadResult<CNABData | Record<string, unknown>>
 
   read(options?: ReadOptions): CNABReadResult<CNABData | Record<string, unknown>> | CNABReadResult<LazyBillItem<CNABData | Record<string, unknown>>> {

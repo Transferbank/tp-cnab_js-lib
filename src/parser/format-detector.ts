@@ -12,15 +12,13 @@ const LINE_LENGTH = {
   CNAB_400: 400,
 } as const
 
-export function detectFormat(lines: string[]): CNABFormatCode {
-  if (lines == null || lines.length === 0) {
+export function detectFormat(text: string[]): CNABFormatCode {
+  if (text == null || text.length === 0) {
     throw new CNABNoLinesProvidedError()
   }
 
-  const len = lines[0].length
-
+  const len = text[0].length
   if (len === LINE_LENGTH.CNAB_240) return CNABFormatCode.CNAB240
-
   if (len === LINE_LENGTH.CNAB_400) return CNABFormatCode.CNAB400
 
   throw new CNABFormatNotRecognizedError(len)

@@ -198,7 +198,6 @@ function validateMiddleLine(
   const suffix2 = getCnab400OptionalSuffix2(line)
   const suffix1 = getCnab400OptionalSuffix1(line)
 
-  // Ordem de tentativa: '5-99' (BB), '6-1' (Itaú), '2' (simples)
   const optionalRecord =
     optionalByIdentifier.get(`${recordType}-${suffix2}`) ||
     optionalByIdentifier.get(`${recordType}-${suffix1}`) ||

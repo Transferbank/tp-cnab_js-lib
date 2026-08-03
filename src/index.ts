@@ -3,35 +3,26 @@ import { getBankSchema } from '@schemas/index'
 import { CNABFile } from '@tp-types/core'
 import { readCnabFile } from '@/utils/file-reader'
 
-export function openCnabFromLines(rawLines: string[]): CNABFile {
-  const format = detectFormat(rawLines)
-  const bankCode = detectBank(rawLines[0], format)
+export function extractCnabFile(txt: string[]): CNABFile {
+  const format = detectFormat(txt)
+  const bankCode = detectBank(txt[0], format)
   const bankSchema = getBankSchema(bankCode, format)
 
-  return new CNABFile(format, bankSchema, rawLines)
+  return new CNABFile(format, bankSchema, txt)
 }
 
 export async function openCnab(file: File): Promise<CNABFile> {
-  const rawLines = await readCnabFile(file)
-  return openCnabFromLines(rawLines)
+  const rawText = await readCnabFile(file)
+  return extractCnabFile(rawText)
 }
 
-// ========== EXPORTAÇÕES PÚBLICAS ==========
+export { CNABFile } from '@tp-types/core'
 
-// --- API Principal ---
-export { CNABFile } from './types/core'
-
-// --- Tipos (inferidos automaticamente na maioria dos casos) ---
 export type {
-  // Validação
   CNABValidationResult,
   ValidationError,
   CNABRecord,
-  
-  // Leitura
   CNABReadResult,
-  
-  // Opções
   ReadOptions,
   ReadAsyncOptions,
   LazyBillItem,
@@ -43,11 +34,9 @@ export type {
   CNABTrailer,
 } from './types/read'
 
-// --- Enums (para comparações) ---
 export { CNABFormatCode } from './types/core'
 export { ReadMode } from './types/core/read-mode'
 
-// --- Erros (para tratamento de exceções) ---
 export {
   CNABError,
   CNABEmptyFileError,

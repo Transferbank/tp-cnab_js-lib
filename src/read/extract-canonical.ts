@@ -22,26 +22,17 @@ const DATE_FIELDS = new Set<CanonicalField>([
   'desconto.dataLimite',
 ])
 
-/**
- * Identificadores (nossoNumero, CEP) mantidos como string crua.
- * nossoNumero pode exceder 16 dígitos (limite JS); CEP tem zero significativo.
- */
 const RAW_STRING_FIELDS = new Set<CanonicalField>([
   'nossoNumero',
   'numeroDocumento',
   'sacado.endereco.cep',
 ])
 
-
 const DOCUMENT_FIELDS = new Set<CanonicalField>([
   'sacado.documento',
   'cedente.documento',
 ])
 
-/**
- * Cache de path.split('.') para evitar re-processar os mesmos paths canônicos.
- * Paths como 'sacado.endereco.cep' são strings literais fixas no schema.
- */
 const PATH_SPLIT_CACHE = new Map<string, string[]>()
 
 function setNestedValue(obj: CanonicalObject, path: string, value: unknown): void {
@@ -83,7 +74,6 @@ function extractFieldsFromLine(line: ParsedLine, destination: CanonicalObject): 
     if (typeof canonical === 'object' && canonical.field) {
       const interpretedValue = canonical.interpret(field.value, line)
       
-      // Código desconhecido (não 0 ou ''): erro
       if (interpretedValue === undefined && field.value !== 0 && field.value !== '') {
         throw new CNABUnknownFieldCodeError(canonical.field, field.value)
       }
