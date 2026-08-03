@@ -7,7 +7,7 @@
  */
 
 import { extractLineFields } from '@parser/field-extractor'
-import { ParsedLine } from '@tp-types/index'
+import { ParsedLine, Cnab240RecordType, Cnab240SegmentCode } from '@tp-types/index'
 import {
   SANTANDER_CNAB240_SEGMENT_S,
   SANTANDER_CNAB240_SEGMENT_S_FORM,
@@ -19,8 +19,8 @@ import {
  */
 export function isSegmentS(line: string): boolean {
   if (line.length !== 240) return false
-  if (line[7] !== '3') return false  // tipo de registro = 3 (detalhe)
-  if (line[13] !== 'S') return false // segmento = S
+  if (line[7] !== Cnab240RecordType.DETALHE) return false
+  if (line[13] !== Cnab240SegmentCode.S) return false
   return true
 }
 
@@ -34,11 +34,11 @@ export function identifySegmentSVariant(
   if (line.length !== 240) {
     return { error: 'Linha não tem 240 caracteres' }
   }
-  if (line[7] !== '3') {
-    return { error: 'Tipo de registro incorreto (esperado 3)' }
+  if (line[7] !== Cnab240RecordType.DETALHE) {
+    return { error: `Tipo de registro incorreto (esperado ${Cnab240RecordType.DETALHE})` }
   }
-  if (line[13] !== 'S') {
-    return { error: 'Segmento incorreto (esperado S)' }
+  if (line[13] !== Cnab240SegmentCode.S) {
+    return { error: `Segmento incorreto (esperado ${Cnab240SegmentCode.S})` }
   }
 
   const printType = line[17] // position 18 (index 17)

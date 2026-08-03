@@ -1,7 +1,7 @@
 import { extractLineFields } from '@parser/field-extractor'
 import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { CNAB240_SEGMENT_P_POSITIONS, CNAB240_SEGMENT_Q_POSITIONS, extractPosition, extractPositionTrimmed } from '@parser/cnab-positions'
-import { BankSchema, CNABRecord, ValidationError, DateFormat, Cnab240SegmentCode, RecordSchema } from '@tp-types/index'
+import { BankSchema, CNABRecord, ValidationError, DateFormat, Cnab240SegmentCode, Cnab240RecordType, RecordSchema } from '@tp-types/index'
 import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
 import { validatePayerDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'
@@ -32,7 +32,7 @@ export function validateCnab240Content(
     const line = lines[i]
     const lineNumber = i + 1
 
-    if (getCnab240RecordType(line) !== '3') {
+    if (getCnab240RecordType(line) !== Cnab240RecordType.DETALHE) {
       pendingP = null
       continue
     }

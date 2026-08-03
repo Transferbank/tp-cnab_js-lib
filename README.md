@@ -78,7 +78,7 @@ O corpo do arquivo só é processado quando `.read()`/`.validate()` são chamado
 |---|---|
 | `.type`, `.bankCode`, `.bankName`, `.lineCount` | Metadados já detectados |
 | `.validate()` | Retorna `boolean` — validação rápida (fail-fast) |
-| `.validate(true)` | Retorna `CNABValidationResult` — validação completa com feedback detalhado `{ isValid, feedback: { type, bank, lines } }` |
+| `.validate(true)` | Retorna `CNABValidationResult` — validação completa com feedback | detalhado `{ isValid, feedback: { type, bank, lines } }` |
 | `.read(options?)` | Extrai `{ header, trailer, bills }`. `mode: 'SIMPLE'` (campos canônicos) ou `'FULL'` (todos os campos do banco); `lazy: true` devolve `LazyBillItem[]` (extração sob demanda via `.resolve()`); `page: { start, size }` pagina |
 | `.readAsync(options?)` | Igual a `.read()`, assíncrono; aceita `onProgress`/`batchSize` para arquivos grandes |
 

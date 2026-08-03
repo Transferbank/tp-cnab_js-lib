@@ -1,5 +1,5 @@
 import { CNABFormatCode, CNABValidationResult, ParsedLine, ValidationError, CNABRecord } from './cnab'
-import { Cnab240SegmentCode } from '../cnab240-record-types'
+import { Cnab240SegmentCode, Cnab240RecordType } from '../cnab240-record-types'
 import { Cnab400RecordType } from '../cnab400-record-types'
 import { ReadMode } from './read-mode'
 import { BankSchema, RecordSchema, CNABProvider, OptionalRecordSchema } from '@tp-types/bank'
@@ -190,7 +190,7 @@ export class CNABFile {
   ): ParsedLine {
     const recordType = getCnab240RecordType(line)
     
-    if (recordType === '3') {
+    if (recordType === Cnab240RecordType.DETALHE) {
       const segment = getCnab240SegmentCode(line)
       
       if (segment === Cnab240SegmentCode.P) {
@@ -200,20 +200,20 @@ export class CNABFile {
         return extractLineFields(line, bankSchema.segmentoQ!)
       } 
       else if (segment === Cnab240SegmentCode.R) {
-        const optR = optionalMap.get('R')
+        const optR = optionalMap.get(Cnab240SegmentCode.R)
         if (optR != null) {
           return extractLineFields(line, optR.schema)
         }
       } 
       else if (segment === Cnab240SegmentCode.S) {
-        const optS = optionalMap.get('S')
+        const optS = optionalMap.get(Cnab240SegmentCode.S)
         if (optS != null) {
           return extractLineFields(line, optS.schema)
         }
       } 
       else if (segment === Cnab240SegmentCode.Y) {
         const subVariant = getCnab240SegmentYVariant(line)
-        const optY = optionalMap.get(`Y${subVariant}`)
+        const optY = optionalMap.get(`${Cnab240SegmentCode.Y}${subVariant}`)
         if (optY != null) {
           return extractLineFields(line, optY.schema)
         }
@@ -309,13 +309,9 @@ export class CNABFile {
   }
 
   /**
-   * @deprecated Método readAsync não faz processamento verdadeiramente assíncrono.
+   * Método readAsync não faz processamento verdadeiramente assíncrono.
    * Todo o trabalho pesado (parse, grouping, extraction) é síncrono e bloqueia a thread.
    * O batchSize/onProgress apenas dispara callbacks, mas não particiona o trabalho real.
-   * 
-   * Para arquivos grandes:
-   * - Use read({ lazy: true }) para adiar extração de bills
-   * - Considere processar o arquivo em chunks menores antes de chamar openCnab()
    * 
    * Este método será removido ou reimplementado com processamento verdadeiramente
    * assíncrono em uma versão futura.

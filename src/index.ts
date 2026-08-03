@@ -1,9 +1,3 @@
-/**
- * CNAB-Lib — Biblioteca TypeScript para processamento de arquivos CNAB
- * 
- * Suporta CNAB 240 e CNAB 400 com validação estrutural e de negócio
- */
-
 import { detectFormat, detectBank } from '@parser/format-detector'
 import { getBankSchema } from '@schemas/index'
 import { CNABFile } from '@tp-types/core'
