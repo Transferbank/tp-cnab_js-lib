@@ -17,7 +17,7 @@ import { extractLineFields } from '@parser/field-extractor'
 import { getCnab400RecordType, getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
 import { getCnab240SegmentYVariant } from '@parser/cnab-positions'
 import type { CNABData } from '@/types/read/read-types'
-import type { BillGroup } from '@/types/processing/processing-types'
+import type { BillGroup } from '@/types/processing/grouping'
 import { ValidationResult } from '@/validators/types'
 
 let cachedGetProvider: typeof import('@/provider/catalog').getProvider | undefined

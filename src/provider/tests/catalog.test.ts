@@ -8,7 +8,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { getProvider } from '@/provider'
+import { getProvider } from '@/provider/catalog'
 import { groupLines } from '@/grouping/group-lines'
 import { getGroupingRule } from '@/grouping/grouping-rules'
 import { extractLineFields } from '@parser/field-extractor'
