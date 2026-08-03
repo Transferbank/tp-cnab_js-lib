@@ -1,63 +1,21 @@
-/**
- * Validador de integridade entre arquivo CNAB e metadados JSON
- * 
- * Este módulo fornece funções para comparar o conteúdo do arquivo TXT
- * com os metadados JSON, detectando inconsistências automaticamente.
- */
-
 import { FixtureMetadata } from '@tp-types/testing'
 import { BankSchema } from '@tp-types/bank'
 import { validateCnab240Content } from '@validators/cnab240-content-validator'
 import { validateCnab400Content } from '@validators/cnab400-content-validator'
 import { extractLineFields } from '@parser/field-extractor'
 import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-reader'
-import { CNABFormatCode, Cnab240RecordType, Cnab240SegmentCode } from '@tp-types/index'
+import { CNABFormatCode, Cnab240RecordType, Cnab240SegmentCode, ValidationError } from '@tp-types/index'
 
-/**
- * Erro de validação de integridade
- */
+
 export interface IntegrityError {
-  /** Tipo do erro */
   type: 'line-count' | 'record-count' | 'field-mismatch' | 'total-mismatch' | 'bank-code'
-  
-  /** Mensagem descritiva */
   message: string
-  
-  /** Campo afetado (se aplicável) */
   field?: string
-  
-  /** Valor esperado (do JSON) */
   expected?: unknown
-  
-  /** Valor encontrado (no TXT) */
   actual?: unknown
-  
-  /** Índice do registro (se aplicável) */
   recordIndex?: number
 }
 
-/**
- * Valida que arquivo TXT corresponde aos metadados JSON
- * 
- * Compara estrutura, código do banco, quantidade de registros,
- * valores dos títulos e totalizadores.
- * 
- * @param lines - Linhas do arquivo CNAB já parseadas
- * @param metadata - Metadados carregados do JSON
- * @param schema - Schema do banco para parsing
- * @returns Array de erros (vazio se tudo OK)
- * 
- * @example
- * ```typescript
- * const lines = readFixture('remessa-multipla.txt')
- * const metadata = loadFixtureMetadata('bradesco', 'remessa-multipla')
- * const errors = validateFixtureIntegrity(lines, metadata, bradescoCnab240)
- * 
- * if (errors.length > 0) {
- *   console.error('Inconsistências encontradas:', errors)
- * }
- * ```
- */
 export function validateFixtureIntegrity(
   lines: string[],
   metadata: FixtureMetadata,
@@ -79,7 +37,6 @@ export function validateFixtureIntegrity(
     }
   })
 
-  // 2. Validar total de linhas
   if (lines.length !== metadata.structure.totalLines) {
     errors.push({
       type: 'line-count',
@@ -88,11 +45,9 @@ export function validateFixtureIntegrity(
       expected: metadata.structure.totalLines,
       actual: lines.length
     })
-    // Se total de linhas está errado, outros erros serão cascata - retornar cedo
     return errors
   }
 
-  // 3. Validar código do banco no header
   if (schema.headerArquivo && lines.length > 0) {
     const header = extractLineFields(lines[0], schema.headerArquivo)
     const bankCodeFromFile = header.controle_banco?.raw || header.controle_banco?.value
@@ -108,7 +63,6 @@ export function validateFixtureIntegrity(
     }
   }
 
-  // 4. Validar código do banco usando validator apropriado
   const result =
     metadata.format === CNABFormatCode.CNAB240 ? validateCnab240Content(lines, schema) : validateCnab400Content(lines, schema)
 
@@ -116,10 +70,10 @@ export function validateFixtureIntegrity(
   // regra de negócio esperada em arquivo real anonimizado (não um problema de parsing/schema),
   // então não conta como falha de integridade aqui  quem trata isso é outra camada.
   const parsingErrors = result.errors.filter(
-    (error) => !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual'))
+    (error: ValidationError) => !(error.field === 'Data de vencimento' && error.message.includes('anterior à data atual'))
   )
   if (parsingErrors.length > 0) {
-    parsingErrors.forEach(error => {
+    parsingErrors.forEach((error: ValidationError) => {
       errors.push({
         type: 'field-mismatch',
         message: `Erro ao processar arquivo (linha ${error.line}, ${error.field}): ${error.message}`,
@@ -128,7 +82,6 @@ export function validateFixtureIntegrity(
     })
   }
 
-  // 5. Validar quantidade de registros
   if (result.records.length !== metadata.records.length) {
     errors.push({
       type: 'record-count',
@@ -137,15 +90,11 @@ export function validateFixtureIntegrity(
       expected: metadata.records.length,
       actual: result.records.length
     })
-    // Se quantidade difere, não faz sentido validar campos individuais
     return errors
   }
 
-  // 6. Validar dados de cada registro
   metadata.records.forEach((expectedRecord, index) => {
     const actualRecord = result.records[index]
-
-    // Validar valor (amount)
     if (actualRecord.amount !== expectedRecord.amount) {
       errors.push({
         type: 'field-mismatch',
