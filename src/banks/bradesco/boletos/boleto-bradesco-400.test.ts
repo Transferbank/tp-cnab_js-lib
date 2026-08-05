@@ -114,4 +114,24 @@ describe('BoletoBradesco400', () => {
       expect(boleto.readExtraField('Código da Carteira')).toBe('009')
     })
   })
+
+  describe('Equivalência entre métodos', () => {
+    test('read(SIMPLE) é equivalente a readSimple()', () => {
+      const boleto = new BoletoBradesco400ComExtras(createValidLines())
+
+      const simpleData = boleto.readSimple()
+      const readSimpleData = boleto.read(ReadMode.SIMPLE)
+
+      expect(simpleData).toEqual(readSimpleData)
+    })
+
+    test('read(FULL) é equivalente a readFull()', () => {
+      const boleto = new BoletoBradesco400ComExtras(createValidLines())
+
+      const fullData = boleto.readFull()
+      const readFullData = boleto.read(ReadMode.FULL)
+
+      expect(fullData).toEqual(readFullData)
+    })
+  })
 })
