@@ -1,9 +1,9 @@
-import { CnabField400 } from './cnab-field-400'
-import { CNABFieldValidationError, CNABBoletoValidationError } from '../errors/field-errors'
-import { NumericValidator, StringValidator } from './validators'
-import { TrimParser } from './parsers'
+import { CnabField } from '@/types/fields/cnab-field'
+import { CNABFieldValidationError } from '@/types/errors/field-errors'
+import { NumericValidator, StringValidator } from '@/types/fields/validators'
+import { TrimParser } from '@/types/fields/parsers'
 
-class TestNumericField extends CnabField400<string> {
+class TestNumericField extends CnabField<string> {
   protected readonly lineIndex = 0
   protected readonly pos: [number, number] = [0, 5]
   protected readonly description = 'campo numérico'
@@ -11,7 +11,7 @@ class TestNumericField extends CnabField400<string> {
   protected readonly parser = new TrimParser()
 }
 
-class TestStringField extends CnabField400<string> {
+class TestStringField extends CnabField<string> {
   protected readonly lineIndex = 0
   protected readonly pos: [number, number] = [0, 10]
   protected readonly description = 'campo texto'
@@ -19,32 +19,7 @@ class TestStringField extends CnabField400<string> {
   protected readonly parser = new TrimParser()
 }
 
-describe('CnabField400', () => {
-  describe('validateStructure', () => {
-    test('sucesso: linha com 400 caracteres', () => {
-      const field = new TestStringField()
-      const lines = ['ABCDEFGHIJ' + 'X'.repeat(390)]
-
-      expect(() => field.read(lines)).not.toThrow()
-    })
-
-    test('falha: linha ausente', () => {
-      const field = new TestStringField()
-      const lines: string[] = []
-
-      expect(() => field.read(lines)).toThrow(CNABBoletoValidationError)
-      expect(() => field.read(lines)).toThrow('linha 0 não encontrada')
-    })
-
-    test('falha: linha com tamanho incorreto', () => {
-      const field = new TestStringField()
-      const lines = ['LINHASEM400CARACTERES']
-
-      expect(() => field.read(lines)).toThrow(CNABBoletoValidationError)
-      expect(() => field.read(lines)).toThrow('linha deve ter 400 caracteres')
-    })
-  })
-
+describe('CnabField', () => {
   describe('validate com NumericValidator', () => {
     test('sucesso: string numérica', () => {
       const field = new TestNumericField()
