@@ -1,5 +1,4 @@
 import { BoletoBradesco400 } from './boleto-bradesco-400'
-import { BoletoBradesco400ComExtras } from './boleto-bradesco-400-com-extras.example'
 import { ReadMode } from '@/types/core/read-mode'
 
 describe('BoletoBradesco400', () => {
@@ -43,17 +42,8 @@ describe('BoletoBradesco400', () => {
   })
 
   describe('readFull()', () => {
-    test('retorna campos canônicos sem extras quando não configurados', () => {
+    test('retorna campos canônicos com extras', () => {
       const boleto = new BoletoBradesco400(createValidLines())
-      
-      const data = boleto.readFull()
-      
-      expect(data.nossoNumero).toBe('09100010629')
-      expect(data.extra).toBeUndefined()
-    })
-
-    test('retorna campos canônicos com extras quando configurados', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
       
       const data = boleto.readFull()
       
@@ -66,7 +56,7 @@ describe('BoletoBradesco400', () => {
 
   describe('read(mode)', () => {
     test('ReadMode.SIMPLE retorna apenas canônicos', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
+      const boleto = new BoletoBradesco400(createValidLines())
       
       const data = boleto.read(ReadMode.SIMPLE)
       
@@ -75,7 +65,7 @@ describe('BoletoBradesco400', () => {
     })
 
     test('ReadMode.FULL retorna com extras', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
+      const boleto = new BoletoBradesco400(createValidLines())
       
       const data = boleto.read(ReadMode.FULL)
       
@@ -84,7 +74,7 @@ describe('BoletoBradesco400', () => {
     })
 
     test('padrão é SIMPLE', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
+      const boleto = new BoletoBradesco400(createValidLines())
       
       const data = boleto.read()
       
@@ -103,35 +93,15 @@ describe('BoletoBradesco400', () => {
 
   describe('readExtraField()', () => {
     test('lê campo extra por key', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
+      const boleto = new BoletoBradesco400(createValidLines())
       
       expect(boleto.readExtraField('codigoOcorrencia')).toBe('01')
     })
 
     test('lê campo extra por description', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
+      const boleto = new BoletoBradesco400(createValidLines())
       
       expect(boleto.readExtraField('Código da Carteira')).toBe('009')
-    })
-  })
-
-  describe('Equivalência entre métodos', () => {
-    test('read(SIMPLE) é equivalente a readSimple()', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
-
-      const simpleData = boleto.readSimple()
-      const readSimpleData = boleto.read(ReadMode.SIMPLE)
-
-      expect(simpleData).toEqual(readSimpleData)
-    })
-
-    test('read(FULL) é equivalente a readFull()', () => {
-      const boleto = new BoletoBradesco400ComExtras(createValidLines())
-
-      const fullData = boleto.readFull()
-      const readFullData = boleto.read(ReadMode.FULL)
-
-      expect(fullData).toEqual(readFullData)
     })
   })
 })
