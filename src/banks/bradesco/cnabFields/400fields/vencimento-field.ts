@@ -1,9 +1,9 @@
-import { CnabField400 } from '@/types/fields/cnab-field-400'
+import { CnabField } from '@/types/fields/cnab-field'
 import { DateDDMMAAValidator } from '@/types/fields/validators'
 import { DateDDMMAAParser } from '@/types/fields/parsers'
 
-export class Bradesco400VencimentoField extends CnabField400<Date> {
-  protected readonly lineIndex = 1
+export class Bradesco400VencimentoField extends CnabField<Date> {
+  protected readonly lineIndex = 0
   protected readonly pos: [number, number] = [120, 126]
   protected readonly description = 'Data de Vencimento'
   protected readonly validator = new DateDDMMAAValidator()
