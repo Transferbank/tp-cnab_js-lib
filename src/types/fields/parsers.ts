@@ -1,0 +1,5 @@
+export { FieldParser } from './parsers/field-parser'
+export { TrimParser } from './parsers/string-parser'
+export { MoneyParser } from './parsers/money-parser'
+export { DateDDMMAAParser } from './parsers/date-parser'
+export { DocumentParser } from './parsers/document-parser'
