@@ -15,8 +15,4 @@ export abstract class CnabBoleto400<T extends BoletoCnabData = BoletoCnabData> e
       }
     }
   }
-
-  readSimple(_rawContent: string[]): T {
-    throw new Error('Method not implemented.')
-  }
 }
