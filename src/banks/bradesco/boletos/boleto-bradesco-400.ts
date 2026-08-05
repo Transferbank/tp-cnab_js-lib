@@ -11,7 +11,7 @@ import {
   Bradesco400SacadoNomeField,
   Bradesco400SacadoLogradouroField,
   Bradesco400SacadoCepField,
-} from '../cnabFields/bradesco-400-fields'
+} from '@banks/bradesco/cnabFields/bradesco-400-fields'
 
 export class BoletoBradesco400 extends CnabBoleto400 {
   protected readonly nossoNumeroField = new Bradesco400NossoNumeroField()
@@ -26,7 +26,7 @@ export class BoletoBradesco400 extends CnabBoleto400 {
   protected readonly sacadoLogradouroField = new Bradesco400SacadoLogradouroField()
   protected readonly sacadoCepField = new Bradesco400SacadoCepField()
 
-  constructor(rawContent?: string[]) {
+  constructor(rawContent: string[]) {
     super(rawContent)
   }
 }
