@@ -3,7 +3,7 @@ import { getCnab400RecordType } from '@parser/position-reader'
 import { CNAB400_DETAIL_POSITIONS, extractPosition, extractPositionTrimmed } from '@parser/cnab-positions'
 import { BankSchema, CNABRecord, ValidationError, DateFormat, BANK_CODES, RecordSchema } from '@/types/all-types'
 import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
-import { validatePayerDocument } from '@utils/string-utils'
+import { validateDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'
 import { validateHeader } from '@validators/validate-header'
 import { collectFieldErrors } from '@validators/collect-field-errors'
@@ -76,7 +76,7 @@ function validateDetailLine(
     })
   }
 
-  const documentIsInvalid = !validatePayerDocument(payerDocument)
+  const documentIsInvalid = !validateDocument(payerDocument)
   if (!fieldsWithError.has('sacado_numero_inscricao') && documentIsInvalid) {
     errors.push({
       line: lineNumber,

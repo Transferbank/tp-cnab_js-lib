@@ -59,7 +59,7 @@ export function isValidCpfCnpj(document: string): boolean {
   return false
 }
 
-export function validatePayerDocument(rawDocument: string): boolean {
+export function validateDocument(rawDocument: string): boolean {
   const cleaned = rawDocument.trim().replace(/^0+/, '')
   if (cleaned.length === 0) return false
 

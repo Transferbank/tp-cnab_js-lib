@@ -3,7 +3,7 @@ import { getCnab240RecordType, getCnab240SegmentCode } from '@parser/position-re
 import { CNAB240_SEGMENT_P_POSITIONS, CNAB240_SEGMENT_Q_POSITIONS, extractPosition, extractPositionTrimmed } from '@parser/cnab-positions'
 import { BankSchema, CNABRecord, ValidationError, DateFormat, Cnab240SegmentCode, Cnab240RecordType, RecordSchema } from '@/types/all-types'
 import { parseDate, isDateInPast, formatDateBR } from '@utils/date-parser'
-import { validatePayerDocument } from '@utils/string-utils'
+import { validateDocument } from '@utils/string-utils'
 import { ValidationResult } from '@validators/types'
 import { validateHeader } from '@validators/validate-header'
 import { collectFieldErrors } from '@validators/collect-field-errors'
@@ -152,7 +152,7 @@ function validateSegmentQ(
   const payerName = parsed?.sacado_nome?.value || extractPositionTrimmed(line, CNAB240_SEGMENT_Q_POSITIONS.SACADO_NOME)
   const payerAddress = parsed?.sacado_endereco?.value || extractPositionTrimmed(line, CNAB240_SEGMENT_Q_POSITIONS.SACADO_ENDERECO)
 
-  const documentIsInvalid = !validatePayerDocument(payerDocument)
+  const documentIsInvalid = !validateDocument(payerDocument)
   if (!fieldsWithError.has('sacado_inscricao_numero') && documentIsInvalid) {
     errors.push({
       line: lineNumber,
