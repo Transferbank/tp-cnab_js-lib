@@ -1,4 +1,4 @@
-import { CNABFieldValidationError, CNABBoletoValidationError } from '@/types/errors/field-errors'
+import { CNABFieldValidationError } from '@/types/errors/field-errors'
 import type { FieldValidator } from './validators/field-validator'
 import type { FieldParser } from './parsers/field-parser'
 
@@ -9,18 +9,12 @@ export abstract class CnabField<T = string | number> {
   protected abstract readonly validator: FieldValidator
   protected abstract readonly parser: FieldParser<T>
 
-  protected abstract validateStructure(lines: string[]): void
-
   protected extractRaw(lines: string[]): string {
     return lines[this.lineIndex].substring(this.pos[0], this.pos[1])
   }
 
   protected throwError(rawValue: string, reason: string): never {
     throw new CNABFieldValidationError(this.description, rawValue, reason)
-  }
-
-  protected throwStructureError(reason: string, lineNumber?: number): never {
-    throw new CNABBoletoValidationError(reason, lineNumber)
   }
 
   protected validate(raw: string): void {
@@ -34,7 +28,6 @@ export abstract class CnabField<T = string | number> {
   }
 
   read(lines: string[]): T {
-    this.validateStructure(lines)
     const raw = this.extractRaw(lines)
     this.validate(raw)
     return this.parse(raw)
