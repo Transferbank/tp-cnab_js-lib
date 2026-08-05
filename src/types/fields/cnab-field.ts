@@ -1,9 +1,13 @@
 import { CNABFieldValidationError, CNABBoletoValidationError } from '@/types/errors/field-errors'
+import type { FieldValidator } from './validators/field-validator'
+import type { FieldParser } from './parsers/field-parser'
 
 export abstract class CnabField<T = string | number> {
   protected abstract readonly lineIndex: number
   protected abstract readonly pos: [number, number]
   protected abstract readonly description: string
+  protected abstract readonly validator: FieldValidator
+  protected abstract readonly parser: FieldParser<T>
 
   protected abstract validateStructure(lines: string[]): void
 
@@ -19,8 +23,15 @@ export abstract class CnabField<T = string | number> {
     throw new CNABBoletoValidationError(reason, lineNumber)
   }
 
-  abstract validate(raw: string): void
-  abstract parse(raw: string): T
+  protected validate(raw: string): void {
+    if (!this.validator.validate(raw)) {
+      this.throwError(raw, this.validator.errorMessage)
+    }
+  }
+
+  protected parse(raw: string): T {
+    return this.parser.parse(raw)
+  }
 
   read(lines: string[]): T {
     this.validateStructure(lines)
