@@ -11,7 +11,7 @@ import {
   Bradesco400SacadoNomeField,
   Bradesco400SacadoLogradouroField,
   Bradesco400SacadoCepField,
-} from '@banks/bradesco/cnabFields/bradesco-400-fields'
+} from '@/banks/bradesco/cnabFields/400fields/bradesco-400-fields'
 import {
   Bradesco400CodigoOcorrenciaField,
   Bradesco400CarteiraCodigoField,
