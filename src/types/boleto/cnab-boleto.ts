@@ -18,6 +18,7 @@ export type BoletoFieldName =
 
 export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
   private readonly rawContent: string[]
+  private _fieldMap?: Record<BoletoFieldName, CnabField<CnabFieldValue>>
   
   protected abstract get lineLength(): number
   
@@ -38,6 +39,25 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
   constructor(rawContent: string[]) {
     this.validateStructure(rawContent)
     this.rawContent = rawContent
+  }
+
+  private get fieldMap(): Record<BoletoFieldName, CnabField<CnabFieldValue>> {
+    if (this._fieldMap == null) {
+      this._fieldMap = {
+        nossoNumero: this.nossoNumeroField,
+        numeroDocumento: this.numeroDocumentoField,
+        vencimento: this.vencimentoField,
+        valor: this.valorField,
+        dataEmissao: this.dataEmissaoField,
+        descontoValor: this.descontoValorField,
+        abatimentoValor: this.abatimentoValorField,
+        sacadoDocumento: this.sacadoDocumentoField,
+        sacadoNome: this.sacadoNomeField,
+        sacadoLogradouro: this.sacadoLogradouroField,
+        sacadoCep: this.sacadoCepField,
+      }
+    }
+    return this._fieldMap
   }
 
   protected validateStructure(rawContent: string[]): void {
@@ -102,21 +122,8 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
   }
 
   readField(fieldName: BoletoFieldName): CnabFieldValue {
-    const fieldMap: Record<BoletoFieldName, CnabField<CnabFieldValue>> = {
-      nossoNumero: this.nossoNumeroField,
-      numeroDocumento: this.numeroDocumentoField,
-      vencimento: this.vencimentoField,
-      valor: this.valorField,
-      dataEmissao: this.dataEmissaoField,
-      descontoValor: this.descontoValorField,
-      abatimentoValor: this.abatimentoValorField,
-      sacadoDocumento: this.sacadoDocumentoField,
-      sacadoNome: this.sacadoNomeField,
-      sacadoLogradouro: this.sacadoLogradouroField,
-      sacadoCep: this.sacadoCepField,
-    }
-
-    const field = fieldMap[fieldName]
+    const field = this.fieldMap[fieldName]
+    
     if (field == null) {
       throw new CNABFieldNotFoundError(fieldName, false)
     }
