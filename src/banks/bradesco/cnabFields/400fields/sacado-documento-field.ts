@@ -6,6 +6,7 @@ export class Bradesco400SacadoDocumentoField extends CnabField<string> {
   protected readonly lineIndex = 0
   protected readonly pos: [number, number] = [220, 234]
   protected readonly description = 'CPF/CNPJ do Sacado'
+  protected readonly key = 'sacadoDocumento'
   protected readonly validator = new DocumentValidator()
   protected readonly parser = new DocumentParser()
 }

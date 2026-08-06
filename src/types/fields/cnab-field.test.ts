@@ -7,6 +7,7 @@ class TestNumericField extends CnabField<string> {
   protected readonly lineIndex = 0
   protected readonly pos: [number, number] = [0, 5]
   protected readonly description = 'campo numérico'
+  protected readonly key = 'testNumeric'
   protected readonly validator = new NumericValidator()
   protected readonly parser = new TrimParser()
 }
@@ -15,6 +16,7 @@ class TestStringField extends CnabField<string> {
   protected readonly lineIndex = 0
   protected readonly pos: [number, number] = [0, 10]
   protected readonly description = 'campo texto'
+  protected readonly key = 'testString'
   protected readonly validator = new StringValidator()
   protected readonly parser = new TrimParser()
 }
@@ -93,6 +95,7 @@ describe('CnabField', () => {
         protected readonly lineIndex = 2
         protected readonly pos: [number, number] = [0, 5]
         protected readonly description = 'campo na linha 2'
+        protected readonly key = 'fieldOnLine2'
         protected readonly validator = new NumericValidator()
         protected readonly parser = new TrimParser()
       }

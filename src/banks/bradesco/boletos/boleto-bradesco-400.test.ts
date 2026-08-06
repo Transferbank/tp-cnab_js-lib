@@ -126,10 +126,10 @@ describe('BoletoBradesco400', () => {
       expect(boleto.readExtraField('codigoOcorrencia')).toBe('01')
     })
 
-    test('lê campo extra por description', () => {
+    test('lê campo extra por key alternativo', () => {
       const boleto = new BoletoBradesco400(createValidLines())
       
-      expect(boleto.readExtraField('Código da Carteira')).toBe('009')
+      expect(boleto.readExtraField('carteiraCodigo')).toBe('009')
     })
   })
 })

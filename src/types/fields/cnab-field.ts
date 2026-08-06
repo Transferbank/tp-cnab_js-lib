@@ -8,7 +8,15 @@ export abstract class CnabField<T = string | number> {
   protected abstract readonly description: string
   protected abstract readonly validator: FieldValidator
   protected abstract readonly parser: FieldParser<T>
-  protected readonly key?: string
+  protected abstract readonly key: string
+
+  get fieldKey(): string {
+    return this.key
+  }
+
+  get fieldDescription(): string {
+    return this.description
+  }
 
   protected extractRaw(lines: string[]): string {
     const line = lines[this.lineIndex]

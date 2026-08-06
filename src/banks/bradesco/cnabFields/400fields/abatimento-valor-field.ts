@@ -6,6 +6,7 @@ export class Bradesco400AbatimentoValorField extends CnabField<number> {
   protected readonly lineIndex = 0
   protected readonly pos: [number, number] = [205, 218]
   protected readonly description = 'Valor do Abatimento'
+  protected readonly key = 'abatimentoValor'
   protected readonly validator = new MoneyValidator(2)
   protected readonly parser = new MoneyParser(2)
 }

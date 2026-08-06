@@ -94,8 +94,7 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
     if (this.extraFields.length > 0) {
       data.extra = {}
       for (const field of this.extraFields) {
-        const key = field['key'] ?? field['description']
-        data.extra[key] = field.read(this.rawContent)
+        data.extra[field.fieldKey] = field.read(this.rawContent)
       }
     }
 
@@ -125,12 +124,11 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
     return field.read(this.rawContent)
   }
 
-  readExtraField(fieldKeyOrDescription: string): CnabFieldValue {
-    const extraField = this.extraFields.find(
-      field => field['key'] === fieldKeyOrDescription || field['description'] === fieldKeyOrDescription
-    )
+  readExtraField(fieldKey: string): CnabFieldValue {
+    const extraField = this.extraFields.find(field => field.fieldKey === fieldKey)
+    
     if (extraField == null) {
-      throw new Error(`Campo extra "${fieldKeyOrDescription}" não encontrado`)
+      throw new Error(`Campo extra "${fieldKey}" não encontrado`)
     }
 
     return extraField.read(this.rawContent)
