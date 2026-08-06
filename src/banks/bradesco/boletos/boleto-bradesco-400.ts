@@ -16,8 +16,12 @@ import {
   Bradesco400CodigoOcorrenciaField,
   Bradesco400CarteiraCodigoField,
 } from '@banks/bradesco/cnabFields/400fields/extraFields/bradesco-400-extra-fields'
+import { BANK_CODES } from '@/types/bank/bank-types'
 
 export class BoletoBradesco400 extends CnabBoleto400 {
+  protected get bankCode(): string {
+    return BANK_CODES.BRADESCO
+  }
   protected readonly nossoNumeroField = new Bradesco400NossoNumeroField()
   protected readonly numeroDocumentoField = new Bradesco400NumeroDocumentoField()
   protected readonly vencimentoField = new Bradesco400VencimentoField()

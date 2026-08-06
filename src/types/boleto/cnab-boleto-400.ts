@@ -1,5 +1,8 @@
 import { CnabBoleto } from './cnab-boleto'
 import { BoletoCnabData } from '@/types/read/boleto-cnab-data'
+import { getGroupingRule } from '@/grouping/grouping-rules'
+import { CNABFormatCode } from '@/types/core/core-types'
+import { getCnab400RecordType } from '@/parser/position-reader'
 
 export abstract class CnabBoleto400<T extends BoletoCnabData = BoletoCnabData> extends CnabBoleto<T> {
   protected get lineLength(): number {
@@ -7,21 +10,39 @@ export abstract class CnabBoleto400<T extends BoletoCnabData = BoletoCnabData> e
   }
 
   protected validateStructure(rawContent: string[]): void {
-    super.validateStructure(rawContent)
-
-    if (rawContent.length < 1) {
-      this.throwStructureError('boleto CNAB 400 deve conter pelo menos 1 linha (detalhe tipo 1)', 0)
-      return
+    if (rawContent.length === 0) {
+      this.throwStructureError('boleto deve conter pelo menos uma linha', 0)
     }
 
-    const firstLine = rawContent[0]
-    if (firstLine.length === 400) {
-      const recordType = firstLine.charAt(0)
+    for (let i = 0; i < rawContent.length; i++) {
+      const line = rawContent[i]
       
-      if (recordType !== '1' && recordType !== '7') {
+      if (line == null) {
+        this.throwStructureError(`linha ${i} não encontrada`, i)
+      }
+      
+      if (line.length !== 400) {
+        this.throwStructureError(`linha deve ter 400 caracteres, tem ${line.length}`, i)
+      }
+    }
+
+    const rule = getGroupingRule(this.bankCode, CNABFormatCode.CNAB400)
+    const coreType = rule.mandatoryCore[0]
+
+    const firstRecordType = getCnab400RecordType(rawContent[0])
+    if (firstRecordType !== coreType) {
+      this.throwStructureError(
+        `primeira linha deve ser registro detalhe (tipo '${coreType}'), encontrado tipo '${firstRecordType}'`,
+        0
+      )
+    }
+
+    for (let i = 1; i < rawContent.length; i++) {
+      const satelliteType = getCnab400RecordType(rawContent[i])
+      if (!rule.optionalSatellites.includes(satelliteType)) {
         this.throwStructureError(
-          `primeira linha deve ser registro detalhe (tipo '1' ou '7'), encontrado tipo '${recordType}'`,
-          0
+          `linha ${i}: tipo '${satelliteType}' não é satélite reconhecido para este banco (tipos válidos: ${rule.optionalSatellites.join(', ')})`,
+          i
         )
       }
     }

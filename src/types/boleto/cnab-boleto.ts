@@ -20,6 +20,7 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
   private readonly rawContent: string[]
   private _fieldMap?: Record<BoletoFieldName, CnabField<CnabFieldValue>>
   
+  protected abstract get bankCode(): string
   protected abstract get lineLength(): number
   
   protected abstract readonly nossoNumeroField: CnabField<string>

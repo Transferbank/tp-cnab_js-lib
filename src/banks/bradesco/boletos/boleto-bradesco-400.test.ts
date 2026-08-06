@@ -31,7 +31,7 @@ describe('BoletoBradesco400', () => {
       const invalidFirstLine = '0' + 'X'.repeat(399)
       
       expect(() => new BoletoBradesco400([invalidFirstLine])).toThrow(
-        "primeira linha deve ser registro detalhe (tipo '1' ou '7')"
+        "primeira linha deve ser registro detalhe (tipo '1'), encontrado tipo '0'"
       )
     })
 
@@ -47,7 +47,39 @@ describe('BoletoBradesco400', () => {
       const detailLine = '1' + 'X'.repeat(399)
       
       expect(() => new BoletoBradesco400([headerLine, detailLine])).toThrow(
-        "primeira linha deve ser registro detalhe (tipo '1' ou '7')"
+        "primeira linha deve ser registro detalhe (tipo '1'), encontrado tipo '0'"
+      )
+    })
+
+    test('aceita linha satélite tipo 2', () => {
+      const line1 = '1' + 'X'.repeat(399)
+      const line2 = '2' + 'Y'.repeat(399)
+      
+      expect(() => new BoletoBradesco400([line1, line2])).not.toThrow()
+    })
+
+    test('aceita linha satélite tipo 6', () => {
+      const line1 = '1' + 'X'.repeat(399)
+      const line2 = '6' + 'Y'.repeat(399)
+      
+      expect(() => new BoletoBradesco400([line1, line2])).not.toThrow()
+    })
+
+    test('rejeita linha satélite tipo inválido', () => {
+      const line1 = '1' + 'X'.repeat(399)
+      const line2 = '7' + 'Y'.repeat(399)
+      
+      expect(() => new BoletoBradesco400([line1, line2])).toThrow(
+        "linha 1: tipo '7' não é satélite reconhecido para este banco"
+      )
+    })
+
+    test('rejeita linha satélite tipo 9 (trailer)', () => {
+      const line1 = '1' + 'X'.repeat(399)
+      const line2 = '9' + 'Y'.repeat(399)
+      
+      expect(() => new BoletoBradesco400([line1, line2])).toThrow(
+        "linha 1: tipo '9' não é satélite reconhecido para este banco"
       )
     })
   })
