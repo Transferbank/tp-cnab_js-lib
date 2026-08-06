@@ -1,5 +1,6 @@
 import { BoletoBradesco400 } from './boleto-bradesco-400'
 import { ReadMode } from '@/types/core/read-mode'
+import { CNABFieldNotFoundError } from '@/types/errors/field-errors'
 
 describe('BoletoBradesco400', () => {
   const createValidLines = (): string[] => {
@@ -117,6 +118,13 @@ describe('BoletoBradesco400', () => {
       expect(boleto.readField('nossoNumero')).toBe('09100010629')
       expect(boleto.readField('valor')).toBe(22560.93)
     })
+
+    test('lança CNABFieldNotFoundError para campo inexistente', () => {
+      const boleto = new BoletoBradesco400(createValidLines())
+      
+      expect(() => boleto.readField('campoInexistente' as any)).toThrow(CNABFieldNotFoundError)
+      expect(() => boleto.readField('campoInexistente' as any)).toThrow('Campo "campoInexistente" não encontrado')
+    })
   })
 
   describe('readExtraField()', () => {
@@ -130,6 +138,13 @@ describe('BoletoBradesco400', () => {
       const boleto = new BoletoBradesco400(createValidLines())
       
       expect(boleto.readExtraField('carteiraCodigo')).toBe('009')
+    })
+
+    test('lança CNABFieldNotFoundError para campo extra inexistente', () => {
+      const boleto = new BoletoBradesco400(createValidLines())
+      
+      expect(() => boleto.readExtraField('campoInexistente')).toThrow(CNABFieldNotFoundError)
+      expect(() => boleto.readExtraField('campoInexistente')).toThrow('Campo extra "campoInexistente" não encontrado')
     })
   })
 })

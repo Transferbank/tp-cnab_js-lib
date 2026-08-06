@@ -12,6 +12,18 @@ export class CNABFieldValidationError extends CNABInputError {
   }
 }
 
+export class CNABFieldNotFoundError extends CNABInputError {
+  readonly code = 'FIELD_NOT_FOUND'
+
+  constructor(readonly fieldKey: string, readonly isExtraField: boolean = false) {
+    super(
+      isExtraField
+        ? `Campo extra "${fieldKey}" não encontrado`
+        : `Campo "${fieldKey}" não encontrado`
+    )
+  }
+}
+
 export class CNABBoletoValidationError extends CNABInputError {
   readonly code = 'BOLETO_VALIDATION_ERROR'
 

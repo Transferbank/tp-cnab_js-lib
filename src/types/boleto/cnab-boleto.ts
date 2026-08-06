@@ -1,6 +1,6 @@
 import { CnabField } from '@/types/fields/cnab-field'
 import { BoletoCnabData, CnabFieldValue } from '@/types/read/boleto-cnab-data'
-import { CNABBoletoValidationError } from '@/types/errors/field-errors'
+import { CNABBoletoValidationError, CNABFieldNotFoundError } from '@/types/errors/field-errors'
 import { ReadMode } from '@/types/core/read-mode'
 
 export type BoletoFieldName =
@@ -118,7 +118,7 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
 
     const field = fieldMap[fieldName]
     if (field == null) {
-      throw new Error(`Campo "${fieldName}" não encontrado`)
+      throw new CNABFieldNotFoundError(fieldName, false)
     }
 
     return field.read(this.rawContent)
@@ -128,7 +128,7 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
     const extraField = this.extraFields.find(field => field.fieldKey === fieldKey)
     
     if (extraField == null) {
-      throw new Error(`Campo extra "${fieldKey}" não encontrado`)
+      throw new CNABFieldNotFoundError(fieldKey, true)
     }
 
     return extraField.read(this.rawContent)
