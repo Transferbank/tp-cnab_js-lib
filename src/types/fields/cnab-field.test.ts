@@ -79,5 +79,29 @@ describe('CnabField', () => {
 
       expect(result).toBe('12345')
     })
+
+    test('lança erro quando linha não existe', () => {
+      const field = new TestNumericField()
+      const lines: string[] = []
+
+      expect(() => field.read(lines)).toThrow(CNABFieldValidationError)
+      expect(() => field.read(lines)).toThrow('linha 0 não encontrada no array fornecido')
+    })
+
+    test('lança erro quando array é menor que lineIndex', () => {
+      class FieldOnLine2 extends CnabField<string> {
+        protected readonly lineIndex = 2
+        protected readonly pos: [number, number] = [0, 5]
+        protected readonly description = 'campo na linha 2'
+        protected readonly validator = new NumericValidator()
+        protected readonly parser = new TrimParser()
+      }
+
+      const field = new FieldOnLine2()
+      const lines = ['linha0', 'linha1']
+
+      expect(() => field.read(lines)).toThrow(CNABFieldValidationError)
+      expect(() => field.read(lines)).toThrow('linha 2 não encontrada no array fornecido')
+    })
   })
 })

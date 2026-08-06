@@ -11,7 +11,13 @@ export abstract class CnabField<T = string | number> {
   protected readonly key?: string
 
   protected extractRaw(lines: string[]): string {
-    return lines[this.lineIndex].substring(this.pos[0], this.pos[1])
+    const line = lines[this.lineIndex]
+    
+    if (line == null) {
+      this.throwError('', `linha ${this.lineIndex} não encontrada no array fornecido`)
+    }
+    
+    return line.substring(this.pos[0], this.pos[1])
   }
 
   protected throwError(rawValue: string, reason: string): never {
