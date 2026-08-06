@@ -16,6 +16,10 @@ describe('BoletoBradesco400', () => {
       expect(() => new BoletoBradesco400(rawContent)).not.toThrow()
     })
 
+    test('rejeita array vazio', () => {
+      expect(() => new BoletoBradesco400([])).toThrow('boleto deve conter pelo menos uma linha')
+    })
+
     test('rejeita linha com tamanho incorreto', () => {
       const invalidRawContent = ['linha curta']
       

@@ -3,6 +3,10 @@ import { BoletoCnabData } from '@/types/read/boleto-cnab-data'
 
 export abstract class CnabBoleto400<T extends BoletoCnabData = BoletoCnabData> extends CnabBoleto<T> {
   protected validateStructure(rawContent: string[]): void {
+    if (rawContent.length === 0) {
+      this.throwStructureError('boleto deve conter pelo menos uma linha', 0)
+    }
+
     for (let i = 0; i < rawContent.length; i++) {
       const line = rawContent[i]
       
