@@ -25,6 +25,30 @@ describe('BoletoBradesco400', () => {
       
       expect(() => new BoletoBradesco400(invalidRawContent)).toThrow('linha deve ter 400 caracteres')
     })
+
+    test('rejeita primeira linha que não é detalhe tipo 1', () => {
+      const invalidFirstLine = '0' + 'X'.repeat(399)
+      
+      expect(() => new BoletoBradesco400([invalidFirstLine])).toThrow(
+        "primeira linha deve ser registro detalhe (tipo '1' ou '7')"
+      )
+    })
+
+    test('aceita boleto com múltiplas linhas começando com tipo 1', () => {
+      const line1 = '1' + 'X'.repeat(399)
+      const line2 = '2' + 'Y'.repeat(399)
+      
+      expect(() => new BoletoBradesco400([line1, line2])).not.toThrow()
+    })
+
+    test('rejeita boleto começando com tipo header (0)', () => {
+      const headerLine = '0' + '0'.repeat(399)
+      const detailLine = '1' + 'X'.repeat(399)
+      
+      expect(() => new BoletoBradesco400([headerLine, detailLine])).toThrow(
+        "primeira linha deve ser registro detalhe (tipo '1' ou '7')"
+      )
+    })
   })
 
   describe('readSimple()', () => {

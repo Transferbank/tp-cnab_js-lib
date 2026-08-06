@@ -19,6 +19,8 @@ export type BoletoFieldName =
 export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
   private readonly rawContent: string[]
   
+  protected abstract get lineLength(): number
+  
   protected abstract readonly nossoNumeroField: CnabField<string>
   protected abstract readonly numeroDocumentoField: CnabField<string>
   protected abstract readonly vencimentoField: CnabField<Date>
@@ -38,7 +40,23 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
     this.rawContent = rawContent
   }
 
-  protected abstract validateStructure(rawContent: string[]): void
+  protected validateStructure(rawContent: string[]): void {
+    if (rawContent.length === 0) {
+      this.throwStructureError('boleto deve conter pelo menos uma linha', 0)
+    }
+
+    for (let i = 0; i < rawContent.length; i++) {
+      const line = rawContent[i]
+      
+      if (line == null) {
+        this.throwStructureError(`linha ${i} não encontrada`, i)
+      }
+      
+      if (line.length !== this.lineLength) {
+        this.throwStructureError(`linha deve ter ${this.lineLength} caracteres, tem ${line.length}`, i)
+      }
+    }
+  }
 
   protected throwStructureError(reason: string, lineNumber?: number): never {
     throw new CNABBoletoValidationError(reason, lineNumber)
