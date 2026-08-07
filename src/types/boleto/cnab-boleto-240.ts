@@ -1,7 +1,6 @@
 import { CnabBoleto } from './cnab-boleto'
-import { BoletoCnabData } from '@/types/read/boleto-cnab-data'
 
-export abstract class CnabBoleto240<T extends BoletoCnabData = BoletoCnabData> extends CnabBoleto<T> {
+export abstract class CnabBoleto240 extends CnabBoleto {
   protected get lineLength(): number {
     return 240
   }

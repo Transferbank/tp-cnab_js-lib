@@ -1,6 +1,6 @@
 import { CnabField } from '@/types/fields/cnab-field'
-import { BoletoCnabData, CnabFieldValue } from '@/types/read/boleto-cnab-data'
-import { CNABBoletoValidationError, CNABFieldNotFoundError } from '@/types/errors/field-errors'
+import { CnabFieldValue, PartialBoletoCnabData } from '@/types/read/boleto-cnab-data'
+import { CNABBoletoValidationError, CNABFieldNotFoundError, CNABFieldValidationError } from '@/types/errors/field-errors'
 import { ReadMode } from '@/types/core/read-mode'
 
 export type BoletoFieldName =
@@ -16,7 +16,12 @@ export type BoletoFieldName =
   | 'sacadoLogradouro'
   | 'sacadoCep'
 
-export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
+export interface BoletoReadResult {
+  data: PartialBoletoCnabData
+  errors: CNABFieldValidationError[]
+}
+
+export abstract class CnabBoleto {
   private readonly rawContent: string[]
   private _fieldMap?: Record<BoletoFieldName, CnabField<CnabFieldValue>>
   
@@ -83,43 +88,82 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
     throw new CNABBoletoValidationError(reason, lineNumber)
   }
 
-  readSimple(): T {
-    const data: BoletoCnabData = {
-      nossoNumero: this.nossoNumeroField.read(this.rawContent),
-      numeroDocumento: this.numeroDocumentoField.read(this.rawContent),
-      vencimento: this.vencimentoField.read(this.rawContent),
-      valor: this.valorField.read(this.rawContent),
-      dataEmissao: this.dataEmissaoField.read(this.rawContent),
-      desconto: {
-        valor: this.descontoValorField.read(this.rawContent),
-      },
-      abatimento: {
-        valor: this.abatimentoValorField.read(this.rawContent),
-      },
-      sacado: {
-        documento: this.sacadoDocumentoField.read(this.rawContent),
-        nome: this.sacadoNomeField.read(this.rawContent),
-        endereco: {
-          logradouro: this.sacadoLogradouroField.read(this.rawContent),
-          cep: this.sacadoCepField.read(this.rawContent),
-        },
-      },
+  private tryRead<V>(field: CnabField<V>, errors: CNABFieldValidationError[]): V | undefined {
+    try {
+      return field.read(this.rawContent)
+    } catch (e) {
+      if (e instanceof CNABFieldValidationError) {
+        errors.push(e)
+        return undefined
+      }
+      throw e
     }
-
-    return data as T
   }
 
-  readFull(): T {
-    const data = this.readSimple() as BoletoCnabData
+  readSimple(): BoletoReadResult {
+    const errors: CNABFieldValidationError[] = []
+    const data: PartialBoletoCnabData = {}
 
-    if (this.extraFields.length > 0) {
-      data.extra = {}
-      for (const field of this.extraFields) {
-        data.extra[field.fieldKey] = field.read(this.rawContent)
+    data.nossoNumero = this.tryRead(this.nossoNumeroField, errors)
+    data.numeroDocumento = this.tryRead(this.numeroDocumentoField, errors)
+    data.vencimento = this.tryRead(this.vencimentoField, errors)
+    data.valor = this.tryRead(this.valorField, errors)
+    data.dataEmissao = this.tryRead(this.dataEmissaoField, errors)
+
+    const descontoValor = this.tryRead(this.descontoValorField, errors)
+    if (descontoValor != null) {
+      data.desconto = { valor: descontoValor }
+    }
+
+    const abatimentoValor = this.tryRead(this.abatimentoValorField, errors)
+    if (abatimentoValor != null) {
+      data.abatimento = { valor: abatimentoValor }
+    }
+
+    const sacadoDocumento = this.tryRead(this.sacadoDocumentoField, errors)
+    const sacadoNome = this.tryRead(this.sacadoNomeField, errors)
+    const sacadoLogradouro = this.tryRead(this.sacadoLogradouroField, errors)
+    const sacadoCep = this.tryRead(this.sacadoCepField, errors)
+
+    if (sacadoDocumento != null || sacadoNome != null || sacadoLogradouro != null || sacadoCep != null) {
+      data.sacado = {}
+      
+      if (sacadoDocumento != null) {
+        data.sacado.documento = sacadoDocumento
+      }
+      
+      if (sacadoNome != null) {
+        data.sacado.nome = sacadoNome
+      }
+      
+      if (sacadoLogradouro != null || sacadoCep != null) {
+        data.sacado.endereco = {}
+        
+        if (sacadoLogradouro != null) {
+          data.sacado.endereco.logradouro = sacadoLogradouro
+        }
+        
+        if (sacadoCep != null) {
+          data.sacado.endereco.cep = sacadoCep
+        }
       }
     }
 
-    return data as T
+    return { data, errors }
+  }
+
+  readFull(): BoletoReadResult {
+    const { data, errors } = this.readSimple()
+
+    for (const field of this.extraFields) {
+      const value = this.tryRead(field, errors)
+      if (value != null) {
+        data.extra ??= {}
+        data.extra[field.fieldKey] = value
+      }
+    }
+
+    return { data, errors }
   }
 
   readField(fieldName: BoletoFieldName): CnabFieldValue {
@@ -142,7 +186,7 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
     return extraField.read(this.rawContent)
   }
 
-  read(mode: ReadMode = ReadMode.SIMPLE): T {
+  read(mode: ReadMode = ReadMode.SIMPLE): BoletoReadResult {
     if (mode === ReadMode.SIMPLE) {
       return this.readSimple()
     }

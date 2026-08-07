@@ -1,10 +1,9 @@
 import { CnabBoleto } from './cnab-boleto'
-import { BoletoCnabData } from '@/types/read/boleto-cnab-data'
 import { getGroupingRule } from '@/grouping/grouping-rules'
 import { CNABFormatCode } from '@/types/core/core-types'
 import { getCnab400RecordType } from '@/parser/position-reader'
 
-export abstract class CnabBoleto400<T extends BoletoCnabData = BoletoCnabData> extends CnabBoleto<T> {
+export abstract class CnabBoleto400 extends CnabBoleto {
   protected get lineLength(): number {
     return 400
   }
