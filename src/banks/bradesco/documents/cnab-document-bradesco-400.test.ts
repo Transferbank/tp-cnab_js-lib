@@ -45,6 +45,18 @@ describe('CnabDocumentBradesco400', () => {
       expect(boleto).toBeInstanceOf(BoletoBradesco400)
     })
 
+    test('tipo retornado é BoletoBradesco400 (type safety)', () => {
+      const lines = createValidDocument()
+      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      
+      const boleto = doc.getBoleto(0)
+      
+      expect(boleto.readSimple).toBeDefined()
+      expect(boleto.readFull).toBeDefined()
+      expect(typeof boleto.readSimple).toBe('function')
+      expect(typeof boleto.readFull).toBe('function')
+    })
+
     test('cada boleto pode ser lido individualmente', () => {
       const lines = createValidDocument()
       const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
