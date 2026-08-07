@@ -1,6 +1,7 @@
 export { FieldValidator } from './validators/field-validator'
 export { NumericValidator } from './validators/numeric-validator'
 export { DateDDMMAAValidator } from './validators/date-validator'
+export { DateDDMMAAAAValidator } from './validators/date-ddmmaaaa-validator'
 export { DocumentValidator } from './validators/document-validator'
 export { StringValidator } from './validators/string-validator'
 export { AlphanumericValidator } from './validators/alphanumeric-validator'
