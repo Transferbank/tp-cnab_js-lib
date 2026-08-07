@@ -1,7 +1,10 @@
 import { CnabDocument, BoletoRange } from './cnab-document'
 import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
-import { CNABBoletoNotFoundError } from '@/types/errors/field-errors'
+import {
+  CNABBoletoNotFoundError,
+  CNABDocumentValidationError
+} from '@/types/errors/field-errors'
 import { BoletoCnabData } from '@/types/read/boleto-cnab-data'
 
 class MockCnabBoleto extends CnabBoleto {
@@ -307,6 +310,38 @@ describe('CnabDocument', () => {
       expect(results[0].index).toBe(0)
       expect(results[1].index).toBe(1)
       expect(results[2].index).toBe(2)
+    })
+  })
+
+  describe('throwDocError', () => {
+    class TestDocumentWithHelper extends TestCnabDocument {
+      public testThrowDocError(reason: string, lineNumber?: number): never {
+        return this.throwDocError(reason, lineNumber)
+      }
+    }
+
+    test('lança CNABDocumentValidationError com reason', () => {
+      const lines = createLines(5)
+      const doc = new TestDocumentWithHelper(lines, MockCnabBoleto, {})
+
+      expect(() => doc.testThrowDocError('erro de teste')).toThrow(
+        CNABDocumentValidationError
+      )
+      expect(() => doc.testThrowDocError('erro de teste')).toThrow(
+        'Arquivo inválido: erro de teste'
+      )
+    })
+
+    test('lança CNABDocumentValidationError com reason e lineNumber', () => {
+      const lines = createLines(5)
+      const doc = new TestDocumentWithHelper(lines, MockCnabBoleto, {})
+
+      expect(() => doc.testThrowDocError('tipo inválido', 5)).toThrow(
+        CNABDocumentValidationError
+      )
+      expect(() => doc.testThrowDocError('tipo inválido', 5)).toThrow(
+        'Arquivo inválido (linha 6): tipo inválido'
+      )
     })
   })
 })

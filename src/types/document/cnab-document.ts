@@ -1,6 +1,9 @@
 import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
-import { CNABBoletoNotFoundError } from '@/types/errors/field-errors'
+import {
+  CNABBoletoNotFoundError,
+  CNABDocumentValidationError
+} from '@/types/errors/field-errors'
 
 export interface BoletoRange {
   startLine: number
@@ -33,6 +36,10 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
   protected abstract validateHeader(): void
   protected abstract validateTrailer(): void
   protected abstract groupBoletos(): BoletoRange[]
+
+  protected throwDocError(reason: string, lineNumber?: number): never {
+    throw new CNABDocumentValidationError(reason, lineNumber)
+  }
 
   get boletoCount(): number {
     return this.boletoRanges.length
