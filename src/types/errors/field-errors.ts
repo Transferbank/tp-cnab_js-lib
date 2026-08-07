@@ -30,7 +30,7 @@ export class CNABBoletoValidationError extends CNABInputError {
   constructor(reason: string, readonly lineNumber?: number) {
     super(
       lineNumber != null
-        ? `Boleto inválido (linha ${lineNumber}): ${reason}`
+        ? `Boleto inválido (linha ${lineNumber + 1}): ${reason}`
         : `Boleto inválido: ${reason}`
     )
   }
@@ -50,7 +50,7 @@ export class CNABDocumentValidationError extends CNABInputError {
   constructor(reason: string, readonly lineNumber?: number) {
     super(
       lineNumber != null
-        ? `Arquivo inválido (linha ${lineNumber}): ${reason}`
+        ? `Arquivo inválido (linha ${lineNumber + 1}): ${reason}`
         : `Arquivo inválido: ${reason}`
     )
   }

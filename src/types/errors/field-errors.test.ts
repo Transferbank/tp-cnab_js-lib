@@ -42,7 +42,7 @@ describe('CNABBoletoValidationError', () => {
 
   test('deve formatar mensagem com número da linha', () => {
     const error = new CNABBoletoValidationError('linha ausente', 5)
-    expect(error.message).toBe('Boleto inválido (linha 5): linha ausente')
+    expect(error.message).toBe('Boleto inválido (linha 6): linha ausente')
   })
 
   test('deve formatar mensagem sem número da linha', () => {
@@ -93,7 +93,13 @@ describe('CNABDocumentValidationError', () => {
 
   test('deve formatar mensagem com número da linha', () => {
     const error = new CNABDocumentValidationError('tipo inválido', 5)
-    expect(error.message).toBe('Arquivo inválido (linha 5): tipo inválido')
+    expect(error.message).toBe('Arquivo inválido (linha 6): tipo inválido')
+  })
+
+  test('lineNumber é 0-indexed internamente, 1-indexed na mensagem', () => {
+    const error = new CNABDocumentValidationError('header deve ser tipo 0', 0)
+    expect(error.lineNumber).toBe(0)
+    expect(error.message).toContain('linha 1')
   })
 
   test('deve formatar mensagem sem número da linha', () => {
