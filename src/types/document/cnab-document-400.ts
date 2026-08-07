@@ -14,6 +14,28 @@ export abstract class CnabDocument400<
 
   protected abstract get bankCode(): string
 
+  private validateStructuralLine(
+    line: string,
+    lineNumber: number,
+    expectedType: string,
+    label: string
+  ): void {
+    if (line.length !== 400) {
+      throw new CNABDocumentValidationError(
+        `${label} deve ter 400 caracteres, tem ${line.length}`,
+        lineNumber
+      )
+    }
+
+    const recordType = getCnab400RecordType(line)
+    if (recordType !== expectedType) {
+      throw new CNABDocumentValidationError(
+        `${label} deve ser tipo '${expectedType}', encontrado '${recordType}'`,
+        lineNumber
+      )
+    }
+  }
+
   protected validateHeader(): void {
     if (this.rawLines.length < 2) {
       throw new CNABDocumentValidationError(
@@ -21,42 +43,17 @@ export abstract class CnabDocument400<
       )
     }
 
-    const headerLine = this.rawLines[0]
-
-    if (headerLine.length !== 400) {
-      throw new CNABDocumentValidationError(
-        `header deve ter 400 caracteres, tem ${headerLine.length}`,
-        0
-      )
-    }
-
-    const recordType = getCnab400RecordType(headerLine)
-    if (recordType !== '0') {
-      throw new CNABDocumentValidationError(
-        `header deve ser tipo '0', encontrado '${recordType}'`,
-        0
-      )
-    }
+    this.validateStructuralLine(this.rawLines[0], 0, '0', 'header')
   }
 
   protected validateTrailer(): void {
-    const trailerLine = this.rawLines[this.rawLines.length - 1]
     const trailerLineNumber = this.rawLines.length - 1
-
-    if (trailerLine.length !== 400) {
-      throw new CNABDocumentValidationError(
-        `trailer deve ter 400 caracteres, tem ${trailerLine.length}`,
-        trailerLineNumber
-      )
-    }
-
-    const recordType = getCnab400RecordType(trailerLine)
-    if (recordType !== '9') {
-      throw new CNABDocumentValidationError(
-        `trailer deve ser tipo '9', encontrado '${recordType}'`,
-        trailerLineNumber
-      )
-    }
+    this.validateStructuralLine(
+      this.rawLines[trailerLineNumber],
+      trailerLineNumber,
+      '9',
+      'trailer'
+    )
   }
 
   protected groupBoletos(): BoletoRange[] {
