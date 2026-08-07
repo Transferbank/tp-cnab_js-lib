@@ -2,7 +2,8 @@ import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import {
   CNABBoletoNotFoundError,
-  CNABDocumentValidationError
+  CNABDocumentValidationError,
+  CNABFieldValidationError
 } from '@/types/errors/field-errors'
 
 export interface BoletoRange {
@@ -13,7 +14,8 @@ export interface BoletoRange {
 export interface BoletoResult<T = unknown> {
   index: number
   success: boolean
-  data?: T
+  data?: Partial<T>
+  fieldErrors?: CNABFieldValidationError[]
   error?: Error
 }
 
@@ -56,8 +58,16 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
     const results: BoletoResult[] = []
     for (let i = 0; i < this.boletoCount; i++) {
       try {
-        const data = this.getBoleto(i).read()
-        results.push({ index: i, success: true, data })
+        const boleto = this.getBoleto(i)
+        const readResult = boleto.read()
+        
+        const success = readResult.errors.length === 0
+        results.push({
+          index: i,
+          success,
+          data: readResult.data,
+          fieldErrors: readResult.errors.length > 0 ? readResult.errors : undefined
+        })
       } catch (error) {
         results.push({ index: i, success: false, error: error as Error })
       }
