@@ -77,7 +77,10 @@ export abstract class CnabDocument240<
     }
 
     if (state.insideLote) {
-      this.throwDocError('arquivo termina com lote aberto (sem trailer de lote)')
+      this.recordDocError('arquivo termina com lote aberto (sem trailer de lote)')
+      if (state.currentRange != null && state.coreComplete) {
+        ranges.push(state.currentRange)
+      }
     }
 
     return ranges
@@ -139,10 +142,12 @@ export abstract class CnabDocument240<
       )
     }
     if (state.currentRange != null && !state.coreComplete) {
-      this.throwDocError(
+      this.recordDocError(
         'boleto incompleto (núcleo P+Q) antes do trailer de lote',
         index
       )
+      state.currentRange = null
+      state.coreComplete = false
     }
     if (state.currentRange != null) {
       ranges.push(state.currentRange)
@@ -175,7 +180,7 @@ export abstract class CnabDocument240<
     } else if (rule.optionalSatellites.includes(type)) {
       this.handleSatellite(type, index, state)
     } else {
-      this.throwDocError(
+      this.recordDocError(
         `segmento '${type}' não reconhecido para este banco`,
         index
       )
@@ -188,9 +193,8 @@ export abstract class CnabDocument240<
     ranges: BoletoRange[]
   ): void {
     if (state.currentRange != null && !state.coreComplete) {
-      this.throwDocError('segmento P sem segmento Q do boleto anterior', index)
-    }
-    if (state.currentRange != null && state.coreComplete) {
+      this.recordDocError('segmento P sem segmento Q do boleto anterior', index)
+    } else if (state.currentRange != null && state.coreComplete) {
       ranges.push(state.currentRange)
     }
     state.currentRange = { startLine: index, endLine: index + 1 }
@@ -199,7 +203,8 @@ export abstract class CnabDocument240<
 
   private handleCoreComplete(index: number, state: GroupingState): void {
     if (state.currentRange == null || state.coreComplete) {
-      this.throwDocError('segmento Q sem segmento P correspondente', index)
+      this.recordDocError('segmento Q sem segmento P correspondente', index)
+      return
     }
     state.currentRange.endLine = index + 1
     state.coreComplete = true
@@ -211,10 +216,11 @@ export abstract class CnabDocument240<
     state: GroupingState
   ): void {
     if (state.currentRange == null || !state.coreComplete) {
-      this.throwDocError(
+      this.recordDocError(
         `satélite '${type}' antes do núcleo P+Q estar completo`,
         index
       )
+      return
     }
     state.currentRange.endLine = index + 1
   }

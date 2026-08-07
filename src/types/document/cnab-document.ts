@@ -24,6 +24,7 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
 
   protected readonly rawLines: string[]
   private readonly boletoRanges: BoletoRange[]
+  private readonly _structureErrors: CNABDocumentValidationError[] = []
 
   constructor(rawLines: string[]) {
     this.rawLines = rawLines
@@ -39,6 +40,18 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
 
   protected throwDocError(reason: string, lineNumber?: number): never {
     throw new CNABDocumentValidationError(reason, lineNumber)
+  }
+
+  protected recordDocError(reason: string, lineNumber?: number): void {
+    this._structureErrors.push(new CNABDocumentValidationError(reason, lineNumber))
+  }
+
+  get structureErrors(): CNABDocumentValidationError[] {
+    return this._structureErrors
+  }
+
+  get hasStructureErrors(): boolean {
+    return this._structureErrors.length > 0
   }
 
   get boletoCount(): number {

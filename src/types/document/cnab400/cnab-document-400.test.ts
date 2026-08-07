@@ -162,14 +162,15 @@ describe('CnabDocument400', () => {
       expect(doc.boletoCount).toBe(3)
     })
 
-    test('rejeita satélite órfão antes de qualquer núcleo', () => {
+    test('registra erro de satélite órfão antes de qualquer núcleo', () => {
       const lines = [createLine('0'), createLine('2'), createLine('9')]
-      expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
-      expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(/satélite tipo '2' sem núcleo precedente/)
+      
+      const doc = new TestCnabDocument400(lines)
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain("satélite tipo '2' sem núcleo precedente")
+      expect(doc.boletoCount).toBe(0)
     })
 
     test('rejeita tipo estrutural no corpo', () => {
@@ -209,6 +210,38 @@ describe('CnabDocument400', () => {
       expect(doc.boletoCount).toBe(0)
       expect(doc.readAll()).toEqual([])
     })
+
+    test('recupera de satélite órfão e continua processando', () => {
+      const lines = [
+        createLine('0'),
+        createLine('2'),
+        createLine('1'),
+        createLine('9'),
+      ]
+      const doc = new TestCnabDocument400(lines)
+
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain("satélite tipo '2' sem núcleo precedente")
+      expect(doc.boletoCount).toBe(1)
+    })
+
+    test('recupera de múltiplos satélites órfãos', () => {
+      const lines = [
+        createLine('0'),
+        createLine('2'),
+        createLine('6'),
+        createLine('1'),
+        createLine('9'),
+      ]
+      const doc = new TestCnabDocument400(lines)
+
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(2)
+      expect(doc.structureErrors[0].message).toContain("satélite tipo '2' sem núcleo precedente")
+      expect(doc.structureErrors[1].message).toContain("satélite tipo '6' sem núcleo precedente")
+      expect(doc.boletoCount).toBe(1)
+    })
   })
 
   describe('integração com getBoleto e readAll', () => {
@@ -227,7 +260,43 @@ describe('CnabDocument400', () => {
       expect(results.every((r) => r.success)).toBe(true)
     })
   })
+
+  describe('recuperação com fixtures mutados', () => {
+    const loadFixture = (): string[] => {
+      const fs = require('fs')
+      const path = require('path')
+      const fixturePath = path.join(
+        __dirname,
+        '../../../banks/bradesco/docs/cnab400/bradesco_cnab_400.txt'
+      )
+      const content = fs.readFileSync(fixturePath, 'latin1')
+      return content.split(/\r?\n/).filter((line: string) => line.length > 0)
+    }
+
+    test('satélite órfão: não lança, registra erro, resto do arquivo legível', () => {
+      const lines = loadFixture()
+      const mutated = [...lines]
+      mutated.splice(1, 0, createLine('2'))
+
+      const doc = new TestCnabDocument400(mutated)
+
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors.some(e => e.message.includes('satélite tipo') && e.message.includes('sem núcleo precedente'))).toBe(true)
+      expect(doc.boletoCount).toBeGreaterThan(0)
+      expect(() => doc.getBoleto(0)).not.toThrow()
+    })
+
+    test('múltiplos satélites órfãos: não lança, registra erros, boletos válidos acessíveis', () => {
+      const lines = loadFixture()
+      const mutated = [...lines]
+      mutated.splice(1, 0, createLine('2'))
+      mutated.splice(3, 0, createLine('6'))
+
+      const doc = new TestCnabDocument400(mutated)
+
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors.length).toBeGreaterThanOrEqual(1)
+      expect(doc.boletoCount).toBeGreaterThan(0)
+    })
+  })
 })
-
-
-

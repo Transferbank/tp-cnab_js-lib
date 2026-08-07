@@ -225,31 +225,37 @@ describe('CnabDocument240', () => {
       }).toThrow('trailer de lote sem header de lote correspondente')
     })
 
-    test('rejeita P sem Q antes do trailer de lote', () => {
+    test('registra erro de P sem Q antes do trailer de lote', () => {
       const header = createLine('0')
       const loteHeader = createLine('1')
       const segmentP = createLine('3', 'P')
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      expect(() => {
-        new TestCnabDocument240([header, loteHeader, segmentP, loteTrailer, trailer])
-      }).toThrow('boleto incompleto (núcleo P+Q) antes do trailer de lote')
+      const doc = new TestCnabDocument240([header, loteHeader, segmentP, loteTrailer, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain('boleto incompleto (núcleo P+Q) antes do trailer de lote')
+      expect(doc.boletoCount).toBe(0)
     })
 
-    test('rejeita Q sem P precedente', () => {
+    test('registra erro de Q sem P precedente', () => {
       const header = createLine('0')
       const loteHeader = createLine('1')
       const segmentQ = createLine('3', 'Q')
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      expect(() => {
-        new TestCnabDocument240([header, loteHeader, segmentQ, loteTrailer, trailer])
-      }).toThrow('segmento Q sem segmento P correspondente')
+      const doc = new TestCnabDocument240([header, loteHeader, segmentQ, loteTrailer, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain('segmento Q sem segmento P correspondente')
+      expect(doc.boletoCount).toBe(0)
     })
 
-    test('rejeita satélite antes do núcleo P+Q completo', () => {
+    test('registra erro de satélite antes do núcleo P+Q completo', () => {
       const header = createLine('0')
       const loteHeader = createLine('1')
       const segmentP = createLine('3', 'P')
@@ -257,9 +263,13 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      expect(() => {
-        new TestCnabDocument240([header, loteHeader, segmentP, segmentR, loteTrailer, trailer])
-      }).toThrow("satélite 'R' antes do núcleo P+Q estar completo")
+      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentR, loteTrailer, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(2)
+      expect(doc.structureErrors[0].message).toContain("satélite 'R' antes do núcleo P+Q estar completo")
+      expect(doc.structureErrors[1].message).toContain('boleto incompleto (núcleo P+Q) antes do trailer de lote')
+      expect(doc.boletoCount).toBe(0)
     })
 
     test('rejeita segmento fora de lote', () => {
@@ -272,16 +282,89 @@ describe('CnabDocument240', () => {
       }).toThrow('segmento fora de um lote')
     })
 
-    test('rejeita arquivo terminando com lote aberto', () => {
+    test('registra erro de arquivo terminando com lote aberto', () => {
       const header = createLine('0')
       const loteHeader = createLine('1')
       const segmentP = createLine('3', 'P')
       const segmentQ = createLine('3', 'Q')
       const trailer = createLine('9')
 
-      expect(() => {
-        new TestCnabDocument240([header, loteHeader, segmentP, segmentQ, trailer])
-      }).toThrow('arquivo termina com lote aberto')
+      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentQ, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain('arquivo termina com lote aberto')
+      expect(doc.boletoCount).toBe(1)
+    })
+
+    test('recupera de P sem Q e continua processando próximos boletos', () => {
+      const header = createLine('0')
+      const loteHeader = createLine('1')
+      const segmentP1 = createLine('3', 'P')
+      const segmentP2 = createLine('3', 'P')
+      const segmentQ2 = createLine('3', 'Q')
+      const loteTrailer = createLine('5')
+      const trailer = createLine('9')
+
+      const doc = new TestCnabDocument240([header, loteHeader, segmentP1, segmentP2, segmentQ2, loteTrailer, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain('segmento P sem segmento Q do boleto anterior')
+      expect(doc.boletoCount).toBe(1)
+    })
+
+    test('recupera de Q órfão e continua processando', () => {
+      const header = createLine('0')
+      const loteHeader = createLine('1')
+      const segmentQ1 = createLine('3', 'Q')
+      const segmentP = createLine('3', 'P')
+      const segmentQ2 = createLine('3', 'Q')
+      const loteTrailer = createLine('5')
+      const trailer = createLine('9')
+
+      const doc = new TestCnabDocument240([header, loteHeader, segmentQ1, segmentP, segmentQ2, loteTrailer, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain('segmento Q sem segmento P correspondente')
+      expect(doc.boletoCount).toBe(1)
+    })
+
+    test('recupera de satélite inválido e continua processando', () => {
+      const header = createLine('0')
+      const loteHeader = createLine('1')
+      const segmentP = createLine('3', 'P')
+      const segmentR = createLine('3', 'R')
+      const segmentQ = createLine('3', 'Q')
+      const loteTrailer = createLine('5')
+      const trailer = createLine('9')
+
+      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentR, segmentQ, loteTrailer, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain("satélite 'R' antes do núcleo P+Q estar completo")
+      expect(doc.boletoCount).toBe(1)
+    })
+
+    test('recupera de múltiplos erros no mesmo arquivo', () => {
+      const header = createLine('0')
+      const loteHeader = createLine('1')
+      const segmentQ1 = createLine('3', 'Q')
+      const segmentP1 = createLine('3', 'P')
+      const segmentP2 = createLine('3', 'P')
+      const segmentQ2 = createLine('3', 'Q')
+      const loteTrailer = createLine('5')
+      const trailer = createLine('9')
+
+      const doc = new TestCnabDocument240([header, loteHeader, segmentQ1, segmentP1, segmentP2, segmentQ2, loteTrailer, trailer])
+      
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors).toHaveLength(2)
+      expect(doc.structureErrors[0].message).toContain('segmento Q sem segmento P correspondente')
+      expect(doc.structureErrors[1].message).toContain('segmento P sem segmento Q do boleto anterior')
+      expect(doc.boletoCount).toBe(1)
     })
 
     test('rejeita tipo de registro não reconhecido', () => {
@@ -351,6 +434,20 @@ describe('CnabDocument240', () => {
       expect(results[0].index).toBe(0)
       expect(results[1].success).toBe(true)
       expect(results[1].index).toBe(1)
+    })
+  })
+
+  describe('recuperação com fixtures mutados', () => {
+    test('segmento não reconhecido: não lança, registra erro, resto do arquivo legível', () => {
+      const lines = loadFixture()
+      const mutated = [...lines]
+      mutated[5] = mutated[5].substring(0, 13) + 'Z' + mutated[5].substring(14)
+
+      const doc = new TestCnabDocument240(mutated)
+
+      expect(doc.hasStructureErrors).toBe(true)
+      expect(doc.structureErrors.some(e => e.message.includes('não reconhecido para este banco'))).toBe(true)
+      expect(doc.boletoCount).toBeGreaterThan(0)
     })
   })
 })

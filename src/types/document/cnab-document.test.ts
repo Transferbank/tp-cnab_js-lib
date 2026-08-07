@@ -288,6 +288,56 @@ describe('CnabDocument', () => {
     })
   })
 
+  describe('recordDocError', () => {
+    class TestDocumentWithRecorder extends TestCnabDocument {
+      public testRecordDocError(reason: string, lineNumber?: number): void {
+        return this.recordDocError(reason, lineNumber)
+      }
+    }
+
+    test('registra erro sem lançar exceção', () => {
+      const lines = createLines(5)
+      const doc = new TestDocumentWithRecorder(lines, {})
+
+      expect(() => doc.testRecordDocError('erro recuperável')).not.toThrow()
+      expect(doc.structureErrors).toHaveLength(1)
+      expect(doc.structureErrors[0].message).toContain('erro recuperável')
+    })
+
+    test('registra múltiplos erros', () => {
+      const lines = createLines(5)
+      const doc = new TestDocumentWithRecorder(lines, {})
+
+      doc.testRecordDocError('erro 1', 0)
+      doc.testRecordDocError('erro 2', 5)
+      doc.testRecordDocError('erro 3')
+
+      expect(doc.structureErrors).toHaveLength(3)
+      expect(doc.structureErrors[0].message).toContain('erro 1')
+      expect(doc.structureErrors[1].message).toContain('erro 2')
+      expect(doc.structureErrors[2].message).toContain('erro 3')
+    })
+
+    test('hasStructureErrors retorna true quando há erros', () => {
+      const lines = createLines(5)
+      const doc = new TestDocumentWithRecorder(lines, {})
+
+      expect(doc.hasStructureErrors).toBe(false)
+      
+      doc.testRecordDocError('erro')
+      
+      expect(doc.hasStructureErrors).toBe(true)
+    })
+
+    test('structureErrors retorna array vazio quando não há erros', () => {
+      const lines = createLines(5)
+      const doc = new TestDocumentWithRecorder(lines, {})
+
+      expect(doc.structureErrors).toEqual([])
+      expect(doc.hasStructureErrors).toBe(false)
+    })
+  })
+
   describe('coleta de erros parciais', () => {
     test('erro de campo em um boleto não interrompe leitura dos demais', () => {
       class BoletoWithFieldError extends MockCnabBoleto {

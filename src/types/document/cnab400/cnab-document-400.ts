@@ -66,10 +66,11 @@ export abstract class CnabDocument400<
         currentRange = { startLine: i, endLine: i + 1 }
       } else if (rule.optionalSatellites.includes(recordType)) {
         if (currentRange == null) {
-          this.throwDocError(
+          this.recordDocError(
             `satélite tipo '${recordType}' sem núcleo precedente`,
             i
           )
+          continue
         }
         currentRange.endLine = i + 1
       } else if (rule.structural.includes(recordType)) {
