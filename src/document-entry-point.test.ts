@@ -36,17 +36,18 @@ describe('openCnabDocument', () => {
       const doc = openCnabDocument(lines)
 
       const boleto = doc.getBoleto(0)
-      const data = boleto.read()
+      const result = boleto.read()
 
-      expect(data.nossoNumero).toBe('09100010629')
-      expect(data.numeroDocumento).toBe('NF82760-03')
-      expect(data.vencimento).toEqual(new Date(2026, 7, 24)) // agosto = mês 7 (0-indexed)
-      expect(data.valor).toBe(22560.93)
-      expect(data.dataEmissao).toEqual(new Date(2026, 4, 25)) // maio = mês 4
-      expect(data.sacado.documento).toBe('20000000997330')
-      expect(data.sacado.nome).toBe('COMERCIAL ALFA LTDA')
-      expect(data.sacado.endereco.logradouro).toBe('AV EXEMPLO 200')
-      expect(data.sacado.endereco.cep).toBe('29045402')
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBe('09100010629')
+      expect(result.data.numeroDocumento).toBe('NF82760-03')
+      expect(result.data.vencimento).toEqual(new Date(2026, 7, 24)) // agosto = mês 7 (0-indexed)
+      expect(result.data.valor).toBe(22560.93)
+      expect(result.data.dataEmissao).toEqual(new Date(2026, 4, 25)) // maio = mês 4
+      expect(result.data.sacado?.documento).toBe('20000000997330')
+      expect(result.data.sacado?.nome).toBe('COMERCIAL ALFA LTDA')
+      expect(result.data.sacado?.endereco?.logradouro).toBe('AV EXEMPLO 200')
+      expect(result.data.sacado?.endereco?.cep).toBe('29045402')
     })
 
     test('lê dados de múltiplos boletos corretamente', () => {
@@ -55,21 +56,24 @@ describe('openCnabDocument', () => {
 
       // Primeiro boleto
       const boleto0 = doc.getBoleto(0)
-      const data0 = boleto0.read()
-      expect(data0.numeroDocumento).toBe('NF82760-03')
-      expect(data0.valor).toBe(22560.93)
+      const result0 = boleto0.read()
+      expect(result0.errors).toHaveLength(0)
+      expect(result0.data.numeroDocumento).toBe('NF82760-03')
+      expect(result0.data.valor).toBe(22560.93)
 
       // Segundo boleto
       const boleto1 = doc.getBoleto(1)
-      const data1 = boleto1.read()
-      expect(data1.numeroDocumento).toBe('NF82761-04')
-      expect(data1.valor).toBe(2890.5)
+      const result1 = boleto1.read()
+      expect(result1.errors).toHaveLength(0)
+      expect(result1.data.numeroDocumento).toBe('NF82761-04')
+      expect(result1.data.valor).toBe(2890.5)
 
       // Terceiro boleto
       const boleto2 = doc.getBoleto(2)
-      const data2 = boleto2.read()
-      expect(data2.numeroDocumento).toBe('NF82761-03')
-      expect(data2.valor).toBe(2890.5)
+      const result2 = boleto2.read()
+      expect(result2.errors).toHaveLength(0)
+      expect(result2.data.numeroDocumento).toBe('NF82761-03')
+      expect(result2.data.valor).toBe(2890.5)
     })
 
     test('readAll retorna dados corretos para todos os boletos', () => {
@@ -105,11 +109,12 @@ describe('openCnabDocument', () => {
 
       // Primeiro boleto tem satélite tipo 2
       const boleto0 = doc.getBoleto(0)
-      const data0 = boleto0.readFull()
+      const result = boleto0.readFull()
 
-      expect(data0.numeroDocumento).toBe('NF82760-03')
-      expect(data0.extra).toBeDefined()
-      expect(data0.extra?.codigoOcorrencia).toBeDefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.numeroDocumento).toBe('NF82760-03')
+      expect(result.data.extra).toBeDefined()
+      expect(result.data.extra?.codigoOcorrencia).toBeDefined()
     })
   })
 
@@ -119,26 +124,32 @@ describe('openCnabDocument', () => {
     })
 
     test('lê dados completos do primeiro boleto corretamente', () => {
-      const data = openCnabDocument(loadFixture240()).getBoleto(0).read()
+      const result = openCnabDocument(loadFixture240()).getBoleto(0).read()
 
-      expect(data.nossoNumero).toBe('000123450010')
-      expect(data.numeroDocumento).toBe('NF0000123')
-      expect(data.vencimento).toEqual(new Date(2026, 11, 15))
-      expect(data.valor).toBe(100)
-      expect(data.dataEmissao).toEqual(new Date(2026, 11, 1))
-      expect(data.sacado.documento).toBe('10000791989')
-      expect(data.sacado.nome).toBe('JOAO EXEMPLO SILVA')
-      expect(data.sacado.endereco.logradouro).toBe('RUA EXEMPLO 123')
-      expect(data.sacado.endereco.cep).toBe('01234567')
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBe('000123450010')
+      expect(result.data.numeroDocumento).toBe('NF0000123')
+      expect(result.data.vencimento).toEqual(new Date(2026, 11, 15))
+      expect(result.data.valor).toBe(100)
+      expect(result.data.dataEmissao).toEqual(new Date(2026, 11, 1))
+      expect(result.data.sacado?.documento).toBe('10000791989')
+      expect(result.data.sacado?.nome).toBe('JOAO EXEMPLO SILVA')
+      expect(result.data.sacado?.endereco?.logradouro).toBe('RUA EXEMPLO 123')
+      expect(result.data.sacado?.endereco?.cep).toBe('01234567')
     })
 
     test('lê dados de múltiplos boletos corretamente', () => {
       const doc = openCnabDocument(loadFixture240())
 
-      expect(doc.getBoleto(1).read().numeroDocumento).toBe('NF0000124')
-      expect(doc.getBoleto(1).read().valor).toBe(250)
-      expect(doc.getBoleto(2).read().numeroDocumento).toBe('NF0000125')
-      expect(doc.getBoleto(2).read().valor).toBe(500)
+      const result1 = doc.getBoleto(1).read()
+      expect(result1.errors).toHaveLength(0)
+      expect(result1.data.numeroDocumento).toBe('NF0000124')
+      expect(result1.data.valor).toBe(250)
+      
+      const result2 = doc.getBoleto(2).read()
+      expect(result2.errors).toHaveLength(0)
+      expect(result2.data.numeroDocumento).toBe('NF0000125')
+      expect(result2.data.valor).toBe(500)
     })
 
     test('readAll retorna dados corretos para todos os boletos', () => {
@@ -157,8 +168,9 @@ describe('openCnabDocument', () => {
     })
 
     test('boletos com campo extra carteira são processados corretamente', () => {
-      const data = openCnabDocument(loadFixture240()).getBoleto(0).readFull()
-      expect(data.extra?.carteira).toBe('001')
+      const result = openCnabDocument(loadFixture240()).getBoleto(0).readFull()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.extra?.carteira).toBe('001')
     })
   })
 
