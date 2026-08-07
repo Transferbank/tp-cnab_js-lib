@@ -35,7 +35,7 @@ export abstract class CnabBoleto<T extends BoletoCnabData = BoletoCnabData> {
   protected abstract readonly sacadoLogradouroField: CnabField<string>
   protected abstract readonly sacadoCepField: CnabField<string>
 
-  protected readonly extraFields: CnabField<CnabFieldValue>[] = []
+  protected abstract get extraFields(): CnabField<CnabFieldValue>[]
 
   constructor(rawContent: string[]) {
     this.validateStructure(rawContent)

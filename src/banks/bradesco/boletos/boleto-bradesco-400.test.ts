@@ -179,4 +179,24 @@ describe('BoletoBradesco400', () => {
       expect(() => boleto.readExtraField('campoInexistente')).toThrow('Campo extra "campoInexistente" não encontrado')
     })
   })
+
+  describe('otimização de campos compartilhados', () => {
+    test('instâncias diferentes compartilham mesmos objetos de campo', () => {
+      const lines = createValidLines()
+      const boleto1 = new BoletoBradesco400(lines)
+      const boleto2 = new BoletoBradesco400(lines)
+      
+      expect((boleto1 as any).valorField).toBe((boleto2 as any).valorField)
+      expect((boleto1 as any).nossoNumeroField).toBe((boleto2 as any).nossoNumeroField)
+      expect((boleto1 as any).sacadoNomeField).toBe((boleto2 as any).sacadoNomeField)
+    })
+
+    test('instâncias diferentes compartilham mesmo array de extraFields', () => {
+      const lines = createValidLines()
+      const boleto1 = new BoletoBradesco400(lines)
+      const boleto2 = new BoletoBradesco400(lines)
+      
+      expect((boleto1 as any).extraFields).toBe((boleto2 as any).extraFields)
+    })
+  })
 })
