@@ -1,1 +1,1 @@
-export * from './boleto-registry'
+export * from './cnab-registry'
