@@ -74,10 +74,11 @@ describe('CnabDocumentBradesco400', () => {
       const doc = new CnabDocumentBradesco400(lines)
       
       const boleto = doc.getBoleto(0)
-      const data = boleto.read()
+      const result = boleto.read()
       
-      expect(data.numeroDocumento).toBe('NF82760-03')
-      expect(data.nossoNumero).toBe('09100010629')
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.numeroDocumento).toBe('NF82760-03')
+      expect(result.data.nossoNumero).toBe('09100010629')
     })
   })
 
@@ -93,8 +94,9 @@ describe('CnabDocumentBradesco400', () => {
       expect(doc.boletoCount).toBe(1)
       
       const boleto = doc.getBoleto(0)
-      const data = boleto.read()
-      expect(data.numeroDocumento).toBe('NF82760-03')
+      const result = boleto.read()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.numeroDocumento).toBe('NF82760-03')
     })
   })
 

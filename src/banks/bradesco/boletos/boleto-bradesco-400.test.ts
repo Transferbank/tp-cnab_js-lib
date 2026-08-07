@@ -88,17 +88,18 @@ describe('BoletoBradesco400', () => {
     test('retorna apenas campos canônicos', () => {
       const boleto = new BoletoBradesco400(createValidLines())
       
-      const data = boleto.readSimple()
+      const result = boleto.readSimple()
       
-      expect(data.nossoNumero).toBe('09100010629')
-      expect(data.numeroDocumento).toBe('NF82760-03')
-      expect(data.vencimento).toEqual(new Date(2026, 7, 24))
-      expect(data.valor).toBe(22560.93)
-      expect(data.dataEmissao).toEqual(new Date(2026, 4, 25))
-      expect(data.sacado.documento).toBe('20000000997330')
-      expect(data.sacado.nome).toBe('COMERCIAL ALFA LTDA')
-      expect(data.sacado.endereco.cep).toBe('29045402')
-      expect(data.extra).toBeUndefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBe('09100010629')
+      expect(result.data.numeroDocumento).toBe('NF82760-03')
+      expect(result.data.vencimento).toEqual(new Date(2026, 7, 24))
+      expect(result.data.valor).toBe(22560.93)
+      expect(result.data.dataEmissao).toEqual(new Date(2026, 4, 25))
+      expect(result.data.sacado?.documento).toBe('20000000997330')
+      expect(result.data.sacado?.nome).toBe('COMERCIAL ALFA LTDA')
+      expect(result.data.sacado?.endereco?.cep).toBe('29045402')
+      expect(result.data.extra).toBeUndefined()
     })
   })
 
@@ -106,12 +107,13 @@ describe('BoletoBradesco400', () => {
     test('retorna campos canônicos com extras', () => {
       const boleto = new BoletoBradesco400(createValidLines())
       
-      const data = boleto.readFull()
+      const result = boleto.readFull()
       
-      expect(data.nossoNumero).toBe('09100010629')
-      expect(data.extra).toBeDefined()
-      expect(data.extra!.codigoOcorrencia).toBe('01')
-      expect(data.extra!.carteiraCodigo).toBe('009')
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBe('09100010629')
+      expect(result.data.extra).toBeDefined()
+      expect(result.data.extra!.codigoOcorrencia).toBe('01')
+      expect(result.data.extra!.carteiraCodigo).toBe('009')
     })
   })
 
@@ -119,27 +121,30 @@ describe('BoletoBradesco400', () => {
     test('ReadMode.SIMPLE retorna apenas canônicos', () => {
       const boleto = new BoletoBradesco400(createValidLines())
       
-      const data = boleto.read(ReadMode.SIMPLE)
+      const result = boleto.read(ReadMode.SIMPLE)
       
-      expect(data.nossoNumero).toBe('09100010629')
-      expect(data.extra).toBeUndefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBe('09100010629')
+      expect(result.data.extra).toBeUndefined()
     })
 
     test('ReadMode.FULL retorna com extras', () => {
       const boleto = new BoletoBradesco400(createValidLines())
       
-      const data = boleto.read(ReadMode.FULL)
+      const result = boleto.read(ReadMode.FULL)
       
-      expect(data.nossoNumero).toBe('09100010629')
-      expect(data.extra!.codigoOcorrencia).toBe('01')
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBe('09100010629')
+      expect(result.data.extra!.codigoOcorrencia).toBe('01')
     })
 
     test('padrão é SIMPLE', () => {
       const boleto = new BoletoBradesco400(createValidLines())
       
-      const data = boleto.read()
+      const result = boleto.read()
       
-      expect(data.extra).toBeUndefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.extra).toBeUndefined()
     })
   })
 

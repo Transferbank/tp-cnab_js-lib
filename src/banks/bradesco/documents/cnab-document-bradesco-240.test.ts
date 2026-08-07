@@ -37,10 +37,11 @@ describe('CnabDocumentBradesco240', () => {
       const doc = new CnabDocumentBradesco240(fixtureLines)
 
       const boleto = doc.getBoleto(0)
-      const data = boleto.readSimple()
+      const result = boleto.readSimple()
 
-      expect(data.nossoNumero).toBeDefined()
-      expect(data.numeroDocumento).toBeDefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBeDefined()
+      expect(result.data.numeroDocumento).toBeDefined()
     })
 
     test('cada boleto pode ser lido individualmente', () => {
@@ -59,11 +60,12 @@ describe('CnabDocumentBradesco240', () => {
       const doc = new CnabDocumentBradesco240(fixtureLines)
 
       const boleto = doc.getBoleto(0)
-      const data = boleto.readSimple()
+      const result = boleto.readSimple()
 
-      expect(data.nossoNumero).toBeTruthy()
-      expect(data.valor).toBeGreaterThan(0)
-      expect(data.vencimento).toBeInstanceOf(Date)
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBeTruthy()
+      expect(result.data.valor).toBeGreaterThan(0)
+      expect(result.data.vencimento).toBeInstanceOf(Date)
     })
   })
 

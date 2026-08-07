@@ -76,31 +76,33 @@ describe('BoletoBradesco240', () => {
   describe('readSimple()', () => {
     test('retorna apenas campos canônicos', () => {
       const boleto = new BoletoBradesco240(firstBoleto)
-      const data = boleto.readSimple()
+      const result = boleto.readSimple()
 
-      expect(data.nossoNumero).toBeDefined()
-      expect(data.numeroDocumento).toBeDefined()
-      expect(data.vencimento).toBeInstanceOf(Date)
-      expect(data.valor).toBeGreaterThan(0)
-      expect(data.dataEmissao).toBeInstanceOf(Date)
-      expect(typeof data.desconto.valor).toBe('number')
-      expect(typeof data.abatimento.valor).toBe('number')
-      expect(data.sacado.documento).toBeDefined()
-      expect(data.sacado.nome).toBeDefined()
-      expect(data.sacado.endereco.logradouro).toBeDefined()
-      expect(data.sacado.endereco.cep).toBeDefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBeDefined()
+      expect(result.data.numeroDocumento).toBeDefined()
+      expect(result.data.vencimento).toBeInstanceOf(Date)
+      expect(result.data.valor).toBeGreaterThan(0)
+      expect(result.data.dataEmissao).toBeInstanceOf(Date)
+      expect(typeof result.data.desconto?.valor).toBe('number')
+      expect(typeof result.data.abatimento?.valor).toBe('number')
+      expect(result.data.sacado?.documento).toBeDefined()
+      expect(result.data.sacado?.nome).toBeDefined()
+      expect(result.data.sacado?.endereco?.logradouro).toBeDefined()
+      expect(result.data.sacado?.endereco?.cep).toBeDefined()
     })
   })
 
   describe('readFull()', () => {
     test('retorna campos canônicos com extras', () => {
       const boleto = new BoletoBradesco240(firstBoleto)
-      const data = boleto.readFull()
+      const result = boleto.readFull()
 
-      expect(data.nossoNumero).toBeDefined()
-      expect(data.extra).toBeDefined()
-      if (data.extra) {
-        expect(data.extra.carteira).toBeDefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBeDefined()
+      expect(result.data.extra).toBeDefined()
+      if (result.data.extra) {
+        expect(result.data.extra.carteira).toBeDefined()
       }
     })
   })
@@ -109,52 +111,57 @@ describe('BoletoBradesco240', () => {
     test('ReadMode.SIMPLE retorna apenas canônicos', () => {
       const boleto = new BoletoBradesco240(firstBoleto)
       
-      const data = boleto.read(ReadMode.SIMPLE)
+      const result = boleto.read(ReadMode.SIMPLE)
       
-      expect(data.nossoNumero).toBeDefined()
-      expect(data.extra).toBeUndefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBeDefined()
+      expect(result.data.extra).toBeUndefined()
     })
 
     test('ReadMode.FULL retorna com extras', () => {
       const boleto = new BoletoBradesco240(firstBoleto)
       
-      const data = boleto.read(ReadMode.FULL)
+      const result = boleto.read(ReadMode.FULL)
       
-      expect(data.nossoNumero).toBeDefined()
-      expect(data.extra).toBeDefined()
-      if (data.extra) {
-        expect(data.extra.carteira).toBeDefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBeDefined()
+      expect(result.data.extra).toBeDefined()
+      if (result.data.extra) {
+        expect(result.data.extra.carteira).toBeDefined()
       }
     })
 
     test('padrão é SIMPLE', () => {
       const boleto = new BoletoBradesco240(firstBoleto)
       
-      const data = boleto.read()
+      const result = boleto.read()
       
-      expect(data.extra).toBeUndefined()
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.extra).toBeUndefined()
     })
   })
 
   describe('fixture real Bradesco CNAB 240', () => {
     test('processa primeiro boleto do fixture', () => {
       const boleto = new BoletoBradesco240(firstBoleto)
-      const data = boleto.readSimple()
+      const result = boleto.readSimple()
 
-      expect(data.nossoNumero).toBeTruthy()
-      expect(data.numeroDocumento).toBeTruthy()
-      expect(data.vencimento).toBeInstanceOf(Date)
-      expect(data.valor).toBeGreaterThan(0)
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.nossoNumero).toBeTruthy()
+      expect(result.data.numeroDocumento).toBeTruthy()
+      expect(result.data.vencimento).toBeInstanceOf(Date)
+      expect(result.data.valor).toBeGreaterThan(0)
     })
 
     test('readFull retorna campo extra carteira', () => {
       const boleto = new BoletoBradesco240(firstBoleto)
-      const data = boleto.readFull()
+      const result = boleto.readFull()
 
-      expect(data.extra).toBeDefined()
-      if (data.extra) {
-        expect(data.extra.carteira).toBeDefined()
-        expect(typeof data.extra.carteira).toBe('string')
+      expect(result.errors).toHaveLength(0)
+      expect(result.data.extra).toBeDefined()
+      if (result.data.extra) {
+        expect(result.data.extra.carteira).toBeDefined()
+        expect(typeof result.data.extra.carteira).toBe('string')
       }
     })
   })
