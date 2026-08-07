@@ -1,11 +1,11 @@
 import { openCnabDocument } from './document-entry-point'
-import { CNABDocumentValidationError } from '@/types/errors/field-errors'
-import { CnabDocumentBradesco400 } from '@/banks/bradesco/documents/cnab-document-bradesco-400'
+import { CNABBoletoValidationError } from '@/types/errors/field-errors'
+import { CNABNoLinesProvidedError } from '@/types/errors/error-types'
 import * as fs from 'fs'
 import * as path from 'path'
 
 describe('openCnabDocument', () => {
-  const loadFixture = (): string[] => {
+  const loadFixture400 = (): string[] => {
     const fixturePath = path.join(
       __dirname,
       'banks/bradesco/docs/cnab400/bradesco_cnab_400.txt'
@@ -14,36 +14,25 @@ describe('openCnabDocument', () => {
     return content.split(/\r?\n/).filter((line) => line.length > 0)
   }
 
+  const loadFixture240 = (): string[] => {
+    const fixturePath = path.join(
+      __dirname,
+      'banks/bradesco/docs/cnab240/bradesco_cnab_240.txt'
+    )
+    const content = fs.readFileSync(fixturePath, 'latin1')
+    return content.split(/\r?\n/).filter((line) => line.length > 0)
+  }
+
   describe('Bradesco CNAB 400', () => {
-    test('retorna CnabDocumentBradesco400 para arquivo válido', () => {
-      const lines = loadFixture()
-      const doc = openCnabDocument(lines)
-
-      expect(doc).toBeInstanceOf(CnabDocumentBradesco400)
-    })
-
     test('identifica quantidade correta de boletos no fixture', () => {
-      const lines = loadFixture()
+      const lines = loadFixture400()
       const doc = openCnabDocument(lines)
 
-      expect(doc.boletoCount).toBeGreaterThan(0)
       expect(doc.boletoCount).toBe(37)
     })
 
-    test('getBoleto retorna boletos válidos', () => {
-      const lines = loadFixture()
-      const doc = openCnabDocument(lines)
-
-      const boleto = doc.getBoleto(0)
-      expect(boleto).toBeDefined()
-
-      const data = boleto.read()
-      expect(data.nossoNumero).toBeDefined()
-      expect(data.numeroDocumento).toBe('NF82760-03')
-    })
-
     test('lê dados completos do primeiro boleto corretamente', () => {
-      const lines = loadFixture()
+      const lines = loadFixture400()
       const doc = openCnabDocument(lines)
 
       const boleto = doc.getBoleto(0)
@@ -61,7 +50,7 @@ describe('openCnabDocument', () => {
     })
 
     test('lê dados de múltiplos boletos corretamente', () => {
-      const lines = loadFixture()
+      const lines = loadFixture400()
       const doc = openCnabDocument(lines)
 
       // Primeiro boleto
@@ -84,7 +73,7 @@ describe('openCnabDocument', () => {
     })
 
     test('readAll retorna dados corretos para todos os boletos', () => {
-      const lines = loadFixture()
+      const lines = loadFixture400()
       const doc = openCnabDocument(lines)
 
       const results = doc.readAll()
@@ -111,7 +100,7 @@ describe('openCnabDocument', () => {
     })
 
     test('boletos com satélites são processados corretamente', () => {
-      const lines = loadFixture()
+      const lines = loadFixture400()
       const doc = openCnabDocument(lines)
 
       // Primeiro boleto tem satélite tipo 2
@@ -122,66 +111,72 @@ describe('openCnabDocument', () => {
       expect(data0.extra).toBeDefined()
       expect(data0.extra?.codigoOcorrencia).toBeDefined()
     })
-
-    test('readAll processa todos os boletos com sucesso', () => {
-      const lines = loadFixture()
-      const doc = openCnabDocument(lines)
-
-      const results = doc.readAll()
-
-      expect(results).toHaveLength(37)
-      expect(results.filter((r) => r.success).length).toBe(37)
-      expect(results.every((r) => r.data != null || r.error != null)).toBe(true)
-    })
   })
 
-  describe('banco não suportado', () => {
-    test('lança CNABDocumentValidationError para Itaú', () => {
-      const header = '0' + ' '.repeat(75) + '341' + ' '.repeat(321)
-      const detail = '1' + ' '.repeat(399)
-      const trailer = '9' + ' '.repeat(399)
-      const lines = [header, detail, trailer]
-
-      expect(() => openCnabDocument(lines)).toThrow(
-        CNABDocumentValidationError
-      )
-      expect(() => openCnabDocument(lines)).toThrow(
-        "combinação banco '341' + formato 'CNAB400' ainda não suportada"
-      )
+  describe('Bradesco CNAB 240', () => {
+    test('identifica quantidade correta de boletos no fixture', () => {
+      expect(openCnabDocument(loadFixture240()).boletoCount).toBe(3)
     })
-  })
 
-  describe('formato não suportado', () => {
-    test('lança CNABDocumentValidationError para Bradesco CNAB 240', () => {
-      const header = '237' + ' '.repeat(237)
-      const batchHeader = '1' + ' '.repeat(239)
-      const segmentP = '3' + ' '.repeat(11) + 'P' + ' '.repeat(227)
-      const segmentQ = '3' + ' '.repeat(11) + 'Q' + ' '.repeat(227)
-      const batchTrailer = '5' + ' '.repeat(239)
-      const trailer = '9' + ' '.repeat(239)
-      const lines = [header, batchHeader, segmentP, segmentQ, batchTrailer, trailer]
+    test('lê dados completos do primeiro boleto corretamente', () => {
+      const data = openCnabDocument(loadFixture240()).getBoleto(0).read()
 
-      expect(() => openCnabDocument(lines)).toThrow(
-        CNABDocumentValidationError
-      )
-      expect(() => openCnabDocument(lines)).toThrow(
-        "combinação banco '237' + formato 'CNAB240' ainda não suportada"
-      )
+      expect(data.nossoNumero).toBe('000123450010')
+      expect(data.numeroDocumento).toBe('NF0000123')
+      expect(data.vencimento).toEqual(new Date(2026, 11, 15))
+      expect(data.valor).toBe(100)
+      expect(data.dataEmissao).toEqual(new Date(2026, 11, 1))
+      expect(data.sacado.documento).toBe('10000791989')
+      expect(data.sacado.nome).toBe('JOAO EXEMPLO SILVA')
+      expect(data.sacado.endereco.logradouro).toBe('RUA EXEMPLO 123')
+      expect(data.sacado.endereco.cep).toBe('01234567')
+    })
+
+    test('lê dados de múltiplos boletos corretamente', () => {
+      const doc = openCnabDocument(loadFixture240())
+
+      expect(doc.getBoleto(1).read().numeroDocumento).toBe('NF0000124')
+      expect(doc.getBoleto(1).read().valor).toBe(250)
+      expect(doc.getBoleto(2).read().numeroDocumento).toBe('NF0000125')
+      expect(doc.getBoleto(2).read().valor).toBe(500)
+    })
+
+    test('readAll retorna dados corretos para todos os boletos', () => {
+      const results = openCnabDocument(loadFixture240()).readAll()
+
+      expect(results).toHaveLength(3)
+      expect(results.every((r) => r.success)).toBe(true)
+
+      const first = results[0].data as any
+      expect(first.numeroDocumento).toBe('NF0000123')
+      expect(first.valor).toBe(100)
+
+      const last = results[2].data as any
+      expect(last.numeroDocumento).toBe('NF0000125')
+      expect(last.valor).toBe(500)
+    })
+
+    test('boletos com campo extra carteira são processados corretamente', () => {
+      const data = openCnabDocument(loadFixture240()).getBoleto(0).readFull()
+      expect(data.extra?.carteira).toBe('001')
     })
   })
 
   describe('arquivo inválido', () => {
-    test('propaga erro de detectFormat para linhas vazias', () => {
-      expect(() => openCnabDocument([])).toThrow()
+    test('linhas vazias lançam CNABNoLinesProvidedError', () => {
+      expect(() => openCnabDocument([])).toThrow(CNABNoLinesProvidedError)
     })
 
-    test('propaga erro de validação estrutural', () => {
-      const header = '0' + ' '.repeat(399)
+    test('linha interna com tamanho errado: construção passa, getBoleto lança', () => {
+      const header = '0' + ' '.repeat(75) + '237' + ' '.repeat(321)
       const invalidDetail = '1' + ' '.repeat(299)
       const trailer = '9' + ' '.repeat(399)
-      const lines = [header, invalidDetail, trailer]
 
-      expect(() => openCnabDocument(lines)).toThrow()
+      const doc = openCnabDocument([header, invalidDetail, trailer])
+      expect(doc.boletoCount).toBe(1)
+
+      expect(() => doc.getBoleto(0)).toThrow(CNABBoletoValidationError)
+      expect(() => doc.getBoleto(0)).toThrow('linha deve ter 400 caracteres, tem 300')
     })
   })
 })
