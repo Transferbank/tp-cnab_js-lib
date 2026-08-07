@@ -1,11 +1,10 @@
 import { CnabDocument, BoletoRange } from './cnab-document'
-import { CnabBoleto } from '@/types/boleto/cnab-boleto'
+import { CnabBoleto, BoletoReadResult } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import {
   CNABBoletoNotFoundError,
   CNABDocumentValidationError
 } from '@/types/errors/field-errors'
-import { BoletoCnabData } from '@/types/read/boleto-cnab-data'
 
 class MockCnabBoleto extends CnabBoleto {
   protected get bankCode(): string {
@@ -31,20 +30,23 @@ class MockCnabBoleto extends CnabBoleto {
   private static readonly EMPTY_EXTRA_FIELDS: any[] = []
   protected get extraFields() { return MockCnabBoleto.EMPTY_EXTRA_FIELDS }
 
-  readSimple(): BoletoCnabData {
+  readSimple(): BoletoReadResult {
     return {
-      nossoNumero: 'mock-001',
-      numeroDocumento: 'DOC-001',
-      vencimento: new Date('2026-12-31'),
-      valor: 100.0,
-      dataEmissao: new Date('2026-01-01'),
-      desconto: { valor: 0 },
-      abatimento: { valor: 0 },
-      sacado: {
-        documento: '12345678900',
-        nome: 'Mock Sacado',
-        endereco: { logradouro: 'Rua Mock', cep: '12345-678' },
+      data: {
+        nossoNumero: 'mock-001',
+        numeroDocumento: 'DOC-001',
+        vencimento: new Date('2026-12-31'),
+        valor: 100.0,
+        dataEmissao: new Date('2026-01-01'),
+        desconto: { valor: 0 },
+        abatimento: { valor: 0 },
+        sacado: {
+          documento: '12345678900',
+          nome: 'Mock Sacado',
+          endereco: { logradouro: 'Rua Mock', cep: '12345-678' },
+        },
       },
+      errors: []
     }
   }
 }
@@ -223,7 +225,7 @@ describe('CnabDocument', () => {
       class FailingBoleto extends MockCnabBoleto {
         private static callCount = 0
 
-        readSimple(): BoletoCnabData {
+        readSimple(): BoletoReadResult {
           FailingBoleto.callCount++
           if (FailingBoleto.callCount === 2) {
             throw new Error('Erro no boleto 2')
@@ -283,6 +285,82 @@ describe('CnabDocument', () => {
       expect(() => doc.testThrowDocError('tipo inválido', 5)).toThrow(
         'Arquivo inválido (linha 6): tipo inválido'
       )
+    })
+  })
+
+  describe('coleta de erros parciais', () => {
+    test('erro de campo em um boleto não interrompe leitura dos demais', () => {
+      class BoletoWithFieldError extends MockCnabBoleto {
+        private readonly index: number
+        private static instanceCount = 0
+
+        constructor(lines: string[]) {
+          super(lines)
+          this.index = BoletoWithFieldError.instanceCount++
+        }
+
+        readSimple(): BoletoReadResult {
+          const result = super.readSimple()
+          
+          // Simula erro de campo no segundo boleto (índice 1)
+          if (this.index === 1) {
+            const { CNABFieldValidationError } = require('@/types/errors/field-errors')
+            return {
+              data: {
+                nossoNumero: result.data.nossoNumero,
+                numeroDocumento: result.data.numeroDocumento,
+                // vencimento omitido (campo com erro)
+                valor: result.data.valor,
+                dataEmissao: result.data.dataEmissao,
+                desconto: result.data.desconto,
+                abatimento: result.data.abatimento,
+                sacado: result.data.sacado,
+              },
+              errors: [
+                new CNABFieldValidationError('vencimento', 'INVALID_DATE', 'data inválida')
+              ]
+            }
+          }
+          
+          // Boletos 0 e 2 retornam sucesso
+          return result
+        }
+      }
+
+      const lines = createLines(10)
+      const doc = new TestCnabDocument(lines, {
+        boletoClass: BoletoWithFieldError as any,
+        ranges: [
+          { startLine: 1, endLine: 3 },  // Boleto 0
+          { startLine: 3, endLine: 5 },  // Boleto 1 (com erro de campo)
+          { startLine: 5, endLine: 7 },  // Boleto 2
+        ],
+      })
+
+      const results = doc.readAll()
+
+      expect(results).toHaveLength(3)
+
+      // Boleto 0: sucesso completo
+      expect(results[0].success).toBe(true)
+      expect(results[0].fieldErrors).toBeUndefined()
+      expect(results[0].data).toBeDefined()
+      expect((results[0].data as any).nossoNumero).toBe('mock-001')
+
+      // Boleto 1: falha com erro de campo
+      expect(results[1].success).toBe(false)
+      expect(results[1].fieldErrors).toBeDefined()
+      expect(results[1].fieldErrors).toHaveLength(1)
+      expect(results[1].fieldErrors![0].field).toBe('vencimento')
+      expect(results[1].data).toBeDefined() // Dados parciais presentes
+      expect((results[1].data as any).nossoNumero).toBe('mock-001')
+      expect((results[1].data as any).numeroDocumento).toBe('DOC-001')
+
+      // Boleto 2: sucesso completo (não foi afetado pelo erro do boleto 1)
+      expect(results[2].success).toBe(true)
+      expect(results[2].fieldErrors).toBeUndefined()
+      expect(results[2].data).toBeDefined()
+      expect((results[2].data as any).nossoNumero).toBe('mock-001')
     })
   })
 })

@@ -1,8 +1,7 @@
 ﻿import { CnabDocument400 } from './cnab-document-400'
-import { CnabBoleto } from '@/types/boleto/cnab-boleto'
+import { CnabBoleto, BoletoReadResult } from '@/types/boleto/cnab-boleto'
 import { BANK_CODES } from '@/types/bank/bank-codes'
 import { CNABDocumentValidationError } from '@/types/errors/field-errors'
-import { BoletoCnabData } from '@/types/read/boleto-cnab-data'
 
 class MockCnabBoleto extends CnabBoleto {
   protected get bankCode(): string {
@@ -28,20 +27,23 @@ class MockCnabBoleto extends CnabBoleto {
   private static readonly EMPTY_EXTRA_FIELDS: any[] = []
   protected get extraFields() { return MockCnabBoleto.EMPTY_EXTRA_FIELDS }
 
-  readSimple(): BoletoCnabData {
+  readSimple(): BoletoReadResult {
     return {
-      nossoNumero: 'mock-001',
-      numeroDocumento: 'DOC-001',
-      vencimento: new Date('2026-12-31'),
-      valor: 100.0,
-      dataEmissao: new Date('2026-01-01'),
-      desconto: { valor: 0 },
-      abatimento: { valor: 0 },
-      sacado: {
-        documento: '12345678900',
-        nome: 'Mock Sacado',
-        endereco: { logradouro: 'Rua Mock', cep: '12345-678' },
+      data: {
+        nossoNumero: 'mock-001',
+        numeroDocumento: 'DOC-001',
+        vencimento: new Date('2026-12-31'),
+        valor: 100.0,
+        dataEmissao: new Date('2026-01-01'),
+        desconto: { valor: 0 },
+        abatimento: { valor: 0 },
+        sacado: {
+          documento: '12345678900',
+          nome: 'Mock Sacado',
+          endereco: { logradouro: 'Rua Mock', cep: '12345-678' },
+        },
       },
+      errors: []
     }
   }
 }
