@@ -1,4 +1,4 @@
-import { CnabDocumentBradesco400 } from './cnab-document-bradesco-400'
+﻿import { CnabDocumentBradesco400 } from './cnab-document-bradesco-400'
 import { BoletoBradesco400 } from '@/banks/bradesco/boletos/boleto-bradesco-400'
 
 describe('CnabDocumentBradesco400', () => {
@@ -24,13 +24,13 @@ describe('CnabDocumentBradesco400', () => {
       const lines = createValidDocument()
       
       expect(() => {
-        new CnabDocumentBradesco400(lines, BoletoBradesco400)
+        new CnabDocumentBradesco400(lines)
       }).not.toThrow()
     })
 
     test('identifica quantidade correta de boletos', () => {
       const lines = createValidDocument()
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       expect(doc.boletoCount).toBe(2)
     })
@@ -39,7 +39,7 @@ describe('CnabDocumentBradesco400', () => {
   describe('getBoleto', () => {
     test('retorna instância de BoletoBradesco400', () => {
       const lines = createValidDocument()
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       const boleto = doc.getBoleto(0)
       expect(boleto).toBeInstanceOf(BoletoBradesco400)
@@ -47,7 +47,7 @@ describe('CnabDocumentBradesco400', () => {
 
     test('tipo retornado é BoletoBradesco400 (type safety)', () => {
       const lines = createValidDocument()
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       const boleto = doc.getBoleto(0)
       
@@ -59,7 +59,7 @@ describe('CnabDocumentBradesco400', () => {
 
     test('cada boleto pode ser lido individualmente', () => {
       const lines = createValidDocument()
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       const boleto0 = doc.getBoleto(0)
       const boleto1 = doc.getBoleto(1)
@@ -71,7 +71,7 @@ describe('CnabDocumentBradesco400', () => {
 
     test('boleto retornado pode ser lido com sucesso', () => {
       const lines = createValidDocument()
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       const boleto = doc.getBoleto(0)
       const data = boleto.read()
@@ -88,7 +88,7 @@ describe('CnabDocumentBradesco400', () => {
       const boletoLine = '100000000000000000000009000881234567425.159185.03             0002020009100010629P00000000002N           0  01NF82760-0324082600000022560930000000001N250526000000000000022560000000000000000000000000000000000000000000000220000000997330COMERCIAL ALFA LTDA                     AV EXEMPLO 200                                      29045402APOS 5 DIAS DE VENCIMENTO PROTESTAR!  REF NF(S): 082760  COB000002'
       
       const lines = [header, boletoLine, trailer]
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       expect(doc.boletoCount).toBe(1)
       
@@ -101,7 +101,7 @@ describe('CnabDocumentBradesco400', () => {
   describe('readAll', () => {
     test('processa todos os boletos do documento', () => {
       const lines = createValidDocument()
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       const results = doc.readAll()
       
@@ -121,10 +121,11 @@ describe('CnabDocumentBradesco400', () => {
       const trailer = '9' + '9'.repeat(399)
       const lines = [header, trailer]
       
-      const doc = new CnabDocumentBradesco400(lines, BoletoBradesco400)
+      const doc = new CnabDocumentBradesco400(lines)
       
       expect(doc.boletoCount).toBe(0)
       expect(doc.readAll()).toEqual([])
     })
   })
 })
+

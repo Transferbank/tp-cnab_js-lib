@@ -23,10 +23,7 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
   protected readonly rawLines: string[]
   private readonly boletoRanges: BoletoRange[]
 
-  constructor(
-    rawLines: string[],
-    private readonly BoletoClass: new (lines: string[]) => TBoleto
-  ) {
+  constructor(rawLines: string[]) {
     this.rawLines = rawLines
     this.validateHeader()
     this.validateTrailer()
@@ -36,6 +33,7 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
   protected abstract validateHeader(): void
   protected abstract validateTrailer(): void
   protected abstract groupBoletos(): BoletoRange[]
+  protected abstract get BoletoClass(): new (lines: string[]) => TBoleto
 
   protected throwDocError(reason: string, lineNumber?: number): never {
     throw new CNABDocumentValidationError(reason, lineNumber)

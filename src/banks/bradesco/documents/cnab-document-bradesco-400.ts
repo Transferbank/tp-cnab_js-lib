@@ -6,4 +6,8 @@ export class CnabDocumentBradesco400 extends CnabDocument400<BoletoBradesco400> 
   protected get bankCode(): string {
     return BANK_CODES.BRADESCO
   }
+
+  protected get BoletoClass(): new (lines: string[]) => BoletoBradesco400 {
+    return BoletoBradesco400
+  }
 }

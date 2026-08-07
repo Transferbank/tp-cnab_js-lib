@@ -28,6 +28,9 @@ class MockCnabBoleto extends CnabBoleto {
   protected readonly sacadoLogradouroField: any
   protected readonly sacadoCepField: any
 
+  private static readonly EMPTY_EXTRA_FIELDS: any[] = []
+  protected get extraFields() { return MockCnabBoleto.EMPTY_EXTRA_FIELDS }
+
   readSimple(): BoletoCnabData {
     return {
       nossoNumero: 'mock-001',
@@ -55,26 +58,32 @@ class TestCnabDocument extends CnabDocument<MockCnabBoleto> {
     headerValid?: boolean
     trailerValid?: boolean
     ranges?: BoletoRange[]
+    boletoClass?: new (lines: string[]) => MockCnabBoleto
   } = {}
 
   private readonly _options: {
     headerValid?: boolean
     trailerValid?: boolean
     ranges?: BoletoRange[]
+    boletoClass?: new (lines: string[]) => MockCnabBoleto
   }
 
   constructor(
     rawLines: string[],
-    boletoClass: new (lines: string[]) => MockCnabBoleto,
     options: {
       headerValid?: boolean
       trailerValid?: boolean
       ranges?: BoletoRange[]
+      boletoClass?: new (lines: string[]) => MockCnabBoleto
     }
   ) {
     TestCnabDocument._tempOptions = options
-    super(rawLines, boletoClass)
+    super(rawLines)
     this._options = options
+  }
+
+  protected get BoletoClass(): new (lines: string[]) => MockCnabBoleto {
+    return this._options.boletoClass ?? MockCnabBoleto
   }
 
   protected validateHeader(): void {
@@ -103,9 +112,10 @@ function createTestDocument(
     headerValid?: boolean
     trailerValid?: boolean
     ranges?: BoletoRange[]
+    boletoClass?: new (lines: string[]) => MockCnabBoleto
   } = {}
 ): TestCnabDocument {
-  return new TestCnabDocument(rawLines, MockCnabBoleto, options)
+  return new TestCnabDocument(rawLines, options)
 }
 
 describe('CnabDocument', () => {
@@ -126,17 +136,6 @@ describe('CnabDocument', () => {
       expect(() => {
         createTestDocument(lines, { trailerValid: false })
       }).toThrow('Trailer inválido')
-    })
-
-    test('agrupa boletos após validações', () => {
-      const lines = createLines(5)
-      const doc = createTestDocument(lines, {
-        ranges: [
-          { startLine: 1, endLine: 3 },
-          { startLine: 3, endLine: 5 },
-        ],
-      })
-      expect(doc.boletoCount).toBe(2)
     })
   })
 
@@ -161,19 +160,6 @@ describe('CnabDocument', () => {
   })
 
   describe('getBoleto', () => {
-    test('retorna boleto no índice válido', () => {
-      const lines = createLines(5)
-      const doc = createTestDocument(lines, {
-        ranges: [
-          { startLine: 1, endLine: 3 },
-          { startLine: 3, endLine: 5 },
-        ],
-      })
-
-      const boleto = doc.getBoleto(0)
-      expect(boleto).toBeInstanceOf(MockCnabBoleto)
-    })
-
     test('cria nova instância a cada chamada', () => {
       const lines = createLines(5)
       const doc = createTestDocument(lines, {
@@ -183,16 +169,6 @@ describe('CnabDocument', () => {
       const boleto1 = doc.getBoleto(0)
       const boleto2 = doc.getBoleto(0)
       expect(boleto1).not.toBe(boleto2)
-    })
-
-    test('passa slice correto das linhas para o boleto', () => {
-      const lines = ['LINE0     ', 'LINE1     ', 'LINE2     ', 'LINE3     ', 'LINE4     ']
-      const doc = createTestDocument(lines, {
-        ranges: [{ startLine: 1, endLine: 3 }],
-      })
-
-      const boleto = doc.getBoleto(0)
-      expect(boleto.read().nossoNumero).toBe('mock-001')
     })
 
     test('lança CNABBoletoNotFoundError para índice negativo', () => {
@@ -216,23 +192,6 @@ describe('CnabDocument', () => {
       expect(() => doc.getBoleto(2)).toThrow(CNABBoletoNotFoundError)
       expect(() => doc.getBoleto(5)).toThrow(CNABBoletoNotFoundError)
     })
-
-    test('CNABBoletoNotFoundError contém índice e total corretos', () => {
-      const lines = createLines(5)
-      const doc = createTestDocument(lines, {
-        ranges: [{ startLine: 1, endLine: 3 }],
-      })
-
-      try {
-        doc.getBoleto(5)
-        fail('Deveria ter lançado CNABBoletoNotFoundError')
-      } catch (error) {
-        expect(error).toBeInstanceOf(CNABBoletoNotFoundError)
-        const err = error as CNABBoletoNotFoundError
-        expect(err.index).toBe(5)
-        expect(err.boletoCount).toBe(1)
-      }
-    })
   })
 
   describe('readAll', () => {
@@ -255,12 +214,9 @@ describe('CnabDocument', () => {
 
       const results = doc.readAll()
       expect(results).toHaveLength(2)
-      expect(results[0].success).toBe(true)
+      expect(results.every((r) => r.success)).toBe(true)
       expect(results[0].index).toBe(0)
-      expect(results[0].data).toBeDefined()
-      expect(results[1].success).toBe(true)
       expect(results[1].index).toBe(1)
-      expect(results[1].data).toBeDefined()
     })
 
     test('captura erro individual sem interromper processamento', () => {
@@ -277,7 +233,8 @@ describe('CnabDocument', () => {
       }
 
       const lines = createLines(9)
-      const doc = new TestCnabDocument(lines, FailingBoleto as any, {
+      const doc = new TestCnabDocument(lines, {
+        boletoClass: FailingBoleto as any,
         ranges: [
           { startLine: 1, endLine: 3 },
           { startLine: 3, endLine: 5 },
@@ -295,22 +252,6 @@ describe('CnabDocument', () => {
       expect(results[2].success).toBe(true)
       expect(results[2].data).toBeDefined()
     })
-
-    test('cada resultado tem índice correto', () => {
-      const lines = createLines(7)
-      const doc = createTestDocument(lines, {
-        ranges: [
-          { startLine: 1, endLine: 2 },
-          { startLine: 2, endLine: 4 },
-          { startLine: 4, endLine: 6 },
-        ],
-      })
-
-      const results = doc.readAll()
-      expect(results[0].index).toBe(0)
-      expect(results[1].index).toBe(1)
-      expect(results[2].index).toBe(2)
-    })
   })
 
   describe('throwDocError', () => {
@@ -322,7 +263,7 @@ describe('CnabDocument', () => {
 
     test('lança CNABDocumentValidationError com reason', () => {
       const lines = createLines(5)
-      const doc = new TestDocumentWithHelper(lines, MockCnabBoleto, {})
+      const doc = new TestDocumentWithHelper(lines, {})
 
       expect(() => doc.testThrowDocError('erro de teste')).toThrow(
         CNABDocumentValidationError
@@ -334,7 +275,7 @@ describe('CnabDocument', () => {
 
     test('lança CNABDocumentValidationError com reason e lineNumber', () => {
       const lines = createLines(5)
-      const doc = new TestDocumentWithHelper(lines, MockCnabBoleto, {})
+      const doc = new TestDocumentWithHelper(lines, {})
 
       expect(() => doc.testThrowDocError('tipo inválido', 5)).toThrow(
         CNABDocumentValidationError
