@@ -1,6 +1,6 @@
 import { BoletoBradesco400 } from './boleto-bradesco-400'
 import { ReadMode } from '@/types/core/read-mode'
-import { CNABFieldNotFoundError } from '@/types/errors/field-errors'
+import { CNABBoletoValidationError, CNABFieldNotFoundError } from '@/types/errors/field-errors'
 
 describe('BoletoBradesco400', () => {
   const createValidLines = (): string[] => {
@@ -17,22 +17,33 @@ describe('BoletoBradesco400', () => {
       expect(() => new BoletoBradesco400(rawContent)).not.toThrow()
     })
 
-    test('rejeita array vazio', () => {
-      expect(() => new BoletoBradesco400([])).toThrow('boleto deve conter pelo menos uma linha')
+    test('captura erro de array vazio', () => {
+      const boleto = new BoletoBradesco400([])
+      const result = boleto.read()
+      
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain('boleto deve conter pelo menos uma linha')
     })
 
-    test('rejeita linha com tamanho incorreto', () => {
+    test('captura erro de linha com tamanho incorreto', () => {
       const invalidRawContent = ['linha curta']
+      const boleto = new BoletoBradesco400(invalidRawContent)
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco400(invalidRawContent)).toThrow('linha deve ter 400 caracteres')
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain('linha deve ter 400 caracteres')
     })
 
-    test('rejeita primeira linha que não é detalhe tipo 1', () => {
+    test('captura erro de primeira linha que não é detalhe tipo 1', () => {
       const invalidFirstLine = '0' + 'X'.repeat(399)
+      const boleto = new BoletoBradesco400([invalidFirstLine])
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco400([invalidFirstLine])).toThrow(
-        "primeira linha deve ser registro detalhe (tipo '1'), encontrado tipo '0'"
-      )
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain("primeira linha deve ser registro detalhe (tipo '1'), encontrado tipo '0'")
     })
 
     test('aceita boleto com múltiplas linhas começando com tipo 1', () => {
@@ -42,13 +53,15 @@ describe('BoletoBradesco400', () => {
       expect(() => new BoletoBradesco400([line1, line2])).not.toThrow()
     })
 
-    test('rejeita boleto começando com tipo header (0)', () => {
+    test('captura erro de boleto começando com tipo header (0)', () => {
       const headerLine = '0' + '0'.repeat(399)
       const detailLine = '1' + 'X'.repeat(399)
+      const boleto = new BoletoBradesco400([headerLine, detailLine])
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco400([headerLine, detailLine])).toThrow(
-        "primeira linha deve ser registro detalhe (tipo '1'), encontrado tipo '0'"
-      )
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain("primeira linha deve ser registro detalhe (tipo '1'), encontrado tipo '0'")
     })
 
     test('aceita linha satélite tipo 2', () => {
@@ -65,22 +78,26 @@ describe('BoletoBradesco400', () => {
       expect(() => new BoletoBradesco400([line1, line2])).not.toThrow()
     })
 
-    test('rejeita linha satélite tipo inválido', () => {
+    test('captura erro de linha satélite tipo inválido', () => {
       const line1 = '1' + 'X'.repeat(399)
       const line2 = '7' + 'Y'.repeat(399)
+      const boleto = new BoletoBradesco400([line1, line2])
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco400([line1, line2])).toThrow(
-        "linha 1: tipo '7' não é satélite reconhecido para este banco"
-      )
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain("linha 1: tipo '7' não é satélite reconhecido para este banco")
     })
 
-    test('rejeita linha satélite tipo 9 (trailer)', () => {
+    test('captura erro de linha satélite tipo 9 (trailer)', () => {
       const line1 = '1' + 'X'.repeat(399)
       const line2 = '9' + 'Y'.repeat(399)
+      const boleto = new BoletoBradesco400([line1, line2])
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco400([line1, line2])).toThrow(
-        "linha 1: tipo '9' não é satélite reconhecido para este banco"
-      )
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain("linha 1: tipo '9' não é satélite reconhecido para este banco")
     })
   })
 

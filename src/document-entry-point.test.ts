@@ -179,7 +179,7 @@ describe('openCnabDocument', () => {
       expect(() => openCnabDocument([])).toThrow(CNABNoLinesProvidedError)
     })
 
-    test('linha interna com tamanho errado: construção passa, getBoleto lança', () => {
+    test('linha interna com tamanho errado: construção passa, boleto captura erro estrutural', () => {
       const header = '0' + ' '.repeat(75) + '237' + ' '.repeat(321)
       const invalidDetail = '1' + ' '.repeat(299)
       const trailer = '9' + ' '.repeat(399)
@@ -187,8 +187,11 @@ describe('openCnabDocument', () => {
       const doc = openCnabDocument([header, invalidDetail, trailer])
       expect(doc.boletoCount).toBe(1)
 
-      expect(() => doc.getBoleto(0)).toThrow(CNABBoletoValidationError)
-      expect(() => doc.getBoleto(0)).toThrow('linha deve ter 400 caracteres, tem 300')
+      const result = doc.getBoleto(0).read()
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain('linha deve ter 400 caracteres, tem 300')
+      expect(result.data).toEqual({})
     })
   })
 })

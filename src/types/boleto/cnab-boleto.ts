@@ -18,11 +18,12 @@ export type BoletoFieldName =
 
 export interface BoletoReadResult {
   data: PartialBoletoCnabData
-  errors: CNABFieldValidationError[]
+  errors: (CNABFieldValidationError | CNABBoletoValidationError)[]
 }
 
 export abstract class CnabBoleto {
   private readonly rawContent: string[]
+  private readonly structuralError: CNABBoletoValidationError | null
   private _fieldMap?: Record<BoletoFieldName, CnabField<CnabFieldValue>>
   
   protected abstract get bankCode(): string
@@ -43,8 +44,20 @@ export abstract class CnabBoleto {
   protected abstract get extraFields(): CnabField<CnabFieldValue>[]
 
   constructor(rawContent: string[]) {
-    this.validateStructure(rawContent)
     this.rawContent = rawContent
+    this.structuralError = this.captureStructuralError(rawContent)
+  }
+
+  private captureStructuralError(rawContent: string[]): CNABBoletoValidationError | null {
+    try {
+      this.validateStructure(rawContent)
+      return null
+    } catch (e) {
+      if (e instanceof CNABBoletoValidationError) {
+        return e
+      }
+      throw e
+    }
   }
 
   private get fieldMap(): Record<BoletoFieldName, CnabField<CnabFieldValue>> {
@@ -88,7 +101,7 @@ export abstract class CnabBoleto {
     throw new CNABBoletoValidationError(reason, lineNumber)
   }
 
-  private tryRead<V>(field: CnabField<V>, errors: CNABFieldValidationError[]): V | undefined {
+  private tryRead<V>(field: CnabField<V>, errors: (CNABFieldValidationError | CNABBoletoValidationError)[]): V | undefined {
     try {
       return field.read(this.rawContent)
     } catch (e) {
@@ -101,8 +114,13 @@ export abstract class CnabBoleto {
   }
 
   readSimple(): BoletoReadResult {
-    const errors: CNABFieldValidationError[] = []
+    const errors: (CNABFieldValidationError | CNABBoletoValidationError)[] = []
     const data: PartialBoletoCnabData = {}
+    
+    if (this.structuralError != null) {
+      errors.push(this.structuralError)
+      return { data, errors }
+    }
 
     data.nossoNumero = this.tryRead(this.nossoNumeroField, errors)
     data.numeroDocumento = this.tryRead(this.numeroDocumentoField, errors)
@@ -153,6 +171,10 @@ export abstract class CnabBoleto {
   }
 
   readFull(): BoletoReadResult {
+    if (this.structuralError != null) {
+      return { data: {}, errors: [this.structuralError] }
+    }
+    
     const { data, errors } = this.readSimple()
 
     for (const field of this.extraFields) {
@@ -167,6 +189,10 @@ export abstract class CnabBoleto {
   }
 
   readField(fieldName: BoletoFieldName): CnabFieldValue {
+    if (this.structuralError != null) {
+      throw this.structuralError
+    }
+    
     const field = this.fieldMap[fieldName]
     
     if (field == null) {
@@ -177,6 +203,10 @@ export abstract class CnabBoleto {
   }
 
   readExtraField(fieldKey: string): CnabFieldValue {
+    if (this.structuralError != null) {
+      throw this.structuralError
+    }
+    
     const extraField = this.extraFields.find(field => field.fieldKey === fieldKey)
     
     if (extraField == null) {

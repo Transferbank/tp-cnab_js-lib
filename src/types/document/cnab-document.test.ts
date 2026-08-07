@@ -3,7 +3,8 @@ import { CnabBoleto, BoletoReadResult } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import {
   CNABBoletoNotFoundError,
-  CNABDocumentValidationError
+  CNABDocumentValidationError,
+  CNABFieldValidationError
 } from '@/types/errors/field-errors'
 
 class MockCnabBoleto extends CnabBoleto {
@@ -393,22 +394,22 @@ describe('CnabDocument', () => {
 
       // Boleto 0: sucesso completo
       expect(results[0].success).toBe(true)
-      expect(results[0].fieldErrors).toBeUndefined()
+      expect(results[0].errors).toBeUndefined()
       expect(results[0].data).toBeDefined()
       expect((results[0].data as any).nossoNumero).toBe('mock-001')
 
       // Boleto 1: falha com erro de campo
       expect(results[1].success).toBe(false)
-      expect(results[1].fieldErrors).toBeDefined()
-      expect(results[1].fieldErrors).toHaveLength(1)
-      expect(results[1].fieldErrors![0].field).toBe('vencimento')
+      expect(results[1].errors).toBeDefined()
+      expect(results[1].errors).toHaveLength(1)
+      expect((results[1].errors![0] as CNABFieldValidationError).field).toBe('vencimento')
       expect(results[1].data).toBeDefined() // Dados parciais presentes
       expect((results[1].data as any).nossoNumero).toBe('mock-001')
       expect((results[1].data as any).numeroDocumento).toBe('DOC-001')
 
       // Boleto 2: sucesso completo (não foi afetado pelo erro do boleto 1)
       expect(results[2].success).toBe(true)
-      expect(results[2].fieldErrors).toBeUndefined()
+      expect(results[2].errors).toBeUndefined()
       expect(results[2].data).toBeDefined()
       expect((results[2].data as any).nossoNumero).toBe('mock-001')
     })

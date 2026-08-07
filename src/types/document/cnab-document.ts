@@ -2,6 +2,7 @@ import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import {
   CNABBoletoNotFoundError,
+  CNABBoletoValidationError,
   CNABDocumentValidationError,
   CNABFieldValidationError
 } from '@/types/errors/field-errors'
@@ -15,7 +16,7 @@ export interface BoletoResult<T = unknown> {
   index: number
   success: boolean
   data?: Partial<T>
-  fieldErrors?: CNABFieldValidationError[]
+  errors?: (CNABFieldValidationError | CNABBoletoValidationError)[]
   error?: Error
 }
 
@@ -79,7 +80,7 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
           index: i,
           success,
           data: readResult.data,
-          fieldErrors: readResult.errors.length > 0 ? readResult.errors : undefined
+          errors: readResult.errors.length > 0 ? readResult.errors : undefined
         })
       } catch (error) {
         results.push({ index: i, success: false, error: error as Error })

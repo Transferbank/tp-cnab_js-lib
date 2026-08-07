@@ -1,5 +1,6 @@
 import { BoletoBradesco240 } from './boleto-bradesco-240'
 import { ReadMode } from '@/types/core/read-mode'
+import { CNABBoletoValidationError } from '@/types/errors/field-errors'
 import * as fs from 'fs'
 import * as path from 'path'
 
@@ -27,40 +28,55 @@ describe('BoletoBradesco240', () => {
       expect(() => new BoletoBradesco240(segments)).not.toThrow()
     })
 
-    test('rejeita array vazio', () => {
-      expect(() => new BoletoBradesco240([])).toThrow('boleto deve conter pelo menos uma linha')
+    test('captura erro de array vazio', () => {
+      const boleto = new BoletoBradesco240([])
+      const result = boleto.read()
+      
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain('boleto deve conter pelo menos uma linha')
     })
 
-    test('rejeita array com menos de 2 linhas', () => {
+    test('captura erro de array com menos de 2 linhas', () => {
       const singleLine = [' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + ' '.repeat(226)]
+      const boleto = new BoletoBradesco240(singleLine)
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco240(singleLine)).toThrow(
-        'boleto CNAB 240 deve conter pelo menos 2 linhas'
-      )
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain('boleto CNAB 240 deve conter pelo menos 2 linhas')
     })
 
-    test('rejeita linha com tamanho incorreto', () => {
+    test('captura erro de linha com tamanho incorreto', () => {
       const invalidLines = ['linha curta', 'outra linha']
+      const boleto = new BoletoBradesco240(invalidLines)
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco240(invalidLines)).toThrow('linha deve ter 240 caracteres')
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain('linha deve ter 240 caracteres')
     })
 
-    test('rejeita primeira linha que não é Segmento P', () => {
+    test('captura erro de primeira linha que não é Segmento P', () => {
       const invalidP = ' '.repeat(7) + '3' + ' '.repeat(5) + 'Q' + ' '.repeat(226)
       const validQ = ' '.repeat(7) + '3' + ' '.repeat(5) + 'Q' + ' '.repeat(226)
+      const boleto = new BoletoBradesco240([invalidP, validQ])
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco240([invalidP, validQ])).toThrow(
-        "primeira linha deve ser Segmento P (tipo '3', segmento 'P')"
-      )
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain("primeira linha deve ser Segmento P (tipo '3', segmento 'P')")
     })
 
-    test('rejeita segunda linha que não é Segmento Q', () => {
+    test('captura erro de segunda linha que não é Segmento Q', () => {
       const validP = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + ' '.repeat(226)
       const invalidQ = ' '.repeat(7) + '3' + ' '.repeat(5) + 'P' + ' '.repeat(226)
+      const boleto = new BoletoBradesco240([validP, invalidQ])
+      const result = boleto.read()
       
-      expect(() => new BoletoBradesco240([validP, invalidQ])).toThrow(
-        "segunda linha deve ser Segmento Q (tipo '3', segmento 'Q')"
-      )
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CNABBoletoValidationError)
+      expect(result.errors[0].message).toContain("segunda linha deve ser Segmento Q (tipo '3', segmento 'Q')")
     })
 
     test('aceita boleto com segmentos opcionais (P+Q+R+S)', () => {
