@@ -1,9 +1,8 @@
-import { CnabDocument, BoletoRange } from './cnab-document'
+import { CnabDocument, BoletoRange } from '../cnab-document'
 import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import { getGroupingRule } from '@/grouping/grouping-rules'
 import { getCnab400RecordType } from '@/parser/position-reader'
-import { CNABDocumentValidationError } from '@/types/errors/field-errors'
 
 export abstract class CnabDocument400<
   TBoleto extends CnabBoleto = CnabBoleto
@@ -21,7 +20,7 @@ export abstract class CnabDocument400<
     label: string
   ): void {
     if (line.length !== 400) {
-      throw new CNABDocumentValidationError(
+      this.throwDocError(
         `${label} deve ter 400 caracteres, tem ${line.length}`,
         lineNumber
       )
@@ -29,7 +28,7 @@ export abstract class CnabDocument400<
 
     const recordType = getCnab400RecordType(line)
     if (recordType !== expectedType) {
-      throw new CNABDocumentValidationError(
+      this.throwDocError(
         `${label} deve ser tipo '${expectedType}', encontrado '${recordType}'`,
         lineNumber
       )
@@ -38,22 +37,15 @@ export abstract class CnabDocument400<
 
   protected validateHeader(): void {
     if (this.rawLines.length < 2) {
-      throw new CNABDocumentValidationError(
-        'arquivo deve ter pelo menos header e trailer'
-      )
+      this.throwDocError('arquivo deve ter pelo menos header e trailer')
     }
 
     this.validateStructuralLine(this.rawLines[0], 0, '0', 'header')
   }
 
   protected validateTrailer(): void {
-    const trailerLineNumber = this.rawLines.length - 1
-    this.validateStructuralLine(
-      this.rawLines[trailerLineNumber],
-      trailerLineNumber,
-      '9',
-      'trailer'
-    )
+    const lastIndex = this.rawLines.length - 1
+    this.validateStructuralLine(this.rawLines[lastIndex], lastIndex, '9', 'trailer')
   }
 
   protected groupBoletos(): BoletoRange[] {
@@ -74,19 +66,19 @@ export abstract class CnabDocument400<
         currentRange = { startLine: i, endLine: i + 1 }
       } else if (rule.optionalSatellites.includes(recordType)) {
         if (currentRange == null) {
-          throw new CNABDocumentValidationError(
+          this.throwDocError(
             `satélite tipo '${recordType}' sem núcleo precedente`,
             i
           )
         }
         currentRange.endLine = i + 1
       } else if (rule.structural.includes(recordType)) {
-        throw new CNABDocumentValidationError(
+        this.throwDocError(
           `tipo estrutural '${recordType}' não deve aparecer no corpo do arquivo`,
           i
         )
       } else {
-        throw new CNABDocumentValidationError(
+        this.throwDocError(
           `tipo de registro '${recordType}' não reconhecido para este banco`,
           i
         )
