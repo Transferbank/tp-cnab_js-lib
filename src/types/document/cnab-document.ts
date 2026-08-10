@@ -68,24 +68,34 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
     return new this.BoletoClass(lines)
   }
 
-  readAll(): BoletoResult[] {
-    const results: BoletoResult[] = []
-    for (let i = 0; i < this.boletoCount; i++) {
-      try {
-        const boleto = this.getBoleto(i)
-        const readResult = boleto.read()
-        
-        const success = readResult.errors.length === 0
-        results.push({
-          index: i,
-          success,
-          data: readResult.data,
-          errors: readResult.errors.length > 0 ? readResult.errors : undefined
-        })
-      } catch (error) {
-        results.push({ index: i, success: false, error: error as Error })
+  private readBoletoResult(index: number): BoletoResult {
+    try {
+      const boleto = this.getBoleto(index)
+      const readResult = boleto.read()
+
+      const success = readResult.errors.length === 0
+      return {
+        index,
+        success,
+        data: readResult.data,
+        errors: readResult.errors.length > 0 ? readResult.errors : undefined
       }
+    } catch (error) {
+      return { index, success: false, error: error as Error }
+    }
+  }
+
+  read(start: number, end: number): BoletoResult[] {
+    const from = Math.max(0, start)
+    const to = Math.min(end, this.boletoCount)
+    const results: BoletoResult[] = []
+    for (let i = from; i < to; i++) {
+      results.push(this.readBoletoResult(i))
     }
     return results
+  }
+
+  readAll(): BoletoResult[] {
+    return this.read(0, this.boletoCount)
   }
 }

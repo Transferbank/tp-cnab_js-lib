@@ -257,6 +257,89 @@ describe('CnabDocument', () => {
     })
   })
 
+  describe('read(start, end)', () => {
+    const createFourBoletoDocument = () => {
+      const lines = createLines(9)
+      return createTestDocument(lines, {
+        ranges: [
+          { startLine: 1, endLine: 2 },
+          { startLine: 2, endLine: 3 },
+          { startLine: 3, endLine: 4 },
+          { startLine: 4, endLine: 5 },
+        ],
+      })
+    }
+
+    test('retorna só o intervalo pedido, na ordem certa', () => {
+      const doc = createFourBoletoDocument()
+
+      const results = doc.read(1, 3)
+
+      expect(results).toHaveLength(2)
+      expect(results[0].index).toBe(1)
+      expect(results[1].index).toBe(2)
+    })
+
+    test('start === end retorna array vazio', () => {
+      const doc = createFourBoletoDocument()
+
+      expect(doc.read(2, 2)).toEqual([])
+    })
+
+    test('start negativo é tratado como 0', () => {
+      const doc = createFourBoletoDocument()
+
+      const results = doc.read(-5, 2)
+
+      expect(results).toHaveLength(2)
+      expect(results[0].index).toBe(0)
+      expect(results[1].index).toBe(1)
+    })
+
+    test('end além de boletoCount é limitado ao total', () => {
+      const doc = createFourBoletoDocument()
+
+      const results = doc.read(2, 999)
+
+      expect(results).toHaveLength(2)
+      expect(results[0].index).toBe(2)
+      expect(results[1].index).toBe(3)
+    })
+
+    test('read(0, boletoCount) se comporta como readAll()', () => {
+      const doc = createFourBoletoDocument()
+
+      expect(doc.read(0, doc.boletoCount)).toEqual(doc.readAll())
+    })
+
+    test('não constrói boletos fora do intervalo pedido', () => {
+      let constructedIndexes: number[] = []
+
+      class TrackingBoleto extends MockCnabBoleto {
+        constructor(lines: string[]) {
+          super(lines)
+          constructedIndexes.push(lines.length)
+        }
+      }
+
+      const lines = createLines(9)
+      const doc = new TestCnabDocument(lines, {
+        boletoClass: TrackingBoleto as any,
+        ranges: [
+          { startLine: 1, endLine: 2 },
+          { startLine: 2, endLine: 3 },
+          { startLine: 3, endLine: 4 },
+          { startLine: 4, endLine: 5 },
+        ],
+      })
+
+      constructedIndexes = []
+      doc.read(1, 2)
+
+      expect(constructedIndexes).toHaveLength(1)
+    })
+  })
+
   describe('throwDocError', () => {
     class TestDocumentWithHelper extends TestCnabDocument {
       public testThrowDocError(reason: string, lineNumber?: number): never {
