@@ -69,7 +69,7 @@ describe('getCnabFileClass', () => {
       
       const header = createValidBradesco400Header()
       const line = '1'.padEnd(400, ' ')
-      const trailer = '9'.padEnd(400, ' ')
+      const trailer = '9' + ' '.repeat(393) + '000003'
       const rawLines = [header, line, trailer]
       
       const document = new DocumentClass(rawLines)

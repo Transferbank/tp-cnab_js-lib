@@ -196,7 +196,7 @@ describe('openCnabFile', () => {
       // Header válido: tipo 0 + literais + código banco nas posições 76-79
       let header = '01REMESSA01COBRANCA       ' + ' '.repeat(50) + '237' + 'BRADESCO       ' + ' '.repeat(300) + '000001'
       const invalidDetail = '1' + ' '.repeat(299)
-      const trailer = '9' + ' '.repeat(399)
+      const trailer = '9' + ' '.repeat(393) + '000003'
 
       const invalidFile = new File([[header, invalidDetail, trailer].join('\n')], 'invalid.txt')
       const doc = await openCnabFile(invalidFile)

@@ -2,15 +2,6 @@ import { CnabFile400 } from '@/types/file/cnab400/cnab-file-400'
 import { BANK_CODES } from '@/types/bank/bank-codes'
 import { BoletoBradesco400 } from '@/banks/bradesco/boletos/boleto-bradesco-400'
 
-const HEADER_LITERALS: { start: number; end: number; expected: string; label: string }[] = [
-  { start: 1, end: 2, expected: '1', label: 'identificação do arquivo-remessa' },
-  { start: 2, end: 9, expected: 'REMESSA', label: 'literal remessa' },
-  { start: 9, end: 11, expected: '01', label: 'código de serviço' },
-  { start: 11, end: 26, expected: 'COBRANCA', label: 'literal serviço' },
-  { start: 79, end: 94, expected: 'BRADESCO', label: 'nome do banco por extenso' },
-  { start: 394, end: 400, expected: '000001', label: 'número sequencial do registro' },
-]
-
 export class CnabFileBradesco400 extends CnabFile400<BoletoBradesco400> {
   protected get bankCode(): string {
     return BANK_CODES.BRADESCO
@@ -24,14 +15,36 @@ export class CnabFileBradesco400 extends CnabFile400<BoletoBradesco400> {
     super.validateHeader()
 
     const header = this.rawLines[0]
-    for (const { start, end, expected, label } of HEADER_LITERALS) {
-      const actual = header.substring(start, end).trim()
-      if (actual !== expected) {
-        this.throwFileError(
-          `header: ${label} deve ser '${expected}', encontrado '${actual}'`,
-          0
-        )
-      }
+    this.validateLiteral(header, 1, 2, '1', 'identificação do arquivo-remessa')
+    this.validateLiteral(header, 2, 9, 'REMESSA', 'literal remessa')
+    this.validateLiteral(header, 9, 11, '01', 'código de serviço')
+    this.validateLiteral(header, 11, 26, 'COBRANCA', 'literal serviço')
+    this.validateLiteral(header, 79, 94, 'BRADESCO', 'nome do banco por extenso')
+    this.validateLiteral(header, 394, 400, '000001', 'número sequencial do registro')
+  }
+
+  protected validateTrailer(): void {
+    super.validateTrailer()
+
+    const trailer = this.rawLines[this.rawLines.length - 1]
+    const blank = trailer.substring(1, 394).trim()
+    if (blank.length > 0) {
+      this.throwFileError('trailer: posições 2-394 devem estar em branco', this.rawLines.length - 1)
+    }
+
+    const sequencial = parseInt(trailer.substring(394, 400), 10)
+    if (sequencial !== this.rawLines.length) {
+      this.throwFileError(
+        `trailer: sequencial de registro (${sequencial}) não bate com a quantidade real de linhas (${this.rawLines.length})`,
+        this.rawLines.length - 1
+      )
+    }
+  }
+
+  private validateLiteral(line: string, start: number, end: number, expected: string, label: string): void {
+    const actual = line.substring(start, end).trim()
+    if (actual !== expected) {
+      this.throwFileError(`header: ${label} deve ser '${expected}', encontrado '${actual}'`, 0)
     }
   }
 }

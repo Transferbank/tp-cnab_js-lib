@@ -24,14 +24,21 @@ describe('CnabFileBradesco400', () => {
     return header
   }
 
+  const createValidTrailer = (lineCount: number): string => {
+    const sequencial = lineCount.toString().padStart(6, '0')
+    return '9' + ' '.repeat(393) + sequencial
+  }
+
   const createValidDocument = (): string[] => {
     const header = createValidHeader()
-    const trailer = '9' + '9'.repeat(399)
     
     const boleto1Lines = createValidLines()
     const boleto2Line = '100000000000000000000009000881234568525.159185.04             0002020009100010630P00000000003N           0  01NF82761-0324082600000033560930000000002N250526000000000000033560000000000000000000000000000000000000000000000220000000997330COMERCIAL BETA LTDA                     AV EXEMPLO 300                                      29045402APOS 5 DIAS DE VENCIMENTO PROTESTAR!  REF NF(S): 082761  COB000003'
     
-    return [header, ...boleto1Lines, boleto2Line, trailer]
+    const lines = [header, ...boleto1Lines, boleto2Line]
+    const trailer = createValidTrailer(lines.length + 1)
+    
+    return [...lines, trailer]
   }
 
   describe('construtor', () => {
@@ -100,8 +107,8 @@ describe('CnabFileBradesco400', () => {
   describe('arquivo com um único boleto', () => {
     test('processa boleto simples sem satélites', () => {
       const header = createValidHeader()
-      const trailer = '9' + '9'.repeat(399)
       const boletoLine = '100000000000000000000009000881234567425.159185.03             0002020009100010629P00000000002N           0  01NF82760-0324082600000022560930000000001N250526000000000000022560000000000000000000000000000000000000000000000220000000997330COMERCIAL ALFA LTDA                     AV EXEMPLO 200                                      29045402APOS 5 DIAS DE VENCIMENTO PROTESTAR!  REF NF(S): 082760  COB000002'
+      const trailer = createValidTrailer(3)
       
       const lines = [header, boletoLine, trailer]
       const doc = new CnabFileBradesco400(lines)
@@ -135,7 +142,7 @@ describe('CnabFileBradesco400', () => {
   describe('arquivo sem boletos', () => {
     test('aceita arquivo com apenas header e trailer', () => {
       const header = createValidHeader()
-      const trailer = '9' + '9'.repeat(399)
+      const trailer = createValidTrailer(2)
       const lines = [header, trailer]
       
       const doc = new CnabFileBradesco400(lines)
@@ -153,7 +160,7 @@ describe('CnabFileBradesco400', () => {
 
     test('rejeita identificação de arquivo-remessa inválida', () => {
       const header = corruptHeader(1, 2, '0')
-      const trailer = '9' + '9'.repeat(399)
+      const trailer = createValidTrailer(2)
       const lines = [header, trailer]
 
       expect(() => {
@@ -163,7 +170,7 @@ describe('CnabFileBradesco400', () => {
 
     test('rejeita literal remessa inválido', () => {
       const header = corruptHeader(2, 9, 'RETORNO')
-      const trailer = '9' + '9'.repeat(399)
+      const trailer = createValidTrailer(2)
       const lines = [header, trailer]
 
       expect(() => {
@@ -173,7 +180,7 @@ describe('CnabFileBradesco400', () => {
 
     test('rejeita código de serviço inválido', () => {
       const header = corruptHeader(9, 11, '02')
-      const trailer = '9' + '9'.repeat(399)
+      const trailer = createValidTrailer(2)
       const lines = [header, trailer]
 
       expect(() => {
@@ -183,7 +190,7 @@ describe('CnabFileBradesco400', () => {
 
     test('rejeita literal serviço inválido', () => {
       const header = corruptHeader(11, 26, 'PAGAMENTO')
-      const trailer = '9' + '9'.repeat(399)
+      const trailer = createValidTrailer(2)
       const lines = [header, trailer]
 
       expect(() => {
@@ -193,7 +200,7 @@ describe('CnabFileBradesco400', () => {
 
     test('rejeita nome do banco inválido', () => {
       const header = corruptHeader(79, 94, 'ITAU')
-      const trailer = '9' + '9'.repeat(399)
+      const trailer = createValidTrailer(2)
       const lines = [header, trailer]
 
       expect(() => {
@@ -203,12 +210,45 @@ describe('CnabFileBradesco400', () => {
 
     test('rejeita número sequencial de registro inválido', () => {
       const header = corruptHeader(394, 400, '000002')
-      const trailer = '9' + '9'.repeat(399)
+      const trailer = createValidTrailer(2)
       const lines = [header, trailer]
 
       expect(() => {
         new CnabFileBradesco400(lines)
       }).toThrow("header: número sequencial do registro deve ser '000001', encontrado '000002'")
+    })
+  })
+
+  describe('validação de integridade do trailer', () => {
+    test('rejeita trailer com conteúdo não-branco nas posições 2-394', () => {
+      const header = createValidHeader()
+      const trailer = '9' + 'X'.repeat(393) + '000002'
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow('trailer: posições 2-394 devem estar em branco')
+    })
+
+    test('rejeita trailer com sequencial incorreto', () => {
+      const header = createValidHeader()
+      const trailer = '9' + ' '.repeat(393) + '000999'
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow('trailer: sequencial de registro (999) não bate com a quantidade real de linhas (2)')
+    })
+
+    test('aceita trailer válido com sequencial correto', () => {
+      const header = createValidHeader()
+      const line = '1'.padEnd(400, ' ')
+      const trailer = '9' + ' '.repeat(393) + '000003'
+      const lines = [header, line, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).not.toThrow()
     })
   })
 })
