@@ -1,39 +1,42 @@
-import { openCnabDocument } from './document-entry-point'
+import { openCnabDocument } from './index'
 import { CNABBoletoValidationError } from '@/types/errors/field-errors'
 import { CNABNoLinesProvidedError } from '@/types/errors/error-types'
 import * as fs from 'fs'
 import * as path from 'path'
 
 describe('openCnabDocument', () => {
-  const loadFixture400 = (): string[] => {
+  const createFileFromPath = (filePath: string): File => {
+    const buffer = fs.readFileSync(filePath)
+    return new File([buffer], path.basename(filePath))
+  }
+
+  const loadFixture400 = (): File => {
     const fixturePath = path.join(
       __dirname,
       'banks/bradesco/docs/cnab400/bradesco_cnab_400.txt'
     )
-    const content = fs.readFileSync(fixturePath, 'latin1')
-    return content.split(/\r?\n/).filter((line) => line.length > 0)
+    return createFileFromPath(fixturePath)
   }
 
-  const loadFixture240 = (): string[] => {
+  const loadFixture240 = (): File => {
     const fixturePath = path.join(
       __dirname,
       'banks/bradesco/docs/cnab240/bradesco_cnab_240.txt'
     )
-    const content = fs.readFileSync(fixturePath, 'latin1')
-    return content.split(/\r?\n/).filter((line) => line.length > 0)
+    return createFileFromPath(fixturePath)
   }
 
   describe('Bradesco CNAB 400', () => {
-    test('identifica quantidade correta de boletos no fixture', () => {
-      const lines = loadFixture400()
-      const doc = openCnabDocument(lines)
+    test('identifica quantidade correta de boletos no fixture', async () => {
+      const file = loadFixture400()
+      const doc = await openCnabDocument(file)
 
       expect(doc.boletoCount).toBe(37)
     })
 
-    test('lê dados completos do primeiro boleto corretamente', () => {
-      const lines = loadFixture400()
-      const doc = openCnabDocument(lines)
+    test('lê dados completos do primeiro boleto corretamente', async () => {
+      const file = loadFixture400()
+      const doc = await openCnabDocument(file)
 
       const boleto = doc.getBoleto(0)
       const result = boleto.read()
@@ -50,9 +53,9 @@ describe('openCnabDocument', () => {
       expect(result.data.sacado?.endereco?.cep).toBe('29045402')
     })
 
-    test('lê dados de múltiplos boletos corretamente', () => {
-      const lines = loadFixture400()
-      const doc = openCnabDocument(lines)
+    test('lê dados de múltiplos boletos corretamente', async () => {
+      const file = loadFixture400()
+      const doc = await openCnabDocument(file)
 
       // Primeiro boleto
       const boleto0 = doc.getBoleto(0)
@@ -76,9 +79,9 @@ describe('openCnabDocument', () => {
       expect(result2.data.valor).toBe(2890.5)
     })
 
-    test('readAll retorna dados corretos para todos os boletos', () => {
-      const lines = loadFixture400()
-      const doc = openCnabDocument(lines)
+    test('readAll retorna dados corretos para todos os boletos', async () => {
+      const file = loadFixture400()
+      const doc = await openCnabDocument(file)
 
       const results = doc.readAll()
 
@@ -103,9 +106,9 @@ describe('openCnabDocument', () => {
       expect(lastData.valor).toBe(1154.8)
     })
 
-    test('boletos com satélites são processados corretamente', () => {
-      const lines = loadFixture400()
-      const doc = openCnabDocument(lines)
+    test('boletos com satélites são processados corretamente', async () => {
+      const file = loadFixture400()
+      const doc = await openCnabDocument(file)
 
       // Primeiro boleto tem satélite tipo 2
       const boleto0 = doc.getBoleto(0)
@@ -119,12 +122,14 @@ describe('openCnabDocument', () => {
   })
 
   describe('Bradesco CNAB 240', () => {
-    test('identifica quantidade correta de boletos no fixture', () => {
-      expect(openCnabDocument(loadFixture240()).boletoCount).toBe(3)
+    test('identifica quantidade correta de boletos no fixture', async () => {
+      const doc = await openCnabDocument(loadFixture240())
+      expect(doc.boletoCount).toBe(3)
     })
 
-    test('lê dados completos do primeiro boleto corretamente', () => {
-      const result = openCnabDocument(loadFixture240()).getBoleto(0).read()
+    test('lê dados completos do primeiro boleto corretamente', async () => {
+      const doc = await openCnabDocument(loadFixture240())
+      const result = doc.getBoleto(0).read()
 
       expect(result.errors).toHaveLength(0)
       expect(result.data.nossoNumero).toBe('000123450010')
@@ -138,8 +143,8 @@ describe('openCnabDocument', () => {
       expect(result.data.sacado?.endereco?.cep).toBe('01234567')
     })
 
-    test('lê dados de múltiplos boletos corretamente', () => {
-      const doc = openCnabDocument(loadFixture240())
+    test('lê dados de múltiplos boletos corretamente', async () => {
+      const doc = await openCnabDocument(loadFixture240())
 
       const result1 = doc.getBoleto(1).read()
       expect(result1.errors).toHaveLength(0)
@@ -152,8 +157,9 @@ describe('openCnabDocument', () => {
       expect(result2.data.valor).toBe(500)
     })
 
-    test('readAll retorna dados corretos para todos os boletos', () => {
-      const results = openCnabDocument(loadFixture240()).readAll()
+    test('readAll retorna dados corretos para todos os boletos', async () => {
+      const doc = await openCnabDocument(loadFixture240())
+      const results = doc.readAll()
 
       expect(results).toHaveLength(3)
       expect(results.every((r) => r.success)).toBe(true)
@@ -167,24 +173,32 @@ describe('openCnabDocument', () => {
       expect(last.valor).toBe(500)
     })
 
-    test('boletos com campo extra carteira são processados corretamente', () => {
-      const result = openCnabDocument(loadFixture240()).getBoleto(0).readFull()
+    test('boletos com campo extra carteira são processados corretamente', async () => {
+      const doc = await openCnabDocument(loadFixture240())
+      const result = doc.getBoleto(0).readFull()
       expect(result.errors).toHaveLength(0)
       expect(result.data.extra?.carteira).toBe('001')
     })
   })
 
   describe('arquivo inválido', () => {
-    test('linhas vazias lançam CNABNoLinesProvidedError', () => {
-      expect(() => openCnabDocument([])).toThrow(CNABNoLinesProvidedError)
+    test('arquivo vazio lança CNABNoLinesProvidedError', async () => {
+      const emptyFile = new File([''], 'empty.txt')
+      await expect(openCnabDocument(emptyFile)).rejects.toThrow(CNABNoLinesProvidedError)
     })
 
-    test('linha interna com tamanho errado: construção passa, boleto captura erro estrutural', () => {
+    test('apenas linhas vazias lança CNABNoLinesProvidedError', async () => {
+      const emptyLinesFile = new File(['\n\n\n'], 'empty-lines.txt')
+      await expect(openCnabDocument(emptyLinesFile)).rejects.toThrow(CNABNoLinesProvidedError)
+    })
+
+    test('linha interna com tamanho errado: construção passa, boleto captura erro estrutural', async () => {
       const header = '0' + ' '.repeat(75) + '237' + ' '.repeat(321)
       const invalidDetail = '1' + ' '.repeat(299)
       const trailer = '9' + ' '.repeat(399)
 
-      const doc = openCnabDocument([header, invalidDetail, trailer])
+      const invalidFile = new File([[header, invalidDetail, trailer].join('\n')], 'invalid.txt')
+      const doc = await openCnabDocument(invalidFile)
       expect(doc.boletoCount).toBe(1)
 
       const result = doc.getBoleto(0).read()
