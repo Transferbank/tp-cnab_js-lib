@@ -1,15 +1,15 @@
 # CNAB-Lib
 
-Biblioteca TypeScript para processamento e validação de arquivos CNAB 240 e 400.
+Biblioteca TypeScript para processamento de arquivos CNAB 240 e 400.
 
 ## Características
 
-- **TypeScript first**, zero dependências
-- CNAB 240 e 400, múltiplos bancos
-- Suporte assíncrono
-- Validações com feedback detalhado
+- TypeScript com validação de tipos completa
+- Suporte a CNAB 240 e 400
+- Recuperação de erros parciais (error-resilient)
+- Validação de campos literais fixos em headers/trailers
 - Decodificação automática Latin-1
-- Extensível para novos bancos
+- Zero dependências de runtime
 
 ## Instalação
 
@@ -20,136 +20,239 @@ npm install tp-cnab-lib
 ## Uso Básico
 
 ```typescript
-import { openCnab } from 'tp-cnab-lib'
+import { openCnabFile } from 'tp-cnab-lib'
 import * as fs from 'fs'
 
 // Carregar arquivo CNAB como File (browser) ou criar File a partir do buffer (Node.js)
-const buffer = fs.readFileSync('remessa.rem')
-const file = new File([buffer], 'remessa.rem')
+const buffer = fs.readFileSync('arquivo.rem')
+const file = new File([buffer], 'arquivo.rem')
 
-try {
-  // openCnab detecta formato/banco automaticamente e resolve o schema
-  const cnabFile = await openCnab(file)
-  console.log(cnabFile.type, cnabFile.bankName)
+// Processar arquivo CNAB
+const cnabFile = await openCnabFile(file)
 
-  // Apenas verificar se é válido (retorna boolean)
-  const isValid = cnabFile.validate()
-  if (!isValid) {
-    console.log('Arquivo inválido')
+console.log(`Formato: ${cnabFile.type}`)
+console.log(`Boletos: ${cnabFile.boletoCount}`)
+
+// Ler todos os boletos
+const results = cnabFile.readAll()
+
+results.forEach((result, index) => {
+  if (result.success) {
+    console.log(`Boleto ${index}: ${result.data.numeroDocumento} - R$ ${result.data.valor}`)
+  } else {
+    console.log(`Boleto ${index}: ${result.errors?.length} erro(s)`)
   }
+})
 
-  // Ou obter feedback detalhado (retorna objeto com erros)
-  const validation = cnabFile.validate(true)
-  if (!validation.isValid) {
-    validation.feedback.lines.forEach(err => 
-      console.log(`Linha ${err.line}: ${err.message}`)
-    )
-  }
+// Ler boleto individual
+const boleto = cnabFile.getBoleto(0)
+const result = boleto.read() // ou readSimple() / readFull()
 
-  // Extrair dados dos boletos
-  const { header, trailer, bills } = cnabFile.read()
-  bills.forEach(bill => 
-    console.log(bill.sacado?.nome, bill.valor, bill.vencimento)
-  )
-} catch (error) {
-  // CNABEmptyFileError | CNABFormatNotRecognizedError | 
-  // CNABBankNotFoundError | CNABSchemaNotFoundError
-  console.error(error.code, error.message)
+if (result.errors.length === 0) {
+  console.log('Sacado:', result.data.sacado?.nome)
+  console.log('Valor:', result.data.valor)
+  console.log('Vencimento:', result.data.vencimento)
 }
 ```
 
 ## API
 
-### `openCnab(file: File): Promise<CNABFile>`
+### `openCnabFile(file: File): Promise<CnabFile>`
 
-Ponto de entrada único e assíncrono. Recebe um objeto `File` (Web API), detecta automaticamente o formato (CNAB 240/400) e o banco, e decodifica o conteúdo usando encoding Latin-1 (ISO-8859-1).
+Detecta formato e banco automaticamente, valida estrutura e retorna arquivo CNAB pronto para leitura.
 
-**Lança exceções** para:
-- Arquivo vazio (`CNABEmptyFileError`)
-- Formato não reconhecido (`CNABFormatNotRecognizedError`)
-- Banco não identificado (`CNABBankNotFoundError`)
-- Banco sem schema cadastrado (`CNABSchemaNotFoundError`)
+**Lança exceções:**
+- `CNABNoLinesProvidedError` - arquivo vazio
+- `CNABFormatNotRecognizedError` - formato não identificado
+- `CNABBankNotFoundError` - banco não suportado
+- `CNABFileValidationError` - erro estrutural não recuperável (header/trailer inválido)
 
-O corpo do arquivo só é processado quando `.read()`/`.validate()` são chamados.
+### `CnabFile`
 
-### `CNABFile`
-
-| Membro | Descrição |
+| Propriedade/Método | Descrição |
 |---|---|
-| `.type`, `.bankCode`, `.bankName`, `.lineCount` | Metadados já detectados |
-| `.validate()` | Retorna `boolean` — validação rápida (fail-fast) |
-| `.validate(true)` | Retorna `CNABValidationResult` — validação completa com feedback | detalhado `{ isValid, feedback: { type, bank, lines } }` |
-| `.read(options?)` | Extrai `{ header, trailer, bills }`. `mode: 'SIMPLE'` (campos canônicos) ou `'FULL'` (todos os campos do banco); `lazy: true` devolve `LazyBillItem[]` (extração sob demanda via `.resolve()`); `page: { start, size }` pagina |
-| `.readAsync(options?)` | Igual a `.read()`, assíncrono; aceita `onProgress`/`batchSize` para arquivos grandes |
+| `.type` | `'CNAB240'` ou `'CNAB400'` |
+| `.boletoCount` | Quantidade de boletos no arquivo |
+| `.structureErrors` | Erros estruturais recuperáveis encontrados |
+| `.hasStructureErrors` | `true` se há erros estruturais |
+| `.getBoleto(index)` | Retorna `CnabBoleto` no índice especificado |
+| `.readAll()` | Retorna array de `BoletoResult` com todos os boletos |
+| `.read(start, end)` | Retorna array de `BoletoResult` para intervalo específico |
+
+### `CnabBoleto`
+
+| Método | Descrição |
+|---|---|
+| `.read(mode?)` | Lê boleto (padrão: `ReadMode.SIMPLE`) |
+| `.readSimple()` | Lê apenas campos canônicos |
+| `.readFull()` | Lê campos canônicos + extras do banco |
+| `.readField(name)` | Lê campo individual (lança erro se houver problema) |
+| `.readExtraField(key)` | Lê campo extra individual |
+
+### `BoletoResult`
+
+Retornado por `.readAll()` e `.read(start, end)` do `CnabFile` - inclui metadados sobre posição e sucesso.
 
 ```typescript
-const { bills } = cnabFile.read({ lazy: true })
-const primeiro = await bills[0].resolve() // extrai só esse boleto
+{
+  index: number          // índice do boleto no arquivo
+  success: boolean       // true se errors.length === 0
+  data?: Partial<BoletoCnabData>  // dados parciais extraídos
+  errors?: (CNABFieldValidationError | CNABBoletoValidationError)[]
+  error?: Error          // erro inesperado durante processamento
+}
 ```
 
-> Formato completo do que cada método devolve: [RETURN_TYPES_GUIDE.md](RETURN_TYPES_GUIDE.md).
+### `BoletoReadResult`
+
+Retornado por `.read()`, `.readSimple()` e `.readFull()` do `CnabBoleto` - apenas dados e erros de validação.
+
+```typescript
+{
+  data: PartialBoletoCnabData  // dados parciais (vazio se houver erro estrutural)
+  errors: (CNABFieldValidationError | CNABBoletoValidationError)[]
+}
+```
+
+## Campos Canônicos (`BoletoCnabData`)
+
+Todos os campos são opcionais:
+
+```typescript
+{
+  nossoNumero?: string
+  numeroDocumento?: string
+  vencimento?: Date
+  valor?: number
+  dataEmissao?: Date
+  desconto?: { valor: number }
+  abatimento?: { valor: number }
+  sacado?: {
+    documento?: string
+    nome?: string
+    endereco?: {
+      logradouro?: string
+      cep?: string
+    }
+  }
+  extra?: Record<string, any>  // campos específicos do banco (modo FULL)
+}
+```
 
 ## Encoding
 
-Arquivos CNAB usam **Latin-1 (ISO-8859-1)**, não UTF-8. A biblioteca faz a decodificação automaticamente ao receber o `File`. Se você estiver lendo o arquivo manualmente (ex: Node.js), não especifique encoding ao ler:
+Arquivos CNAB usam **Latin-1 (ISO-8859-1)**:
 
 ```typescript
-// ✅ Correto - deixa o buffer binário
-const buffer = fs.readFileSync('remessa.rem')
-const file = new File([buffer], 'remessa.rem')
+// ✅ Correto
+const content = fs.readFileSync('arquivo.rem', 'latin1')
 
-// ❌ Errado - não especifique 'utf8' ou 'latin1'
-const wrong = fs.readFileSync('remessa.rem', 'utf8') // ❌
+// ❌ Errado
+const content = fs.readFileSync('arquivo.rem', 'utf8')
 ```
+
+## Erros
+
+A biblioteca distingue entre:
+
+- **Erros não recuperáveis**: lançam exceção, interrompem processamento
+- **Erros recuperáveis**: coletados em listas, retornam dados parciais
+
+### Erros de Campo (`CNABFieldValidationError`)
+
+Campo inválido ou com formato incorreto.
+
+```typescript
+{
+  code: 'FIELD_VALIDATION_ERROR'
+  field: string        // nome do campo
+  rawValue: string     // valor bruto que falhou
+  message: string
+  lineNumber?: number  // 0-indexed internamente, 1-indexed na mensagem
+}
+```
+
+### Erros de Boleto (`CNABBoletoValidationError`)
+
+Problema estrutural em um boleto específico (ex: segmento órfão).
+
+```typescript
+{
+  code: 'BOLETO_VALIDATION_ERROR'
+  message: string
+  lineNumber?: number
+}
+```
+
+### Erros de Arquivo (`CNABFileValidationError`)
+
+Problema estrutural no arquivo inteiro (ex: header/trailer inválido, campos literais incorretos).
+
+```typescript
+{
+  code: 'FILE_VALIDATION_ERROR'
+  message: string
+  lineNumber?: number
+}
+```
+
+## Validações Implementadas
+
+### CNAB 400 Bradesco
+
+**Header:**
+- Identificação arquivo-remessa (posição 1: '1')
+- Literal REMESSA (posições 2-8)
+- Código de serviço (posições 9-10: '01')
+- Literal COBRANCA (posições 11-25)
+- Nome do banco (posições 79-93: 'BRADESCO')
+- Número sequencial (posições 394-399: '000001')
+
+**Trailer:**
+- Posições 2-394 devem estar em branco
+- Sequencial de registro deve bater com quantidade de linhas
+
+### CNAB 240 Bradesco
+
+**Header:**
+- Código do banco (posições 0-2: '237')
+- Controle de lote (posições 3-6: '0000')
+- Código do arquivo remessa (posição 142: '1')
+- Versão do layout (posições 163-165: '084')
+
+**Trailer:**
+- Código do banco (posições 0-2: '237')
+- Controle de lote (posições 3-6: '9999')
 
 ## Bancos Suportados
 
-| Banco | CNAB 400 | CNAB 240 |
-|---|:---:|:---:|
-| Banco do Brasil (001) | ✅ | |
-| Santander (033) | ✅ | ✅ |
-| Caixa (104) | ✅ | |
-| Bradesco (237) | ✅ | ✅ |
-| Itaú (341) | ✅ | |
-| Sicredi (748) | ✅ | ✅ |
-| Sicoob (756) | ✅ | |
+| Banco | Código | CNAB 400 | CNAB 240 |
+|---|:---:|:---:|:---:|
+| Bradesco | 237 | ✅ | ✅ |
 
 ## Estrutura do Projeto
 
 ```
 src/
-├── index.ts              # openCnab + exports públicos
-├── types/                # Core (CNABFile), bank (BankSchema), errors, read
-├── banks/                # Schemas específicos de cada banco
-│   └── <banco>/
-│       ├── docs/         # Arquivos de exemplo e documentação
-│       ├── schemas/      # Definições CNAB 240/400
-│       └── tests/        # Testes específicos do banco
-├── schemas/              # Registro central (cnab400Banks/cnab240Banks)
-├── provider/             # Monta schema + regra de agrupamento
-├── grouping/             # Agrupa linhas em boletos
-├── read/                 # Extração de campos canônicos/full
-├── parser/               # Detecção de formato/banco, extração de campos
-├── validators/           # Validação estrutural e de negócio
-└── utils/                # Helpers (datas, CPF/CNPJ, leitura de arquivo)
+├── index.ts                    # API pública
+├── types/
+│   ├── file/                  # CnabFile (base + 240/400)
+│   ├── boleto/                # CnabBoleto (base + 240/400)
+│   ├── fields/                # CnabField + validators/parsers
+│   ├── errors/                # Hierarquia de erros
+│   └── processing/            # Tipos de retorno e agrupamento
+├── banks/
+│   └── bradesco/
+│       ├── boletos/           # Implementações de CnabBoleto
+│       ├── files/             # Implementações de CnabFile
+│       └── cnabFields/        # Definições de campos específicos
+├── parser/                    # Detecção de formato/banco
+├── registry/                  # Registro de bancos suportados
+└── utils/                     # Helpers (validação CPF/CNPJ, etc)
 ```
-
-## Contribuindo
-
-Para adicionar um banco novo, veja [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md).
 
 ## Licença
 
+LGPL-3.0-or-later
+
 Copyright (c) 2026 Transferbank
-
-Este projeto é distribuído sob os termos da GNU Lesser General Public License, versão 3.0 (LGPL-3.0).
-
-Você pode utilizá-lo, modificá-lo e redistribuí-lo conforme os termos da LGPL. Alterações feitas na própria biblioteca devem permanecer sob a mesma licença.
-
-Consulte o arquivo LICENSE para o texto completo.
-
-```json
-{
-  "license": "LGPL-3.0-or-later"
-}
-```
