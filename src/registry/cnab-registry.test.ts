@@ -82,12 +82,12 @@ describe('getCnabFileClass', () => {
     test('documento instancia boleto correto internamente (CNAB 240)', () => {
       const DocumentClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB240)
       
-      const header = '0' + ' '.repeat(6) + '0' + ' '.repeat(232)
-      const loteHeader = '1' + ' '.repeat(6) + '1' + ' '.repeat(232)
-      const segP = '3' + ' '.repeat(6) + '3' + ' '.repeat(5) + 'P' + ' '.repeat(226)
-      const segQ = '3' + ' '.repeat(6) + '3' + ' '.repeat(5) + 'Q' + ' '.repeat(226)
-      const loteTrailer = '5' + ' '.repeat(6) + '5' + ' '.repeat(232)
-      const trailer = '9' + ' '.repeat(6) + '9' + ' '.repeat(232)
+      const header = '237' + '0000' + '0' + ' '.repeat(134) + '1' + ' '.repeat(20) + '084' + ' '.repeat(74)
+      const loteHeader = '237' + '0001' + '1' + ' '.repeat(232)
+      const segP = '237' + '0001' + '3' + '00001' + 'P' + ' '.repeat(227)
+      const segQ = '237' + '0001' + '3' + '00001' + 'Q' + ' '.repeat(227)
+      const loteTrailer = '237' + '0001' + '5' + ' '.repeat(232)
+      const trailer = '237' + '9999' + '9' + ' '.repeat(9) + '000006' + ' '.repeat(217)
       const rawLines = [header, loteHeader, segP, segQ, loteTrailer, trailer]
       
       const document = new DocumentClass(rawLines)
