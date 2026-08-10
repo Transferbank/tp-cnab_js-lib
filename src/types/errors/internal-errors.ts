@@ -1,11 +1,5 @@
-/**
- * Exceptions concretas para inconsistências internas (CNABInternalError).
- * Erros que indicam bugs ou problemas de configuração da biblioteca.
- * Consumidores que receberem devem reportar como issue.
- */
-
 import { CNABInternalError } from './base'
-import type { CNABFormatCode } from '@/types/core/core-types'
+import type { CNABFormatCode } from '@/types/core/cnab'
 
 
 export class CNABInternalInconsistencyError extends CNABInternalError {

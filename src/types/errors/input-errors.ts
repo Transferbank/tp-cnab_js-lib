@@ -1,19 +1,6 @@
-/**
- * Exceptions concretas para erros de input (CNABInputError).
- * Erros causados por input inválido do consumidor em openCnab().
- */
-
 import { CNABInputError } from './base'
-import { CNABFormatCode } from '@/types/core/core-types'
+import { CNABFormatCode } from '@/types/core/cnab'
 
-
-export class CNABEmptyFileError extends CNABInputError {
-  readonly code = 'EMPTY_FILE'
-
-  constructor() {
-    super('Arquivo CNAB vazio ou contém apenas linhas em branco')
-  }
-}
 
 export class CNABFormatNotRecognizedError extends CNABInputError {
   readonly code = 'FORMAT_NOT_RECOGNIZED'
@@ -43,23 +30,6 @@ export class CNABBankNotFoundError extends CNABInputError {
   }
 }
 
-
-export class CNABSchemaNotFoundError extends CNABInputError {
-  readonly code = 'SCHEMA_NOT_FOUND'
-  readonly bankCode: string
-  readonly format: CNABFormatCode
-
-  constructor(bankCode: string, format: CNABFormatCode) {
-    const formatLabel = format === CNABFormatCode.CNAB240 ? 'CNAB 240' : 'CNAB 400'
-    super(
-      `Banco ${bankCode} não possui schema cadastrado para ${formatLabel}. ` +
-        `Bancos suportados: consulte a documentação ou use validateCnabFile() ` +
-        `para processar arquivos de bancos não cadastrados.`
-    )
-    this.bankCode = bankCode
-    this.format = format
-  }
-}
 
 export class CNABNoLinesProvidedError extends CNABInputError {
   readonly code = 'NO_LINES_PROVIDED'

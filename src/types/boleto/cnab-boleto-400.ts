@@ -1,6 +1,6 @@
 import { CnabBoleto } from './cnab-boleto'
 import { getGroupingRule } from '@/grouping/grouping-rules'
-import { CNABFormatCode } from '@/types/core/core-types'
+import { CNABFormatCode } from '@/types/core/cnab'
 import { getCnab400RecordType } from '@/parser/position-reader'
 
 export abstract class CnabBoleto400 extends CnabBoleto {

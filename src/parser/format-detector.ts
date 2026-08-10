@@ -1,4 +1,4 @@
-import { CNABFormatCode } from '@/types/all-types'
+import { CNABFormatCode } from '@/types/core/cnab'
 import {
   CNABNoLinesProvidedError,
   CNABInvalidHeaderError,

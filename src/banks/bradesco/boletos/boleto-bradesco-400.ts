@@ -12,11 +12,9 @@ import {
   Bradesco400SacadoLogradouroField,
   Bradesco400SacadoCepField,
 } from '@/banks/bradesco/cnabFields/400fields/bradesco-400-fields'
-import {
-  Bradesco400CodigoOcorrenciaField,
-  Bradesco400CarteiraCodigoField,
-} from '@banks/bradesco/cnabFields/400fields/extraFields/bradesco-400-extra-fields'
-import { BANK_CODES } from '@/types/bank/bank-types'
+import { Bradesco400CodigoOcorrenciaField } from '@banks/bradesco/cnabFields/400fields/extraFields/codigo-ocorrencia-field'
+import { Bradesco400CarteiraCodigoField } from '@banks/bradesco/cnabFields/400fields/extraFields/carteira-codigo-field'
+import { BANK_CODES } from '@/types/bank/bank-codes'
 
 export class BoletoBradesco400 extends CnabBoleto400 {
   protected get bankCode(): string {

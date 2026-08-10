@@ -1,5 +1,3 @@
-import { DateFormat } from '@/types/all-types'
-
 function isValidDate(date: Date, year: number, month: number, day: number): boolean {
   return (
     date.getFullYear() === year &&
@@ -32,34 +30,3 @@ export function parseDateDDMMAAAA(str: string): Date | null {
   return isValidDate(date, year, month, day) ? date : null
 }
 
-export function parseDateAAAAMMDD(str: string): Date | null {
-  if (str == null || str.length !== 8 || !/^\d{8}$/.test(str)) return null
-
-  const year = parseInt(str.substring(0, 4), 10)
-  const month = parseInt(str.substring(4, 6), 10)
-  const day = parseInt(str.substring(6, 8), 10)
-
-  const date = new Date(year, month - 1, day)
-
-  return isValidDate(date, year, month, day) ? date : null
-}
-
-export function parseDate(str: string, dateFormat: DateFormat | null): Date | null {
-  if (dateFormat === 'DDMMAA') return parseDateDDMMAA(str)
-  if (dateFormat === 'DDMMAAAA') return parseDateDDMMAAAA(str)
-  if (dateFormat === 'AAAAMMDD') return parseDateAAAAMMDD(str)
-  return null
-}
-
-export function isDateInPast(date: Date): boolean {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  return date < today
-}
-
-export function formatDateBR(date: Date): string {
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const year = date.getFullYear()
-  return `${day}/${month}/${year}`
-}

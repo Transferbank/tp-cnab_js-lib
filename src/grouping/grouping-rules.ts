@@ -1,7 +1,7 @@
 import type { GroupingRule } from '@tp-types/processing/grouping'
-import { CNABFormatCode } from '@/types/core/core-types'
+import { CNABFormatCode } from '@/types/core/cnab'
 import { CNABInternalInconsistencyError } from '@/types/errors/error-types'
-import { BANK_CODES } from '@/types/bank/bank-types'
+import { BANK_CODES } from '@/types/bank/bank-codes'
 
 export const CNAB400_GROUPING_RULES: Record<string, GroupingRule> = {
   [BANK_CODES.BANCO_DO_BRASIL]: {

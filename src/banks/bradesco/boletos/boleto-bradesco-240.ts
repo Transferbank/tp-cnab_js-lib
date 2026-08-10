@@ -1,6 +1,6 @@
 import { CnabBoleto240 } from '@/types/boleto/cnab-boleto-240'
-import { BANK_CODES } from '@/types/bank/bank-types'
-import { Bradesco240CarteiraField } from '@/banks/bradesco/cnabFields/240fields/extraFields/bradesco-240-extra-fields'
+import { BANK_CODES } from '@/types/bank/bank-codes'
+import { Bradesco240CarteiraField } from '@/banks/bradesco/cnabFields/240fields/extraFields/carteira-field'
 import {
   Bradesco240NossoNumeroField,
   Bradesco240NumeroDocumentoField,

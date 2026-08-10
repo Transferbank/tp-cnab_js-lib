@@ -1,52 +1,31 @@
-import { detectFormat, detectBank } from '@parser/format-detector'
-import { getBankSchema } from '@/schemas/bank-registry'
-import { CNABFile } from '@/types/core/core-types'
-import { readCnabFile } from '@/utils/file-reader'
+export { openCnabDocument } from './document-entry-point'
 
-export function extractCnabFile(txt: string[]): CNABFile {
-  const format = detectFormat(txt)
-  const bankCode = detectBank(txt[0], format)
-  const bankSchema = getBankSchema(bankCode, format)
+export { CnabDocument } from '@/types/document/cnab-document'
+export type { BoletoRange, BoletoResult } from '@/types/document/cnab-document'
 
-  return new CNABFile(format, bankSchema, txt)
-}
-
-export async function openCnab(file: File): Promise<CNABFile> {
-  const rawText = await readCnabFile(file)
-  return extractCnabFile(rawText)
-}
-
-export { CNABFile } from '@/types/core/core-types'
+export { CnabBoleto } from '@/types/boleto/cnab-boleto'
+export type { BoletoFieldName, BoletoReadResult } from '@/types/boleto/cnab-boleto'
 
 export type {
-  CNABValidationResult,
-  ValidationError,
-  CNABRecord,
-  CNABReadResult,
-  ReadOptions,
-  ReadAsyncOptions,
-  LazyBillItem,
-} from './types/core/core-types'
+  BoletoCnabData,
+  PartialBoletoCnabData,
+  CnabFieldValue,
+} from '@/types/read/boleto-cnab-data'
 
-export type {
-  CNABData,
-  CNABHeader,
-  CNABTrailer,
-} from './types/read/read-types'
-
-export { CNABFormatCode } from './types/core/core-types'
-export { ReadMode } from './types/core/read-mode'
+export { CNABFormatCode } from '@/types/core/cnab'
+export { ReadMode } from '@/types/core/read-mode'
 
 export {
-  CNABError,
-  CNABEmptyFileError,
-  CNABFormatNotRecognizedError,
-  CNABBankNotFoundError,
-  CNABSchemaNotFoundError,
+  CNABFieldValidationError,
+  CNABFieldNotFoundError,
+  CNABBoletoValidationError,
+  CNABBoletoNotFoundError,
+  CNABDocumentValidationError,
+} from '@/types/errors/field-errors'
+
+export {
   CNABNoLinesProvidedError,
   CNABInvalidHeaderError,
-  CNABInternalInconsistencyError,
-  CNABGroupingError,
-  CNABUnknownFieldCodeError,
-  CNABLazyResolveError,
-} from './types/errors/error-types'
+  CNABFormatNotRecognizedError,
+  CNABBankNotFoundError,
+} from '@/types/errors/error-types'
