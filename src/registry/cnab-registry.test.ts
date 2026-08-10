@@ -24,8 +24,8 @@ const createValidBradesco400Header = (): string => {
 describe('getCnabFileClass', () => {
   describe('CNAB 400', () => {
     test('retorna CnabFileBradesco400 para Bradesco', () => {
-      const DocumentClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
-      expect(DocumentClass).toBe(CnabFileBradesco400)
+      const FileClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
+      expect(FileClass).toBe(CnabFileBradesco400)
     })
 
     test('lança erro para banco não registrado', () => {
@@ -49,8 +49,8 @@ describe('getCnabFileClass', () => {
 
   describe('CNAB 240', () => {
     test('retorna CnabFileBradesco240 para Bradesco', () => {
-      const DocumentClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB240)
-      expect(DocumentClass).toBe(CnabFileBradesco240)
+      const FileClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB240)
+      expect(FileClass).toBe(CnabFileBradesco240)
     })
 
     test('lança erro para banco não registrado', () => {
@@ -65,14 +65,14 @@ describe('getCnabFileClass', () => {
 
   describe('integração document + boleto', () => {
     test('documento instancia boleto correto internamente (CNAB 400)', () => {
-      const DocumentClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
+      const FileClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
       
       const header = createValidBradesco400Header()
       const line = '1'.padEnd(400, ' ')
       const trailer = '9' + ' '.repeat(393) + '000003'
       const rawLines = [header, line, trailer]
       
-      const document = new DocumentClass(rawLines)
+      const document = new FileClass(rawLines)
       expect(document).toBeInstanceOf(CnabFileBradesco400)
       
       const boleto = document.getBoleto(0)
@@ -80,7 +80,7 @@ describe('getCnabFileClass', () => {
     })
 
     test('documento instancia boleto correto internamente (CNAB 240)', () => {
-      const DocumentClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB240)
+      const FileClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB240)
       
       const header = '237' + '0000' + '0' + ' '.repeat(134) + '1' + ' '.repeat(20) + '084' + ' '.repeat(74)
       const loteHeader = '237' + '0001' + '1' + ' '.repeat(232)
@@ -90,7 +90,7 @@ describe('getCnabFileClass', () => {
       const trailer = '237' + '9999' + '9' + ' '.repeat(9) + '000006' + ' '.repeat(217)
       const rawLines = [header, loteHeader, segP, segQ, loteTrailer, trailer]
       
-      const document = new DocumentClass(rawLines)
+      const document = new FileClass(rawLines)
       expect(document).toBeInstanceOf(CnabFileBradesco240)
       
       const boleto = document.getBoleto(0)
