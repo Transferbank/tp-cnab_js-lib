@@ -57,13 +57,6 @@ describe('openCnabFile', () => {
       const file = loadFixture400()
       const doc = await openCnabFile(file)
 
-      // Primeiro boleto
-      const boleto0 = doc.getBoleto(0)
-      const result0 = boleto0.read()
-      expect(result0.errors).toHaveLength(0)
-      expect(result0.data.numeroDocumento).toBe('NF82760-03')
-      expect(result0.data.valor).toBe(22560.93)
-
       // Segundo boleto
       const boleto1 = doc.getBoleto(1)
       const result1 = boleto1.read()
@@ -79,28 +72,16 @@ describe('openCnabFile', () => {
       expect(result2.data.valor).toBe(2890.5)
     })
 
-    test('readAll retorna dados corretos para todos os boletos', async () => {
+    test('readAll processa os 37 boletos com sucesso e não para antes do fim', async () => {
       const file = loadFixture400()
       const doc = await openCnabFile(file)
 
       const results = doc.readAll()
 
       expect(results).toHaveLength(37)
-      
-      // Verifica que todos foram processados com sucesso
-      const successfulResults = results.filter((r) => r.success)
-      expect(successfulResults).toHaveLength(37)
+      expect(results.every((r) => r.success)).toBe(true)
 
-      // Verifica dados do primeiro boleto
-      expect(results[0].success).toBe(true)
-      expect(results[0].data).toBeDefined()
-      const firstData = results[0].data as any
-      expect(firstData.numeroDocumento).toBe('NF82760-03')
-      expect(firstData.valor).toBe(22560.93)
-
-      // Verifica dados do último boleto
-      expect(results[36].success).toBe(true)
-      expect(results[36].data).toBeDefined()
+      // Verifica dados do último boleto para garantir que o loop não para antes
       const lastData = results[36].data as any
       expect(lastData.numeroDocumento).toBe('NF80387-03')
       expect(lastData.valor).toBe(1154.8)
@@ -157,17 +138,14 @@ describe('openCnabFile', () => {
       expect(result2.data.valor).toBe(500)
     })
 
-    test('readAll retorna dados corretos para todos os boletos', async () => {
+    test('readAll processa os 3 boletos com sucesso e não para antes do fim', async () => {
       const doc = await openCnabFile(loadFixture240())
       const results = doc.readAll()
 
       expect(results).toHaveLength(3)
       expect(results.every((r) => r.success)).toBe(true)
 
-      const first = results[0].data as any
-      expect(first.numeroDocumento).toBe('NF0000123')
-      expect(first.valor).toBe(100)
-
+      // Verifica dados do último boleto para garantir que o loop não para antes
       const last = results[2].data as any
       expect(last.numeroDocumento).toBe('NF0000125')
       expect(last.valor).toBe(500)

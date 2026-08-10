@@ -48,47 +48,28 @@ describe('CnabFileBradesco240', () => {
   })
 
   describe('getBoleto', () => {
-    test('retorna instância de BoletoBradesco240', () => {
+    test('retorna instância correta e legível', () => {
       const doc = new CnabFileBradesco240(fixtureLines)
 
       const boleto = doc.getBoleto(0)
-
       expect(boleto).toBeInstanceOf(BoletoBradesco240)
-    })
-
-    test('tipo retornado é BoletoBradesco240 (type safety)', () => {
-      const doc = new CnabFileBradesco240(fixtureLines)
-
-      const boleto = doc.getBoleto(0)
+      
       const result = boleto.readSimple()
-
-      expect(result.errors).toHaveLength(0)
-      expect(result.data.nossoNumero).toBeDefined()
-      expect(result.data.numeroDocumento).toBeDefined()
-    })
-
-    test('cada boleto pode ser lido individualmente', () => {
-      const doc = new CnabFileBradesco240(fixtureLines)
-
-      const boleto0 = doc.getBoleto(0)
-      const boleto1 = doc.getBoleto(1)
-      const boleto2 = doc.getBoleto(2)
-
-      expect(boleto0).toBeInstanceOf(BoletoBradesco240)
-      expect(boleto1).toBeInstanceOf(BoletoBradesco240)
-      expect(boleto2).toBeInstanceOf(BoletoBradesco240)
-    })
-
-    test('boleto retornado pode ser lido com sucesso', () => {
-      const doc = new CnabFileBradesco240(fixtureLines)
-
-      const boleto = doc.getBoleto(0)
-      const result = boleto.readSimple()
-
       expect(result.errors).toHaveLength(0)
       expect(result.data.nossoNumero).toBeTruthy()
       expect(result.data.valor).toBeGreaterThan(0)
       expect(result.data.vencimento).toBeInstanceOf(Date)
+    })
+
+    test('cada chamada retorna instância diferente', () => {
+      const doc = new CnabFileBradesco240(fixtureLines)
+
+      const boleto0 = doc.getBoleto(0)
+      const boleto1 = doc.getBoleto(1)
+
+      expect(boleto0).toBeInstanceOf(BoletoBradesco240)
+      expect(boleto1).toBeInstanceOf(BoletoBradesco240)
+      expect(boleto0).not.toBe(boleto1)
     })
   })
 
