@@ -57,14 +57,14 @@ describe('openCnabFile', () => {
       const file = loadFixture400()
       const doc = await openCnabFile(file)
 
-      // Segundo boleto
+      
       const boleto1 = doc.getBoleto(1)
       const result1 = boleto1.read()
       expect(result1.errors).toHaveLength(0)
       expect(result1.data.numeroDocumento).toBe('NF82761-04')
       expect(result1.data.valor).toBe(2890.5)
 
-      // Terceiro boleto
+      
       const boleto2 = doc.getBoleto(2)
       const result2 = boleto2.read()
       expect(result2.errors).toHaveLength(0)
@@ -82,9 +82,9 @@ describe('openCnabFile', () => {
       expect(results.every((r) => r.success)).toBe(true)
 
       // Verifica dados do último boleto para garantir que o loop não para antes
-      const lastData = results[36].data as any
-      expect(lastData.numeroDocumento).toBe('NF80387-03')
-      expect(lastData.valor).toBe(1154.8)
+      const lastData = results[36].data
+      expect(lastData?.numeroDocumento).toBe('NF80387-03')
+      expect(lastData?.valor).toBe(1154.8)
     })
 
     test('boletos com satélites são processados corretamente', async () => {
@@ -146,9 +146,9 @@ describe('openCnabFile', () => {
       expect(results.every((r) => r.success)).toBe(true)
 
       // Verifica dados do último boleto para garantir que o loop não para antes
-      const last = results[2].data as any
-      expect(last.numeroDocumento).toBe('NF0000125')
-      expect(last.valor).toBe(500)
+      const last = results[2].data
+      expect(last?.numeroDocumento).toBe('NF0000125')
+      expect(last?.valor).toBe(500)
     })
 
     test('boletos com campo extra carteira são processados corretamente', async () => {

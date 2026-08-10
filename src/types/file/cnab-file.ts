@@ -1,5 +1,6 @@
 import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
+import { PartialBoletoCnabData } from '@/types/read/boleto-cnab-data'
 import {
   CNABBoletoNotFoundError,
   CNABBoletoValidationError,
@@ -12,10 +13,10 @@ export interface BoletoRange {
   endLine: number
 }
 
-export interface BoletoResult<T = unknown> {
+export interface BoletoResult {
   index: number
   success: boolean
-  data?: Partial<T>
+  data?: PartialBoletoCnabData
   errors?: (CNABFieldValidationError | CNABBoletoValidationError)[]
   error?: Error
 }
