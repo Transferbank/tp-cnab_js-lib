@@ -9,8 +9,23 @@ describe('CnabFileBradesco400', () => {
     ]
   }
 
+  const createValidHeader = (): string => {
+    // Posições 0-indexadas conforme HEADER_LITERALS + código banco posições 76-79
+    let header = '0' // posição 0: tipo de registro
+    header += '1' // posição 1: identificação arquivo-remessa
+    header += 'REMESSA' // posições 2-8: literal remessa
+    header += '01' // posições 9-10: código de serviço
+    header += 'COBRANCA       ' // posições 11-25: literal serviço (15 chars)
+    header += ' '.repeat(50) // posições 26-75: espaços até código do banco
+    header += '237' // posições 76-78: código do banco (Bradesco = 237)
+    header += 'BRADESCO       ' // posições 79-93: nome do banco (15 chars)
+    header += ' '.repeat(300) // posições 94-393: resto do header
+    header += '000001' // posições 394-399: número sequencial
+    return header
+  }
+
   const createValidDocument = (): string[] => {
-    const header = '0' + '0'.repeat(399)
+    const header = createValidHeader()
     const trailer = '9' + '9'.repeat(399)
     
     const boleto1Lines = createValidLines()
@@ -84,7 +99,7 @@ describe('CnabFileBradesco400', () => {
 
   describe('arquivo com um único boleto', () => {
     test('processa boleto simples sem satélites', () => {
-      const header = '0' + '0'.repeat(399)
+      const header = createValidHeader()
       const trailer = '9' + '9'.repeat(399)
       const boletoLine = '100000000000000000000009000881234567425.159185.03             0002020009100010629P00000000002N           0  01NF82760-0324082600000022560930000000001N250526000000000000022560000000000000000000000000000000000000000000000220000000997330COMERCIAL ALFA LTDA                     AV EXEMPLO 200                                      29045402APOS 5 DIAS DE VENCIMENTO PROTESTAR!  REF NF(S): 082760  COB000002'
       
@@ -119,7 +134,7 @@ describe('CnabFileBradesco400', () => {
 
   describe('arquivo sem boletos', () => {
     test('aceita arquivo com apenas header e trailer', () => {
-      const header = '0' + '0'.repeat(399)
+      const header = createValidHeader()
       const trailer = '9' + '9'.repeat(399)
       const lines = [header, trailer]
       
@@ -127,6 +142,73 @@ describe('CnabFileBradesco400', () => {
       
       expect(doc.boletoCount).toBe(0)
       expect(doc.readAll()).toEqual([])
+    })
+  })
+
+  describe('validação de literais do header', () => {
+    const corruptHeader = (start: number, end: number, replacement: string): string => {
+      const validHeader = createValidHeader()
+      return validHeader.substring(0, start) + replacement.padEnd(end - start, ' ') + validHeader.substring(end)
+    }
+
+    test('rejeita identificação de arquivo-remessa inválida', () => {
+      const header = corruptHeader(1, 2, '0')
+      const trailer = '9' + '9'.repeat(399)
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow("header: identificação do arquivo-remessa deve ser '1', encontrado '0'")
+    })
+
+    test('rejeita literal remessa inválido', () => {
+      const header = corruptHeader(2, 9, 'RETORNO')
+      const trailer = '9' + '9'.repeat(399)
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow("header: literal remessa deve ser 'REMESSA', encontrado 'RETORNO'")
+    })
+
+    test('rejeita código de serviço inválido', () => {
+      const header = corruptHeader(9, 11, '02')
+      const trailer = '9' + '9'.repeat(399)
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow("header: código de serviço deve ser '01', encontrado '02'")
+    })
+
+    test('rejeita literal serviço inválido', () => {
+      const header = corruptHeader(11, 26, 'PAGAMENTO')
+      const trailer = '9' + '9'.repeat(399)
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow("header: literal serviço deve ser 'COBRANCA', encontrado 'PAGAMENTO'")
+    })
+
+    test('rejeita nome do banco inválido', () => {
+      const header = corruptHeader(79, 94, 'ITAU')
+      const trailer = '9' + '9'.repeat(399)
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow("header: nome do banco por extenso deve ser 'BRADESCO', encontrado 'ITAU'")
+    })
+
+    test('rejeita número sequencial de registro inválido', () => {
+      const header = corruptHeader(394, 400, '000002')
+      const trailer = '9' + '9'.repeat(399)
+      const lines = [header, trailer]
+
+      expect(() => {
+        new CnabFileBradesco400(lines)
+      }).toThrow("header: número sequencial do registro deve ser '000001', encontrado '000002'")
     })
   })
 })

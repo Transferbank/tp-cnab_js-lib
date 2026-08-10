@@ -7,6 +7,20 @@ import { CnabFileBradesco400 } from '@/banks/bradesco/files/cnab-file-bradesco-4
 import { CnabFileBradesco240 } from '@/banks/bradesco/files/cnab-file-bradesco-240'
 import { CNABFileValidationError } from '@/types/errors/field-errors'
 
+const createValidBradesco400Header = (): string => {
+  let header = '0'
+  header += '1'
+  header += 'REMESSA'
+  header += '01'
+  header += 'COBRANCA       '
+  header += ' '.repeat(50)
+  header += '237'
+  header += 'BRADESCO       '
+  header += ' '.repeat(300)
+  header += '000001'
+  return header
+}
+
 describe('getCnabFileClass', () => {
   describe('CNAB 400', () => {
     test('retorna CnabFileBradesco400 para Bradesco', () => {
@@ -53,7 +67,7 @@ describe('getCnabFileClass', () => {
     test('documento instancia boleto correto internamente (CNAB 400)', () => {
       const DocumentClass = getCnabFileClass(BANK_CODES.BRADESCO, CNABFormatCode.CNAB400)
       
-      const header = '0'.padEnd(400, ' ')
+      const header = createValidBradesco400Header()
       const line = '1'.padEnd(400, ' ')
       const trailer = '9'.padEnd(400, ' ')
       const rawLines = [header, line, trailer]

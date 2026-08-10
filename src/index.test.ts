@@ -193,7 +193,8 @@ describe('openCnabFile', () => {
     })
 
     test('linha interna com tamanho errado: construção passa, boleto captura erro estrutural', async () => {
-      const header = '0' + ' '.repeat(75) + '237' + ' '.repeat(321)
+      // Header válido: tipo 0 + literais + código banco nas posições 76-79
+      let header = '01REMESSA01COBRANCA       ' + ' '.repeat(50) + '237' + 'BRADESCO       ' + ' '.repeat(300) + '000001'
       const invalidDetail = '1' + ' '.repeat(299)
       const trailer = '9' + ' '.repeat(399)
 
