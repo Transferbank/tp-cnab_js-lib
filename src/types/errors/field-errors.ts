@@ -6,9 +6,14 @@ export class CNABFieldValidationError extends CNABInputError {
   constructor(
     readonly field: string,
     readonly rawValue: string,
-    reason: string
+    reason: string,
+    readonly lineNumber?: number
   ) {
-    super(`Campo "${field}" inválido: ${reason} (valor: "${rawValue}")`)
+    super(
+      lineNumber != null
+        ? `Campo "${field}" inválido (linha ${lineNumber + 1}): ${reason} (valor: "${rawValue}")`
+        : `Campo "${field}" inválido: ${reason} (valor: "${rawValue}")`
+    )
   }
 }
 

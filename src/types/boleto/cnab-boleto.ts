@@ -23,6 +23,7 @@ export interface BoletoReadResult {
 
 export abstract class CnabBoleto {
   private readonly rawContent: string[]
+  private readonly lineOffset: number
   private readonly structuralError: CNABBoletoValidationError | null
   private _fieldMap?: Record<BoletoFieldName, CnabField<CnabFieldValue>>
   
@@ -43,8 +44,9 @@ export abstract class CnabBoleto {
 
   protected abstract get extraFields(): CnabField<CnabFieldValue>[]
 
-  constructor(rawContent: string[]) {
+  constructor(rawContent: string[], lineOffset: number = 0) {
     this.rawContent = rawContent
+    this.lineOffset = lineOffset
     this.structuralError = this.captureStructuralError(rawContent)
   }
 
@@ -98,12 +100,12 @@ export abstract class CnabBoleto {
   }
 
   protected throwStructureError(reason: string, lineNumber?: number): never {
-    throw new CNABBoletoValidationError(reason, lineNumber)
+    throw new CNABBoletoValidationError(reason, lineNumber != null ? lineNumber + this.lineOffset : undefined)
   }
 
   private tryRead<V>(field: CnabField<V>, errors: (CNABFieldValidationError | CNABBoletoValidationError)[]): V | undefined {
     try {
-      return field.read(this.rawContent)
+      return field.read(this.rawContent, this.lineOffset)
     } catch (e) {
       if (e instanceof CNABFieldValidationError) {
         errors.push(e)
@@ -199,7 +201,7 @@ export abstract class CnabBoleto {
       throw new CNABFieldNotFoundError(fieldName, false)
     }
 
-    return field.read(this.rawContent)
+    return field.read(this.rawContent, this.lineOffset)
   }
 
   readExtraField(fieldKey: string): CnabFieldValue {
@@ -213,7 +215,7 @@ export abstract class CnabBoleto {
       throw new CNABFieldNotFoundError(fieldKey, true)
     }
 
-    return extraField.read(this.rawContent)
+    return extraField.read(this.rawContent, this.lineOffset)
   }
 
   read(mode: ReadMode = ReadMode.SIMPLE): BoletoReadResult {

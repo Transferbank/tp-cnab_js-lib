@@ -18,23 +18,23 @@ export abstract class CnabField<T = string | number> {
     return this.description
   }
 
-  protected extractRaw(lines: string[]): string {
+  protected extractRaw(lines: string[], lineOffset: number): string {
     const line = lines[this.lineIndex]
-    
+
     if (line == null) {
-      this.throwError('', `linha ${this.lineIndex} não encontrada no array fornecido`)
+      this.throwError('', `linha ${this.lineIndex} não encontrada no array fornecido`, lineOffset)
     }
-    
+
     return line.substring(this.pos[0], this.pos[1])
   }
 
-  protected throwError(rawValue: string, reason: string): never {
-    throw new CNABFieldValidationError(this.description, rawValue, reason)
+  protected throwError(rawValue: string, reason: string, lineOffset: number = 0): never {
+    throw new CNABFieldValidationError(this.description, rawValue, reason, this.lineIndex + lineOffset)
   }
 
-  protected validate(raw: string): void {
+  protected validate(raw: string, lineOffset: number): void {
     if (!this.validator.validate(raw)) {
-      this.throwError(raw, this.validator.errorMessage)
+      this.throwError(raw, this.validator.errorMessage, lineOffset)
     }
   }
 
@@ -42,9 +42,9 @@ export abstract class CnabField<T = string | number> {
     return this.parser.parse(raw)
   }
 
-  read(lines: string[]): T {
-    const raw = this.extractRaw(lines)
-    this.validate(raw)
+  read(lines: string[], lineOffset: number = 0): T {
+    const raw = this.extractRaw(lines, lineOffset)
+    this.validate(raw, lineOffset)
     return this.parse(raw)
   }
 }
