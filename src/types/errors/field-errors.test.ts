@@ -1,4 +1,4 @@
-import { CNABFieldValidationError, CNABBoletoValidationError, CNABBoletoNotFoundError, CNABDocumentValidationError } from './field-errors'
+import { CNABFieldValidationError, CNABBoletoValidationError, CNABBoletoNotFoundError, CNABFileValidationError } from './field-errors'
 import { CNABInputError } from './base'
 
 describe('CNABFieldValidationError', () => {
@@ -75,35 +75,35 @@ describe('CNABBoletoNotFoundError', () => {
   })
 })
 
-describe('CNABDocumentValidationError', () => {
+describe('CNABFileValidationError', () => {
   test('deve estender CNABInputError', () => {
-    const error = new CNABDocumentValidationError('header ausente')
+    const error = new CNABFileValidationError('header ausente')
     expect(error).toBeInstanceOf(CNABInputError)
   })
 
-  test('deve ter code fixo DOCUMENT_VALIDATION_ERROR', () => {
-    const error = new CNABDocumentValidationError('header ausente')
-    expect(error.code).toBe('DOCUMENT_VALIDATION_ERROR')
+  test('deve ter code fixo FILE_VALIDATION_ERROR', () => {
+    const error = new CNABFileValidationError('header ausente')
+    expect(error.code).toBe('FILE_VALIDATION_ERROR')
   })
 
   test('deve armazenar lineNumber quando fornecido', () => {
-    const error = new CNABDocumentValidationError('tipo inválido', 5)
+    const error = new CNABFileValidationError('tipo inválido', 5)
     expect(error.lineNumber).toBe(5)
   })
 
   test('deve formatar mensagem com número da linha', () => {
-    const error = new CNABDocumentValidationError('tipo inválido', 5)
+    const error = new CNABFileValidationError('tipo inválido', 5)
     expect(error.message).toBe('Arquivo inválido (linha 6): tipo inválido')
   })
 
   test('lineNumber é 0-indexed internamente, 1-indexed na mensagem', () => {
-    const error = new CNABDocumentValidationError('header deve ser tipo 0', 0)
+    const error = new CNABFileValidationError('header deve ser tipo 0', 0)
     expect(error.lineNumber).toBe(0)
     expect(error.message).toContain('linha 1')
   })
 
   test('deve formatar mensagem sem número da linha', () => {
-    const error = new CNABDocumentValidationError('arquivo vazio')
+    const error = new CNABFileValidationError('arquivo vazio')
     expect(error.message).toBe('Arquivo inválido: arquivo vazio')
     expect(error.lineNumber).toBeUndefined()
   })

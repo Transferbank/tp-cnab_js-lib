@@ -1,7 +1,7 @@
-﻿import { CnabDocument400 } from './cnab-document-400'
+import { CnabFile400 } from './cnab-file-400'
 import { CnabBoleto, BoletoReadResult } from '@/types/boleto/cnab-boleto'
 import { BANK_CODES } from '@/types/bank/bank-codes'
-import { CNABDocumentValidationError } from '@/types/errors/field-errors'
+import { CNABFileValidationError } from '@/types/errors/field-errors'
 
 class MockCnabBoleto extends CnabBoleto {
   protected get bankCode(): string {
@@ -48,7 +48,7 @@ class MockCnabBoleto extends CnabBoleto {
   }
 }
 
-class TestCnabDocument400 extends CnabDocument400<MockCnabBoleto> {
+class TestCnabFile400 extends CnabFile400<MockCnabBoleto> {
   protected get bankCode(): string {
     return BANK_CODES.BRADESCO
   }
@@ -58,7 +58,7 @@ class TestCnabDocument400 extends CnabDocument400<MockCnabBoleto> {
   }
 }
 
-describe('CnabDocument400', () => {
+describe('CnabFile400', () => {
   const createLine = (recordType: string): string => {
     return recordType.padEnd(400, ' ')
   }
@@ -67,37 +67,37 @@ describe('CnabDocument400', () => {
     test('aceita header válido tipo 0', () => {
       const lines = [createLine('0'), createLine('1'), createLine('9')]
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).not.toThrow()
     })
 
     test('rejeita arquivo com menos de 2 linhas', () => {
       const lines = [createLine('0')]
       expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
+        new TestCnabFile400(lines)
+      }).toThrow(CNABFileValidationError)
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).toThrow('arquivo deve ter pelo menos header e trailer')
     })
 
     test('rejeita header com tamanho incorreto', () => {
       const lines = ['0'.padEnd(350, ' '), createLine('1'), createLine('9')]
       expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
+        new TestCnabFile400(lines)
+      }).toThrow(CNABFileValidationError)
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).toThrow('header deve ter 400 caracteres')
     })
 
     test('rejeita header com tipo diferente de 0', () => {
       const lines = [createLine('1'), createLine('1'), createLine('9')]
       expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
+        new TestCnabFile400(lines)
+      }).toThrow(CNABFileValidationError)
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).toThrow("header deve ser tipo '0'")
     })
   })
@@ -106,20 +106,20 @@ describe('CnabDocument400', () => {
     test('rejeita trailer com tamanho incorreto', () => {
       const lines = [createLine('0'), createLine('1'), '9'.padEnd(350, ' ')]
       expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
+        new TestCnabFile400(lines)
+      }).toThrow(CNABFileValidationError)
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).toThrow('trailer deve ter 400 caracteres')
     })
 
     test('rejeita trailer com tipo diferente de 9', () => {
       const lines = [createLine('0'), createLine('1'), createLine('1')]
       expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
+        new TestCnabFile400(lines)
+      }).toThrow(CNABFileValidationError)
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).toThrow("trailer deve ser tipo '9'")
     })
   })
@@ -127,7 +127,7 @@ describe('CnabDocument400', () => {
   describe('groupBoletos', () => {
     test('agrupa boleto simples sem satélites', () => {
       const lines = [createLine('0'), createLine('1'), createLine('9')]
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
 
       expect(doc.boletoCount).toBe(1)
       const boleto = doc.getBoleto(0)
@@ -142,7 +142,7 @@ describe('CnabDocument400', () => {
         createLine('6'),
         createLine('9'),
       ]
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
 
       expect(doc.boletoCount).toBe(1)
     })
@@ -157,7 +157,7 @@ describe('CnabDocument400', () => {
         createLine('1'),
         createLine('9'),
       ]
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
 
       expect(doc.boletoCount).toBe(3)
     })
@@ -165,7 +165,7 @@ describe('CnabDocument400', () => {
     test('registra erro de satélite órfão antes de qualquer núcleo', () => {
       const lines = [createLine('0'), createLine('2'), createLine('9')]
       
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -181,10 +181,10 @@ describe('CnabDocument400', () => {
         createLine('9'),
       ]
       expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
+        new TestCnabFile400(lines)
+      }).toThrow(CNABFileValidationError)
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).toThrow(/tipo estrutural '0' não deve aparecer no corpo/)
     })
 
@@ -196,16 +196,16 @@ describe('CnabDocument400', () => {
         createLine('9'),
       ]
       expect(() => {
-        new TestCnabDocument400(lines)
-      }).toThrow(CNABDocumentValidationError)
+        new TestCnabFile400(lines)
+      }).toThrow(CNABFileValidationError)
       expect(() => {
-        new TestCnabDocument400(lines)
+        new TestCnabFile400(lines)
       }).toThrow(/tipo de registro '5' não reconhecido/)
     })
 
     test('aceita arquivo sem boletos (apenas header e trailer)', () => {
       const lines = [createLine('0'), createLine('9')]
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
 
       expect(doc.boletoCount).toBe(0)
       expect(doc.readAll()).toEqual([])
@@ -218,7 +218,7 @@ describe('CnabDocument400', () => {
         createLine('1'),
         createLine('9'),
       ]
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
 
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -234,7 +234,7 @@ describe('CnabDocument400', () => {
         createLine('1'),
         createLine('9'),
       ]
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
 
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(2)
@@ -253,7 +253,7 @@ describe('CnabDocument400', () => {
         createLine('1'),
         createLine('9'),
       ]
-      const doc = new TestCnabDocument400(lines)
+      const doc = new TestCnabFile400(lines)
 
       const results = doc.readAll()
       expect(results).toHaveLength(3)
@@ -278,7 +278,7 @@ describe('CnabDocument400', () => {
       const mutated = [...lines]
       mutated.splice(1, 0, createLine('2'))
 
-      const doc = new TestCnabDocument400(mutated)
+      const doc = new TestCnabFile400(mutated)
 
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors.some(e => e.message.includes('satélite tipo') && e.message.includes('sem núcleo precedente'))).toBe(true)
@@ -292,7 +292,7 @@ describe('CnabDocument400', () => {
       mutated.splice(1, 0, createLine('2'))
       mutated.splice(3, 0, createLine('6'))
 
-      const doc = new TestCnabDocument400(mutated)
+      const doc = new TestCnabFile400(mutated)
 
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors.length).toBeGreaterThanOrEqual(1)

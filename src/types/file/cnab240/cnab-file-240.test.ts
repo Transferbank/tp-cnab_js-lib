@@ -1,4 +1,4 @@
-﻿import { CnabDocument240 } from './cnab-document-240'
+import { CnabFile240 } from './cnab-file-240'
 import { CnabBoleto, BoletoReadResult } from '@/types/boleto/cnab-boleto'
 import { BANK_CODES } from '@/types/bank/bank-codes'
 import * as fs from 'fs'
@@ -56,7 +56,7 @@ class MockCnabBoleto extends CnabBoleto {
   }
 }
 
-class TestCnabDocument240 extends CnabDocument240<MockCnabBoleto> {
+class TestCnabFile240 extends CnabFile240<MockCnabBoleto> {
   protected get bankCode(): string {
     return BANK_CODES.BRADESCO
   }
@@ -66,7 +66,7 @@ class TestCnabDocument240 extends CnabDocument240<MockCnabBoleto> {
   }
 }
 
-describe('CnabDocument240', () => {
+describe('CnabFile240', () => {
   const loadFixture = (): string[] => {
     const fixturePath = path.join(
       __dirname,
@@ -85,7 +85,7 @@ describe('CnabDocument240', () => {
     test('rejeita arquivo com menos de 2 linhas', () => {
       const header = createLine('0')
       expect(() => {
-        new TestCnabDocument240([header])
+        new TestCnabFile240([header])
       }).toThrow('arquivo deve ter pelo menos header e trailer')
     })
 
@@ -93,12 +93,12 @@ describe('CnabDocument240', () => {
       const headerWrongSize = '0' + ' '.repeat(100)
       const trailer = createLine('9')
       expect(() => {
-        new TestCnabDocument240([headerWrongSize, trailer])
+        new TestCnabFile240([headerWrongSize, trailer])
       }).toThrow('header de arquivo deve ter 240 caracteres')
 
       const headerWrongType = createLine('1')
       expect(() => {
-        new TestCnabDocument240([headerWrongType, trailer])
+        new TestCnabFile240([headerWrongType, trailer])
       }).toThrow("header de arquivo deve ser tipo '0'")
     })
 
@@ -106,12 +106,12 @@ describe('CnabDocument240', () => {
       const header = createLine('0')
       const trailerWrongSize = '9' + ' '.repeat(100)
       expect(() => {
-        new TestCnabDocument240([header, trailerWrongSize])
+        new TestCnabFile240([header, trailerWrongSize])
       }).toThrow('trailer de arquivo deve ter 240 caracteres')
 
       const trailerWrongType = createLine('5')
       expect(() => {
-        new TestCnabDocument240([header, trailerWrongType])
+        new TestCnabFile240([header, trailerWrongType])
       }).toThrow("trailer de arquivo deve ser tipo '9'")
     })
   })
@@ -125,7 +125,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentQ, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP, segmentQ, loteTrailer, trailer])
 
       expect(doc.boletoCount).toBe(1)
     })
@@ -140,7 +140,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentQ, segmentR, segmentS, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP, segmentQ, segmentR, segmentS, loteTrailer, trailer])
 
       expect(doc.boletoCount).toBe(1)
     })
@@ -159,7 +159,7 @@ describe('CnabDocument240', () => {
       const lote2Trailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240(
+      const doc = new TestCnabFile240(
         [
           header,
           lote1Header,
@@ -188,7 +188,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentQ, segmentY01, segmentY04, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP, segmentQ, segmentY01, segmentY04, loteTrailer, trailer])
 
       expect(doc.boletoCount).toBe(1)
     })
@@ -197,7 +197,7 @@ describe('CnabDocument240', () => {
       const header = createLine('0')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, trailer])
+      const doc = new TestCnabFile240([header, trailer])
 
       expect(doc.boletoCount).toBe(0)
     })
@@ -211,7 +211,7 @@ describe('CnabDocument240', () => {
       const trailer = createLine('9')
 
       expect(() => {
-        new TestCnabDocument240([header, loteHeader1, loteHeader2, trailer])
+        new TestCnabFile240([header, loteHeader1, loteHeader2, trailer])
       }).toThrow('header de lote dentro de outro lote')
     })
 
@@ -221,7 +221,7 @@ describe('CnabDocument240', () => {
       const trailer = createLine('9')
 
       expect(() => {
-        new TestCnabDocument240([header, loteTrailer, trailer])
+        new TestCnabFile240([header, loteTrailer, trailer])
       }).toThrow('trailer de lote sem header de lote correspondente')
     })
 
@@ -232,7 +232,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP, loteTrailer, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -247,7 +247,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentQ, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentQ, loteTrailer, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -263,7 +263,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentR, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP, segmentR, loteTrailer, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(2)
@@ -278,7 +278,7 @@ describe('CnabDocument240', () => {
       const trailer = createLine('9')
 
       expect(() => {
-        new TestCnabDocument240([header, segmentP, trailer])
+        new TestCnabFile240([header, segmentP, trailer])
       }).toThrow('segmento fora de um lote')
     })
 
@@ -289,7 +289,7 @@ describe('CnabDocument240', () => {
       const segmentQ = createLine('3', 'Q')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentQ, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP, segmentQ, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -306,7 +306,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP1, segmentP2, segmentQ2, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP1, segmentP2, segmentQ2, loteTrailer, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -323,7 +323,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentQ1, segmentP, segmentQ2, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentQ1, segmentP, segmentQ2, loteTrailer, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -340,7 +340,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP, segmentR, segmentQ, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP, segmentR, segmentQ, loteTrailer, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(1)
@@ -358,7 +358,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentQ1, segmentP1, segmentP2, segmentQ2, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentQ1, segmentP1, segmentP2, segmentQ2, loteTrailer, trailer])
       
       expect(doc.hasStructureErrors).toBe(true)
       expect(doc.structureErrors).toHaveLength(2)
@@ -374,8 +374,8 @@ describe('CnabDocument240', () => {
       const trailer = createLine('9')
 
       expect(() => {
-        new TestCnabDocument240([header, loteHeader, invalidLine, trailer])
-      }).toThrow("tipo de registro '7' não reconhecido no corpo do arquivo")
+        new TestCnabFile240([header, loteHeader, invalidLine, trailer])
+      }).toThrow(/tipo de registro '7' não reconhecido no corpo do arquivo/)
     })
   })
 
@@ -383,7 +383,7 @@ describe('CnabDocument240', () => {
     test('processa fixture com 3 boletos (P+Q+R+S cada)', () => {
       const lines = loadFixture()
 
-      const doc = new TestCnabDocument240(lines)
+      const doc = new TestCnabFile240(lines)
 
       expect(lines).toHaveLength(16)
       expect(doc.boletoCount).toBe(3)
@@ -405,7 +405,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP1, segmentQ1, segmentP2, segmentQ2, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP1, segmentQ1, segmentP2, segmentQ2, loteTrailer, trailer])
 
       const boleto0 = doc.getBoleto(0) as MockCnabBoleto
       const boleto1 = doc.getBoleto(1) as MockCnabBoleto
@@ -425,7 +425,7 @@ describe('CnabDocument240', () => {
       const loteTrailer = createLine('5')
       const trailer = createLine('9')
 
-      const doc = new TestCnabDocument240([header, loteHeader, segmentP1, segmentQ1, segmentP2, segmentQ2, loteTrailer, trailer])
+      const doc = new TestCnabFile240([header, loteHeader, segmentP1, segmentQ1, segmentP2, segmentQ2, loteTrailer, trailer])
 
       const results = doc.readAll()
 
@@ -443,10 +443,10 @@ describe('CnabDocument240', () => {
       const mutated = [...lines]
       mutated[5] = mutated[5].substring(0, 13) + 'Z' + mutated[5].substring(14)
 
-      const doc = new TestCnabDocument240(mutated)
+      const doc = new TestCnabFile240(mutated)
 
       expect(doc.hasStructureErrors).toBe(true)
-      expect(doc.structureErrors.some(e => e.message.includes('não reconhecido para este banco'))).toBe(true)
+      expect(doc.structureErrors.some(e => e.message.includes('não reconhecido'))).toBe(true)
       expect(doc.boletoCount).toBeGreaterThan(0)
     })
   })

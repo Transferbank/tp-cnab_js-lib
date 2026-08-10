@@ -1,9 +1,9 @@
-import { CnabDocument, BoletoRange } from './cnab-document'
+import { CnabFile, BoletoRange } from './cnab-file'
 import { CnabBoleto, BoletoReadResult } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import {
   CNABBoletoNotFoundError,
-  CNABDocumentValidationError,
+  CNABFileValidationError,
   CNABFieldValidationError
 } from '@/types/errors/field-errors'
 
@@ -52,7 +52,7 @@ class MockCnabBoleto extends CnabBoleto {
   }
 }
 
-class TestCnabDocument extends CnabDocument<MockCnabBoleto> {
+class TestCnabFile extends CnabFile<MockCnabBoleto> {
   get type(): CNABFormatCode {
     return CNABFormatCode.CNAB400
   }
@@ -80,7 +80,7 @@ class TestCnabDocument extends CnabDocument<MockCnabBoleto> {
       boletoClass?: new (lines: string[]) => MockCnabBoleto
     }
   ) {
-    TestCnabDocument._tempOptions = options
+    TestCnabFile._tempOptions = options
     super(rawLines)
     this._options = options
   }
@@ -90,21 +90,21 @@ class TestCnabDocument extends CnabDocument<MockCnabBoleto> {
   }
 
   protected validateHeader(): void {
-    const opts = this._options ?? TestCnabDocument._tempOptions
+    const opts = this._options ?? TestCnabFile._tempOptions
     if (opts.headerValid === false) {
       throw new Error('Header inválido')
     }
   }
 
   protected validateTrailer(): void {
-    const opts = this._options ?? TestCnabDocument._tempOptions
+    const opts = this._options ?? TestCnabFile._tempOptions
     if (opts.trailerValid === false) {
       throw new Error('Trailer inválido')
     }
   }
 
   protected groupBoletos(): BoletoRange[] {
-    const opts = this._options ?? TestCnabDocument._tempOptions
+    const opts = this._options ?? TestCnabFile._tempOptions
     return opts.ranges ?? []
   }
 }
@@ -117,11 +117,11 @@ function createTestDocument(
     ranges?: BoletoRange[]
     boletoClass?: new (lines: string[]) => MockCnabBoleto
   } = {}
-): TestCnabDocument {
-  return new TestCnabDocument(rawLines, options)
+): TestCnabFile {
+  return new TestCnabFile(rawLines, options)
 }
 
-describe('CnabDocument', () => {
+describe('CnabFile', () => {
   const createLines = (count: number): string[] => {
     return Array.from({ length: count }, (_, i) => `LINE${i}`.padEnd(10, ' '))
   }
@@ -236,7 +236,7 @@ describe('CnabDocument', () => {
       }
 
       const lines = createLines(9)
-      const doc = new TestCnabDocument(lines, {
+      const doc = new TestCnabFile(lines, {
         boletoClass: FailingBoleto as any,
         ranges: [
           { startLine: 1, endLine: 3 },
@@ -323,7 +323,7 @@ describe('CnabDocument', () => {
       }
 
       const lines = createLines(9)
-      const doc = new TestCnabDocument(lines, {
+      const doc = new TestCnabFile(lines, {
         boletoClass: TrackingBoleto as any,
         ranges: [
           { startLine: 1, endLine: 2 },
@@ -340,42 +340,42 @@ describe('CnabDocument', () => {
     })
   })
 
-  describe('throwDocError', () => {
-    class TestDocumentWithHelper extends TestCnabDocument {
-      public testThrowDocError(reason: string, lineNumber?: number): never {
-        return this.throwDocError(reason, lineNumber)
+  describe('throwFileError', () => {
+    class TestDocumentWithHelper extends TestCnabFile {
+      public testThrowFileError(reason: string, lineNumber?: number): never {
+        return this.throwFileError(reason, lineNumber)
       }
     }
 
-    test('lança CNABDocumentValidationError com reason', () => {
+    test('lança CNABFileValidationError com reason', () => {
       const lines = createLines(5)
       const doc = new TestDocumentWithHelper(lines, {})
 
-      expect(() => doc.testThrowDocError('erro de teste')).toThrow(
-        CNABDocumentValidationError
+      expect(() => doc.testThrowFileError('erro de teste')).toThrow(
+        CNABFileValidationError
       )
-      expect(() => doc.testThrowDocError('erro de teste')).toThrow(
+      expect(() => doc.testThrowFileError('erro de teste')).toThrow(
         'Arquivo inválido: erro de teste'
       )
     })
 
-    test('lança CNABDocumentValidationError com reason e lineNumber', () => {
+    test('lança CNABFileValidationError com reason e lineNumber', () => {
       const lines = createLines(5)
       const doc = new TestDocumentWithHelper(lines, {})
 
-      expect(() => doc.testThrowDocError('tipo inválido', 5)).toThrow(
-        CNABDocumentValidationError
+      expect(() => doc.testThrowFileError('tipo inválido', 5)).toThrow(
+        CNABFileValidationError
       )
-      expect(() => doc.testThrowDocError('tipo inválido', 5)).toThrow(
+      expect(() => doc.testThrowFileError('tipo inválido', 5)).toThrow(
         'Arquivo inválido (linha 6): tipo inválido'
       )
     })
   })
 
-  describe('recordDocError', () => {
-    class TestDocumentWithRecorder extends TestCnabDocument {
-      public testRecordDocError(reason: string, lineNumber?: number): void {
-        return this.recordDocError(reason, lineNumber)
+  describe('recordFileError', () => {
+    class TestDocumentWithRecorder extends TestCnabFile {
+      public testrecordFileError(reason: string, lineNumber?: number): void {
+        return this.recordFileError(reason, lineNumber)
       }
     }
 
@@ -383,7 +383,7 @@ describe('CnabDocument', () => {
       const lines = createLines(5)
       const doc = new TestDocumentWithRecorder(lines, {})
 
-      expect(() => doc.testRecordDocError('erro recuperável')).not.toThrow()
+      expect(() => doc.testrecordFileError('erro recuperável')).not.toThrow()
       expect(doc.structureErrors).toHaveLength(1)
       expect(doc.structureErrors[0].message).toContain('erro recuperável')
     })
@@ -392,9 +392,9 @@ describe('CnabDocument', () => {
       const lines = createLines(5)
       const doc = new TestDocumentWithRecorder(lines, {})
 
-      doc.testRecordDocError('erro 1', 0)
-      doc.testRecordDocError('erro 2', 5)
-      doc.testRecordDocError('erro 3')
+      doc.testrecordFileError('erro 1', 0)
+      doc.testrecordFileError('erro 2', 5)
+      doc.testrecordFileError('erro 3')
 
       expect(doc.structureErrors).toHaveLength(3)
       expect(doc.structureErrors[0].message).toContain('erro 1')
@@ -408,7 +408,7 @@ describe('CnabDocument', () => {
 
       expect(doc.hasStructureErrors).toBe(false)
       
-      doc.testRecordDocError('erro')
+      doc.testrecordFileError('erro')
       
       expect(doc.hasStructureErrors).toBe(true)
     })
@@ -462,7 +462,7 @@ describe('CnabDocument', () => {
       }
 
       const lines = createLines(10)
-      const doc = new TestCnabDocument(lines, {
+      const doc = new TestCnabFile(lines, {
         boletoClass: BoletoWithFieldError as any,
         ranges: [
           { startLine: 1, endLine: 3 },  // Boleto 0

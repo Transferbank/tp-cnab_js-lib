@@ -3,7 +3,7 @@ import { CNABFormatCode } from '@/types/core/cnab'
 import {
   CNABBoletoNotFoundError,
   CNABBoletoValidationError,
-  CNABDocumentValidationError,
+  CNABFileValidationError,
   CNABFieldValidationError
 } from '@/types/errors/field-errors'
 
@@ -20,12 +20,12 @@ export interface BoletoResult<T = unknown> {
   error?: Error
 }
 
-export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
+export abstract class CnabFile<TBoleto extends CnabBoleto = CnabBoleto> {
   abstract readonly type: CNABFormatCode
 
   protected readonly rawLines: string[]
   private readonly boletoRanges: BoletoRange[]
-  private readonly _structureErrors: CNABDocumentValidationError[] = []
+  private readonly _structureErrors: CNABFileValidationError[] = []
 
   constructor(rawLines: string[]) {
     this.rawLines = rawLines
@@ -39,15 +39,15 @@ export abstract class CnabDocument<TBoleto extends CnabBoleto = CnabBoleto> {
   protected abstract groupBoletos(): BoletoRange[]
   protected abstract get BoletoClass(): new (lines: string[]) => TBoleto
 
-  protected throwDocError(reason: string, lineNumber?: number): never {
-    throw new CNABDocumentValidationError(reason, lineNumber)
+  protected throwFileError(reason: string, lineNumber?: number): never {
+    throw new CNABFileValidationError(reason, lineNumber)
   }
 
-  protected recordDocError(reason: string, lineNumber?: number): void {
-    this._structureErrors.push(new CNABDocumentValidationError(reason, lineNumber))
+  protected recordFileError(reason: string, lineNumber?: number): void {
+    this._structureErrors.push(new CNABFileValidationError(reason, lineNumber))
   }
 
-  get structureErrors(): CNABDocumentValidationError[] {
+  get structureErrors(): CNABFileValidationError[] {
     return this._structureErrors
   }
 

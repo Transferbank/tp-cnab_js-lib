@@ -1,8 +1,8 @@
-import { CnabDocument240 } from '@/types/document/cnab240/cnab-document-240'
+import { CnabFile240 } from '@/types/file/cnab240/cnab-file-240'
 import { BANK_CODES } from '@/types/bank/bank-codes'
 import { BoletoBradesco240 } from '@/banks/bradesco/boletos/boleto-bradesco-240'
 
-export class CnabDocumentBradesco240 extends CnabDocument240<BoletoBradesco240> {
+export class CnabFileBradesco240 extends CnabFile240<BoletoBradesco240> {
   protected get bankCode(): string {
     return BANK_CODES.BRADESCO
   }

@@ -1,4 +1,4 @@
-import { CnabDocument, BoletoRange } from '../cnab-document'
+import { CnabFile, BoletoRange } from '../cnab-file'
 import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import { GroupingRule } from '@/types/processing/grouping'
@@ -16,9 +16,9 @@ interface GroupingState {
   coreComplete: boolean
 }
 
-export abstract class CnabDocument240<
+export abstract class CnabFile240<
   TBoleto extends CnabBoleto = CnabBoleto
-> extends CnabDocument<TBoleto> {
+> extends CnabFile<TBoleto> {
   get type(): CNABFormatCode {
     return CNABFormatCode.CNAB240
   }
@@ -32,14 +32,14 @@ export abstract class CnabDocument240<
     label: string
   ): void {
     if (line.length !== 240) {
-      this.throwDocError(
+      this.throwFileError(
         `${label} deve ter 240 caracteres, tem ${line.length}`,
         lineNumber
       )
     }
     const recordType = getCnab240RecordType(line)
     if (recordType !== expectedType) {
-      this.throwDocError(
+      this.throwFileError(
         `${label} deve ser tipo '${expectedType}', encontrado '${recordType}'`,
         lineNumber
       )
@@ -48,7 +48,7 @@ export abstract class CnabDocument240<
 
   protected validateHeader(): void {
     if (this.rawLines.length < 2) {
-      this.throwDocError('arquivo deve ter pelo menos header e trailer')
+      this.throwFileError('arquivo deve ter pelo menos header e trailer')
     }
     this.validateStructuralLine(this.rawLines[0], 0, '0', 'header de arquivo')
   }
@@ -77,7 +77,7 @@ export abstract class CnabDocument240<
     }
 
     if (state.insideLote) {
-      this.recordDocError('arquivo termina com lote aberto (sem trailer de lote)')
+      this.recordFileError('arquivo termina com lote aberto (sem trailer de lote)')
       if (state.currentRange != null && state.coreComplete) {
         ranges.push(state.currentRange)
       }
@@ -106,14 +106,14 @@ export abstract class CnabDocument240<
     }
 
     if (recordType !== '3') {
-      this.throwDocError(
+      this.throwFileError(
         `tipo de registro '${recordType}' não reconhecido no corpo do arquivo`,
         index
       )
     }
 
     if (!state.insideLote) {
-      this.throwDocError('segmento fora de um lote', index)
+      this.throwFileError('segmento fora de um lote', index)
     }
 
     const segmentType = this.resolveSegmentType(line)
@@ -122,7 +122,7 @@ export abstract class CnabDocument240<
 
   private handleLoteHeader(index: number, state: GroupingState): void {
     if (state.insideLote) {
-      this.throwDocError(
+      this.throwFileError(
         'header de lote dentro de outro lote (sem trailer de lote anterior)',
         index
       )
@@ -136,13 +136,13 @@ export abstract class CnabDocument240<
     ranges: BoletoRange[]
   ): void {
     if (!state.insideLote) {
-      this.throwDocError(
+      this.throwFileError(
         'trailer de lote sem header de lote correspondente',
         index
       )
     }
     if (state.currentRange != null && !state.coreComplete) {
-      this.recordDocError(
+      this.recordFileError(
         'boleto incompleto (núcleo P+Q) antes do trailer de lote',
         index
       )
@@ -180,7 +180,7 @@ export abstract class CnabDocument240<
     } else if (rule.optionalSatellites.includes(type)) {
       this.handleSatellite(type, index, state)
     } else {
-      this.recordDocError(
+      this.recordFileError(
         `segmento '${type}' não reconhecido para este banco`,
         index
       )
@@ -193,7 +193,7 @@ export abstract class CnabDocument240<
     ranges: BoletoRange[]
   ): void {
     if (state.currentRange != null && !state.coreComplete) {
-      this.recordDocError('segmento P sem segmento Q do boleto anterior', index)
+      this.recordFileError('segmento P sem segmento Q do boleto anterior', index)
     } else if (state.currentRange != null && state.coreComplete) {
       ranges.push(state.currentRange)
     }
@@ -203,7 +203,7 @@ export abstract class CnabDocument240<
 
   private handleCoreComplete(index: number, state: GroupingState): void {
     if (state.currentRange == null || state.coreComplete) {
-      this.recordDocError('segmento Q sem segmento P correspondente', index)
+      this.recordFileError('segmento Q sem segmento P correspondente', index)
       return
     }
     state.currentRange.endLine = index + 1
@@ -216,7 +216,7 @@ export abstract class CnabDocument240<
     state: GroupingState
   ): void {
     if (state.currentRange == null || !state.coreComplete) {
-      this.recordDocError(
+      this.recordFileError(
         `satélite '${type}' antes do núcleo P+Q estar completo`,
         index
       )

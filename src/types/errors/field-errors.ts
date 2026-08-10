@@ -44,8 +44,8 @@ export class CNABBoletoNotFoundError extends CNABInputError {
   }
 }
 
-export class CNABDocumentValidationError extends CNABInputError {
-  readonly code = 'DOCUMENT_VALIDATION_ERROR'
+export class CNABFileValidationError extends CNABInputError {
+  readonly code = 'FILE_VALIDATION_ERROR'
 
   constructor(reason: string, readonly lineNumber?: number) {
     super(

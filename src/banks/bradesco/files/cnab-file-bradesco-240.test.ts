@@ -1,9 +1,9 @@
-﻿import { CnabDocumentBradesco240 } from './cnab-document-bradesco-240'
+import { CnabFileBradesco240 } from './cnab-file-bradesco-240'
 import { BoletoBradesco240 } from '@/banks/bradesco/boletos/boleto-bradesco-240'
 import * as fs from 'fs'
 import * as path from 'path'
 
-describe('CnabDocumentBradesco240', () => {
+describe('CnabFileBradesco240', () => {
   let fixtureLines: string[]
 
   beforeAll(() => {
@@ -14,11 +14,11 @@ describe('CnabDocumentBradesco240', () => {
 
   describe('construtor', () => {
     test('aceita arquivo válido', () => {
-      expect(() => new CnabDocumentBradesco240(fixtureLines)).not.toThrow()
+      expect(() => new CnabFileBradesco240(fixtureLines)).not.toThrow()
     })
 
     test('identifica quantidade correta de boletos', () => {
-      const doc = new CnabDocumentBradesco240(fixtureLines)
+      const doc = new CnabFileBradesco240(fixtureLines)
 
       expect(doc.boletoCount).toBe(3)
     })
@@ -26,7 +26,7 @@ describe('CnabDocumentBradesco240', () => {
 
   describe('getBoleto', () => {
     test('retorna instância de BoletoBradesco240', () => {
-      const doc = new CnabDocumentBradesco240(fixtureLines)
+      const doc = new CnabFileBradesco240(fixtureLines)
 
       const boleto = doc.getBoleto(0)
 
@@ -34,7 +34,7 @@ describe('CnabDocumentBradesco240', () => {
     })
 
     test('tipo retornado é BoletoBradesco240 (type safety)', () => {
-      const doc = new CnabDocumentBradesco240(fixtureLines)
+      const doc = new CnabFileBradesco240(fixtureLines)
 
       const boleto = doc.getBoleto(0)
       const result = boleto.readSimple()
@@ -45,7 +45,7 @@ describe('CnabDocumentBradesco240', () => {
     })
 
     test('cada boleto pode ser lido individualmente', () => {
-      const doc = new CnabDocumentBradesco240(fixtureLines)
+      const doc = new CnabFileBradesco240(fixtureLines)
 
       const boleto0 = doc.getBoleto(0)
       const boleto1 = doc.getBoleto(1)
@@ -57,7 +57,7 @@ describe('CnabDocumentBradesco240', () => {
     })
 
     test('boleto retornado pode ser lido com sucesso', () => {
-      const doc = new CnabDocumentBradesco240(fixtureLines)
+      const doc = new CnabFileBradesco240(fixtureLines)
 
       const boleto = doc.getBoleto(0)
       const result = boleto.readSimple()
@@ -71,7 +71,7 @@ describe('CnabDocumentBradesco240', () => {
 
   describe('readAll', () => {
     test('processa todos os boletos do documento', () => {
-      const doc = new CnabDocumentBradesco240(fixtureLines)
+      const doc = new CnabFileBradesco240(fixtureLines)
 
       const results = doc.readAll()
 
@@ -88,7 +88,7 @@ describe('CnabDocumentBradesco240', () => {
       const header = ' '.repeat(7) + '0' + ' '.repeat(232)
       const trailer = ' '.repeat(7) + '9' + ' '.repeat(232)
 
-      const doc = new CnabDocumentBradesco240([header, trailer])
+      const doc = new CnabFileBradesco240([header, trailer])
 
       expect(doc.boletoCount).toBe(0)
     })

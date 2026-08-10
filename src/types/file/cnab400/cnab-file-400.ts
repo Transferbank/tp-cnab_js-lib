@@ -1,12 +1,12 @@
-import { CnabDocument, BoletoRange } from '../cnab-document'
+import { CnabFile, BoletoRange } from '../cnab-file'
 import { CnabBoleto } from '@/types/boleto/cnab-boleto'
 import { CNABFormatCode } from '@/types/core/cnab'
 import { getGroupingRule } from '@/grouping/grouping-rules'
 import { getCnab400RecordType } from '@/parser/position-reader'
 
-export abstract class CnabDocument400<
+export abstract class CnabFile400<
   TBoleto extends CnabBoleto = CnabBoleto
-> extends CnabDocument<TBoleto> {
+> extends CnabFile<TBoleto> {
   get type(): CNABFormatCode {
     return CNABFormatCode.CNAB400
   }
@@ -20,7 +20,7 @@ export abstract class CnabDocument400<
     label: string
   ): void {
     if (line.length !== 400) {
-      this.throwDocError(
+      this.throwFileError(
         `${label} deve ter 400 caracteres, tem ${line.length}`,
         lineNumber
       )
@@ -28,7 +28,7 @@ export abstract class CnabDocument400<
 
     const recordType = getCnab400RecordType(line)
     if (recordType !== expectedType) {
-      this.throwDocError(
+      this.throwFileError(
         `${label} deve ser tipo '${expectedType}', encontrado '${recordType}'`,
         lineNumber
       )
@@ -37,7 +37,7 @@ export abstract class CnabDocument400<
 
   protected validateHeader(): void {
     if (this.rawLines.length < 2) {
-      this.throwDocError('arquivo deve ter pelo menos header e trailer')
+      this.throwFileError('arquivo deve ter pelo menos header e trailer')
     }
 
     this.validateStructuralLine(this.rawLines[0], 0, '0', 'header')
@@ -66,7 +66,7 @@ export abstract class CnabDocument400<
         currentRange = { startLine: i, endLine: i + 1 }
       } else if (rule.optionalSatellites.includes(recordType)) {
         if (currentRange == null) {
-          this.recordDocError(
+          this.recordFileError(
             `satélite tipo '${recordType}' sem núcleo precedente`,
             i
           )
@@ -74,12 +74,12 @@ export abstract class CnabDocument400<
         }
         currentRange.endLine = i + 1
       } else if (rule.structural.includes(recordType)) {
-        this.throwDocError(
+        this.throwFileError(
           `tipo estrutural '${recordType}' não deve aparecer no corpo do arquivo`,
           i
         )
       } else {
-        this.throwDocError(
+        this.throwFileError(
           `tipo de registro '${recordType}' não reconhecido para este banco`,
           i
         )
