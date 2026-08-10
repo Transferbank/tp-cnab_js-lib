@@ -7,7 +7,7 @@ export class CnabFileBradesco400 extends CnabFile400<BoletoBradesco400> {
     return BANK_CODES.BRADESCO
   }
 
-  protected get BoletoClass(): new (lines: string[]) => BoletoBradesco400 {
+  protected get BoletoClass(): new (lines: string[], lineOffset?: number) => BoletoBradesco400 {
     return BoletoBradesco400
   }
 
@@ -15,12 +15,12 @@ export class CnabFileBradesco400 extends CnabFile400<BoletoBradesco400> {
     super.validateHeader()
 
     const header = this.rawLines[0]
-    this.validateLiteral(header, 1, 2, '1', 'identificação do arquivo-remessa')
-    this.validateLiteral(header, 2, 9, 'REMESSA', 'literal remessa')
-    this.validateLiteral(header, 9, 11, '01', 'código de serviço')
-    this.validateLiteral(header, 11, 26, 'COBRANCA', 'literal serviço')
-    this.validateLiteral(header, 79, 94, 'BRADESCO', 'nome do banco por extenso')
-    this.validateLiteral(header, 394, 400, '000001', 'número sequencial do registro')
+    this.validateLiteral(header, 1, 2, '1', 'identificação do arquivo-remessa', 0)
+    this.validateLiteral(header, 2, 9, 'REMESSA', 'literal remessa', 0)
+    this.validateLiteral(header, 9, 11, '01', 'código de serviço', 0)
+    this.validateLiteral(header, 11, 26, 'COBRANCA', 'literal serviço', 0)
+    this.validateLiteral(header, 79, 94, 'BRADESCO', 'nome do banco por extenso', 0)
+    this.validateLiteral(header, 394, 400, '000001', 'número sequencial do registro', 0)
   }
 
   protected validateTrailer(): void {
@@ -38,13 +38,6 @@ export class CnabFileBradesco400 extends CnabFile400<BoletoBradesco400> {
         `trailer: sequencial de registro (${sequencial}) não bate com a quantidade real de linhas (${this.rawLines.length})`,
         this.rawLines.length - 1
       )
-    }
-  }
-
-  private validateLiteral(line: string, start: number, end: number, expected: string, label: string): void {
-    const actual = line.substring(start, end).trim()
-    if (actual !== expected) {
-      this.throwFileError(`header: ${label} deve ser '${expected}', encontrado '${actual}'`, 0)
     }
   }
 }

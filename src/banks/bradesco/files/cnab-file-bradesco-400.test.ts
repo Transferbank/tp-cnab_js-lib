@@ -165,7 +165,7 @@ describe('CnabFileBradesco400', () => {
 
       expect(() => {
         new CnabFileBradesco400(lines)
-      }).toThrow("header: identificação do arquivo-remessa deve ser '1', encontrado '0'")
+      }).toThrow("campo 'identificação do arquivo-remessa' deve ser '1', encontrado '0'")
     })
 
     test('rejeita literal remessa inválido', () => {
@@ -175,7 +175,7 @@ describe('CnabFileBradesco400', () => {
 
       expect(() => {
         new CnabFileBradesco400(lines)
-      }).toThrow("header: literal remessa deve ser 'REMESSA', encontrado 'RETORNO'")
+      }).toThrow("campo 'literal remessa' deve ser 'REMESSA', encontrado 'RETORNO'")
     })
 
     test('rejeita código de serviço inválido', () => {
@@ -185,7 +185,7 @@ describe('CnabFileBradesco400', () => {
 
       expect(() => {
         new CnabFileBradesco400(lines)
-      }).toThrow("header: código de serviço deve ser '01', encontrado '02'")
+      }).toThrow("campo 'código de serviço' deve ser '01', encontrado '02'")
     })
 
     test('rejeita literal serviço inválido', () => {
@@ -195,7 +195,7 @@ describe('CnabFileBradesco400', () => {
 
       expect(() => {
         new CnabFileBradesco400(lines)
-      }).toThrow("header: literal serviço deve ser 'COBRANCA', encontrado 'PAGAMENTO'")
+      }).toThrow("campo 'literal serviço' deve ser 'COBRANCA', encontrado 'PAGAMENTO'")
     })
 
     test('rejeita nome do banco inválido', () => {
@@ -205,7 +205,7 @@ describe('CnabFileBradesco400', () => {
 
       expect(() => {
         new CnabFileBradesco400(lines)
-      }).toThrow("header: nome do banco por extenso deve ser 'BRADESCO', encontrado 'ITAU'")
+      }).toThrow("campo 'nome do banco por extenso' deve ser 'BRADESCO', encontrado 'ITAU'")
     })
 
     test('rejeita número sequencial de registro inválido', () => {
@@ -215,7 +215,7 @@ describe('CnabFileBradesco400', () => {
 
       expect(() => {
         new CnabFileBradesco400(lines)
-      }).toThrow("header: número sequencial do registro deve ser '000001', encontrado '000002'")
+      }).toThrow("campo 'número sequencial do registro' deve ser '000001', encontrado '000002'")
     })
   })
 

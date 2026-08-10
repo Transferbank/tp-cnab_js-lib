@@ -37,7 +37,7 @@ export abstract class CnabFile<TBoleto extends CnabBoleto = CnabBoleto> {
   protected abstract validateHeader(): void
   protected abstract validateTrailer(): void
   protected abstract groupBoletos(): BoletoRange[]
-  protected abstract get BoletoClass(): new (lines: string[]) => TBoleto
+  protected abstract get BoletoClass(): new (lines: string[], lineOffset?: number) => TBoleto
 
   protected throwFileError(reason: string, lineNumber?: number): never {
     throw new CNABFileValidationError(reason, lineNumber)
@@ -45,6 +45,13 @@ export abstract class CnabFile<TBoleto extends CnabBoleto = CnabBoleto> {
 
   protected recordFileError(reason: string, lineNumber?: number): void {
     this._structureErrors.push(new CNABFileValidationError(reason, lineNumber))
+  }
+
+  protected validateLiteral(line: string, start: number, end: number, expected: string, label: string, lineNumber?: number): void {
+    const actual = line.substring(start, end).trim()
+    if (actual !== expected) {
+      this.throwFileError(`campo '${label}' deve ser '${expected}', encontrado '${actual}'`, lineNumber)
+    }
   }
 
   get structureErrors(): CNABFileValidationError[] {
@@ -65,7 +72,7 @@ export abstract class CnabFile<TBoleto extends CnabBoleto = CnabBoleto> {
       throw new CNABBoletoNotFoundError(index, this.boletoCount)
     }
     const lines = this.rawLines.slice(range.startLine, range.endLine)
-    return new this.BoletoClass(lines)
+    return new this.BoletoClass(lines, range.startLine)
   }
 
   private readBoletoResult(index: number): BoletoResult {
