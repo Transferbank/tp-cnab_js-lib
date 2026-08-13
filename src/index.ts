@@ -1,5 +1,5 @@
 import { CnabFile } from './cnab/types/cnab-file'
-import { readCnabLines } from './utils/file-reader'
+import { readCnabLines } from './cnab/utils/file-reader'
 
 export async function openCnabFile(file: File): Promise<CnabFile>
 export function openCnabFile(lines: string[]): CnabFile
