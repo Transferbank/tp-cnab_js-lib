@@ -9,23 +9,33 @@ import {
 } from './cnab-exceptions'
 
 export class CnabFile {
-  private readonly rawLines: string[]
-  private readonly format: CnabFormat
-  private readonly bankCode: CnabBankCode
-  private readonly schema: CnabSchema
+  private rawLines!: string[]
+  private format!: CnabFormat
+  private bankCode!: CnabBankCode
+  private schema!: CnabSchema
 
-  private constructor(lines: string[]) {
-    this.rawLines = lines
-    this.format = this.detectCnabFormat(this.rawLines[0])
-    this.bankCode = this.detectBankCode(this.rawLines[0])
-    this.schema = CnabFile.getSchema(this.bankCode, this.format)
+  private constructor() {}
+
+  static async open(file: File): Promise<CnabFile> {
+    const cnabFile = new CnabFile()
+    cnabFile.rawLines = await CnabFile.read(file)
+
+    if (cnabFile.rawLines.length < 3) {
+      throw new CnabFileInsufficientLinesException(cnabFile.rawLines.length)
+    }
+
+    cnabFile.format = cnabFile.detectCnabFormat(cnabFile.rawLines[0])
+    cnabFile.bankCode = cnabFile.detectBankCode(cnabFile.rawLines[0])
+    cnabFile.schema = CnabFile.getSchema(cnabFile.bankCode, cnabFile.format)
+
+    return cnabFile
   }
 
-  static open(lines: string[]): CnabFile {
-    if (lines.length < 3) {
-      throw new CnabFileInsufficientLinesException(lines.length)
-    }
-    return new CnabFile(lines)
+  static async read(file: File): Promise<string[]> {
+    const text = await file.text()
+    return text
+      .split(/\r?\n/)
+      .filter(line => line.length > 0)
   }
 
   private detectCnabFormat(header: string): CnabFormat {
