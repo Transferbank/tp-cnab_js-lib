@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+.claude/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+# Build output
+dist/
+/docs/
+
+# Scripts temporários
+scripts/
+
+# Local Kiro configuration
+.kiro/
+
+# NPM package
+*.tgz
+
+# Material interno (preparação de apresentação, resumos de status) — não é
+# documentação da lib, fica só local
+/local/

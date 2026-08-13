@@ -1,0 +1,23 @@
+# Arquivos de desenvolvimento
+src/
+tests/
+*.test.ts
+example.ts
+tsconfig.json
+jest.config.js
+.eslintrc.json
+.prettierrc.json
+
+# Documentação de desenvolvimento
+IMPLEMENTATION_GUIDE.md
+
+# Build
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
