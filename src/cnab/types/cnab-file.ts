@@ -17,8 +17,17 @@ export class CnabFile {
   private constructor() {}
 
   static async open(file: File): Promise<CnabFile> {
+    const lines = await CnabFile.read(file)
+    return CnabFile.create(lines)
+  }
+
+  static openFromLines(lines: string[]): CnabFile {
+    return CnabFile.create(lines)
+  }
+
+  private static create(lines: string[]): CnabFile {
     const cnabFile = new CnabFile()
-    cnabFile.rawLines = await CnabFile.read(file)
+    cnabFile.rawLines = lines
 
     if (cnabFile.rawLines.length < 3) {
       throw new CnabFileInsufficientLinesException(cnabFile.rawLines.length)
