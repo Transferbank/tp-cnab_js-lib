@@ -1,5 +1,5 @@
 import { CnabFormat } from './cnab-format'
-import { CnabBank, CnabBankCode, fromBankCode , getBankFromCode } from './cnab-bank-code'
+import { CnabBank, CnabBankCode } from './cnab-bank-code'
 import { CnabSchema } from './cnab-schema'
 import { getSchema } from './cnab-schema-registry'
 import { 
@@ -40,7 +40,7 @@ export class CnabFile {
       ? header.substring(0, 3)
       : header.substring(76, 79)
     
-    const bankCode = fromBankCode(code)
+    const bankCode = CnabBankCode.fromBankCode(code)
     
     if (bankCode == null) {
       throw new CnabFileUnsupportedBankException(code)
@@ -66,7 +66,7 @@ export class CnabFile {
   }
 
   getBank(): CnabBank {
-    return  getBankFromCode(this.bankCode)
+    return CnabBankCode.getBankFromCode(this.bankCode)
   }
 
   getSchema(): CnabSchema {
