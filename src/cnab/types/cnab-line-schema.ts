@@ -4,15 +4,24 @@ import { CnabFieldType } from './cnab-field-type'
 import { CnabField } from './cnab-field'
 import { CnabValidationResult } from './cnab-validation-result'
 
-export interface CnabLineSchema {
-  format: CnabFormat
-  bankCode: CnabBankCode
-  fieldType: CnabFieldType
-  fields: (new () => CnabField)[]
+export class CnabLineSchema {
+  constructor(
+    public readonly format: CnabFormat,
+    public readonly bankCode: CnabBankCode,
+    public readonly fieldType: CnabFieldType,
+    public readonly fields: (new () => CnabField)[]
+  ) {}
+
   validate(
-    rawLines: string[],
-    isEager: boolean,
-    extraFields: CnabField[],
-    firstLine: number
-  ): CnabValidationResult
+    _rawLines: string[],
+    _isEager: boolean,
+    _extraFields: CnabField[],
+    _firstLine: number
+  ): CnabValidationResult {
+    // TODO: Implementar lógica de validação
+    return {
+      isValid: true,
+      errors: []
+    }
+  }
 }

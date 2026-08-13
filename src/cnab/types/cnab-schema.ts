@@ -9,11 +9,38 @@ export class CnabSchema {
     public readonly boleto: CnabLineSchema
   ) {}
 
-  validate(_lines: string[], _isEager: boolean, _extraFields?: CnabField[]): CnabValidationResult {
-    // TODO: Implementar lógica de validação
-    return {
+  validate(_rawLines: string[], _isEager: boolean, _extraFields?: CnabField[]): CnabValidationResult {
+    const result: CnabValidationResult = {
       isValid: true,
       errors: []
     }
+
+    const items: Array<[CnabLineSchema, string[], number]> = [
+      [this.header, [_rawLines[0]], 0],
+      [this.trailer, [_rawLines[_rawLines.length - 1]], _rawLines.length - 1],
+      [this.boleto, _rawLines.slice(1, -1), 1]
+    ]
+
+    for (const [group, lines, firstLine] of items) {
+      const groupExtraFields = (_extraFields ?? []).filter(
+        field => field.fieldType === group.fieldType
+      )
+
+      const groupResult = group.validate(
+        lines,
+        _isEager,
+        groupExtraFields,
+        firstLine
+      )
+
+      result.isValid = result.isValid && groupResult.isValid
+      result.errors.push(...groupResult.errors)
+
+      if (!result.isValid && _isEager) {
+        return result
+      }
+    }
+
+    return result
   }
 }
