@@ -1,6 +1,8 @@
 import { CnabFormat } from './cnab-format'
-import { CnabBank, CnabBankCode, fromBankCode , getBankFromCode } from './cnab-bank-code'
+import { CnabBank, CnabBankCode, fromBankCode, getBankFromCode } from './cnab-bank-code'
 import { CnabSchema } from './cnab-schema'
+import { CnabField } from './cnab-field'
+import { CnabValidationResult } from './cnab-validation-result'
 import { getSchema } from './cnab-schema-registry'
 import { 
   CnabFileInsufficientLinesException, 
@@ -71,5 +73,19 @@ export class CnabFile {
 
   getSchema(): CnabSchema {
     return this.schema
+  }
+
+  validate(withFeedback: boolean = false, _extraFields?: CnabField[]): boolean | CnabValidationResult {
+    const result = this.schema.validate(
+      this.rawLines,
+      !withFeedback,
+      _extraFields
+    )
+
+    if (withFeedback) {
+      return result
+    }
+
+    return result.isValid
   }
 }
