@@ -29,8 +29,7 @@ export class ValorTituloField extends CnabField {
   }
 
   parse(): string {
-    const [start, end] = this.range
-    const value = this.rawLine.substring(start, end)
+    const value = this.getFieldValue()
     const numValue = parseInt(value, 10)
     return (numValue / 100).toFixed(2)
   }
