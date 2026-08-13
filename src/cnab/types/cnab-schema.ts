@@ -17,7 +17,7 @@ export class CnabSchema {
     this.boleto = config.boleto
   }
 
-  validate(_rawLines: string[], _isEager: boolean, _extraFields?: CnabField[]): CnabValidationResult {
+  validate(_rawLines: string[], _isEager: boolean, _extraFields?: (typeof CnabField)[]): CnabValidationResult {
     const result: CnabValidationResult = {
       isValid: true,
       errors: []

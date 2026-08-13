@@ -75,7 +75,7 @@ export class CnabFile {
     return this.schema
   }
 
-  validate(withFeedback: boolean = false, _extraFields?: CnabField[]): boolean | CnabValidationResult {
+  validate(withFeedback: boolean = false, _extraFields?: (typeof CnabField)[]): boolean | CnabValidationResult {
     const result = this.schema.validate(
       this.rawLines,
       !withFeedback,
