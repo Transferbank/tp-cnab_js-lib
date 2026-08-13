@@ -1,4 +1,11 @@
-import { CnabException } from './cnab-exception'
+export abstract class CnabException extends Error {
+  abstract readonly code: string
+
+  constructor(message: string) {
+    super(message)
+    this.name = this.constructor.name
+  }
+}
 
 export class CnabFileInsufficientLinesException extends CnabException {
   readonly code = 'CNAB_FILE_INSUFFICIENT_LINES'

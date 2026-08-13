@@ -1,33 +1,52 @@
 import { CnabFormat } from './cnab-format'
-import { CnabBank, CnabBankCode, fromBankCode, getBankFromCode } from './cnab-bank-code'
+import { CnabBank, CnabBankCode } from './cnab-bank-code'
 import { CnabSchema } from './cnab-schema'
-import { CnabField } from './cnab-field'
-import { CnabValidationResult } from './cnab-validation-result'
-import { getSchema } from './cnab-schema-registry'
+import { CNAB_BANK_SCHEMAS } from '../banks/cnab-bank-schemas'
 import { 
   CnabFileInsufficientLinesException, 
   CnabFileInvalidFormatException,
   CnabFileUnsupportedBankException 
-} from './exceptions/cnab-file-exceptions'
+} from './cnab-exceptions'
+import { CnabField } from './cnab-field'
+import { CnabValidationResult } from './cnab-validation-result'
 
 export class CnabFile {
-  private readonly rawLines: string[]
-  private readonly format: CnabFormat
-  private readonly bankCode: CnabBankCode
-  private readonly schema: CnabSchema
+  private rawLines!: string[]
+  private format!: CnabFormat
+  private bankCode!: CnabBankCode
+  private schema!: CnabSchema
 
-  private constructor(lines: string[]) {
-    this.rawLines = lines
-    this.format = this.detectCnabFormat(this.rawLines[0])
-    this.bankCode = this.detectBankCode(this.rawLines[0])
-    this.schema = this.loadSchema(this.bankCode, this.format)
+  private constructor() {}
+
+  static async open(file: File): Promise<CnabFile> {
+    const lines = await CnabFile.read(file)
+    return CnabFile.create(lines)
   }
 
-  static open(lines: string[]): CnabFile {
-    if (lines.length < 3) {
-      throw new CnabFileInsufficientLinesException(lines.length)
+  static openFromLines(lines: string[]): CnabFile {
+    return CnabFile.create(lines)
+  }
+
+  private static create(lines: string[]): CnabFile {
+    const cnabFile = new CnabFile()
+    cnabFile.rawLines = lines
+
+    if (cnabFile.rawLines.length < 3) {
+      throw new CnabFileInsufficientLinesException(cnabFile.rawLines.length)
     }
-    return new CnabFile(lines)
+
+    cnabFile.format = cnabFile.detectCnabFormat(cnabFile.rawLines[0])
+    cnabFile.bankCode = cnabFile.detectBankCode(cnabFile.rawLines[0])
+    cnabFile.schema = CnabFile.getSchema(cnabFile.bankCode, cnabFile.format)
+
+    return cnabFile
+  }
+
+  static async read(file: File): Promise<string[]> {
+    const text = await file.text()
+    return text
+      .split(/\r?\n/)
+      .filter(line => line.length > 0)
   }
 
   private detectCnabFormat(header: string): CnabFormat {
@@ -42,7 +61,7 @@ export class CnabFile {
       ? header.substring(0, 3)
       : header.substring(76, 79)
     
-    const bankCode = fromBankCode(code)
+    const bankCode = CnabBankCode.fromBankCode(code)
     
     if (bankCode == null) {
       throw new CnabFileUnsupportedBankException(code)
@@ -51,8 +70,15 @@ export class CnabFile {
     return bankCode
   }
 
-  private loadSchema(bankCode: CnabBankCode, format: CnabFormat): CnabSchema {
-    return getSchema(bankCode, format)
+  private static getSchema(bankCode: CnabBankCode, format: CnabFormat): CnabSchema {
+    const bank = CnabBankCode.getBankFromCode(bankCode)
+    const schema = CNAB_BANK_SCHEMAS[bank]?.[format]
+
+    if (schema == null) {
+      throw new Error(`Schema não encontrado para banco ${bankCode} e formato ${format}`)
+    }
+
+    return schema
   }
 
   getLines(): string[] {
@@ -68,7 +94,7 @@ export class CnabFile {
   }
 
   getBank(): CnabBank {
-    return  getBankFromCode(this.bankCode)
+    return CnabBankCode.getBankFromCode(this.bankCode)
   }
 
   getSchema(): CnabSchema {
