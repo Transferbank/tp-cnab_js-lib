@@ -14,6 +14,18 @@ export abstract class CnabField {
     this.lineNumber = config.lineNumber
   }
 
+  protected get fieldType(): CnabFieldType {
+    return (this.constructor as typeof CnabField).fieldType
+  }
+
+  protected get fieldName(): string {
+    return (this.constructor as typeof CnabField).fieldName
+  }
+
+  protected get range(): [number, number] {
+    return (this.constructor as typeof CnabField).range
+  }
+
   static shouldValidate(_rawLine: string): boolean {
     return false
   }

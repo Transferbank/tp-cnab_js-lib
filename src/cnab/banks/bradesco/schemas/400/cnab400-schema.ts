@@ -3,6 +3,11 @@ import { CnabLineSchema } from '../../../../types/cnab-line-schema'
 import { CnabFormat } from '../../../../types/cnab-format'
 import { CnabBankCode } from '../../../../types/cnab-bank-code'
 import { CnabFieldType } from '../../../../types/cnab-field-type'
+import {
+  NomeSacadoField,
+  ValorTituloField,
+  VencimentoField
+} from '../../fields/cnab400'
 
 export const BradescoCnab400Schema = new CnabSchema({
   header: new CnabLineSchema({
@@ -21,6 +26,10 @@ export const BradescoCnab400Schema = new CnabSchema({
     format: CnabFormat.CNAB400,
     bankCode: CnabBankCode.BRADESCO,
     fieldType: CnabFieldType.BOLETO,
-    fields: []
+    fields: [
+      VencimentoField,
+      ValorTituloField,
+      NomeSacadoField
+    ]
   })
 })
