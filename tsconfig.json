@@ -20,7 +20,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@tp-types/*": ["src/types/*"],
+      "@tp-types/*": ["src/cnab/types/*"],
       "@validators/*": ["src/validators/*"],
       "@parser/*": ["src/parser/*"],
       "@schemas/*": ["src/schemas/*"],

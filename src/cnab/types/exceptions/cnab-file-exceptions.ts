@@ -15,3 +15,11 @@ export class CnabFileInvalidFormatException extends CnabException {
     super(`Formato CNAB inválido. Tamanho da linha: ${lineLength}. Esperado: 240 ou 400`)
   }
 }
+
+export class CnabFileUnsupportedBankException extends CnabException {
+  readonly code = 'CNAB_FILE_UNSUPPORTED_BANK'
+
+  constructor(bankCode: string) {
+    super(`Banco não suportado. Código do banco: ${bankCode}`)
+  }
+}
