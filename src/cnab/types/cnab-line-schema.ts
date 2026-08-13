@@ -5,12 +5,22 @@ import { CnabField } from './cnab-field'
 import { CnabValidationResult } from './cnab-validation-result'
 
 export class CnabLineSchema {
-  constructor(
-    public readonly format: CnabFormat,
-    public readonly bankCode: CnabBankCode,
-    public readonly fieldType: CnabFieldType,
-    public readonly fields: (new () => CnabField)[]
-  ) {}
+  public readonly format: CnabFormat
+  public readonly bankCode: CnabBankCode
+  public readonly fieldType: CnabFieldType
+  public readonly fields: (new () => CnabField)[]
+
+  constructor(config: {
+    format: CnabFormat
+    bankCode: CnabBankCode
+    fieldType: CnabFieldType
+    fields: (new () => CnabField)[]
+  }) {
+    this.format = config.format
+    this.bankCode = config.bankCode
+    this.fieldType = config.fieldType
+    this.fields = config.fields
+  }
 
   validate(
     _rawLines: string[],

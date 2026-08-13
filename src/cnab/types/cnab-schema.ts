@@ -3,11 +3,19 @@ import { CnabField } from './cnab-field'
 import { CnabValidationResult } from './cnab-validation-result'
 
 export class CnabSchema {
-  constructor(
-    public readonly header: CnabLineSchema,
-    public readonly trailer: CnabLineSchema,
-    public readonly boleto: CnabLineSchema
-  ) {}
+  public readonly header: CnabLineSchema
+  public readonly trailer: CnabLineSchema
+  public readonly boleto: CnabLineSchema
+
+  constructor(config: {
+    header: CnabLineSchema
+    trailer: CnabLineSchema
+    boleto: CnabLineSchema
+  }) {
+    this.header = config.header
+    this.trailer = config.trailer
+    this.boleto = config.boleto
+  }
 
   validate(_rawLines: string[], _isEager: boolean, _extraFields?: CnabField[]): CnabValidationResult {
     const result: CnabValidationResult = {

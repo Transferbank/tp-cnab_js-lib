@@ -4,8 +4,23 @@ import { CnabFormat } from '../../../../types/cnab-format'
 import { CnabBankCode } from '../../../../types/cnab-bank-code'
 import { CnabFieldType } from '../../../../types/cnab-field-type'
 
-export const BradescoCnab240Schema = new CnabSchema(
-  new CnabLineSchema(CnabFormat.CNAB240, CnabBankCode.BRADESCO, CnabFieldType.HEADER, []),
-  new CnabLineSchema(CnabFormat.CNAB240, CnabBankCode.BRADESCO, CnabFieldType.TRAILER, []),
-  new CnabLineSchema(CnabFormat.CNAB240, CnabBankCode.BRADESCO, CnabFieldType.BOLETO, [])
-)
+export const BradescoCnab240Schema = new CnabSchema({
+  header: new CnabLineSchema({
+    format: CnabFormat.CNAB240,
+    bankCode: CnabBankCode.BRADESCO,
+    fieldType: CnabFieldType.HEADER,
+    fields: []
+  }),
+  trailer: new CnabLineSchema({
+    format: CnabFormat.CNAB240,
+    bankCode: CnabBankCode.BRADESCO,
+    fieldType: CnabFieldType.TRAILER,
+    fields: []
+  }),
+  boleto: new CnabLineSchema({
+    format: CnabFormat.CNAB240,
+    bankCode: CnabBankCode.BRADESCO,
+    fieldType: CnabFieldType.BOLETO,
+    fields: []
+  })
+})
