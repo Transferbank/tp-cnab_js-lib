@@ -1,7 +1,7 @@
-import { CnabLineValidator } from '../types/cnab-line-validator'
-import { CnabValidationResult } from '../types/cnab-validation-result'
-import { CnabValidationError } from '../types/cnab-validation-error'
-import { CnabValidationErrorType } from '../types/cnab-validation-error-type'
+import { CnabLineValidator } from '@cnab/types/cnab-line-validator'
+import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
+import { CnabValidationError } from '@cnab/types/cnab-validation-error'
+import { CnabValidationErrorType } from '@cnab/types/cnab-validation-error-type'
 
 export abstract class Cnab240LineStartValidator extends CnabLineValidator {
   static readonly expectedStart: string

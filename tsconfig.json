@@ -20,12 +20,10 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@tp-types/*": ["src/cnab/types/*"],
-      "@validators/*": ["src/validators/*"],
-      "@parser/*": ["src/parser/*"],
-      "@schemas/*": ["src/schemas/*"],
-      "@banks/*": ["src/banks/*"],
-      "@utils/*": ["src/utils/*"]
+      "@cnab/types/*": ["src/cnab/types/*"],
+      "@cnab/validators/*": ["src/cnab/validators/*"],
+      "@cnab/utils/*": ["src/cnab/utils/*"],
+      "@cnab/banks/*": ["src/cnab/banks/*"]
     }
   },
   "include": ["src/**/*"],

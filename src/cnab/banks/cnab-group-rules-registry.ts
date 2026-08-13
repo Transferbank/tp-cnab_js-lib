@@ -1,6 +1,6 @@
-import { CnabBank } from '../types/cnab-bank-code'
-import { CnabFormat } from '../types/cnab-format'
-import { CnabBoletoGroupRule } from '../types/cnab-boleto-group-rule'
+import { CnabBank } from '@cnab/types/cnab-bank-code'
+import { CnabFormat } from '@cnab/types/cnab-format'
+import { CnabBoletoGroupRule } from '@cnab/types/cnab-boleto-group-rule'
 import { Cnab240BradescoGroupRule, Cnab400BradescoGroupRule } from './bradesco/group-rules'
 
 type GroupRuleClass = typeof CnabBoletoGroupRule

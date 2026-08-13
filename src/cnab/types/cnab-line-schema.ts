@@ -4,8 +4,8 @@ import { CnabFieldType } from './cnab-field-type'
 import { CnabField } from './cnab-field'
 import { CnabValidationResult } from './cnab-validation-result'
 import { CnabLineValidator } from './cnab-line-validator'
-import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '../validators/cnab-line-size-validator'
-import { getGroupRule } from '../banks/cnab-group-rules-registry'
+import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
+import { getGroupRule } from '@cnab/banks/cnab-group-rules-registry'
 
 type ValidatorClass = typeof CnabLineValidator
 type FieldClass = typeof CnabField
@@ -91,7 +91,6 @@ export class CnabLineSchema {
             continue
           }
 
-          // Cria uma instância do validator/field para validar esta linha
           // @ts-expect-error - ValidationType pode ser abstrato, mas subclasses concretas serão instanciadas
           const validator = new ValidationType({
             rawLine,

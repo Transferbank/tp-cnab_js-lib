@@ -1,7 +1,7 @@
-import { CnabField } from '../../../../types/cnab-field'
-import { CnabFieldType } from '../../../../types/cnab-field-type'
-import { CnabValidationResult } from '../../../../types/cnab-validation-result'
-import { CnabValidationErrorType } from '../../../../types/cnab-validation-error-type'
+import { CnabField } from '@cnab/types/cnab-field'
+import { CnabFieldType } from '@cnab/types/cnab-field-type'
+import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
+import { CnabValidationErrorType } from '@cnab/types/cnab-validation-error-type'
 
 export class VencimentoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO

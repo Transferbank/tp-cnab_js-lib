@@ -1,8 +1,8 @@
-import { CnabSchema } from '../../../../types/cnab-schema'
-import { CnabLineSchema } from '../../../../types/cnab-line-schema'
-import { CnabFormat } from '../../../../types/cnab-format'
-import { CnabBankCode } from '../../../../types/cnab-bank-code'
-import { CnabFieldType } from '../../../../types/cnab-field-type'
+import { CnabSchema } from '@cnab/types/cnab-schema'
+import { CnabLineSchema } from '@cnab/types/cnab-line-schema'
+import { CnabFormat } from '@cnab/types/cnab-format'
+import { CnabBankCode } from '@cnab/types/cnab-bank-code'
+import { CnabFieldType } from '@cnab/types/cnab-field-type'
 import {
   NomeSacadoField,
   ValorTituloField,
