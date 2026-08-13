@@ -8,7 +8,7 @@ export enum CnabBankCode {
 
 export function fromBankCode(code: string): CnabBankCode | null {
   switch (code) {
-    case CnabBankCode.BRADESCO:
+    case '237':
       return CnabBankCode.BRADESCO
     default:
       return null
