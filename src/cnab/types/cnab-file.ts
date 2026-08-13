@@ -1,7 +1,7 @@
 import { CnabFormat } from './cnab-format'
 import { CnabBank, CnabBankCode } from './cnab-bank-code'
 import { CnabSchema } from './cnab-schema'
-import { getSchema } from './cnab-schema-registry'
+import { CNAB_BANK_SCHEMAS } from '../banks/cnab-bank-schemas'
 import { 
   CnabFileInsufficientLinesException, 
   CnabFileInvalidFormatException,
@@ -18,7 +18,7 @@ export class CnabFile {
     this.rawLines = lines
     this.format = this.detectCnabFormat(this.rawLines[0])
     this.bankCode = this.detectBankCode(this.rawLines[0])
-    this.schema = this.loadSchema(this.bankCode, this.format)
+    this.schema = CnabFile.getSchema(this.bankCode, this.format)
   }
 
   static open(lines: string[]): CnabFile {
@@ -49,8 +49,15 @@ export class CnabFile {
     return bankCode
   }
 
-  private loadSchema(bankCode: CnabBankCode, format: CnabFormat): CnabSchema {
-    return getSchema(bankCode, format)
+  private static getSchema(bankCode: CnabBankCode, format: CnabFormat): CnabSchema {
+    const bank = CnabBankCode.getBankFromCode(bankCode)
+    const schema = CNAB_BANK_SCHEMAS[bank]?.[format]
+
+    if (schema == null) {
+      throw new Error(`Schema não encontrado para banco ${bankCode} e formato ${format}`)
+    }
+
+    return schema
   }
 
   getLines(): string[] {
