@@ -1,11 +1,6 @@
-import { CnabFieldType } from './cnab-field-type'
 import { CnabValidationResult } from './cnab-validation-result'
 
-export abstract class CnabField {
-  static readonly fieldType: CnabFieldType
-  static readonly fieldName: string
-  static readonly range: [number, number]
-
+export abstract class CnabLineValidator {
   protected readonly rawLine: string
   protected readonly lineNumber: number
 
@@ -19,5 +14,4 @@ export abstract class CnabField {
   }
 
   abstract validate(): CnabValidationResult
-  abstract parse(): string
 }
