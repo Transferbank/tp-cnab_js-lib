@@ -1,5 +1,5 @@
 import { CnabFormat } from './cnab-format'
-import { CnabBankCode, getBankFromCode } from './cnab-bank-code'
+import { CnabBankCode } from './cnab-bank-code'
 import { CnabFieldType } from './cnab-field-type'
 import { CnabField } from './cnab-field'
 import { CnabValidationResult } from './cnab-validation-result'
@@ -37,7 +37,7 @@ export class CnabLineSchema {
   }
 
   private isBoletoGroupStart(rawLine: string): boolean {
-    const bank = getBankFromCode(this.bankCode)
+    const bank = CnabBankCode.getBankFromCode(this.bankCode)
     const GroupRule = getGroupRule(bank, this.format)
     return GroupRule.check(rawLine)
   }
