@@ -1,11 +1,11 @@
-import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabField } from '@cnab/type/cnab-field'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
-import { CNAB_GROUP_RULES } from '@/cnab/bank/cnab-group-rules'
 
 type ValidatorClass = typeof CnabLineValidator
 type FieldClass = typeof CnabField

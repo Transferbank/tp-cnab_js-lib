@@ -29,6 +29,6 @@ export class ValorTituloField extends CnabField {
   }
 
   parse(): string {
-  return (parseInt(this.getFieldValue(), 10) / 100).toFixed(2)
+    return (parseInt(this.getFieldValue(), 10) / 100).toFixed(2)
   }
 }

@@ -1,15 +1,15 @@
-import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabField } from '@cnab/type/cnab-field'
+import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { 
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException
 } from '@cnab/exception/cnab-exception'
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
 export class CnabFile {
   public rawLines!: string[]
