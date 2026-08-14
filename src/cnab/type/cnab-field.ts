@@ -1,4 +1,4 @@
-import { CnabFieldType } from './cnab-field-type'
+import { CnabFieldType } from '@cnab/types/cnab-field-type'
 
 export interface CnabField {
   fieldType: CnabFieldType
