@@ -5,38 +5,42 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
-import { getGroupRule } from '@cnab/bank/cnab-group-rules-registry'
+import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules-registry'
 
 type ValidatorClass = typeof CnabLineValidator
 type FieldClass = typeof CnabField
 
 export class CnabLineSchema {
-  public readonly format: CnabFormat
+  public readonly fmt: CnabFormat
   public readonly bank: CnabBank
   public readonly fieldType: CnabFieldType
   public readonly fields: FieldClass[]
   public readonly validators: ValidatorClass[]
 
   constructor(config: {
-    format: CnabFormat
+    fmt: CnabFormat
     bank: CnabBank
     fieldType: CnabFieldType
     fields: FieldClass[]
     validators?: ValidatorClass[]
   }) {
-    this.format = config.format
+    this.fmt = config.fmt
     this.bank = config.bank
     this.fieldType = config.fieldType
     this.fields = config.fields
 
-    const lineSizeValidator = config.format === CnabFormat.CNAB240
+    const lineSizeValidator = config.fmt === CnabFormat.CNAB240
       ? Cnab240LineSizeValidator
       : Cnab400LineSizeValidator
     this.validators = [lineSizeValidator, ...(config.validators ?? [])]
   }
 
   private isBoletoGroupStart(rawLine: string): boolean {
-    return getGroupRule(this.bank, this.format).check(rawLine)
+    const GroupRuleClass = CNAB_GROUP_RULES[this.bank]?.[this.fmt]
+    if (GroupRuleClass == null) return false
+    // @ts-expect-error - GroupRuleClass pode ser abstrato, mas subclasses concretas serão instanciadas
+    const groupRule = new GroupRuleClass()
+    return groupRule.check(rawLine)
   }
 
   private *genBoletoLineGroupsIterator(rawLines: string[]): Generator<string[]> {
@@ -56,9 +60,10 @@ export class CnabLineSchema {
   validate(
     rawLines: string[],
     isEager: boolean,
-    extraFields: FieldClass[],
-    firstLine: number
+    extraFields?: FieldClass[],
+    firstLine: number = 0
   ): CnabValidationResult {
+    const fields = extraFields ?? []
     const result: CnabValidationResult = {
       isValid: true,
       errors: []
@@ -66,7 +71,7 @@ export class CnabLineSchema {
     const validationTypes: (ValidatorClass | FieldClass)[] = [
       ...this.validators,
       ...this.fields,
-      ...extraFields
+      ...fields
     ]
     let lineNumber = firstLine
     const groupLines = this.fieldType === CnabFieldType.BOLETO

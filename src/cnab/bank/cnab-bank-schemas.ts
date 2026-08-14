@@ -8,19 +8,19 @@ export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
   [CnabBank.BRADESCO]: {
     [CnabFormat.CNAB240]: new CnabSchema({
       header: new CnabLineSchema({
-        format: CnabFormat.CNAB240,
+        fmt: CnabFormat.CNAB240,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.HEADER,
         fields: []
       }),
       trailer: new CnabLineSchema({
-        format: CnabFormat.CNAB240,
+        fmt: CnabFormat.CNAB240,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.TRAILER,
         fields: []
       }),
       boleto: new CnabLineSchema({
-        format: CnabFormat.CNAB240,
+        fmt: CnabFormat.CNAB240,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.BOLETO,
         fields: []
@@ -28,19 +28,19 @@ export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
     }),
     [CnabFormat.CNAB400]: new CnabSchema({
       header: new CnabLineSchema({
-        format: CnabFormat.CNAB400,
+        fmt: CnabFormat.CNAB400,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.HEADER,
         fields: []
       }),
       trailer: new CnabLineSchema({
-        format: CnabFormat.CNAB400,
+        fmt: CnabFormat.CNAB400,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.TRAILER,
         fields: []
       }),
       boleto: new CnabLineSchema({
-        format: CnabFormat.CNAB400,
+        fmt: CnabFormat.CNAB400,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.BOLETO,
         fields: []

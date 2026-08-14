@@ -11,7 +11,3 @@ export const CNAB_GROUP_RULES: Record<string, Record<string, GroupRuleClass>> = 
     [CnabFormat.CNAB400]: Cnab400BradescoGroupRule
   }
 }
-
-export function getGroupRule(bank: CnabBank, format: CnabFormat): GroupRuleClass {
-  return CNAB_GROUP_RULES[bank]?.[format.toString()] ?? CnabBoletoGroupRule
-}
