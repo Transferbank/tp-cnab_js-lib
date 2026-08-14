@@ -1,4 +1,4 @@
-import { CnabBoletoGroupRule } from '@cnab/types/cnab-boleto-group-rule'
+import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 
 export class Cnab400BradescoGroupRule extends CnabBoletoGroupRule {
   static check(rawLine: string): boolean {

@@ -1,5 +1,5 @@
-import { CnabFieldType } from '@cnab/types/cnab-field-type'
-import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
 export abstract class CnabField {
   static readonly fieldType: CnabFieldType

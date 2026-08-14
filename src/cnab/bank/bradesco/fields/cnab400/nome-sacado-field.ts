@@ -1,7 +1,7 @@
-import { CnabField } from '@cnab/types/cnab-field'
-import { CnabFieldType } from '@cnab/types/cnab-field-type'
-import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
-import { CnabValidationErrorType } from '@cnab/types/cnab-validation-error-type'
+import { CnabField } from '@cnab/type/cnab-field'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error-type'
 
 export class NomeSacadoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
