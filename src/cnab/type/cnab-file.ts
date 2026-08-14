@@ -10,10 +10,10 @@ import {
 } from '@/cnab/exception/cnab-exception'
 
 export class CnabFile {
-  private rawLines!: string[]
-  private format!: CnabFormat
-  private bank!: CnabBank
-  private schema!: CnabSchema
+  public rawLines!: string[]
+  public format!: CnabFormat
+  public bank!: CnabBank
+  public schema!: CnabSchema
 
   private constructor() {}
 
@@ -75,21 +75,5 @@ export class CnabFile {
     }
 
     return schema
-  }
-
-  getLines(): string[] {
-    return this.rawLines
-  }
-
-  getFormat(): CnabFormat {
-    return this.format
-  }
-
-  getBank(): CnabBank {
-    return this.bank
-  }
-
-  getSchema(): CnabSchema {
-    return this.schema
   }
 }
