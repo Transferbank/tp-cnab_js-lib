@@ -9,6 +9,8 @@ import {
   CnabBankSchemaNotFoundException
 } from '@/cnab/exception/cnab-exception'
 
+type NonEmptyArray<T> = [T, ...T[]]
+
 export class CnabFile {
   public rawLines!: string[]
   public format!: CnabFormat
@@ -39,11 +41,17 @@ export class CnabFile {
 
   
 
-  private static async read(file: File): Promise<string[]> {
+  private static async read(file: File): Promise<NonEmptyArray<string>> {
     const text = await file.text()
-    return text
+    const lines = text
       .split(/\r?\n/)
       .filter(line => line.length > 0)
+    
+    if (lines.length === 0) {
+      throw new CnabMinimumLinesNotReachedException()
+    }
+    // garante array não vazio em nível de tipo
+    return lines as NonEmptyArray<string>
   }
 
   private detectFormat(header: string): CnabFormat {
