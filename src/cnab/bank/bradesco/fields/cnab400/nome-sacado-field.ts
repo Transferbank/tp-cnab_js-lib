@@ -5,8 +5,8 @@ import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error-type'
 
 export class NomeSacadoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
-  static readonly fieldName = 'nome'
-  static readonly range: [number, number] = [234, 274]
+  readonly fieldName = 'nome'
+  readonly range: [number, number] = [234, 274]
 
   static shouldValidate(_rawLine: string): boolean {
     return true

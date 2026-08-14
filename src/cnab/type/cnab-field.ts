@@ -3,8 +3,8 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
 export abstract class CnabField {
   static readonly fieldType: CnabFieldType
-  static readonly fieldName: string
-  static readonly range: [number, number]
+  abstract readonly fieldName: string
+  abstract readonly range: [number, number]
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
@@ -12,18 +12,6 @@ export abstract class CnabField {
   constructor(config: { rawLine: string; lineNumber: number }) {
     this.rawLine = config.rawLine
     this.lineNumber = config.lineNumber
-  }
-
-  protected get fieldType(): CnabFieldType {
-    return (this.constructor as typeof CnabField).fieldType
-  }
-
-  protected get fieldName(): string {
-    return (this.constructor as typeof CnabField).fieldName
-  }
-
-  protected get range(): [number, number] {
-    return (this.constructor as typeof CnabField).range
   }
 
   protected getFieldValue(): string {
