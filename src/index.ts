@@ -1,9 +1,9 @@
 import { CnabFile } from '@cnab/types/cnab-file'
 
 export async function openCnabFile(file: File): Promise<CnabFile> {
-  return CnabFile.open(file)
+  return CnabFile.openFromLines(file)
 }
 
 export function openCnabFileFromLines(lines: string[]): CnabFile {
-  return CnabFile.openFromLines(lines)
+  return CnabFile.create(lines)
 }

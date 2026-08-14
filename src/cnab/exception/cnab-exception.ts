@@ -1,5 +1,4 @@
 export abstract class CnabException extends Error {
-  abstract code: string
 
   constructor(message: string) {
     super(message)
@@ -7,26 +6,34 @@ export abstract class CnabException extends Error {
   }
 }
 
-export class CnabFileInsufficientLinesException extends CnabException {
-  code = 'CNAB_FILE_INSUFFICIENT_LINES'
+export class CnabMinimumLinesNotReachedException extends CnabException {
 
-  constructor(lineCount: number) {
-    super(`Arquivo CNAB deve ter pelo menos 3 linhas. Recebido: ${lineCount}`)
+  constructor() {
+    super('Arquivo CNAB inválido: esperado ao menos 3 linhas')
   }
 }
 
-export class CnabFileInvalidFormatException extends CnabException {
-  code = 'CNAB_FILE_INVALID_FORMAT'
+export class CnabFormatNotRecognizedException extends CnabException {
 
   constructor(lineLength: number) {
-    super(`Formato CNAB inválido. Tamanho da linha: ${lineLength}. Esperado: 240 ou 400`)
+    super(
+      `Formato CNAB não reconhecido. Primeira linha tem ${lineLength} caracteres. Esperado: 240 ou 400`
+    )
   }
 }
 
-export class CnabFileUnsupportedBankException extends CnabException {
-  code = 'CNAB_FILE_UNSUPPORTED_BANK'
+export class CnabBankCodeNotFoundException extends CnabException {
 
-  constructor(bankCode: string) {
-    super(`Banco não suportado. Código do banco: ${bankCode}`)
+  constructor(bankCode: string, cnabFormat: number) {
+    super(
+      `Código do banco não encontrado: ${bankCode} para o CNAB${cnabFormat}`
+    )
+  }
+}
+
+export class CnabBankSchemaNotFoundException extends CnabException {
+
+  constructor(bank: string, cnabFormat: number) {
+    super(`CNAB${cnabFormat} para o banco ${bank} não suportado`)
   }
 }
