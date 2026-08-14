@@ -6,7 +6,7 @@ import {
   CnabFileInsufficientLinesException, 
   CnabFileInvalidFormatException,
   CnabFileUnsupportedBankException 
-} from '@/cnab/type/cnab-exceptions'
+} from '@/cnab/exception/cnab-exception'
 
 export class CnabFile {
   private rawLines!: string[]
