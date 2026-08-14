@@ -20,11 +20,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@cnab/type/*": ["src/cnab/type/*"],
-      "@cnab/exception/*": ["src/cnab/exception/*"],
-      "@cnab/validators/*": ["src/cnab/validators/*"],
-      "@cnab/utils/*": ["src/cnab/utils/*"],
-      "@cnab/bank/*": ["src/cnab/bank/*"],
+      "@cnab/*": ["src/cnab/*"],
       "@test/*": ["src/test/*"]
     }
   },

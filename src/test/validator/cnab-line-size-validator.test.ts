@@ -9,11 +9,11 @@ describe('CnabLineSizeValidator', () => {
   describe.each([
     {
       validatorType: Cnab240LineSizeValidator,
-      examplePath: 'bradesco/cnab_240/bradesco_cnab_240.txt'
+      examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt'
     },
     {
       validatorType: Cnab400LineSizeValidator,
-      examplePath: 'bradesco/cnab_400/bradesco_cnab_400.txt'
+      examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt'
     }
   ])('$validatorType.name', ({ validatorType, examplePath }) => {
     it('given valid doc lines when validating size then accepts all lines', () => {
@@ -26,12 +26,12 @@ describe('CnabLineSizeValidator', () => {
       }))
 
       // When
-      const results = rawLines.map((rawLine, lineNumber) =>
+      const results = rawLines.map((rawLine: string, lineNumber: number) =>
         new validatorType({ rawLine, lineNumber }).validate()
       )
 
       // Then
-      const lineSizes = new Set(rawLines.map(line => line.length))
+      const lineSizes = new Set(rawLines.map((line: string) => line.length))
       expect(lineSizes).toEqual(new Set([expectedSize]))
       expect(results).toEqual(expectedResults)
     })
@@ -40,13 +40,13 @@ describe('CnabLineSizeValidator', () => {
   describe.each([
     {
       validatorType: Cnab240LineSizeValidator,
-      examplePath: 'bradesco/cnab_240/bradesco_cnab_240.txt',
+      examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt',
       transform: (line: string): string => line.slice(0, -1),
       sizeDelta: -1
     },
     {
       validatorType: Cnab400LineSizeValidator,
-      examplePath: 'bradesco/cnab_400/bradesco_cnab_400.txt',
+      examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt',
       transform: (line: string): string => `${line} `,
       sizeDelta: 1
     }
