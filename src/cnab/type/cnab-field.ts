@@ -14,10 +14,6 @@ export abstract class CnabField {
     this.lineNumber = config.lineNumber
   }
 
-  protected getFieldValue(): string {
-    return this.rawLine.substring(...this.range)
-  }
-
   static shouldValidate(_rawLine: string): boolean {
     return false
   }

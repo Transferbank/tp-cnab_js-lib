@@ -29,6 +29,6 @@ export class VencimentoField extends CnabField {
   }
 
   parse(): string {
-    return this.getFieldValue()
+    return this.rawLine.substring(...this.range)
   }
 }

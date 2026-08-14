@@ -28,6 +28,6 @@ export class NomeSacadoField extends CnabField {
   }
 
   parse(): string {
-    return this.getFieldValue().trim()
+    return this.rawLine.substring(...this.range).trim()
   }
 }

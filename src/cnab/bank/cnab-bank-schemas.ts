@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { NomeSacadoField } from '@cnab/bank/bradesco/fields/cnab400'
-import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400-line-start-validator'
+import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@/cnab/validators/cnab400/cnab400-line-start-validator'
 
 export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
   [CnabBank.BRADESCO]: {
