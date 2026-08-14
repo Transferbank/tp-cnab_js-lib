@@ -1,15 +1,13 @@
-import { CnabFormat } from '@/cnab/type/cnab-format'
-import { CnabBank } from '@/cnab/type/cnab-bank'
-import { CnabSchema } from '@/cnab/type/cnab-schema'
-import { CNAB_BANK_SCHEMAS } from '@/cnab/bank/cnab-bank-schemas'
+import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabSchema } from '@cnab/type/cnab-schema'
+import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
 import { 
   CnabMinimumLinesNotReachedException, 
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException
-} from '@/cnab/exception/cnab-exception'
-
-type NonEmptyArray<T> = [T, ...T[]]
+} from '@cnab/exception/cnab-exception'
 
 export class CnabFile {
   public rawLines!: string[]
@@ -27,31 +25,18 @@ export class CnabFile {
   static openFromLines(lines: string[]): CnabFile {
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
-
     if (cnabFile.rawLines.length < 3) {
       throw new CnabMinimumLinesNotReachedException()
     }
-
     cnabFile.format = cnabFile.detectFormat(cnabFile.rawLines[0])
     cnabFile.bank = cnabFile.detectBank(cnabFile.rawLines[0])
     cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)
-
     return cnabFile
   }
 
-  
-
-  private static async read(file: File): Promise<NonEmptyArray<string>> {
+  private static async read(file: File): Promise<string[]> {
     const text = await file.text()
-    const lines = text
-      .split(/\r?\n/)
-      .filter(line => line.length > 0)
-    
-    if (lines.length === 0) {
-      throw new CnabMinimumLinesNotReachedException()
-    }
-    // garante array não vazio em nível de tipo
-    return lines as NonEmptyArray<string>
+    return text.split(/\r?\n/).filter(line => line.length > 0)
   }
 
   private detectFormat(header: string): CnabFormat {
@@ -65,23 +50,14 @@ export class CnabFile {
     const code = this.format === CnabFormat.CNAB240 
       ? header.substring(0, 3)
       : header.substring(76, 79)
-    
     const bank = CnabBank.fromCode(code)
-    
-    if (bank == null) {
-      throw new CnabBankCodeNotFoundException(code, this.format)
-    }
-    
+    if (bank == null) throw new CnabBankCodeNotFoundException(code, this.format)
     return bank
   }
 
   private static getSchema(bank: CnabBank, format: CnabFormat): CnabSchema {
     const schema = CNAB_BANK_SCHEMAS[bank]?.[format]
-
-    if (schema == null) {
-      throw new CnabBankSchemaNotFoundException(bank, format)
-    }
-
+    if (schema == null) throw new CnabBankSchemaNotFoundException(bank, format)
     return schema
   }
 }

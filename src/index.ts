@@ -1,4 +1,4 @@
-import { CnabFile } from '@cnab/types/cnab-file'
+import { CnabFile } from '@cnab/type/cnab-file'
 
 export async function openCnabFile(file: File): Promise<CnabFile> {
   return CnabFile.openFromFile(file)

@@ -1,7 +1,7 @@
-import { CnabBank } from '@/cnab/type/cnab-bank'
-import { CnabFormat } from '@cnab/types/cnab-format'
-import { CnabSchema } from '@cnab/types/cnab-schema'
-import { CnabFieldType } from '@cnab/types/cnab-field-type'
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabSchema } from '@cnab/type/cnab-schema'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
 
 export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
   [CnabBank.BRADESCO]: {

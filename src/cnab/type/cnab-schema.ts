@@ -1,4 +1,4 @@
-import { CnabLineSchema } from '@cnab/types/cnab-line-schema'
+import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 
 export interface CnabSchema {
   header: CnabLineSchema
