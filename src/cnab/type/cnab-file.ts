@@ -3,7 +3,6 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
 import { 
-  CnabMinimumLinesNotReachedException, 
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException
@@ -25,9 +24,6 @@ export class CnabFile {
   static openFromLines(lines: string[]): CnabFile {
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
-    if (cnabFile.rawLines.length < 3) {
-      throw new CnabMinimumLinesNotReachedException()
-    }
     cnabFile.format = cnabFile.detectFormat(cnabFile.rawLines[0])
     cnabFile.bank = cnabFile.detectBank(cnabFile.rawLines[0])
     cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)

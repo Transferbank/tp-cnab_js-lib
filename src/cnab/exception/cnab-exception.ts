@@ -5,12 +5,6 @@ export abstract class CnabException extends Error {
   }
 }
 
-export class CnabMinimumLinesNotReachedException extends CnabException {
-  constructor() {
-    super('Arquivo CNAB inválido: esperado ao menos 3 linhas')
-  }
-}
-
 export class CnabFormatNotRecognizedException extends CnabException {
   constructor(lineLength: number) {
     super(
