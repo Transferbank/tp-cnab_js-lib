@@ -5,11 +5,11 @@ import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
 
 export class ValorTituloField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'valor_titulo'
+  readonly fieldName = 'valor titulo'
   readonly range: [number, number] = [126, 139]
 
-  static shouldValidate(_rawLine: string): boolean {
-    return true
+  static shouldValidate(rawLine: string): boolean {
+    return rawLine.startsWith('1')
   }
 
   validate(): CnabValidationResult {
@@ -19,7 +19,7 @@ export class ValorTituloField extends CnabField {
     return {
       isValid,
       errors: isValid ? [] : [{
-        message: `Campo valor_titulo inválido: deve conter apenas números`,
+        message: `Campo valor titulo inválido: deve conter apenas números`,
         errorType: CnabValidationErrorType.FIELD,
         lineNumber: this.lineNumber,
         fieldName: this.fieldName,

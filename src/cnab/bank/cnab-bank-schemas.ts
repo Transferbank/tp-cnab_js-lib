@@ -3,6 +3,8 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+import { NomeSacadoField } from '@cnab/bank/bradesco/fields/cnab400'
+import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400-line-start-validator'
 
 export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
   [CnabBank.BRADESCO]: {
@@ -31,19 +33,22 @@ export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
         fmt: CnabFormat.CNAB400,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.HEADER,
-        fields: []
+        fields: [],
+        validators: [Cnab400HeaderLineStartValidator]
       }),
       trailer: new CnabLineSchema({
         fmt: CnabFormat.CNAB400,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.TRAILER,
-        fields: []
+        fields: [],
+        validators: [Cnab400TrailerLineStartValidator]
       }),
       boleto: new CnabLineSchema({
         fmt: CnabFormat.CNAB400,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.BOLETO,
-        fields: []
+        fields: [NomeSacadoField],
+        validators: [Cnab400HeaderLineStartValidator]
       })
     })
   }

@@ -8,8 +8,8 @@ export class VencimentoField extends CnabField {
   readonly fieldName = 'vencimento'
   readonly range: [number, number] = [120, 126]
 
-  static shouldValidate(_rawLine: string): boolean {
-    return true
+  static shouldValidate(rawLine: string): boolean {
+    return rawLine.startsWith('1')
   }
 
   validate(): CnabValidationResult {

@@ -5,21 +5,20 @@ import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
 
 export class NomeSacadoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'nome'
-  readonly range: [number, number] = [234, 274]
+  readonly fieldName = 'nome do sacado'
+  readonly range: [number, number] = [235, 274]
 
-  static shouldValidate(_rawLine: string): boolean {
-    return true
+  static shouldValidate(rawLine: string): boolean {
+    return rawLine.startsWith('1')
   }
 
   validate(): CnabValidationResult {
     const value = this.parse()
-    const isValid = value.length <= 40
-
+    const isValid = value.length >= 3
     return {
       isValid,
       errors: isValid ? [] : [{
-        message: `Campo nome inválido: tamanho máximo 40 caracteres`,
+        message: 'Nome do sacado no boleto espera ao menos 3 caracteres',
         errorType: CnabValidationErrorType.FIELD,
         lineNumber: this.lineNumber,
         fieldName: this.fieldName,
