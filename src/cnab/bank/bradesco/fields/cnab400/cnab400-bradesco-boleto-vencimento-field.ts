@@ -2,6 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
+import { parseDateDDMMAA } from '@/cnab/utils/date-parser'
 
 export class Cnab400BradescoBoletoVencimentoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -14,7 +15,7 @@ export class Cnab400BradescoBoletoVencimentoField extends CnabField {
 
   validate(): CnabValidationResult {
     const value = this.parse()
-    const isValid = /^\d{6}$/.test(value)
+    const isValid = parseDateDDMMAA(value) !== null
 
     return {
       isValid,

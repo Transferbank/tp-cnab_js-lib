@@ -2,6 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
+import { minLength } from '@cnab/utils/field-validator'
 
 export class Cnab400BradescoBoletoNameField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -14,7 +15,7 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
 
   validate(): CnabValidationResult {
     const value = this.parse()
-    const isValid = value.length >= 3
+    const isValid = minLength(value, 3)
     return {
       isValid,
       errors: isValid ? [] : [{

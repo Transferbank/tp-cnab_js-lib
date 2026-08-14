@@ -2,6 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
+import { isNumeric } from '@cnab/utils/field-validator'
 
 export class Cnab400BradescoBoletoValorTituloField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -14,7 +15,7 @@ export class Cnab400BradescoBoletoValorTituloField extends CnabField {
 
   validate(): CnabValidationResult {
     const value = this.parse()
-    const isValid = /^\d+$/.test(value)
+    const isValid = isNumeric(value)
 
     return {
       isValid,
