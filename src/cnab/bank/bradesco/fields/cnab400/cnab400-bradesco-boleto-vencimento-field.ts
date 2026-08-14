@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
 
-export class VencimentoField extends CnabField {
+export class Cnab400BradescoBoletoVencimentoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'vencimento'
   readonly range: [number, number] = [120, 126]
