@@ -1,5 +1,5 @@
 import { CnabFormat } from '@cnab/types/cnab-format'
-import { CnabBankCode } from '@cnab/types/cnab-bank-code'
+import { CnabBank } from '@/cnab/type/cnab-bank'
 import { CnabFieldType } from '@cnab/types/cnab-field-type'
 import { CnabField } from '@cnab/types/cnab-field'
 import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
@@ -12,20 +12,20 @@ type FieldClass = typeof CnabField
 
 export class CnabLineSchema {
   public readonly format: CnabFormat
-  public readonly bankCode: CnabBankCode
+  public readonly bank: CnabBank
   public readonly fieldType: CnabFieldType
   public readonly fields: FieldClass[]
   public readonly validators: ValidatorClass[]
 
   constructor(config: {
     format: CnabFormat
-    bankCode: CnabBankCode
+    bank: CnabBank
     fieldType: CnabFieldType
     fields: FieldClass[]
     validators?: ValidatorClass[]
   }) {
     this.format = config.format
-    this.bankCode = config.bankCode
+    this.bank = config.bank
     this.fieldType = config.fieldType
     this.fields = config.fields
 
@@ -37,8 +37,7 @@ export class CnabLineSchema {
   }
 
   private isBoletoGroupStart(rawLine: string): boolean {
-    const bank = CnabBankCode.getBankFromCode(this.bankCode)
-    const GroupRule = getGroupRule(bank, this.format)
+    const GroupRule = getGroupRule(this.bank, this.format)
     return GroupRule.check(rawLine)
   }
 
