@@ -1,5 +1,5 @@
 import { CnabFormat } from '@/cnab/type/cnab-format'
-import { CnabBank, CnabBankCode } from '@/cnab/type/cnab-bank-code'
+import { CnabBank } from '@/cnab/type/cnab-bank'
 import { CnabSchema } from '@/cnab/type/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@/cnab/bank/cnab-bank-schemas'
 import { 
@@ -11,7 +11,7 @@ import {
 export class CnabFile {
   private rawLines!: string[]
   private format!: CnabFormat
-  private bankCode!: CnabBankCode
+  private bank!: CnabBank
   private schema!: CnabSchema
 
   private constructor() {}
@@ -34,8 +34,8 @@ export class CnabFile {
     }
 
     cnabFile.format = cnabFile.detectCnabFormat(cnabFile.rawLines[0])
-    cnabFile.bankCode = cnabFile.detectBankCode(cnabFile.rawLines[0])
-    cnabFile.schema = CnabFile.getSchema(cnabFile.bankCode, cnabFile.format)
+    cnabFile.bank = cnabFile.detectBank(cnabFile.rawLines[0])
+    cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)
 
     return cnabFile
   }
@@ -54,26 +54,25 @@ export class CnabFile {
     throw new CnabFileInvalidFormatException(firstLineLength)
   }
 
-  private detectBankCode(header: string): CnabBankCode {
+  private detectBank(header: string): CnabBank {
     const code = this.format === CnabFormat.CNAB240 
       ? header.substring(0, 3)
       : header.substring(76, 79)
     
-    const bankCode = CnabBankCode.fromBankCode(code)
+    const bank = CnabBank.fromCode(code)
     
-    if (bankCode == null) {
+    if (bank == null) {
       throw new CnabFileUnsupportedBankException(code)
     }
     
-    return bankCode
+    return bank
   }
 
-  private static getSchema(bankCode: CnabBankCode, format: CnabFormat): CnabSchema {
-    const bank = CnabBankCode.getBankFromCode(bankCode)
+  private static getSchema(bank: CnabBank, format: CnabFormat): CnabSchema {
     const schema = CNAB_BANK_SCHEMAS[bank]?.[format]
 
     if (schema == null) {
-      throw new Error(`Schema não encontrado para banco ${bankCode} e formato ${format}`)
+      throw new Error(`Schema não encontrado para banco ${bank} e formato ${format}`)
     }
 
     return schema
@@ -87,12 +86,8 @@ export class CnabFile {
     return this.format
   }
 
-  getBankCode(): CnabBankCode {
-    return this.bankCode
-  }
-
   getBank(): CnabBank {
-    return CnabBankCode.getBankFromCode(this.bankCode)
+    return this.bank
   }
 
   getSchema(): CnabSchema {
