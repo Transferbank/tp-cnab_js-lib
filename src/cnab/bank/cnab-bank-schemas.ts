@@ -9,7 +9,7 @@ import {
   VencimentoField
 } from '@cnab/banks/bradesco/fields/cnab400'
 
-export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
+export const CNAB_BANK_SCHEMAS = {
   [CnabBank.BRADESCO]: {
     [CnabFormat.CNAB240]: new CnabSchema({
       header: new CnabLineSchema({
@@ -56,4 +56,4 @@ export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
       })
     })
   }
-}
+} satisfies Record<CnabBank, Record<CnabFormat, CnabSchema>>

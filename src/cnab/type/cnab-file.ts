@@ -3,57 +3,64 @@ import { CnabFormat } from '@cnab/types/cnab-format'
 import { CnabSchema } from '@cnab/types/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@/cnab/bank/cnab-bank-schemas'
 import { 
-  CnabFileInsufficientLinesException, 
-  CnabFileInvalidFormatException,
-  CnabFileUnsupportedBankException 
+  CnabMinimumLinesNotReachedException, 
+  CnabFormatNotRecognizedException,
+  CnabBankCodeNotFoundException,
+  CnabBankSchemaNotFoundException
 } from '@/cnab/exception/cnab-exception'
 import { CnabField } from '@cnab/types/cnab-field'
 import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
 
+type NonEmptyArray<T> = [T, ...T[]]
+
 export class CnabFile {
-  private rawLines!: string[]
-  private format!: CnabFormat
-  private bank!: CnabBank
-  private schema!: CnabSchema
+  public rawLines!: string[]
+  public format!: CnabFormat
+  public bank!: CnabBank
+  public schema!: CnabSchema
 
   private constructor() {}
 
-  static async open(file: File): Promise<CnabFile> {
+  static async openFromFile(file: File): Promise<CnabFile> {
     const lines = await CnabFile.read(file)
-    return CnabFile.create(lines)
+    return CnabFile.openFromLines(lines)
   }
 
   static openFromLines(lines: string[]): CnabFile {
-    return CnabFile.create(lines)
-  }
-
-  private static create(lines: string[]): CnabFile {
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
 
     if (cnabFile.rawLines.length < 3) {
-      throw new CnabFileInsufficientLinesException(cnabFile.rawLines.length)
+      throw new CnabMinimumLinesNotReachedException()
     }
 
-    cnabFile.format = cnabFile.detectCnabFormat(cnabFile.rawLines[0])
+    cnabFile.format = cnabFile.detectFormat(cnabFile.rawLines[0])
     cnabFile.bank = cnabFile.detectBank(cnabFile.rawLines[0])
     cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)
 
     return cnabFile
   }
 
-  static async read(file: File): Promise<string[]> {
+  
+
+  private static async read(file: File): Promise<NonEmptyArray<string>> {
     const text = await file.text()
-    return text
+    const lines = text
       .split(/\r?\n/)
       .filter(line => line.length > 0)
+    
+    if (lines.length === 0) {
+      throw new CnabMinimumLinesNotReachedException()
+    }
+    // garante array não vazio em nível de tipo
+    return lines as NonEmptyArray<string>
   }
 
-  private detectCnabFormat(header: string): CnabFormat {
+  private detectFormat(header: string): CnabFormat {
     const firstLineLength = header.length
     if (firstLineLength === CnabFormat.CNAB240) return CnabFormat.CNAB240
     if (firstLineLength === CnabFormat.CNAB400) return CnabFormat.CNAB400
-    throw new CnabFileInvalidFormatException(firstLineLength)
+    throw new CnabFormatNotRecognizedException(firstLineLength)
   }
 
   private detectBank(header: string): CnabBank {
@@ -64,7 +71,7 @@ export class CnabFile {
     const bank = CnabBank.fromCode(code)
     
     if (bank == null) {
-      throw new CnabFileUnsupportedBankException(code)
+      throw new CnabBankCodeNotFoundException(code, this.format)
     }
     
     return bank
@@ -74,26 +81,10 @@ export class CnabFile {
     const schema = CNAB_BANK_SCHEMAS[bank]?.[format]
 
     if (schema == null) {
-      throw new Error(`Schema não encontrado para banco ${bank} e formato ${format}`)
+      throw new CnabBankSchemaNotFoundException(bank, format)
     }
 
     return schema
-  }
-
-  getLines(): string[] {
-    return this.rawLines
-  }
-
-  getFormat(): CnabFormat {
-    return this.format
-  }
-
-  getBank(): CnabBank {
-    return this.bank
-  }
-
-  getSchema(): CnabSchema {
-    return this.schema
   }
 
   validate(withFeedback: boolean = false, _extraFields?: (typeof CnabField)[]): boolean | CnabValidationResult {
