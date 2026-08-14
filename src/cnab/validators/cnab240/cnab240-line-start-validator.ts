@@ -2,7 +2,7 @@ import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
 
-export abstract class Cnab240LineStartValidator extends CnabLineValidator {
+export class Cnab240LineStartValidator extends CnabLineValidator {
   static readonly expectedStart: string
 
   static shouldValidate(_rawLine: string): boolean {

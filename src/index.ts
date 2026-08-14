@@ -5,5 +5,5 @@ export async function openCnabFile(file: File): Promise<CnabFile> {
 }
 
 export function openCnabFileFromLines(lines: string[]): CnabFile {
-  return CnabFile.openFromLines(lines)
+  return CnabFile.fromLines(lines)
 }

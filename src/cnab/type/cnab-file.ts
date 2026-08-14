@@ -21,10 +21,10 @@ export class CnabFile {
 
   static async open(file: File): Promise<CnabFile> {
     const lines = await CnabFile.read(file)
-    return CnabFile.openFromLines(lines)
+    return CnabFile.fromLines(lines)
   }
 
-  static openFromLines(lines: string[]): CnabFile {
+  static fromLines(lines: string[]): CnabFile {
     if (lines.length < 3) throw new CnabMinimumLinesNotReachedException()
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
@@ -62,14 +62,13 @@ export class CnabFile {
     return schema
   }
 
-  validate(withFeedback: boolean = false, extraFields?: (typeof CnabField)[]): boolean | CnabValidationResult {
+  validate(withFeedback: boolean = false, extraFields?: (typeof CnabField)[]): CnabValidationResult {
     const fields = extraFields ?? []
-    const result = this.schema.validate(
+    return this.schema.validate(
       this.rawLines,
       !withFeedback,
       fields
     )
-    return withFeedback ? result : result.isValid
   }
 
   read(_fields: (typeof CnabField)[]): CnabField[] {
