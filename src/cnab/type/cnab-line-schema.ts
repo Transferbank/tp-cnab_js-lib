@@ -5,7 +5,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
-import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules-registry'
+import { CNAB_GROUP_RULES } from '@/cnab/bank/cnab-group-rules'
 
 type ValidatorClass = typeof CnabLineValidator
 type FieldClass = typeof CnabField
