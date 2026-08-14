@@ -1,4 +1,7 @@
-import { CnabValidationErrorType } from './cnab-validation-error-type'
+export enum CnabValidationErrorType {
+  LINE = 'line',
+  FIELD = 'field'
+}
 
 export interface CnabValidationError {
   message: string

@@ -1,6 +1,6 @@
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error-type'
+import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabLineSizeValidator extends CnabLineValidator {
   static readonly expectedSize: number
