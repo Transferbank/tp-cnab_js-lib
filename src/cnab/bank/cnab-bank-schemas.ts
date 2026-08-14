@@ -3,7 +3,7 @@ import { CnabFormat } from '@cnab/types/cnab-format'
 import { CnabSchema } from '@cnab/types/cnab-schema'
 import { CnabFieldType } from '@cnab/types/cnab-field-type'
 
-export const CNAB_BANK_SCHEMAS = {
+export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
   [CnabBank.BRADESCO]: {
     [CnabFormat.CNAB240]: {
       header: {
@@ -46,4 +46,4 @@ export const CNAB_BANK_SCHEMAS = {
       }
     }
   }
-} satisfies Record<CnabBank, Record<CnabFormat, CnabSchema>>
+}
