@@ -1,14 +1,14 @@
-import { CnabFormat } from './cnab-format'
-import { CnabBank, CnabBankCode } from './cnab-bank-code'
-import { CnabSchema } from './cnab-schema'
-import { CNAB_BANK_SCHEMAS } from '../banks/cnab-bank-schemas'
+import { CnabFormat } from '@cnab/types/cnab-format'
+import { CnabBank, CnabBankCode } from '@cnab/types/cnab-bank-code'
+import { CnabSchema } from '@cnab/types/cnab-schema'
+import { CNAB_BANK_SCHEMAS } from '@cnab/banks/cnab-bank-schemas'
 import { 
   CnabFileInsufficientLinesException, 
   CnabFileInvalidFormatException,
   CnabFileUnsupportedBankException 
-} from './cnab-exceptions'
-import { CnabField } from './cnab-field'
-import { CnabValidationResult } from './cnab-validation-result'
+} from '@cnab/types/cnab-exceptions'
+import { CnabField } from '@cnab/types/cnab-field'
+import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
 
 export class CnabFile {
   private rawLines!: string[]

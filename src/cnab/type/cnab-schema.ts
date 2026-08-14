@@ -1,6 +1,6 @@
-import { CnabLineSchema } from './cnab-line-schema'
-import { CnabField } from './cnab-field'
-import { CnabValidationResult } from './cnab-validation-result'
+import { CnabLineSchema } from '@cnab/types/cnab-line-schema'
+import { CnabField } from '@cnab/types/cnab-field'
+import { CnabValidationResult } from '@cnab/types/cnab-validation-result'
 
 export class CnabSchema {
   public readonly header: CnabLineSchema

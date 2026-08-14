@@ -20,10 +20,10 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@cnab/types/*": ["src/cnab/types/*"],
+      "@cnab/types/*": ["src/cnab/type/*"],
       "@cnab/validators/*": ["src/cnab/validators/*"],
       "@cnab/utils/*": ["src/cnab/utils/*"],
-      "@cnab/banks/*": ["src/cnab/banks/*"]
+      "@cnab/banks/*": ["src/cnab/bank/*"]
     }
   },
   "include": ["src/**/*"],
