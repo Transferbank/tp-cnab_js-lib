@@ -32,32 +32,25 @@ export class CnabLineSchema {
     const lineSizeValidator = config.format === CnabFormat.CNAB240
       ? Cnab240LineSizeValidator
       : Cnab400LineSizeValidator
-
     this.validators = [lineSizeValidator, ...(config.validators ?? [])]
   }
 
   private isBoletoGroupStart(rawLine: string): boolean {
-    const GroupRule = getGroupRule(this.bank, this.format)
-    return GroupRule.check(rawLine)
+    return getGroupRule(this.bank, this.format).check(rawLine)
   }
 
   private *genBoletoLineGroupsIterator(rawLines: string[]): Generator<string[]> {
     let boletoRawLines: string[] = []
-
     for (const rawLine of rawLines) {
       if (this.isBoletoGroupStart(rawLine)) {
-        if (boletoRawLines.length !== 0) {
+        if (boletoRawLines.length !== 0) 
           yield boletoRawLines
-        }
         boletoRawLines = [rawLine]
-      } else if (boletoRawLines.length > 0) {
+      } else if (boletoRawLines.length > 0) 
         boletoRawLines.push(rawLine)
-      }
     }
-
-    if (boletoRawLines.length > 0) {
+    if (boletoRawLines.length > 0) 
       yield boletoRawLines
-    }
   }
 
   validate(
@@ -70,45 +63,35 @@ export class CnabLineSchema {
       isValid: true,
       errors: []
     }
-
     const validationTypes: (ValidatorClass | FieldClass)[] = [
       ...this.validators,
       ...this.fields,
       ...extraFields
     ]
-
     let lineNumber = firstLine
-
     const groupLines = this.fieldType === CnabFieldType.BOLETO
       ? this.genBoletoLineGroupsIterator(rawLines)
       : [[...rawLines]]
-
     for (const group of groupLines) {
       for (const rawLine of group) {
         for (const ValidationType of validationTypes) {
-          if (!ValidationType.shouldValidate(rawLine)) {
+          if (!ValidationType.shouldValidate(rawLine)) 
             continue
-          }
 
           // @ts-expect-error - ValidationType pode ser abstrato, mas subclasses concretas serão instanciadas
           const validator = new ValidationType({
             rawLine,
             lineNumber
           })
-          
           const validationResult = validator.validate()
-
           result.isValid = result.isValid && validationResult.isValid
           result.errors.push(...validationResult.errors)
-
-          if (!result.isValid && isEager) {
+          if (!result.isValid && isEager) 
             return result
-          }
         }
         lineNumber++
       }
     }
-
     return result
   }
 }

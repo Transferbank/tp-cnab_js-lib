@@ -65,11 +65,7 @@ export class CnabFile {
       !withFeedback,
       _extraFields
     )
-
-    if (withFeedback) {
-      return result
-    }
-
+    if (withFeedback) return result
     return result.isValid
   }
 }
