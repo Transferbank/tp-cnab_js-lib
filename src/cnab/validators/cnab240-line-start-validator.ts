@@ -1,6 +1,5 @@
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabValidationError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error-type'
 
 export abstract class Cnab240LineStartValidator extends CnabLineValidator {
@@ -13,19 +12,13 @@ export abstract class Cnab240LineStartValidator extends CnabLineValidator {
   validate(): CnabValidationResult {
     const expectedStart = (this.constructor as typeof Cnab240LineStartValidator).expectedStart
     const isValid = this.rawLine.startsWith(expectedStart)
-    const errors: CnabValidationError[] = []
-
-    if (!isValid) {
-      errors.push({
+    return {
+      isValid,
+      errors: isValid ? [] : [{
         message: `Início de linha inválido: esperado "${expectedStart}"`,
         errorType: CnabValidationErrorType.LINE,
         lineNumber: this.lineNumber
-      })
-    }
-
-    return {
-      isValid,
-      errors
+      }]
     }
   }
 }

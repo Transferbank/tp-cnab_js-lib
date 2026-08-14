@@ -15,8 +15,7 @@ export abstract class CnabField {
   }
 
   protected getFieldValue(): string {
-    const [start, end] = this.range
-    return this.rawLine.substring(start, end)
+    return this.rawLine.substring(...this.range)
   }
 
   static shouldValidate(_rawLine: string): boolean {

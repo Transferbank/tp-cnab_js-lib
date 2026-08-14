@@ -38,10 +38,9 @@ export class CnabFile {
   }
 
   private detectFormat(header: string): CnabFormat {
-    const firstLineLength = header.length
-    if (firstLineLength === CnabFormat.CNAB240) return CnabFormat.CNAB240
-    if (firstLineLength === CnabFormat.CNAB400) return CnabFormat.CNAB400
-    throw new CnabFormatNotRecognizedException(firstLineLength)
+    if (header.length === CnabFormat.CNAB240) return CnabFormat.CNAB240
+    if (header.length === CnabFormat.CNAB400) return CnabFormat.CNAB400
+    throw new CnabFormatNotRecognizedException(header.length)
   }
 
   private detectBank(header: string): CnabBank {
