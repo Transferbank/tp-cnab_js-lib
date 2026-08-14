@@ -17,12 +17,12 @@ export class CnabFile {
 
   private constructor() {}
 
-  static async openFromLines(file: File): Promise<CnabFile> {
+  static async openFromFile(file: File): Promise<CnabFile> {
     const lines = await CnabFile.read(file)
-    return CnabFile.create(lines)
+    return CnabFile.openFromLines(lines)
   }
 
-  static create(lines: string[]): CnabFile {
+  static openFromLines(lines: string[]): CnabFile {
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
 
