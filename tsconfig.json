@@ -24,7 +24,8 @@
       "@cnab/exception/*": ["src/cnab/exception/*"],
       "@cnab/validators/*": ["src/cnab/validators/*"],
       "@cnab/utils/*": ["src/cnab/utils/*"],
-      "@cnab/bank/*": ["src/cnab/bank/*"]
+      "@cnab/bank/*": ["src/cnab/bank/*"],
+      "@test/*": ["src/test/*"]
     }
   },
   "include": ["src/**/*"],
