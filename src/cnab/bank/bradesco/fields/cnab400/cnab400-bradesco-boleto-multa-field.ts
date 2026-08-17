@@ -4,6 +4,7 @@ import { isNumeric } from '@cnab/utils/field-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabValidationError,
+  createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -28,7 +29,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
 
     if (indicador !== '0' && indicador !== '2') {
       errors.push(
-        CnabValidationError({
+        createCnabValidationError({
           message: `Indicador de multa inválido: esperado '0' ou '2', recebido '${indicador}'`,
           errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
@@ -46,7 +47,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
       const percentual = this.rawLine.substring(67, 70)
       if (!isNumeric(percentual)) {
         errors.push(
-          CnabValidationError({
+          createCnabValidationError({
             message: 'Percentual de multa inválido: deve conter apenas números',
             errorType: CnabValidationErrorType.FIELD,
             lineNumber: this.lineNumber,
@@ -63,7 +64,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
       const percentualNum = parseInt(percentual, 10)
       if (percentualNum === 0) {
         errors.push(
-          CnabValidationError({
+          createCnabValidationError({
             message: "Percentual de multa deve ser maior que zero quando indicador é '2'",
             errorType: CnabValidationErrorType.FIELD,
             lineNumber: this.lineNumber,

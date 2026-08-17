@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { parseDateDDMMAA } from '@cnab/utils/date-parser'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
-  CnabValidationError,
+  createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -24,7 +24,7 @@ export class Cnab400BradescoHeaderDataGeracaoField extends CnabField {
 
     if (!isValid) {
       errors.push(
-        CnabValidationError({
+        createCnabValidationError({
           message: 'Campo data de geração inválido: deve ser data no formato DDMMAA',
           errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,

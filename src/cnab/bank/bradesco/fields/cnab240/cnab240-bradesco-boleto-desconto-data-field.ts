@@ -3,6 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
+  CnabValidationError,
   createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
