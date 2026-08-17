@@ -80,14 +80,15 @@ export class CnabLineSchema {
     for (const group of groupLines) {
       for (const rawLine of group) {
         for (const ValidationType of validationTypes) {
-          if (!ValidationType.shouldValidate(rawLine)) 
-            continue
-
           // @ts-expect-error - ValidationType pode ser abstrato, mas subclasses concretas serão instanciadas
           const validator = new ValidationType({
             rawLine,
             lineNumber
           })
+          
+          if (!validator.shouldValidate()) 
+            continue
+
           const validationResult = validator.validate()
           result.isValid = result.isValid && validationResult.isValid
           result.errors.push(...validationResult.errors)

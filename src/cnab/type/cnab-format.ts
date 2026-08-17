@@ -1,4 +1,4 @@
 export enum CnabFormat {
-  CNAB240 = 240,
-  CNAB400 = 400
+  CNAB240 = '240',
+  CNAB400 = '400'
 }
