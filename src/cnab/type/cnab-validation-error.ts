@@ -3,7 +3,7 @@ export enum CnabValidationErrorType {
   FIELD = 'field'
 }
 
-export interface CnabValidationError {
+export interface createCnabValidationError {
   message: string
   errorType: CnabValidationErrorType
   lineNumber: number
@@ -11,13 +11,13 @@ export interface CnabValidationError {
   range?: [number, number]
 }
 
-export function CnabValidationError(params: {
+export function createCnabValidationError(params: {
   message: string
   errorType: CnabValidationErrorType
   lineNumber: number
   fieldName?: string
   range?: [number, number]
-}): CnabValidationError {
+}): createCnabValidationError {
   return {
     message: params.message,
     errorType: params.errorType,

@@ -37,7 +37,7 @@ export class CnabLineSchema {
   }
 
   private isBoletoGroupStart(rawLine: string): boolean {
-    const GroupRuleClass = CNAB_GROUP_RULES[this.bank]?.[this.fmt]
+    const GroupRuleClass = CNAB_GROUP_RULES[this.bank][this.fmt]
     if (GroupRuleClass == null) {
       throw new CnabGroupRuleNotFoundException(this.bank, this.fmt)
     }
@@ -78,7 +78,7 @@ export class CnabLineSchema {
     let lineNumber = firstLine
     const groupLines = this.fieldType === CnabFieldType.BOLETO
       ? this.genBoletoLineGroupsIterator(rawLines)
-      : [...rawLines]
+      : [rawLines]
     for (const group of groupLines) {
       for (const rawLine of group) {
         for (const ValidationType of validationTypes) {
