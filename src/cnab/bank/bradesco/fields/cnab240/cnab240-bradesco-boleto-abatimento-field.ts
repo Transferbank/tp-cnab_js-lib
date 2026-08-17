@@ -8,7 +8,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 export class Cnab240BradescoBoletoAbatimentoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'abatimento'
-  readonly range: [number, number] = [180, 195]
+  readonly range: [number, number] = [181, 195]
   static shouldValidate(rawLine: string): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(rawLine)
   }

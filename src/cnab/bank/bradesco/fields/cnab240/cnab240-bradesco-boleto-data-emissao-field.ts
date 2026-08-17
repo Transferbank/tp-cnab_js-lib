@@ -8,7 +8,7 @@ import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 export class Cnab240BradescoBoletoDataEmissaoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'dataEmissao'
-  readonly range: [number, number] = [109, 117]
+  readonly range: [number, number] = [110, 117]
   static shouldValidate(rawLine: string): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(rawLine)
   }

@@ -13,7 +13,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 export class Cnab240BradescoBoletoMultaCodigoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'codigo multa'
-  readonly range: [number, number] = [65, 66]
+  readonly range: [number, number] = [66, 66]
 
   static shouldValidate(rawLine: string): boolean {
     return Cnab240LineTypeChecker.isSegmentoR(rawLine)

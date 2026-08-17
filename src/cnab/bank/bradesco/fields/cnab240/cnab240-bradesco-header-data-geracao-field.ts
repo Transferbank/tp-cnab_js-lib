@@ -8,7 +8,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 export class Cnab240BradescoHeaderDataGeracaoField extends CnabField {
   static readonly fieldType = CnabFieldType.HEADER
   readonly fieldName = 'data de geração'
-  readonly range: [number, number] = [143, 151]
+  readonly range: [number, number] = [144, 151]
 
   static shouldValidate(rawLine: string): boolean {
     return Cnab240LineTypeChecker.isHeaderArquivo(rawLine)

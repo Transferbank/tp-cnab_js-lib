@@ -8,15 +8,15 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 export class Cnab240BradescoBoletoValorTituloField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor titulo'
-  readonly range: [number, number] = [85, 100]
+  readonly range: [number, number] = [86, 100]
 
   static shouldValidate(rawLine: string): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(rawLine)
   }
 
   validate(): CnabValidationResult {
-    const value = this.parse()
-    const isValid = isNumeric(value)
+    const rawValue = this.getRangeValue()
+    const isValid = isNumeric(rawValue)
 
     return {
       isValid,
