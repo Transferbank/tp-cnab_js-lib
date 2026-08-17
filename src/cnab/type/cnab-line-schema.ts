@@ -6,6 +6,7 @@ import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
+import { CnabGroupRuleNotFoundException } from '@cnab/exception/cnab-exception'
 
 type ValidatorClass = typeof CnabLineValidator
 type FieldClass = typeof CnabField
@@ -37,7 +38,9 @@ export class CnabLineSchema {
 
   private isBoletoGroupStart(rawLine: string): boolean {
     const GroupRuleClass = CNAB_GROUP_RULES[this.bank]?.[this.fmt]
-    if (GroupRuleClass == null) return false
+    if (GroupRuleClass == null) {
+      throw new CnabGroupRuleNotFoundException(this.bank, this.fmt)
+    }
     // @ts-expect-error - GroupRuleClass pode ser abstrato, mas subclasses concretas serão instanciadas
     const groupRule = new GroupRuleClass()
     return groupRule.check(rawLine)

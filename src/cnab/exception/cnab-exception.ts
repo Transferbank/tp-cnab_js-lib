@@ -31,3 +31,9 @@ export class CnabBankSchemaNotFoundException extends CnabException {
     super(`CNAB${cnabFormat} para o banco ${bank} não suportado`)
   }
 }
+
+export class CnabGroupRuleNotFoundException extends CnabException {
+  constructor(bank: CnabBank, cnabFormat: CnabFormat) {
+    super(`Regra de agrupamento não encontrada para banco ${bank} no formato CNAB${cnabFormat}`)
+  }
+}
