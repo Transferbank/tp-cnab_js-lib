@@ -19,7 +19,7 @@ export abstract class CnabField {
   }
 
   protected getRangeValue(): string {
-    return this.rawLine.substring(...this.range)
+    return this.rawLine.substring(this.range[0] - 1, this.range[1])
   }
 
   abstract validate(): CnabValidationResult
