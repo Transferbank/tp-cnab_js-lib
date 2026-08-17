@@ -17,7 +17,7 @@ export class CnabSchema {
     this.boleto = config.boleto
   }
 
-  validate(rawLines: string[], isEager: boolean, extraFields?: (typeof CnabField)[]): CnabValidationResult {
+  validate(rawLines: string[], eagerEnabled: boolean, extraFields?: (typeof CnabField)[]): CnabValidationResult {
     const fields = extraFields ?? []
     const result: CnabValidationResult = {isValid: true, errors: []}
     const items: Array<[CnabLineSchema, string[], number]> = [
@@ -29,10 +29,10 @@ export class CnabSchema {
       const groupExtraFields = fields.filter(
         field => field.fieldType === group.fieldType
       )
-      const groupResult = group.validate(lines,isEager,groupExtraFields,firstLine)
+      const groupResult = group.validate(lines, eagerEnabled, firstLine, groupExtraFields)
       result.isValid = result.isValid && groupResult.isValid
       result.errors.push(...groupResult.errors)
-      if (!result.isValid && isEager) {
+      if (!result.isValid && eagerEnabled) {
         return result
       }
     }

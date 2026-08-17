@@ -41,7 +41,6 @@ export class CnabLineSchema {
     if (GroupRuleClass == null) {
       throw new CnabGroupRuleNotFoundException(this.bank, this.fmt)
     }
-    // @ts-expect-error - GroupRuleClass pode ser abstrato, mas subclasses concretas serão instanciadas
     const groupRule = new GroupRuleClass()
     return groupRule.check(rawLine)
   }
@@ -62,9 +61,9 @@ export class CnabLineSchema {
 
   validate(
     rawLines: string[],
-    isEager: boolean,
-    extraFields?: FieldClass[],
-    firstLine: number = 0
+    eagerEnabled: boolean,
+    firstLine: number,
+    extraFields?: FieldClass[]
   ): CnabValidationResult {
     const fields = extraFields ?? []
     const result: CnabValidationResult = {
@@ -79,7 +78,7 @@ export class CnabLineSchema {
     let lineNumber = firstLine
     const groupLines = this.fieldType === CnabFieldType.BOLETO
       ? this.genBoletoLineGroupsIterator(rawLines)
-      : [[...rawLines]]
+      : [...rawLines]
     for (const group of groupLines) {
       for (const rawLine of group) {
         for (const ValidationType of validationTypes) {
@@ -95,10 +94,10 @@ export class CnabLineSchema {
           const validationResult = validator.validate()
           result.isValid = result.isValid && validationResult.isValid
           result.errors.push(...validationResult.errors)
-          if (!result.isValid && isEager) 
+          if (!result.isValid && eagerEnabled) 
             return result
         }
-        lineNumber++
+        ++lineNumber
       }
     }
     return result
