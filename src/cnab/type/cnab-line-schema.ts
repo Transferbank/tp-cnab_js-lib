@@ -8,7 +8,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
 import { CnabGroupRuleNotFoundException } from '@cnab/exception/cnab-exception'
 
-type ValidatorClass = typeof CnabLineValidator
+type ValidatorConstructor = new (params: { rawLine: string; lineNumber: number }) => CnabLineValidator
 type FieldClass = typeof CnabField
 
 export class CnabLineSchema {
@@ -16,14 +16,14 @@ export class CnabLineSchema {
   public readonly bank: CnabBank
   public readonly fieldType: CnabFieldType
   public readonly fields: FieldClass[]
-  public readonly validators: ValidatorClass[]
+  public readonly validators: ValidatorConstructor[]
 
   constructor(config: {
     fmt: CnabFormat
     bank: CnabBank
     fieldType: CnabFieldType
     fields: FieldClass[]
-    validators?: ValidatorClass[]
+    validators?: ValidatorConstructor[]
   }) {
     this.fmt = config.fmt
     this.bank = config.bank
@@ -70,7 +70,7 @@ export class CnabLineSchema {
       isValid: true,
       errors: []
     }
-    const validationTypes: (ValidatorClass | FieldClass)[] = [
+    const validationTypes: (ValidatorConstructor | FieldClass)[] = [
       ...this.validators,
       ...this.fields,
       ...fields
@@ -82,8 +82,7 @@ export class CnabLineSchema {
     for (const group of groupLines) {
       for (const rawLine of group) {
         for (const ValidationType of validationTypes) {
-          // @ts-expect-error - ValidationType pode ser abstrato, mas subclasses concretas serão instanciadas
-          const validator = new ValidationType({
+          const validator = new (ValidationType as ValidatorConstructor)({
             rawLine,
             lineNumber
           })

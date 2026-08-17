@@ -67,7 +67,7 @@ export class CnabFile {
     return this.schema.validate(
       this.rawLines,
       !withFeedback,
-      fields
+      fields ?? []
     )
   }
 
