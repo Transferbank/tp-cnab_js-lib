@@ -18,6 +18,10 @@ export abstract class CnabField {
     return false
   }
 
+  protected getRangeValue(): string {
+    return this.rawLine.substring(...this.range)
+  }
+
   abstract validate(): CnabValidationResult
   abstract parse(): string
 }
