@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
-  CnabValidationError,
+  createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -30,7 +30,7 @@ export class Cnab240BradescoBoletoDescontoDataField extends CnabField {
 
     if (!isValid) {
       errors.push(
-        CnabValidationError({
+        createCnabValidationError({
           message: 'Campo data limite desconto inválido: deve ser data no formato DDMMAAAA ou "00000000"',
           errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
@@ -47,6 +47,6 @@ export class Cnab240BradescoBoletoDescontoDataField extends CnabField {
   }
 
   parse(): string {
-    return this.rawLine.substring(...this.range)
+    return this.getRangeValue()
   }
 }

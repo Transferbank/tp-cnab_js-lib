@@ -18,7 +18,7 @@ export class Cnab400BradescoBoletoSacadoDocumentoField extends CnabField {
   }
 
   validate(): CnabValidationResult {
-    const value = this.rawLine.substring(...this.range)
+    const value = this.getRangeValue()
     const isValid = validateDocument(value)
     const errors = []
 
@@ -41,6 +41,6 @@ export class Cnab400BradescoBoletoSacadoDocumentoField extends CnabField {
   }
 
   parse(): string {
-    return this.rawLine.substring(...this.range)
+    return this.getRangeValue()
   }
 }

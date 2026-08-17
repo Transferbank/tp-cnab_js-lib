@@ -22,7 +22,7 @@ export class Cnab400BradescoBoletoNumeroDocumentoEmissorField extends CnabField 
   }
 
   validate(): CnabValidationResult {
-    const value = this.rawLine.substring(...this.range).trim()
+    const value = this.getRangeValue().trim()
     const isValid = minLength(value, 1)
     const errors = []
 
@@ -45,6 +45,6 @@ export class Cnab400BradescoBoletoNumeroDocumentoEmissorField extends CnabField 
   }
 
   parse(): string {
-    return this.rawLine.substring(...this.range).trim()
+    return this.getRangeValue().trim()
   }
 }

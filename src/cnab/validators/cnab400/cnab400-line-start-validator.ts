@@ -1,7 +1,7 @@
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
-  createCnabValidationError,
+  CnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 
@@ -19,7 +19,7 @@ export class Cnab400LineStartValidator extends CnabLineValidator {
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
+        CnabValidationError({
           message: `Início de linha inválido: esperado "${expectedStart}"`,
           errorType: CnabValidationErrorType.LINE,
           lineNumber: this.lineNumber

@@ -18,7 +18,7 @@ export class Cnab400BradescoBoletoDescontoValorField extends CnabField {
   }
 
   validate(): CnabValidationResult {
-    const value = this.rawLine.substring(...this.range)
+    const value = this.getRangeValue()
     const isValid = isNumeric(value)
     const errors = []
 
@@ -41,7 +41,7 @@ export class Cnab400BradescoBoletoDescontoValorField extends CnabField {
   }
 
   parse(): string {
-    const value = this.rawLine.substring(...this.range)
+    const value = this.getRangeValue()
     return (parseInt(value, 10) / 100).toFixed(2)
   }
 }

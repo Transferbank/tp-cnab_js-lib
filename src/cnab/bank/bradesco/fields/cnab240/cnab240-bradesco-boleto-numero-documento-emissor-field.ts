@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { minLength } from '@cnab/utils/field-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
-  CnabValidationError,
+  createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -22,13 +22,13 @@ export class Cnab240BradescoBoletoNumeroDocumentoEmissorField extends CnabField 
   }
 
   validate(): CnabValidationResult {
-    const value = this.rawLine.substring(...this.range).trim()
+    const value = this.getRangeValue().trim()
     const isValid = minLength(value, 1)
     const errors = []
 
     if (!isValid) {
       errors.push(
-        CnabValidationError({
+        createCnabValidationError({
           message: 'Campo documento emissor inválido: deve conter ao menos 1 caractere',
           errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
@@ -45,6 +45,6 @@ export class Cnab240BradescoBoletoNumeroDocumentoEmissorField extends CnabField 
   }
 
   parse(): string {
-    return this.rawLine.substring(...this.range).trim()
+    return this.getRangeValue().trim()
   }
 }

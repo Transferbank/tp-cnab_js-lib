@@ -1,7 +1,7 @@
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
-  createCnabValidationError,
+  CnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 
@@ -20,7 +20,7 @@ export class CnabLineSizeValidator extends CnabLineValidator {
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
+        CnabValidationError({
           message: `Tamanho de linha inválido: esperado ${expectedSize}, recebido ${actualSize}`,
           errorType: CnabValidationErrorType.LINE,
           lineNumber: this.lineNumber

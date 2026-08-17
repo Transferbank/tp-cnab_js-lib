@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { isNumeric } from '@cnab/utils/field-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
-  CnabValidationError,
+  createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -22,13 +22,13 @@ export class Cnab240BradescoBoletoNossoNumeroField extends CnabField {
   }
 
   validate(): CnabValidationResult {
-    const value = this.rawLine.substring(...this.range)
+    const value = this.getRangeValue()
     const isValid = isNumeric(value)
     const errors = []
 
     if (!isValid) {
       errors.push(
-        CnabValidationError({
+        createCnabValidationError({
           message: 'Campo nosso numero inválido: deve conter apenas números',
           errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
@@ -45,6 +45,6 @@ export class Cnab240BradescoBoletoNossoNumeroField extends CnabField {
   }
 
   parse(): string {
-    return this.rawLine.substring(...this.range)
+    return this.getRangeValue()
   }
 }

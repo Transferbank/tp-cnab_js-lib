@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { isNumeric } from '@cnab/utils/field-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
-  CnabValidationError,
+  createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -18,13 +18,13 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField {
   }
 
   validate(): CnabValidationResult {
-    const rawValue = this.rawLine.substring(...this.range)
+    const rawValue = this.getRangeValue()
     const isValid = isNumeric(rawValue)
     const errors = []
 
     if (!isValid) {
       errors.push(
-        CnabValidationError({
+        createCnabValidationError({
           message: 'Campo valor titulo inválido: deve conter apenas números',
           errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
@@ -41,6 +41,6 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField {
   }
 
   parse(): string {
-    return (parseInt(this.rawLine.substring(...this.range), 10) / 100).toFixed(2)
+    return (parseInt(this.getRangeValue(), 10) / 100).toFixed(2)
   }
 }
