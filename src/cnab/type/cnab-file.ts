@@ -42,8 +42,8 @@ export class CnabFile {
   }
 
   private detectFormat(header: string): CnabFormat {
-    if (header.length === CnabFormat.CNAB240) return CnabFormat.CNAB240
-    if (header.length === CnabFormat.CNAB400) return CnabFormat.CNAB400
+    if (header.length === 240) return CnabFormat.CNAB240
+    if (header.length === 400) return CnabFormat.CNAB400
     throw new CnabFormatNotRecognizedException(header.length)
   }
 
@@ -62,12 +62,11 @@ export class CnabFile {
     return schema
   }
 
-  validate(withFeedback: boolean = false, extraFields?: (typeof CnabField)[]): CnabValidationResult {
-    const fields = extraFields ?? []
+  validate(withFeedback: boolean = false, fields?: (typeof CnabField)[]): CnabValidationResult {
     return this.schema.validate(
       this.rawLines,
       !withFeedback,
-      fields
+      fields ?? []
     )
   }
 

@@ -1,0 +1,1 @@
+export { Cnab400BradescoBoletoNameField } from './cnab400-bradesco-boleto-name-field'

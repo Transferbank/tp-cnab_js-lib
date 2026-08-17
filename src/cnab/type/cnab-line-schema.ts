@@ -6,8 +6,9 @@ import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
+import { CnabGroupRuleNotFoundException } from '@cnab/exception/cnab-exception'
 
-type ValidatorClass = typeof CnabLineValidator
+type ValidatorConstructor = new (params: { rawLine: string; lineNumber: number }) => CnabLineValidator
 type FieldClass = typeof CnabField
 
 export class CnabLineSchema {
@@ -15,14 +16,14 @@ export class CnabLineSchema {
   public readonly bank: CnabBank
   public readonly fieldType: CnabFieldType
   public readonly fields: FieldClass[]
-  public readonly validators: ValidatorClass[]
+  public readonly validators: ValidatorConstructor[]
 
   constructor(config: {
     fmt: CnabFormat
     bank: CnabBank
     fieldType: CnabFieldType
     fields: FieldClass[]
-    validators?: ValidatorClass[]
+    validators?: ValidatorConstructor[]
   }) {
     this.fmt = config.fmt
     this.bank = config.bank
@@ -37,8 +38,9 @@ export class CnabLineSchema {
 
   private isBoletoGroupStart(rawLine: string): boolean {
     const GroupRuleClass = CNAB_GROUP_RULES[this.bank]?.[this.fmt]
-    if (GroupRuleClass == null) return false
-    // @ts-expect-error - GroupRuleClass pode ser abstrato, mas subclasses concretas serão instanciadas
+    if (GroupRuleClass == null) {
+      throw new CnabGroupRuleNotFoundException(this.bank, this.fmt)
+    }
     const groupRule = new GroupRuleClass()
     return groupRule.check(rawLine)
   }
@@ -59,16 +61,16 @@ export class CnabLineSchema {
 
   validate(
     rawLines: string[],
-    isEager: boolean,
-    extraFields?: FieldClass[],
-    firstLine: number = 0
+    eagerEnabled: boolean,
+    firstLine: number,
+    extraFields?: FieldClass[]
   ): CnabValidationResult {
     const fields = extraFields ?? []
     const result: CnabValidationResult = {
       isValid: true,
       errors: []
     }
-    const validationTypes: (ValidatorClass | FieldClass)[] = [
+    const validationTypes: (ValidatorConstructor | FieldClass)[] = [
       ...this.validators,
       ...this.fields,
       ...fields
@@ -76,25 +78,25 @@ export class CnabLineSchema {
     let lineNumber = firstLine
     const groupLines = this.fieldType === CnabFieldType.BOLETO
       ? this.genBoletoLineGroupsIterator(rawLines)
-      : [[...rawLines]]
+      : [...rawLines]
     for (const group of groupLines) {
       for (const rawLine of group) {
         for (const ValidationType of validationTypes) {
-          if (!ValidationType.shouldValidate(rawLine)) 
-            continue
-
-          // @ts-expect-error - ValidationType pode ser abstrato, mas subclasses concretas serão instanciadas
-          const validator = new ValidationType({
+          const validator = new (ValidationType as ValidatorConstructor)({
             rawLine,
             lineNumber
           })
+          
+          if (!validator.shouldValidate()) 
+            continue
+
           const validationResult = validator.validate()
           result.isValid = result.isValid && validationResult.isValid
           result.errors.push(...validationResult.errors)
-          if (!result.isValid && isEager) 
+          if (!result.isValid && eagerEnabled) 
             return result
         }
-        lineNumber++
+        ++lineNumber
       }
     }
     return result

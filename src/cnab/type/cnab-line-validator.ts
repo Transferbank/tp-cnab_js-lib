@@ -9,9 +9,7 @@ export abstract class CnabLineValidator {
     this.lineNumber = config.lineNumber
   }
 
-  static shouldValidate(_rawLine: string): boolean {
-    return false
-  }
+  abstract shouldValidate(): boolean
 
   abstract validate(): CnabValidationResult
 }
