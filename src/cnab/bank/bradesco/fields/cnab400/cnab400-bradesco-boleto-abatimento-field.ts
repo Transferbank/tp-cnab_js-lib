@@ -9,7 +9,7 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 export class Cnab400BradescoBoletoAbatimentoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'abatimento'
-  readonly range: [number, number] = [205, 218]
+  readonly range: [number, number] = [206, 218]
   static shouldValidate(rawLine: string): boolean {
     return Cnab400LineTypeChecker.isDetalhe(rawLine)
   }

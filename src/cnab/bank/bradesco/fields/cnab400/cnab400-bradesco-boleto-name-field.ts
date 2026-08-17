@@ -8,7 +8,7 @@ import { minLength } from '@cnab/utils/field-validator'
 export class Cnab400BradescoBoletoNameField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [234, 274]
+  readonly range: [number, number] = [235, 274]
   static shouldValidate(rawLine: string): boolean {
     return Cnab400LineTypeChecker.isDetalhe(rawLine)
   }

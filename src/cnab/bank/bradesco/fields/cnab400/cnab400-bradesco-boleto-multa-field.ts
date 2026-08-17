@@ -13,12 +13,12 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 export class Cnab400BradescoBoletoMultaField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'multa'
-  readonly range: [number, number] = [65, 70]
+  readonly range: [number, number] = [66, 70]
   static shouldValidate(rawLine: string): boolean {
     return Cnab400LineTypeChecker.isDetalhe(rawLine)
   }
   validate(): CnabValidationResult {
-    const indicador = this.rawLine[65]
+    const indicador = this.rawLine[66]
     if (indicador != '0' && indicador != '2') {
       return {
         isValid: false,
@@ -32,7 +32,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
       }
     }
     if (indicador == '2') {
-      const percentual = this.rawLine.substring(66, 70)
+      const percentual = this.rawLine.substring(67, 70)
       if (!isNumeric(percentual)) {
         return {
           isValid: false,
@@ -41,7 +41,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
             errorType: CnabValidationErrorType.FIELD,
             lineNumber: this.lineNumber,
             fieldName: this.fieldName,
-            range: [66, 70]
+            range: [67, 70]
           }]
         }
       }
@@ -54,7 +54,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
             errorType: CnabValidationErrorType.FIELD,
             lineNumber: this.lineNumber,
             fieldName: this.fieldName,
-            range: [66, 70]
+            range: [67, 70]
           }]
         }
       }
@@ -63,9 +63,9 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
   }
 
   parse(): string {
-    const indicador = this.rawLine[65]
+    const indicador = this.rawLine[66]
     if (indicador !== '2') return '0.00'
-    const percentualStr = this.rawLine.substring(66, 70)
+    const percentualStr = this.rawLine.substring(67, 70)
     const percentual = (parseInt(percentualStr, 10) / 100).toFixed(2)
     return percentual
   }

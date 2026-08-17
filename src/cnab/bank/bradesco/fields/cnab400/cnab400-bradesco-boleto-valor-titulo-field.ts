@@ -8,7 +8,7 @@ import { isNumeric } from '@cnab/utils/field-validator'
 export class Cnab400BradescoBoletoValorTituloField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor titulo'
-  readonly range: [number, number] = [126, 139]
+  readonly range: [number, number] = [127, 139]
 
   static shouldValidate(rawLine: string): boolean {
     return Cnab400LineTypeChecker.isDetalhe(rawLine)

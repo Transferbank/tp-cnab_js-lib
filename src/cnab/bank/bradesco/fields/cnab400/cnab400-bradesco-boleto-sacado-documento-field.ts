@@ -1,6 +1,6 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { isValidCpfCnpj } from '@cnab/utils/document-parser'
+import { validateDocument } from '@cnab/utils/document-parser'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -8,13 +8,13 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 export class Cnab400BradescoBoletoSacadoDocumentoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'sacado documento'
-  readonly range: [number, number] = [220, 234]
+  readonly range: [number, number] = [221, 234]
   static shouldValidate(rawLine: string): boolean {
     return Cnab400LineTypeChecker.isDetalhe(rawLine)
   }
   validate(): CnabValidationResult {
     const value = this.getRangeValue()
-    const isValid = isValidCpfCnpj(value)
+    const isValid = validateDocument(value)
     return {
       isValid,
       errors: isValid ? [] : [{
