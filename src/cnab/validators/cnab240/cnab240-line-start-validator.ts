@@ -12,13 +12,19 @@ export class Cnab240LineStartValidator extends CnabLineValidator {
   validate(): CnabValidationResult {
     const expectedStart = (this.constructor as typeof Cnab240LineStartValidator).expectedStart
     const isValid = this.rawLine.startsWith(expectedStart)
-    return {
-      isValid,
-      errors: isValid ? [] : [{
+    const errors = []
+    
+    if (!isValid) {
+      errors.push({
         message: `Início de linha inválido: esperado "${expectedStart}"`,
         errorType: CnabValidationErrorType.LINE,
         lineNumber: this.lineNumber
-      }]
+      })
+    }
+    
+    return {
+      isValid,
+      errors
     }
   }
 }

@@ -13,13 +13,19 @@ export class CnabLineSizeValidator extends CnabLineValidator {
     const actualSize = this.rawLine.length
     const expectedSize = (this.constructor as typeof CnabLineSizeValidator).expectedSize
     const isValid = actualSize === expectedSize
-    return {
-      isValid,
-      errors: isValid ? [] : [{
+    const errors = []
+    
+    if (!isValid) {
+      errors.push({
         message: `Tamanho de linha inválido: esperado ${expectedSize}, recebido ${actualSize}`,
         errorType: CnabValidationErrorType.LINE,
         lineNumber: this.lineNumber
-      }]
+      })
+    }
+    
+    return {
+      isValid,
+      errors
     }
   }
 }
