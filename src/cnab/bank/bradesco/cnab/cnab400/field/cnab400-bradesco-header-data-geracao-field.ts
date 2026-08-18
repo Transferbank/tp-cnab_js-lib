@@ -18,7 +18,7 @@ export class Cnab400BradescoHeaderDataGeracaoField extends CnabField {
   }
 
   validate(): CnabValidationResult {
-    const value = this.parse()
+    const value = this.parse().trim()
     const isValid = parseDateDDMMAA(value) != null
     const errors = []
 

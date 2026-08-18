@@ -1,8 +1,34 @@
 import * as path from 'path'
-import { describe, it, expect } from '@jest/globals'
 import { resPath } from '@test/conftest'
 import { readExampleLines } from '@test/test-utils'
-import * as Fields from '@cnab/bank/bradesco/fields/cnab240/fields'
+import { describe, it, expect } from '@jest/globals'
+import * as Fields from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
+
+describe('Bradesco CNAB240 Fields - Header', (): void => {
+  const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
+  const headerArquivo = lines[0]
+
+  describe('Data de Geração', (): void => {
+    it('dado Header Arquivo quando extrair então retorna 10072026', (): void => {
+      const field = new Fields.Cnab240BradescoHeaderDataGeracaoField({ rawLine: headerArquivo, lineNumber: 1 })
+      expect(field.parse()).toBe('10072026')
+    })
+    it('dado Header Arquivo válido quando validar então isValid true', (): void => {
+      const field = new Fields.Cnab240BradescoHeaderDataGeracaoField({ rawLine: headerArquivo, lineNumber: 1 })
+      const result = field.validate()
+      expect(result.isValid).toBe(true)
+      expect(result.errors).toHaveLength(0)
+    })
+    it('dado data inválida quando validar então isValid false', (): void => {
+      const invalidLine = headerArquivo.substring(0, 143) + '99999999' + headerArquivo.substring(151)
+      const field = new Fields.Cnab240BradescoHeaderDataGeracaoField({ rawLine: invalidLine, lineNumber: 1 })
+      const result = field.validate()
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+    })
+  })
+})
+
 describe('Bradesco CNAB240 Fields - Primeiro Boleto', (): void => {
   const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
   const segmentoP = lines[2]
@@ -27,6 +53,7 @@ describe('Bradesco CNAB240 Fields - Primeiro Boleto', (): void => {
       expect(result.errors).toHaveLength(1)
     })
   })
+
   describe('Número Documento Emissor', (): void => {
     it('dado Segmento P quando extrair então retorna NF0000123', (): void => {
       const field = new Fields.Cnab240BradescoBoletoNumeroDocumentoEmissorField({ rawLine: segmentoP, lineNumber: 3 })
@@ -46,6 +73,7 @@ describe('Bradesco CNAB240 Fields - Primeiro Boleto', (): void => {
       expect(result.errors).toHaveLength(1)
     })
   })
+
   describe('CPF/CNPJ do Sacado', (): void => {
     it('dado Segmento Q quando extrair então retorna 000010000791989', (): void => {
       const field = new Fields.Cnab240BradescoBoletoSacadoDocumentoField({ rawLine: segmentoQ, lineNumber: 4 })
@@ -66,6 +94,7 @@ describe('Bradesco CNAB240 Fields - Primeiro Boleto', (): void => {
       expect(result.errors).toHaveLength(1)
     })
   })
+
   describe('Nome do Pagador', (): void => {
     it('dado Segmento Q quando extrair então retorna JOAO EXEMPLO SILVA', (): void => {
       const field = new Fields.Cnab240BradescoBoletoNameField({ rawLine: segmentoQ, lineNumber: 4 })
@@ -85,6 +114,7 @@ describe('Bradesco CNAB240 Fields - Primeiro Boleto', (): void => {
       expect(result.errors).toHaveLength(1)
     })
   })
+
   describe('Valor do Título', (): void => {
     it('dado Segmento P quando extrair então retorna 100.00', (): void => {
       const field = new Fields.Cnab240BradescoBoletoValorTituloField({ rawLine: segmentoP, lineNumber: 3 })
@@ -104,6 +134,7 @@ describe('Bradesco CNAB240 Fields - Primeiro Boleto', (): void => {
       expect(result.errors).toHaveLength(1)
     })
   })
+  
   describe('Vencimento', (): void => {
     it('dado Segmento P quando extrair então retorna 15122026', (): void => {
       const field = new Fields.Cnab240BradescoBoletoVencimentoField({ rawLine: segmentoP, lineNumber: 3 })
@@ -209,7 +240,7 @@ describe('Bradesco CNAB240 Fields - Multa (Segmento R)', (): void => {
   const segmentoR = lines[4]
 
   describe('Multa Código', (): void => {
-    it('dado Segmento R quando extrair então retorna percentual', (): void => {
+    it('dado Segmento R quando extrair então retorna (percentual)', (): void => {
       const field = new Fields.Cnab240BradescoBoletoMultaCodigoField({ rawLine: segmentoR, lineNumber: 5 })
       expect(field.parse()).toBe('percentual')
     })

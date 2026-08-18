@@ -24,7 +24,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
   }
 
   validate(): CnabValidationResult {
-    const indicador = this.rawLine[66]
+    const indicador = this.rawLine[65]
     const errors: CnabValidationError[] = []
 
     if (indicador !== '0' && indicador !== '2') {
@@ -44,7 +44,7 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
     }
 
     if (indicador === '2') {
-      const percentual = this.rawLine.substring(67, 70)
+      const percentual = this.rawLine.substring(66, 70)
       if (!isNumeric(percentual)) {
         errors.push(
           createCnabValidationError({
@@ -83,9 +83,9 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
   }
 
   parse(): string {
-    const indicador = this.rawLine[66]
+    const indicador = this.rawLine[65]
     if (indicador !== '2') return '0.00'
-    const percentualStr = this.rawLine.substring(67, 70)
+    const percentualStr = this.rawLine.substring(66, 70)
     const percentual = (parseInt(percentualStr, 10) / 100).toFixed(2)
     return percentual
   }
