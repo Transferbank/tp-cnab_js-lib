@@ -11,7 +11,7 @@ describe('Bradesco CNAB400 Fields - Header', (): void => {
   describe('Data de Geração', (): void => {
     it('dado Header Arquivo quando extrair então retorna 260526', (): void => {
       const field = new Fields.Cnab400BradescoHeaderDataGeracaoField({ rawLine: headerArquivo, lineNumber: 1 })
-      expect(field.parse().trim()).toBe('260526')
+      expect(field.parse()).toBe('260526')
     })
     it('dado Header Arquivo válido quando validar então isValid true', (): void => {
       const field = new Fields.Cnab400BradescoHeaderDataGeracaoField({ rawLine: headerArquivo, lineNumber: 1 })

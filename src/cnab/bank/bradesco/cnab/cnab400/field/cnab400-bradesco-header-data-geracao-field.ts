@@ -11,7 +11,7 @@ import {
 export class Cnab400BradescoHeaderDataGeracaoField extends CnabField {
   static readonly fieldType = CnabFieldType.HEADER
   readonly fieldName = 'data de geração'
-  readonly range: [number, number] = [94, 100]
+  readonly range: [number, number] = [95, 100]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isHeader(this.rawLine)
