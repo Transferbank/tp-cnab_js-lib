@@ -5,6 +5,8 @@ import {
   createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
+import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { minLength } from '@cnab/utils/field-validator'
 
 export class Cnab400BradescoBoletoNameField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -12,11 +14,12 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
   readonly range: [number, number] = [235, 274]
 
   shouldValidate(): boolean {
-    return this.rawLine.startsWith('1')
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
   }
 
   validate(): CnabValidationResult {
-    const isValid = this.parse().length >= 3
+    const value = this.parse()
+    const isValid = minLength(value, 3)
     const errors = []
 
     if (!isValid) {

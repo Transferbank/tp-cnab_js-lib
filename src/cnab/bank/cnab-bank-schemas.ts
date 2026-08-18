@@ -3,8 +3,8 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
-import * as BradescoCnab240Fields from '@cnab/bank/bradesco/fields/cnab240/fields'
-import * as BradescoCnab400Fields from '@cnab/bank/bradesco/fields/cnab400/fields'
+import * as BradescoCnab240Fields from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
+import * as BradescoCnab400Fields from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400/cnab400-line-start-validator'
 
 export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
