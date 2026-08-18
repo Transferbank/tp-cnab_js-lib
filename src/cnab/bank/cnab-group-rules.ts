@@ -1,7 +1,10 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
-import { Cnab240BradescoGroupRule, Cnab400BradescoGroupRule } from './bradesco/group-rules'
+import {
+  Cnab240BradescoGroupRule,
+  Cnab400BradescoGroupRule
+} from './bradesco/group-rules'
 
 type GroupRuleConstructor = new () => CnabBoletoGroupRule
 

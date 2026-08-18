@@ -1,13 +1,13 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabValidationError,
   createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
-import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BradescoBoletoDescontoDataField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO

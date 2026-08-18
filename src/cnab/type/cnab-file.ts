@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { 
+import {
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,

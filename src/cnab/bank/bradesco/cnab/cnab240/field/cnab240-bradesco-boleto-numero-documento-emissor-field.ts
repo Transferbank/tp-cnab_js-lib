@@ -1,12 +1,12 @@
 import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { minLength } from '@cnab/utils/field-validator'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
-import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 /**
  * Número do Documento - Número de controle/identificação da empresa emissora

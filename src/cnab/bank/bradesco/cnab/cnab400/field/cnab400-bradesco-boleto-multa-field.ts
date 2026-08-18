@@ -1,13 +1,13 @@
 import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { isNumeric } from '@cnab/utils/field-validator'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabValidationError,
   createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 /**
  * IMPORTANTE: No CNAB400, não existe campo de data para início da multa.

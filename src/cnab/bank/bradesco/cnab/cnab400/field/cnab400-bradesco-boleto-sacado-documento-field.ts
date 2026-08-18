@@ -1,12 +1,12 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { validateDocument } from '@cnab/utils/document-parser'
+import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   createCnabValidationError,
   CnabValidationErrorType
 } from '@cnab/type/cnab-validation-error'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab400BradescoBoletoSacadoDocumentoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO

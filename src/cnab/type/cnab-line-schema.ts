@@ -5,11 +5,14 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
 import { CnabGroupRuleNotFoundException } from '@cnab/exception/cnab-exception'
+import {
+  Cnab240LineSizeValidator,
+  Cnab400LineSizeValidator
+} from '@cnab/validators/cnab-line-size-validator'
 
-type ValidatorConstructor = new (params: { rawLine: string; lineNumber: number }) => CnabLineValidator
 type FieldClass = typeof CnabField
+type ValidatorConstructor = new (params: { rawLine: string; lineNumber: number }) => CnabLineValidator
 
 export class CnabLineSchema {
   public readonly fmt: CnabFormat
