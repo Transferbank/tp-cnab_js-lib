@@ -8,7 +8,7 @@ import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import {CNAB_BANK_SCHEMAS, indexCnabSchemas} from '@cnab/bank/cnab-bank-schemas'
 
 describe('cnab-bank-schemas', (): void => {
-  it('dado schemas quando indexar então chaves e valores vêm de cada schema', (): void => {
+  it('dado schemas quando indexar então chaves vêm de cada schema', (): void => {
     // Given
     const schemas = [
       genCnabSchemaStub({ bank: CnabBank.BRADESCO, format: CnabFormat.CNAB240 }),

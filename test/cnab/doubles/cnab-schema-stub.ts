@@ -3,6 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabSchema } from '@cnab/type/cnab-schema'
+import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/group-rules'
 
 export function genCnabSchemaStub(config?: {
   bank?: CnabBank
@@ -14,6 +15,7 @@ export function genCnabSchemaStub(config?: {
   return new CnabSchema({
     bank,
     fmt: format,
+    boletoGroupRule: Cnab400BradescoGroupRule,
     header: new CnabLineSchema({
       fieldType: CnabFieldType.HEADER,
       fields: []

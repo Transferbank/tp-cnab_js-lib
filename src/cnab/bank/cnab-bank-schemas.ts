@@ -3,6 +3,10 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+import {
+  Cnab240BradescoGroupRule,
+  Cnab400BradescoGroupRule
+} from '@cnab/bank/bradesco/group-rules'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
@@ -11,11 +15,12 @@ import {
   Cnab400TrailerLineStartValidator
 } from '@cnab/validators/cnab400/cnab400-line-start-validator'
 
-function registerCnabSchemas(): CnabSchema[] {
+function _registerCnabSchemas(): CnabSchema[] {
   return [
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB240,
+      boletoGroupRule: Cnab240BradescoGroupRule,
       header: new CnabLineSchema({
         fieldType: CnabFieldType.HEADER,
         fields: []
@@ -32,6 +37,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB400,
+      boletoGroupRule: Cnab400BradescoGroupRule,
       header: new CnabLineSchema({
         fieldType: CnabFieldType.HEADER,
         fields: [],
@@ -87,4 +93,4 @@ export function indexCnabSchemas(
 export const CNAB_BANK_SCHEMAS: Record<
   CnabBank,
   Record<CnabFormat, CnabSchema>
-> = indexCnabSchemas(registerCnabSchemas())
+> = indexCnabSchemas(_registerCnabSchemas())

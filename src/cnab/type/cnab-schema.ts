@@ -3,13 +3,13 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules'
-import { CnabGroupRuleNotFoundException } from '@cnab/exception/cnab-exception'
 
 export class CnabSchema {
   readonly bank: CnabBank
   readonly fmt: CnabFormat
+  readonly boletoGroupRule: typeof CnabBoletoGroupRule
   readonly header: CnabLineSchema
   readonly trailer: CnabLineSchema
   readonly boleto: CnabLineSchema
@@ -17,23 +17,20 @@ export class CnabSchema {
   constructor(config: {
     bank: CnabBank
     fmt: CnabFormat
+    boletoGroupRule: typeof CnabBoletoGroupRule
     header: CnabLineSchema
     trailer: CnabLineSchema
     boleto: CnabLineSchema
   }) {
     this.bank = config.bank
     this.fmt = config.fmt
+    this.boletoGroupRule = config.boletoGroupRule
     this.header = config.header
     this.trailer = config.trailer
     this.boleto = config.boleto
 
-    const boletoGroupRule = CNAB_GROUP_RULES[this.bank]?.[this.fmt]
-    if (boletoGroupRule == null) {
-      throw new CnabGroupRuleNotFoundException(this.bank, this.fmt)
-    }
-
     for (const lineSchema of this.lineSchemas) {
-      lineSchema.init(this.bank, this.fmt, boletoGroupRule)
+      lineSchema.init(this.bank, this.fmt, this.boletoGroupRule)
     }
   }
 
