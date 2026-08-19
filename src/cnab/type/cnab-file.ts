@@ -72,6 +72,8 @@ export class CnabFile {
   }
 
   read(extraFields?: (typeof CnabField)[]): Cnab {
+    // TODO: Verificar resultado da validação e lançar erro se inválido
+    // Atualmente, erros de validação de campo não impedem o read()
     this.validate(false, extraFields)
     return this.schema.read(this.rawLines, extraFields ?? [])
   }

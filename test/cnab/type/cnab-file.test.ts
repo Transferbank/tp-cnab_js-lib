@@ -1,9 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import * as fs from 'fs'
 import * as path from 'path'
-import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFile } from '@cnab/type/cnab-file'
-import { CnabFormat } from '@cnab/type/cnab-format'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 
 const RES_PATH = path.resolve(__dirname, '../../../res')
@@ -16,24 +14,14 @@ function createFileFromPath(filePath: string): File {
 
 describe('cnab-file', (): void => {
   it.each([
-    [
-      'bradesco/cnab240/bradesco_cnab_240.txt',
-      CnabBank.BRADESCO,
-      CnabFormat.CNAB240,
-      16
-    ],
-    [
-      'bradesco/cnab400/bradesco_cnab_400.txt',
-      CnabBank.BRADESCO,
-      CnabFormat.CNAB400,
-      76
-    ]
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 16],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76]
   ])(
     'dado arquivo de documento quando abrir então detecta banco, formato e linhas',
     async (
       examplePath: string,
-      expectedBank: CnabBank,
-      expectedFormat: CnabFormat,
+      expectedBank: string,
+      expectedFormat: string,
       expectedLineCount: number
     ): Promise<void> => {
       // Given
