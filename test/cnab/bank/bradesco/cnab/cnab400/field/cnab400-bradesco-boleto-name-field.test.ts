@@ -3,7 +3,7 @@ import { resPath } from '@test/conftest'
 import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, replaceLineRange } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-name-field'
 
@@ -93,7 +93,6 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
     it('dado linha de boleto com nome em branco quando validar então retorna erro de campo', (): void => {
       // Given
       const dummyLineNumber = 37
-      const expectedErrorMessage = 'Nome do sacado no boleto espera ao menos 3 caracteres'
       const fieldRange = new Cnab400BradescoBoletoNameField({
         rawLine: '',
         lineNumber: 0
@@ -110,18 +109,12 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
-      const expectedResult: CnabValidationResult = {
-        isValid: false,
-        errors: [
-          {
-            message: expectedErrorMessage,
-            errorType: CnabValidationErrorType.FIELD,
-            lineNumber: dummyLineNumber,
-            fieldName: 'nome do sacado',
-            range: fieldRange
-          }
-        ]
-      }
+      const expectedError = new CnabFieldMinLengthError({
+        lineNumber: dummyLineNumber,
+        fieldName: 'nome do sacado',
+        range: fieldRange,
+        minLength: 3
+      })
 
       // When
       const field = new Cnab400BradescoBoletoNameField({
@@ -134,7 +127,11 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       expect(invalidLine.length).toBe(rawLine.length)
       expect(field.parse()).toBe('')
       expect(field.value).toBe(null)
-      expect(result).toEqual(expectedResult)
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
   })
 })

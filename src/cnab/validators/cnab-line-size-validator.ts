@@ -1,9 +1,6 @@
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  createCnabValidationError,
-  CnabValidationErrorType
-} from '@cnab/type/cnab-validation-error'
+import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 
 export class CnabLineSizeValidator extends CnabLineValidator {
   static readonly expectedSize: number
@@ -14,16 +11,17 @@ export class CnabLineSizeValidator extends CnabLineValidator {
 
   validate(): CnabValidationResult {
     const actualSize = this.rawLine.length
-    const expectedSize = (this.constructor as typeof CnabLineSizeValidator).expectedSize
+    const expectedSize = (this.constructor as typeof CnabLineSizeValidator)
+      .expectedSize
     const isValid = actualSize === expectedSize
     const errors = []
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
-          message: `Tamanho de linha inválido: esperado ${expectedSize}, recebido ${actualSize}`,
-          errorType: CnabValidationErrorType.LINE,
-          lineNumber: this.lineNumber
+        new CnabInvalidLineSizeError({
+          lineNumber: this.lineNumber,
+          expectedSize,
+          actualSize
         })
       )
     }

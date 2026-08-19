@@ -1,10 +1,7 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  createCnabValidationError,
-  CnabValidationErrorType
-} from '@cnab/type/cnab-validation-error'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
 export class Cnab400BradescoBoletoNameField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -21,12 +18,11 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
-          message: 'Nome do sacado no boleto espera ao menos 3 caracteres',
-          errorType: CnabValidationErrorType.FIELD,
+        new CnabFieldMinLengthError({
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
-          range: this.range
+          range: this.range,
+          minLength: 3
         })
       )
     }
