@@ -71,7 +71,7 @@ export class CnabSchema {
     return result
   }
 
-  read(rawLines: string[], extraFields?: Array<typeof CnabField>): Cnab {
+  read(_rawLines: string[], _extraFields?: Array<typeof CnabField>): Cnab {
     // TODO: Implementar método read que retorna objeto Cnab
     throw new Error('Método read() ainda não implementado')
   }
