@@ -2,61 +2,100 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CNAB_GROUP_RULES } from '@cnab/bank/cnab-group-rules'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { Cnab240LineSizeValidator, Cnab400LineSizeValidator } from '@cnab/validators/cnab-line-size-validator'
-import { CnabGroupRuleNotFoundException } from '@cnab/exception/cnab-exception'
+import {
+  Cnab240LineSizeValidator,
+  Cnab400LineSizeValidator
+} from '@cnab/validators/cnab-line-size-validator'
 
-type ValidatorConstructor = new (params: { rawLine: string; lineNumber: number }) => CnabLineValidator
+type ValidatorConstructor = new (params: {
+  rawLine: string
+  lineNumber: number
+}) => CnabLineValidator
 type FieldClass = typeof CnabField
 
 export class CnabLineSchema {
-  public readonly fmt: CnabFormat
-  public readonly bank: CnabBank
-  public readonly fieldType: CnabFieldType
-  public readonly fields: FieldClass[]
-  public readonly validators: ValidatorConstructor[]
+  readonly fieldType: CnabFieldType
+  readonly fields: FieldClass[]
+  readonly declaredValidators: ValidatorConstructor[]
+
+  bank: CnabBank | null = null
+  fmt: CnabFormat | null = null
+  private _validators?: ValidatorConstructor[]
 
   constructor(config: {
-    fmt: CnabFormat
-    bank: CnabBank
     fieldType: CnabFieldType
     fields: FieldClass[]
     validators?: ValidatorConstructor[]
   }) {
-    this.fmt = config.fmt
-    this.bank = config.bank
     this.fieldType = config.fieldType
     this.fields = config.fields
-
-    const lineSizeValidator = config.fmt === CnabFormat.CNAB240
-      ? Cnab240LineSizeValidator
-      : Cnab400LineSizeValidator
-    this.validators = [lineSizeValidator, ...(config.validators ?? [])]
+    this.declaredValidators = config.validators ?? []
   }
 
-  private isBoletoGroupStart(rawLine: string): boolean {
-    const GroupRuleClass = CNAB_GROUP_RULES[this.bank][this.fmt]
-    if (GroupRuleClass == null) {
-      throw new CnabGroupRuleNotFoundException(this.bank, this.fmt)
+  init(bank: CnabBank, fmt: CnabFormat): void {
+    this.bank = bank
+    this.fmt = fmt
+    delete this._validators // limpa o cache
+  }
+
+  get validators(): ValidatorConstructor[] {
+    if (this._validators == null) {
+      const lineSizeValidators: Record<CnabFormat, ValidatorConstructor> = {
+        [CnabFormat.CNAB240]: Cnab240LineSizeValidator as ValidatorConstructor,
+        [CnabFormat.CNAB400]: Cnab400LineSizeValidator as ValidatorConstructor
+      }
+
+      this._validators = [
+        lineSizeValidators[this.fmt!],
+        ...this.declaredValidators
+      ]
     }
-    const groupRule = new GroupRuleClass()
+    return this._validators
+  }
+
+  isBoletoGroupStart(rawLine: string): boolean {
+    // Import dinâmico para evitar dependência circular
+    const CNAB_GROUP_RULES =
+      require('@cnab/bank/cnab-group-rules').CNAB_GROUP_RULES
+    const groupRule = CNAB_GROUP_RULES[this.bank!][this.fmt!]
     return groupRule.check(rawLine)
   }
 
-  private *genBoletoLineGroupsIterator(rawLines: string[]): Generator<string[]> {
-    let boletoRawLines: string[] = []
-    for (const rawLine of rawLines) {
-      if (this.isBoletoGroupStart(rawLine)) {
-        if (boletoRawLines.length !== 0) 
-          yield boletoRawLines
-        boletoRawLines = [rawLine]
-      } else if (boletoRawLines.length > 0) 
-        boletoRawLines.push(rawLine)
+  *genLineGroups(
+    rawLines: string[],
+    firstLine: number
+  ): Generator<Array<[number, string]>> {
+    const numberedLines: Array<[number, string]> = Array.from(
+      rawLines,
+      (line: string, index: number): [number, string] => [
+        firstLine + index,
+        line
+      ]
+    )
+
+    if (this.fieldType !== CnabFieldType.BOLETO) {
+      yield numberedLines
+      return
     }
-    if (boletoRawLines.length > 0) 
-      yield boletoRawLines
+
+    let group: Array<[number, string]> = []
+    for (const numberedLine of numberedLines) {
+      const [, rawLine] = numberedLine
+      if (this.isBoletoGroupStart(rawLine)) {
+        if (group.length !== 0) {
+          yield group
+        }
+        group = [numberedLine]
+      } else if (group.length > 0) {
+        group.push(numberedLine)
+      }
+    }
+
+    if (group.length !== 0) {
+      yield group
+    }
   }
 
   validate(
@@ -65,40 +104,42 @@ export class CnabLineSchema {
     firstLine: number,
     extraFields?: FieldClass[]
   ): CnabValidationResult {
-    const fields = extraFields ?? []
     const result: CnabValidationResult = {
       isValid: true,
       errors: []
     }
+
+    const extraFieldsList = extraFields ?? []
     const validationTypes: (ValidatorConstructor | FieldClass)[] = [
       ...this.validators,
       ...this.fields,
-      ...fields
+      ...extraFieldsList
     ]
-    let lineNumber = firstLine
-    const groupLines = this.fieldType === CnabFieldType.BOLETO
-      ? this.genBoletoLineGroupsIterator(rawLines)
-      : [rawLines]
-    for (const group of groupLines) {
-      for (const rawLine of group) {
-        for (const ValidationType of validationTypes) {
-          const validator = new (ValidationType as ValidatorConstructor)({
+
+    for (const group of this.genLineGroups(rawLines, firstLine)) {
+      for (const [lineNumber, rawLine] of group) {
+        for (const validationType of validationTypes) {
+          // Cria a instância para verificar shouldValidate e validate
+          const instance = new (validationType as ValidatorConstructor)({
             rawLine,
             lineNumber
           })
-          
-          if (!validator.shouldValidate()) 
-            continue
 
-          const validationResult = validator.validate()
+          if (!instance.shouldValidate()) {
+            continue
+          }
+
+          const validationResult = instance.validate()
           result.isValid = result.isValid && validationResult.isValid
           result.errors.push(...validationResult.errors)
-          if (!result.isValid && eagerEnabled) 
+
+          if (!result.isValid && eagerEnabled) {
             return result
+          }
         }
-        ++lineNumber
       }
     }
+
     return result
   }
 }
