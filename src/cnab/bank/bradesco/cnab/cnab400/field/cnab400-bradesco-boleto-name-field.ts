@@ -16,7 +16,7 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
   }
 
   protected _validate(): CnabValidationResult {
-    const isValid = this.parse().length >= 3
+    const isValid = this.value !== null && (this.value as string).length >= 3
     const errors = []
 
     if (!isValid) {
