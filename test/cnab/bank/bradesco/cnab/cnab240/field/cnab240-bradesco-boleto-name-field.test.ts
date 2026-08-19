@@ -2,9 +2,9 @@ import * as path from 'path'
 import { resPath } from '@test/conftest'
 import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, replaceLineRange } from '@test/test-utils'
-import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabValidationErrorType } from '@cnab/type/cnab-validation-error'
+import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 
 describe('Cnab240BradescoBoletoNameField', (): void => {
