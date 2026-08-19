@@ -5,6 +5,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400/cnab400-line-start-validator'
+import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 
 export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
   [CnabBank.BRADESCO]: {
@@ -25,7 +26,7 @@ export const CNAB_BANK_SCHEMAS: Record<string, Record<string, CnabSchema>> = {
         fmt: CnabFormat.CNAB240,
         bank: CnabBank.BRADESCO,
         fieldType: CnabFieldType.BOLETO,
-        fields: []
+        fields: [Cnab240BradescoBoletoNameField]
       })
     }),
     [CnabFormat.CNAB400]: new CnabSchema({
