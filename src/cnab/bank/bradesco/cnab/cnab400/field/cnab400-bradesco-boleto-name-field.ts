@@ -15,7 +15,7 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
     return this.rawLine.startsWith('1')
   }
 
-  validate(): CnabValidationResult {
+  protected _validate(): CnabValidationResult {
     const isValid = this.parse().length >= 3
     const errors = []
 
