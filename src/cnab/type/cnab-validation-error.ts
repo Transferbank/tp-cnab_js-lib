@@ -3,7 +3,6 @@ export enum CnabValidationErrorType {
   FIELD = 'field'
 }
 
-// Classe base abstrata
 export abstract class CnabValidationError {
   readonly lineNumber: number
 
@@ -22,7 +21,6 @@ export abstract class CnabLineValidationError extends CnabValidationError {
   }
 }
 
-// Classe base para erros de campo
 export abstract class CnabFieldValidationError extends CnabValidationError {
   readonly fieldName: string
   readonly range: [number, number]
@@ -42,7 +40,6 @@ export abstract class CnabFieldValidationError extends CnabValidationError {
   }
 }
 
-// Erros concretos de linha
 export class CnabInvalidLineSizeError extends CnabLineValidationError {
   readonly expectedSize: number
   readonly actualSize: number
@@ -75,7 +72,6 @@ export class CnabInvalidLineStartError extends CnabLineValidationError {
   }
 }
 
-// Erros concretos de campo
 export class CnabFieldMinLengthError extends CnabFieldValidationError {
   readonly minLength: number
 
@@ -98,23 +94,4 @@ export class CnabFieldMinLengthError extends CnabFieldValidationError {
       this.fieldName.charAt(0).toUpperCase() + this.fieldName.slice(1)
     return `${capitalizedFieldName} espera ao menos ${this.minLength} caracteres`
   }
-}
-
-// Função helper para compatibilidade com código legado (será removida)
-export function createCnabValidationError(params: {
-  message: string
-  errorType: CnabValidationErrorType
-  lineNumber: number
-  fieldName?: string
-  range?: [number, number]
-}): CnabValidationError {
-  // Compatibilidade temporária - cria classe anônima
-  return new (class extends CnabValidationError {
-    get errorType() {
-      return params.errorType
-    }
-    get message() {
-      return params.message
-    }
-  })({ lineNumber: params.lineNumber })
 }
