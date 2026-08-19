@@ -79,7 +79,9 @@ export class CnabSchema {
   }
 
   read(_rawLines: string[], _extraFields?: Array<typeof CnabField>): Cnab {
-    // TODO: Implementar método read que retorna objeto Cnab
+    // TODO: Implementar método read que retorna objeto Cnab com header, trailer e boletos
+    // Necessário para CnabFile.read() funcionar corretamente
+    // Deve processar: rawLines[0] (header), rawLines[length-1] (trailer), slice(1,-1) (boletos)
     throw new Error('Método read() ainda não implementado')
   }
 }
