@@ -4,6 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabGroupRuleNotFoundException } from '@cnab/exception/cnab-exception'
 import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator
@@ -57,10 +58,14 @@ export class CnabLineSchema {
 
   isBoletoGroupStart(rawLine: string): boolean {
     // Import dinâmico para evitar dependência circular
-    const CNAB_GROUP_RULES =
-      require('@cnab/bank/cnab-group-rules').CNAB_GROUP_RULES
-    const groupRule = CNAB_GROUP_RULES[this.bank!][this.fmt!]
-    return groupRule.check(rawLine)
+    const { CNAB_GROUP_RULES } = require('@cnab/bank/cnab-group-rules')
+    
+    const GroupRuleClass = CNAB_GROUP_RULES[this.bank!]?.[this.fmt!]
+    if (GroupRuleClass == null) {
+      throw new CnabGroupRuleNotFoundException(this.bank!, this.fmt!)
+    }
+    
+    return GroupRuleClass.check(rawLine)
   }
 
   *genLineGroups(
