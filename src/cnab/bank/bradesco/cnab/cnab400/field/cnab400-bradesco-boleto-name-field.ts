@@ -13,7 +13,8 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
   }
 
   protected _validate(): CnabValidationResult {
-    const isValid = this.value !== null && (this.value as string).length >= 3
+    const minLength = 3
+    const isValid = this.value !== null && (this.value as string).length >= minLength
     const errors = []
 
     if (!isValid) {
@@ -22,7 +23,7 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range,
-          minLength: 3
+          minLength
         })
       )
     }
