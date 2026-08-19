@@ -50,7 +50,7 @@ function registerCnabSchemas(): CnabSchema[] {
   ]
 }
 
-function indexCnabSchemas(
+export function indexCnabSchemas(
   schemas: CnabSchema[]
 ): Record<CnabBank, Record<CnabFormat, CnabSchema>> {
   const keys = schemas.map(
