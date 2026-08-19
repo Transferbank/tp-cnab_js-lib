@@ -1,15 +1,15 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import {
   Cnab240BradescoGroupRule,
   Cnab400BradescoGroupRule
 } from '@cnab/bank/bradesco/group-rules'
-import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
-import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
+import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 import {
   Cnab400HeaderLineStartValidator,
   Cnab400TrailerLineStartValidator
@@ -90,7 +90,4 @@ export function indexCnabSchemas(
   return indexed as Record<CnabBank, Record<CnabFormat, CnabSchema>>
 }
 
-export const CNAB_BANK_SCHEMAS: Record<
-  CnabBank,
-  Record<CnabFormat, CnabSchema>
-> = indexCnabSchemas(_registerCnabSchemas())
+export const CNAB_BANK_SCHEMAS: Record< CnabBank, Record<CnabFormat, CnabSchema>> = indexCnabSchemas(_registerCnabSchemas())
