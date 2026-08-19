@@ -12,6 +12,8 @@ export function genCnabSchemaStub(config?: {
   const format = config?.format ?? CnabFormat.CNAB400
 
   return new CnabSchema({
+    bank,
+    fmt: format,
     header: new CnabLineSchema({
       fieldType: CnabFieldType.HEADER,
       fields: []
