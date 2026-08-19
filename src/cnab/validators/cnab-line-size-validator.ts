@@ -5,7 +5,7 @@ import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 export class CnabLineSizeValidator extends CnabLineValidator {
   static readonly expectedSize: number
 
-  shouldValidate(): boolean {
+  static shouldValidate(_rawLine: string): boolean {
     return true
   }
 

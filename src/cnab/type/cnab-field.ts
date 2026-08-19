@@ -34,7 +34,9 @@ export abstract class CnabField {
     return this._value
   }
 
-  abstract shouldValidate(): boolean
+  static shouldValidate(_rawLine: string): boolean {
+    throw new Error('shouldValidate must be implemented by subclass')
+  }
 
   validate(): CnabValidationResult {
     const isOptional = (this.constructor as typeof CnabField).isOptional

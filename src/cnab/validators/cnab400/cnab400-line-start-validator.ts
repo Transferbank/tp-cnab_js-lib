@@ -5,7 +5,7 @@ import { CnabInvalidLineStartError } from '@cnab/type/cnab-validation-error'
 export class Cnab400LineStartValidator extends CnabLineValidator {
   static readonly expectedStart: string
 
-  shouldValidate(): boolean {
+  static shouldValidate(_rawLine: string): boolean {
     return true
   }
 

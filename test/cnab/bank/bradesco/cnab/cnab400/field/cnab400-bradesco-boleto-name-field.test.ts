@@ -27,10 +27,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         }
 
         // When
-        const shouldValidate = new Cnab400BradescoBoletoNameField({
-          rawLine,
-          lineNumber: 0
-        }).shouldValidate()
+        const shouldValidate = Cnab400BradescoBoletoNameField.shouldValidate(rawLine)
 
         // Then
         expect(shouldValidate).toBe(expectedShouldValidate)
@@ -45,7 +42,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const boletoLines = lines
         .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
         .filter(({ rawLine }: { rawLine: string }) =>
-          new Cnab400BradescoBoletoNameField({ rawLine, lineNumber: 0 }).shouldValidate()
+          Cnab400BradescoBoletoNameField.shouldValidate(rawLine)
         )
 
       // When
@@ -70,7 +67,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const dummyLineNumber = 37
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = lines.find((line: string) =>
-        new Cnab400BradescoBoletoNameField({ rawLine: line, lineNumber: 0 }).shouldValidate()
+        Cnab400BradescoBoletoNameField.shouldValidate(line)
       )
 
       if (!rawLine) {
@@ -100,7 +97,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = lines.find((line: string) =>
-        new Cnab400BradescoBoletoNameField({ rawLine: line, lineNumber: 0 }).shouldValidate()
+        Cnab400BradescoBoletoNameField.shouldValidate(line)
       )
 
       if (!rawLine) {
