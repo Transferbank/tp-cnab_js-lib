@@ -38,6 +38,6 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
   }
 
   parse(): string {
-    return this.rawLine.substring(...this.range).trim()
+    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
   }
 }

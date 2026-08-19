@@ -1,5 +1,6 @@
 export enum CnabBank {
-  BRADESCO = 'bradesco'
+  BRADESCO = 'bradesco',
+  ITAU = 'itau'
 }
 
 export namespace CnabBank {
