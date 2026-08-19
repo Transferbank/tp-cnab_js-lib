@@ -5,6 +5,7 @@ export abstract class CnabField {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
   abstract readonly fieldName: string
+  // O range começa a partir de start + 1, seguindo as documentações dos arquivos cnab
   abstract readonly range: [number, number]
 
   protected readonly rawLine: string
