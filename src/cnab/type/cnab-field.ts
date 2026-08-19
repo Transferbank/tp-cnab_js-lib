@@ -3,19 +3,46 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
 export abstract class CnabField {
   static readonly fieldType: CnabFieldType
+  static readonly isOptional: boolean = false
   abstract readonly fieldName: string
   abstract readonly range: [number, number]
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
+  private _value?: unknown | null
 
   constructor(config: { rawLine: string; lineNumber: number }) {
     this.rawLine = config.rawLine
     this.lineNumber = config.lineNumber
   }
 
+  get value(): unknown | null {
+    if (this._value === undefined) {
+      try {
+        const parsed = this.parse()
+        this._value = parsed === '' ? null : parsed
+      } catch (error) {
+        const isOptional = (this.constructor as typeof CnabField).isOptional
+        if (isOptional) {
+          this._value = null
+        } else {
+          throw error
+        }
+      }
+    }
+    return this._value
+  }
+
   abstract shouldValidate(): boolean
 
-  abstract validate(): CnabValidationResult
+  validate(): CnabValidationResult {
+    const isOptional = (this.constructor as typeof CnabField).isOptional
+    if (isOptional && this.value === null) {
+      return { isValid: true, errors: [] }
+    }
+    return this._validate()
+  }
+
+  protected abstract _validate(): CnabValidationResult
   abstract parse(): string
 }
