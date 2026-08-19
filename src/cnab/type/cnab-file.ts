@@ -1,3 +1,4 @@
+import { Cnab } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
@@ -62,15 +63,16 @@ export class CnabFile {
     return schema
   }
 
-  validate(withFeedback: boolean = false, fields?: (typeof CnabField)[]): CnabValidationResult {
+  validate(withFeedback: boolean = false, extraFields?: (typeof CnabField)[]): CnabValidationResult {
     return this.schema.validate(
       this.rawLines,
       !withFeedback,
-      fields ?? []
+      extraFields ?? []
     )
   }
 
-  read(_fields: (typeof CnabField)[]): CnabField[] {
-    throw new Error('Not implemented')
+  read(extraFields?: (typeof CnabField)[]): Cnab {
+    this.validate(false, extraFields)
+    return this.schema.read(this.rawLines, extraFields ?? [])
   }
 }
