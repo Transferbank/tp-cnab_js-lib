@@ -4,11 +4,9 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
-import {
-  Cnab240BradescoGroupRule,
-  Cnab400BradescoGroupRule
-} from '@cnab/bank/bradesco/group-rules'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
+import { Cnab240BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab240/cnab-240-bradesco-group-rule'
+import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
 import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 import {
   Cnab400HeaderLineStartValidator,

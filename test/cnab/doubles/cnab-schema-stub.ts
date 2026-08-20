@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabSchema } from '@cnab/type/cnab-schema'
-import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/group-rules'
+import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
 
 export function genCnabSchemaStub(config?: {
   bank?: CnabBank
