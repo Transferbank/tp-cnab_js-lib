@@ -67,10 +67,7 @@ export class CnabLineSchema {
     return this.boletoGroupRule!.check(rawLine)
   }
 
-  *genLineGroups(
-    rawLines: string[],
-    firstLine: number
-  ): Generator<Array<[number, string]>> {
+  *genLineGroups( rawLines: string[], firstLine: number): Generator<Array<[number, string]>> {
     const numberedLines: Array<[number, string]> = Array.from(
       rawLines,
       (line: string, index: number): [number, string] => [
@@ -85,35 +82,19 @@ export class CnabLineSchema {
     }
 
     let group: Array<[number, string]> = []
-    let orphanLines: Array<[number, string]> = []
 
     for (const numberedLine of numberedLines) {
       const [, rawLine] = numberedLine
       if (this.isBoletoGroupStart(rawLine)) {
-        // Entrega linhas órfãs antes do primeiro grupo
-        if (orphanLines.length > 0) {
-          yield orphanLines
-          orphanLines = []
-        }
-        // Entrega grupo anterior se existir
         if (group.length !== 0) {
           yield group
         }
         group = [numberedLine]
       } else if (group.length > 0) {
         group.push(numberedLine)
-      } else {
-        // Linhas antes do início do primeiro grupo
-        orphanLines.push(numberedLine)
       }
     }
 
-    // Entrega linhas órfãs restantes
-    if (orphanLines.length > 0) {
-      yield orphanLines
-    }
-
-    // Entrega grupo final
     if (group.length !== 0) {
       yield group
     }
