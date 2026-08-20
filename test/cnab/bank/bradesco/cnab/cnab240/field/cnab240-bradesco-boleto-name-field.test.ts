@@ -5,7 +5,8 @@ import {
   readExampleLines,
   findCnab240SegmentLine,
   filterValidatableLines,
-  replaceLineRange
+  replaceLineRange,
+  getFieldRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
@@ -67,10 +68,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
     it('dado linha segmento Q com nome em branco quando validar então retorna erro de campo', (): void => {
       // Given
       const dummyLineNumber = 37
-      const fieldRange = new Cnab240BradescoBoletoNameField({ 
-        rawLine: '', 
-        lineNumber: 0 
-      }).range
+      const fieldRange = getFieldRange(Cnab240BradescoBoletoNameField)
       
       const lines = readExampleLines(examplePath)
       const rawLine = findCnab240SegmentLine(lines, 'Q')

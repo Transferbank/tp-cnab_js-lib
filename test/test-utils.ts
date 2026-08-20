@@ -37,3 +37,11 @@ export function filterValidatableLines<T extends typeof CnabField>(
       FieldClass.shouldValidate(rawLine)
     )
 }
+
+export function getFieldRange<T extends typeof CnabField>(
+  FieldClass: T
+): [number, number] {
+  const Constructor = FieldClass as unknown as new (config: { rawLine: string; lineNumber: number }) => CnabField
+  const instance = new Constructor({ rawLine: '', lineNumber: 0 })
+  return instance.range
+}
