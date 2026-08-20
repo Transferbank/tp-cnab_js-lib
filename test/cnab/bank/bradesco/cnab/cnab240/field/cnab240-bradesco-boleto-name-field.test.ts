@@ -36,10 +36,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       // Given
       const lines = TestUtils.readExampleLines(examplePath)
       const validatableLines = TestUtils.filterValidatableLines(lines, Cnab240BradescoBoletoNameField)
-
-      const fields = validatableLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) =>
-        new Cnab240BradescoBoletoNameField({ rawLine, lineNumber })
-      )
+      const fields = TestUtils.createFieldsFromLines(validatableLines, Cnab240BradescoBoletoNameField)
 
       const results = fields.map((field: Cnab240BradescoBoletoNameField) => field.validate())
 

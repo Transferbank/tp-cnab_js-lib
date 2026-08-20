@@ -35,19 +35,12 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
     it('dado linhas de boleto com nome válido quando parsear e validar então aceita todas as linhas', (): void => {
       // Given
       const lines = TestUtils.readExampleLines(examplePath)
-      const boletoLines = lines
-        .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
-        .filter(({ rawLine }: { rawLine: string }) =>
-          Cnab400BradescoBoletoNameField.shouldValidate(rawLine)
-        )
-
-      const fields = boletoLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) =>
-        new Cnab400BradescoBoletoNameField({ rawLine, lineNumber })
-      )
+      const validatableLines = TestUtils.filterValidatableLines(lines, Cnab400BradescoBoletoNameField)
+      const fields = TestUtils.createFieldsFromLines(validatableLines, Cnab400BradescoBoletoNameField)
       const results = fields.map((field: Cnab400BradescoBoletoNameField) => field.validate())
 
       // Then
-      expect(boletoLines.length).toBeGreaterThan(0)
+      expect(validatableLines.length).toBeGreaterThan(0)
       expect(fields[0].parse()).toBe('COMERCIAL ALFA LTDA')
       expect(fields[0].value).toBe('COMERCIAL ALFA LTDA')
       
