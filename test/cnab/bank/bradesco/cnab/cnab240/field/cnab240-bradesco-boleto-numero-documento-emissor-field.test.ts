@@ -8,17 +8,17 @@ import {
   replaceLineRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
+import { Cnab240BradescoBoletoNumeroDocumentoEmissorField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-numero-documento-emissor-field'
 
-describe('Cnab240BradescoBoletoNameField', (): void => {
+describe('Cnab240BradescoBoletoNumeroDocumentoEmissorField', (): void => {
   const examplePath = path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')
 
   describe('shouldValidate', (): void => {
     describe.each([
-      { segment: 'P', expectedShouldValidate: false },
-      { segment: 'Q', expectedShouldValidate: true },
+      { segment: 'P', expectedShouldValidate: true },
+      { segment: 'Q', expectedShouldValidate: false },
       { segment: 'R', expectedShouldValidate: false },
       { segment: 'S', expectedShouldValidate: false }
     ])('casos parametrizados', ({ segment, expectedShouldValidate }): void => {
@@ -32,7 +32,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
         }
 
         // When
-        const shouldValidate = Cnab240BradescoBoletoNameField.shouldValidate(rawLine)
+        const shouldValidate = Cnab240BradescoBoletoNumeroDocumentoEmissorField.shouldValidate(rawLine)
 
         // Then
         expect(shouldValidate).toBe(expectedShouldValidate)
@@ -41,21 +41,20 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
   })
 
   describe('parse e validate', (): void => {
-    it('dado linhas segmento Q com nome válido quando parsear e validar então aceita todas as linhas', (): void => {
+    it('dado linhas segmento P com documento emissor válido quando parsear e validar então aceita todas as linhas', (): void => {
       // Given
       const lines = readExampleLines(examplePath)
-      const validatableLines = filterValidatableLines(lines, Cnab240BradescoBoletoNameField)
-
-      const fields = validatableLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) =>
-        new Cnab240BradescoBoletoNameField({ rawLine, lineNumber })
+      const validatableLines = filterValidatableLines(lines, Cnab240BradescoBoletoNumeroDocumentoEmissorField)
+      
+      const fields = validatableLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
+        new Cnab240BradescoBoletoNumeroDocumentoEmissorField({ rawLine, lineNumber })
       )
-
-      const results = fields.map((field: Cnab240BradescoBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab240BradescoBoletoNumeroDocumentoEmissorField) => field.validate())
 
       // Then
       expect(validatableLines.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toBe('JOAO EXEMPLO SILVA')
-      expect(fields[0].value).toBe('JOAO EXEMPLO SILVA')
+      expect(fields[0].parse()).toBe('NF0000123')
+      expect(fields[0].value).toBe('NF0000123')
       
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
@@ -64,32 +63,32 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
   })
 
   describe('validate com erro', (): void => {
-    it('dado linha segmento Q com nome em branco quando validar então retorna erro de campo', (): void => {
+    it('dado linha segmento P com documento emissor vazio quando validar então retorna erro de campo', (): void => {
       // Given
-      const dummyLineNumber = 37
-      const fieldRange = new Cnab240BradescoBoletoNameField({ 
+      const dummyLineNumber = 42
+      const fieldRange = new Cnab240BradescoBoletoNumeroDocumentoEmissorField({ 
         rawLine: '', 
         lineNumber: 0 
       }).range
       
       const lines = readExampleLines(examplePath)
-      const rawLine = findCnab240SegmentLine(lines, 'Q')
+      const rawLine = findCnab240SegmentLine(lines, 'P')
 
       if (!rawLine) {
-        throw new Error('Linha segmento Q não encontrada')
+        throw new Error('Linha segmento P não encontrada')
       }
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
       
-      const expectedError = new CnabFieldMinLengthError({
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo documento emissor inválido: deve conter ao menos 1 caractere',
         lineNumber: dummyLineNumber,
-        fieldName: 'nome do sacado',
-        range: fieldRange,
-        minLength: 3
+        fieldName: 'documento emissor',
+        range: fieldRange
       })
 
       // When
-      const field = new Cnab240BradescoBoletoNameField({
+      const field = new Cnab240BradescoBoletoNumeroDocumentoEmissorField({
         rawLine: invalidLine,
         lineNumber: dummyLineNumber
       })
@@ -101,7 +100,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       expect(field.value).toBe(null)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
-      expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
       expect(result.errors[0].message).toBe(expectedError.message)
       expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })

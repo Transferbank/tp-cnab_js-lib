@@ -1,13 +1,19 @@
+import * as path from 'path'
 import { resPath } from '@test/conftest'
 import { describe, it, expect } from '@jest/globals'
+import {
+  readExampleLines,
+  findCnab240SegmentLine,
+  filterValidatableLines,
+  replaceLineRange
+} from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BradescoBoletoNossoNumeroField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-nosso-numero-field'
-import { readLinesFrom,findCnab240SegmentLine,filterValidatableLines,replaceLineRange} from '@test/test-utils'
 
 describe('Cnab240BradescoBoletoNossoNumeroField', (): void => {
-  const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+  const examplePath = path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')
 
   describe('shouldValidate', (): void => {
     describe.each([
@@ -18,7 +24,7 @@ describe('Cnab240BradescoBoletoNossoNumeroField', (): void => {
     ])('casos parametrizados', ({ segment, expectedShouldValidate }): void => {
       it(`dado segmento ${segment} quando verificar shouldValidate então retorna ${expectedShouldValidate}`, (): void => {
         // Given
-        const lines = readLinesFrom(resPath, examplePath)
+        const lines = readExampleLines(examplePath)
         const rawLine = findCnab240SegmentLine(lines, segment)
 
         if (!rawLine) {
@@ -37,7 +43,7 @@ describe('Cnab240BradescoBoletoNossoNumeroField', (): void => {
   describe('parse e validate', (): void => {
     it('dado linhas segmento P com nosso numero válido quando parsear e validar então aceita todas as linhas', (): void => {
       // Given
-      const lines = readLinesFrom(resPath, examplePath)
+      const lines = readExampleLines(examplePath)
       const validatableLines = filterValidatableLines(lines, Cnab240BradescoBoletoNossoNumeroField)
       
       const fields = validatableLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
@@ -65,7 +71,7 @@ describe('Cnab240BradescoBoletoNossoNumeroField', (): void => {
         lineNumber: 0 
       }).range
       
-      const lines = readLinesFrom(resPath, examplePath)
+      const lines = readExampleLines(examplePath)
       const rawLine = findCnab240SegmentLine(lines, 'P')
 
       if (!rawLine) {
