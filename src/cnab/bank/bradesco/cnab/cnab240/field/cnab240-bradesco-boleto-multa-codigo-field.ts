@@ -20,7 +20,7 @@ export class Cnab240BradescoBoletoMultaCodigoField extends CnabField {
   }
 
   protected validateInternal(): CnabValidationResult {
-    const codigo = this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+    const codigo = this.getRangeValue()
     const isValid = codigo === '0' || codigo === '1' || codigo === '2'
     const errors = []
 
@@ -42,7 +42,7 @@ export class Cnab240BradescoBoletoMultaCodigoField extends CnabField {
   }
 
   parse(): string {
-    const codigo = this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+    const codigo = this.getRangeValue()
     switch (codigo) {
       case '0':
         return 'dispensado'

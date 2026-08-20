@@ -46,6 +46,15 @@ export abstract class CnabField {
     return this.validateInternal()
   }
 
+  /**
+   * Extrai o valor do campo a partir da rawLine usando o range definido.
+   * O range usa índice 1-based (primeiro caractere é posição 1), então subtraímos 1.
+   * Remove espaços em branco do início e fim.
+   */
+  protected getRangeValue(): string {
+    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+  }
+
   protected abstract validateInternal(): CnabValidationResult
   abstract parse(): string
 }

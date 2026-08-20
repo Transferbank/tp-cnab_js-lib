@@ -36,6 +36,6 @@ export class Cnab240BradescoBoletoDataEmissaoField extends CnabField {
   }
 
   parse(): string {
-    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+    return this.getRangeValue()
   }
 }

@@ -13,31 +13,43 @@ export class Cnab400LineTypeChecker {
   }
 }
 export class Cnab240LineTypeChecker {
+  private static hasMinLength(rawLine: string, minLength: number): boolean {
+    return rawLine.length >= minLength
+  }
+
   static isHeaderArquivo(rawLine: string): boolean {
-    return rawLine[7] === '0'
+    return this.hasMinLength(rawLine, 8) && rawLine[7] === '0'
   }
+
   static isHeaderLote(rawLine: string): boolean {
-    return rawLine[7] === '1'
+    return this.hasMinLength(rawLine, 8) && rawLine[7] === '1'
   }
+
   static isDetalhe(rawLine: string): boolean {
-    return rawLine[7] === '3'
+    return this.hasMinLength(rawLine, 8) && rawLine[7] === '3'
   }
+
   static isTrailerLote(rawLine: string): boolean {
-    return rawLine[7] === '5'
+    return this.hasMinLength(rawLine, 8) && rawLine[7] === '5'
   }
+
   static isTrailerArquivo(rawLine: string): boolean {
-    return rawLine[7] === '9'
+    return this.hasMinLength(rawLine, 8) && rawLine[7] === '9'
   }
+
   static isSegmentoP(rawLine: string): boolean {
-    return rawLine[7] === '3' && rawLine[13] === 'P'
+    return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'P'
   }
+
   static isSegmentoQ(rawLine: string): boolean {
-    return rawLine[7] === '3' && rawLine[13] === 'Q'
+    return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'Q'
   }
+
   static isSegmentoR(rawLine: string): boolean {
-    return rawLine[7] === '3' && rawLine[13] === 'R'
+    return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'R'
   }
+
   static isSegmentoS(rawLine: string): boolean {
-    return rawLine[7] === '3' && rawLine[13] === 'S'
+    return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'S'
   }
 }

@@ -19,7 +19,7 @@ export class Cnab240BradescoBoletoNossoNumeroField extends CnabField {
   }
 
   protected validateInternal(): CnabValidationResult {
-    const value = this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+    const value = this.getRangeValue()
     const isValid = isNumeric(value)
     const errors = []
 
@@ -41,6 +41,6 @@ export class Cnab240BradescoBoletoNossoNumeroField extends CnabField {
   }
 
   parse(): string {
-    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+    return this.getRangeValue()
   }
 }
