@@ -10,7 +10,7 @@ export abstract class CnabField {
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
-  private _value?: unknown | null
+  private cachedValue?: unknown | null
 
   constructor(config: { rawLine: string; lineNumber: number }) {
     this.rawLine = config.rawLine
@@ -18,20 +18,20 @@ export abstract class CnabField {
   }
 
   get value(): unknown | null {
-    if (this._value === undefined) {
+    if (this.cachedValue === undefined) {
       try {
         const parsed = this.parse()
-        this._value = parsed === '' ? null : parsed
+        this.cachedValue = parsed === '' ? null : parsed
       } catch (error) {
         const isOptional = (this.constructor as typeof CnabField).isOptional
         if (isOptional) {
-          this._value = null
+          this.cachedValue = null
         } else {
           throw error
         }
       }
     }
-    return this._value
+    return this.cachedValue
   }
 
   static shouldValidate(_rawLine: string): boolean {
@@ -43,9 +43,9 @@ export abstract class CnabField {
     if (isOptional && this.value === null) {
       return { isValid: true, errors: [] }
     }
-    return this._validate()
+    return this.validateInternal()
   }
 
-  protected abstract _validate(): CnabValidationResult
+  protected abstract validateInternal(): CnabValidationResult
   abstract parse(): string
 }

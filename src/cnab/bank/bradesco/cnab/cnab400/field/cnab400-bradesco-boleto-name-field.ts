@@ -12,7 +12,7 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
     return rawLine.startsWith('1')
   }
 
-  protected _validate(): CnabValidationResult {
+  protected validateInternal(): CnabValidationResult {
     const minLength = 3
     const isValid = this.value !== null && (this.value as string).length >= minLength
     const errors = []
