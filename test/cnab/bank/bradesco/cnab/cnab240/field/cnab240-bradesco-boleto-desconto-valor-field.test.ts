@@ -1,13 +1,7 @@
-import * as path from 'path'
+﻿import * as path from 'path'
 import { resPath } from '@test/conftest'
 import { describe, it, expect } from '@jest/globals'
-import {
-  readExampleLines,
-  findFirstCnab240SegmentLine,
-  filterValidatableLines,
-  replaceLineRange,
-  getFieldRange
-} from '@test/test-utils'
+import * as TestUtils from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
@@ -25,8 +19,8 @@ describe('Cnab240BradescoBoletoDescontoValorField', (): void => {
     ])('casos parametrizados', ({ segment, expectedShouldValidate }): void => {
       it(`dado segmento ${segment} quando verificar shouldValidate então retorna ${expectedShouldValidate}`, (): void => {
         // Given
-        const lines = readExampleLines(examplePath)
-        const rawLine = findFirstCnab240SegmentLine(lines, segment)!
+        const lines = TestUtils.readExampleLines(examplePath)
+        const rawLine = TestUtils.findFirstCnab240SegmentLine(lines, segment)!
 
         // When
         const shouldValidate = Cnab240BradescoBoletoDescontoValorField.shouldValidate(rawLine)
@@ -40,8 +34,8 @@ describe('Cnab240BradescoBoletoDescontoValorField', (): void => {
   describe('parse e validate', (): void => {
     it('dado linhas segmento P com valor desconto válido quando parsear e validar então aceita todas as linhas', (): void => {
       // Given
-      const lines = readExampleLines(examplePath)
-      const validatableLines = filterValidatableLines(lines, Cnab240BradescoBoletoDescontoValorField)
+      const lines = TestUtils.readExampleLines(examplePath)
+      const validatableLines = TestUtils.filterValidatableLines(lines, Cnab240BradescoBoletoDescontoValorField)
       
       const fields = validatableLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
         new Cnab240BradescoBoletoDescontoValorField({ rawLine, lineNumber })
@@ -63,12 +57,12 @@ describe('Cnab240BradescoBoletoDescontoValorField', (): void => {
     it('dado linha segmento P com valor desconto alfanumérico quando validar então retorna erro de campo', (): void => {
       // Given
       const dummyLineNumber = 42
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoDescontoValorField)
+      const fieldRange = TestUtils.getFieldRange(Cnab240BradescoBoletoDescontoValorField)
       
-      const lines = readExampleLines(examplePath)
-      const rawLine = findFirstCnab240SegmentLine(lines, 'P')!
+      const lines = TestUtils.readExampleLines(examplePath)
+      const rawLine = TestUtils.findFirstCnab240SegmentLine(lines, 'P')!
 
-      const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABC12345XYZ')
+      const invalidLine = TestUtils.replaceLineRange(rawLine, fieldRange, 'ABC12345XYZ')
       
       const expectedError = new CnabGenericFieldError({
         message: 'Campo valor desconto inválido: deve conter apenas números',
