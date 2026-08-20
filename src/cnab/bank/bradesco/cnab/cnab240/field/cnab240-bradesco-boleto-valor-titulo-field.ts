@@ -3,30 +3,26 @@ import { isNumeric } from '@cnab/utils/field-validator'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  createCnabValidationError,
-  CnabValidationErrorType
-} from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 
 export class Cnab240BradescoBoletoValorTituloField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor titulo'
   readonly range: [number, number] = [86, 100]
 
-  shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
+  static shouldValidate(rawLine: string): boolean {
+    return Cnab240LineTypeChecker.isSegmentoP(rawLine)
   }
 
-  validate(): CnabValidationResult {
-    const rawValue = this.getRangeValue()
+  protected validateInternal(): CnabValidationResult {
+    const rawValue = this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
     const isValid = isNumeric(rawValue)
     const errors = []
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
+        new CnabGenericFieldError({
           message: 'Campo valor titulo inválido: deve conter apenas números',
-          errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range
@@ -41,6 +37,6 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField {
   }
 
   parse(): string {
-    return (parseInt(this.getRangeValue(), 10) / 100).toFixed(2)
+    return (parseInt(this.rawLine.substring(this.range[0] - 1, this.range[1]).trim(), 10) / 100).toFixed(2)
   }
 }

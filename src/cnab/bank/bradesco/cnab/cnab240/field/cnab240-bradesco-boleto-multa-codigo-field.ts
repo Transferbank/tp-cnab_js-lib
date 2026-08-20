@@ -2,10 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  createCnabValidationError,
-  CnabValidationErrorType
-} from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 
 /**
  * Código que indica o tipo de multa:
@@ -18,20 +15,19 @@ export class Cnab240BradescoBoletoMultaCodigoField extends CnabField {
   readonly fieldName = 'codigo multa'
   readonly range: [number, number] = [66, 66]
 
-  shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoR(this.rawLine)
+  static shouldValidate(rawLine: string): boolean {
+    return Cnab240LineTypeChecker.isSegmentoR(rawLine)
   }
 
-  validate(): CnabValidationResult {
-    const codigo = this.getRangeValue()
+  protected validateInternal(): CnabValidationResult {
+    const codigo = this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
     const isValid = codigo === '0' || codigo === '1' || codigo === '2'
     const errors = []
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
+        new CnabGenericFieldError({
           message: `Código de multa inválido: esperado '0', '1' ou '2', recebido '${codigo}'`,
-          errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range
@@ -46,7 +42,7 @@ export class Cnab240BradescoBoletoMultaCodigoField extends CnabField {
   }
 
   parse(): string {
-    const codigo = this.getRangeValue()
+    const codigo = this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
     switch (codigo) {
       case '0':
         return 'dispensado'

@@ -95,3 +95,25 @@ export class CnabFieldMinLengthError extends CnabFieldValidationError {
     return `${capitalizedFieldName} espera ao menos ${this.minLength} caracteres`
   }
 }
+
+export class CnabGenericFieldError extends CnabFieldValidationError {
+  private readonly errorMessage: string
+
+  constructor(params: {
+    lineNumber: number
+    fieldName: string
+    range: [number, number]
+    message: string
+  }) {
+    super({
+      lineNumber: params.lineNumber,
+      fieldName: params.fieldName,
+      range: params.range
+    })
+    this.errorMessage = params.message
+  }
+
+  get message(): string {
+    return this.errorMessage
+  }
+}

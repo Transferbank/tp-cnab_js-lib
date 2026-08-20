@@ -5,8 +5,7 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabValidationError,
-  createCnabValidationError,
-  CnabValidationErrorType
+  CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 
 /**
@@ -19,19 +18,18 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
   readonly fieldName = 'multa'
   readonly range: [number, number] = [66, 70]
 
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+  static shouldValidate(rawLine: string): boolean {
+    return Cnab400LineTypeChecker.isDetalhe(rawLine)
   }
 
-  validate(): CnabValidationResult {
+  protected validateInternal(): CnabValidationResult {
     const indicador = this.rawLine[65]
     const errors: CnabValidationError[] = []
 
     if (indicador !== '0' && indicador !== '2') {
       errors.push(
-        createCnabValidationError({
+        new CnabGenericFieldError({
           message: `Indicador de multa inválido: esperado '0' ou '2', recebido '${indicador}'`,
-          errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range
@@ -47,9 +45,8 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
       const percentual = this.rawLine.substring(66, 70)
       if (!isNumeric(percentual)) {
         errors.push(
-          createCnabValidationError({
+          new CnabGenericFieldError({
             message: 'Percentual de multa inválido: deve conter apenas números',
-            errorType: CnabValidationErrorType.FIELD,
             lineNumber: this.lineNumber,
             fieldName: this.fieldName,
             range: [67, 70]
@@ -64,9 +61,8 @@ export class Cnab400BradescoBoletoMultaField extends CnabField {
       const percentualNum = parseInt(percentual, 10)
       if (percentualNum === 0) {
         errors.push(
-          createCnabValidationError({
+          new CnabGenericFieldError({
             message: "Percentual de multa deve ser maior que zero quando indicador é '2'",
-            errorType: CnabValidationErrorType.FIELD,
             lineNumber: this.lineNumber,
             fieldName: this.fieldName,
             range: [67, 70]

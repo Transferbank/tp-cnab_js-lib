@@ -5,8 +5,7 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabValidationError,
-  createCnabValidationError,
-  CnabValidationErrorType
+  CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 
 export class Cnab400BradescoBoletoDescontoDataField extends CnabField {
@@ -14,11 +13,11 @@ export class Cnab400BradescoBoletoDescontoDataField extends CnabField {
   readonly fieldName = 'data limite desconto'
   readonly range: [number, number] = [174, 179]
 
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+  static shouldValidate(rawLine: string): boolean {
+    return Cnab400LineTypeChecker.isDetalhe(rawLine)
   }
 
-  validate(): CnabValidationResult {
+  protected validateInternal(): CnabValidationResult {
     const value = this.parse()
     const errors: CnabValidationError[] = []
 
@@ -31,9 +30,8 @@ export class Cnab400BradescoBoletoDescontoDataField extends CnabField {
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
+        new CnabGenericFieldError({
           message: 'Campo data limite desconto inválido: deve ser data no formato DDMMAA ou "000000"',
-          errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range
@@ -48,6 +46,6 @@ export class Cnab400BradescoBoletoDescontoDataField extends CnabField {
   }
 
   parse(): string {
-    return this.getRangeValue()
+    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
   }
 }

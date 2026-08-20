@@ -3,29 +3,25 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  createCnabValidationError,
-  CnabValidationErrorType
-} from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 
 export class Cnab240BradescoBoletoDataEmissaoField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'dataEmissao'
   readonly range: [number, number] = [110, 117]
 
-  shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
+  static shouldValidate(rawLine: string): boolean {
+    return Cnab240LineTypeChecker.isSegmentoP(rawLine)
   }
 
-  validate(): CnabValidationResult {
+  protected validateInternal(): CnabValidationResult {
     const isValid = parseDateDDMMAAAA(this.parse()) != null
     const errors = []
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
+        new CnabGenericFieldError({
           message: 'Campo dataEmissao inválido: deve ser data no formato DDMMAAAA',
-          errorType: CnabValidationErrorType.FIELD,
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range
@@ -40,6 +36,6 @@ export class Cnab240BradescoBoletoDataEmissaoField extends CnabField {
   }
 
   parse(): string {
-    return this.getRangeValue()
+    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
   }
 }
