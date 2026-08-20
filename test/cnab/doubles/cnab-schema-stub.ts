@@ -9,8 +9,10 @@ export function genCnabSchemaStub(config?: {
   bank?: CnabBank
   format?: CnabFormat
 }): CnabSchema {
-  const bank = config?.bank ?? CnabBank.BRADESCO
-  const format = config?.format ?? CnabFormat.CNAB400
+  const {
+    bank = CnabBank.BRADESCO,
+    format = CnabFormat.CNAB400
+  } = config ?? {}
 
   return new CnabSchema({
     bank,
