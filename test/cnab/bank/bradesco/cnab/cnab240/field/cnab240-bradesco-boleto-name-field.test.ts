@@ -1,0 +1,116 @@
+import * as path from 'path'
+import { resPath } from '@test/conftest'
+import { describe, it, expect } from '@jest/globals'
+import { readExampleLines, replaceLineRange } from '@test/test-utils'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
+import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
+
+describe('Cnab240BradescoBoletoNameField', (): void => {
+  const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+
+  describe('shouldValidate', (): void => {
+    describe.each([
+      { segment: 'P', expectedShouldValidate: false },
+      { segment: 'Q', expectedShouldValidate: true },
+      { segment: 'R', expectedShouldValidate: false },
+      { segment: 'S', expectedShouldValidate: false }
+    ])('casos parametrizados', ({ segment, expectedShouldValidate }): void => {
+      it(`dado segmento ${segment} quando verificar shouldValidate então retorna ${expectedShouldValidate}`, (): void => {
+        // Given
+        const lines = readExampleLines(path.join(resPath(), examplePath))
+        const rawLine = lines.find(
+          (line: string) => line[7] === '3' && line[13] === segment
+        )
+
+        if (!rawLine) {
+          throw new Error(`Linha com segmento ${segment} não encontrada`)
+        }
+
+        // When
+        const shouldValidate = Cnab240BradescoBoletoNameField.shouldValidate(rawLine)
+
+        // Then
+        expect(shouldValidate).toBe(expectedShouldValidate)
+      })
+    })
+  })
+
+  describe('parse e validate', (): void => {
+    it('dado linhas segmento Q com nome válido quando parsear e validar então aceita todas as linhas', (): void => {
+      // Given
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const segmentQLines = lines
+        .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
+        .filter(({ rawLine }: { rawLine: string }) => 
+          Cnab240BradescoBoletoNameField.shouldValidate(rawLine)
+        )
+
+      const fields = segmentQLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
+        new Cnab240BradescoBoletoNameField({
+          rawLine,
+          lineNumber
+        })
+      )
+
+      const results = fields.map((field: Cnab240BradescoBoletoNameField) => field.validate())
+
+      // Then
+      expect(segmentQLines.length).toBeGreaterThan(0)
+      expect(fields[0].parse()).toBe('JOAO EXEMPLO SILVA')
+      expect(fields[0].value).toBe('JOAO EXEMPLO SILVA')
+      
+      results.forEach((result: CnabValidationResult) => {
+        expect(result).toEqual(genValidCnabValidationResult())
+      })
+    })
+  })
+
+  describe('validate com erro', (): void => {
+    it('dado linha segmento Q com nome em branco quando validar então retorna erro de campo', (): void => {
+      // Given
+      const dummyLineNumber = 37
+      const fieldRange = new Cnab240BradescoBoletoNameField({ 
+        rawLine: '', 
+        lineNumber: 0 
+      }).range
+      
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = lines.find(
+        (line: string) => 
+          Cnab240BradescoBoletoNameField.shouldValidate(line)
+      )
+
+      if (!rawLine) {
+        throw new Error('Linha segmento Q não encontrada')
+      }
+
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '')
+      
+      const expectedError = new CnabFieldMinLengthError({
+        lineNumber: dummyLineNumber,
+        fieldName: 'nome do sacado',
+        range: fieldRange,
+        minLength: 3
+      })
+
+      // When
+      const field = new Cnab240BradescoBoletoNameField({
+        rawLine: invalidLine,
+        lineNumber: dummyLineNumber
+      })
+      const result = field.validate()
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(field.parse()).toBe('')
+      expect(field.value).toBe(null)
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
+    })
+  })
+})

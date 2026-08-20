@@ -1,3 +1,5 @@
 export abstract class CnabBoletoGroupRule {
-  abstract check(rawLine: string): boolean
+  static check(_rawLine: string): boolean {
+    throw new Error('Subclass must implement static method check()')
+  }
 }

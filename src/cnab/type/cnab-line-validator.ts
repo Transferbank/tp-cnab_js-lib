@@ -9,7 +9,9 @@ export abstract class CnabLineValidator {
     this.lineNumber = config.lineNumber
   }
 
-  abstract shouldValidate(): boolean
+  static shouldValidate(_rawLine: string): boolean {
+    throw new Error('shouldValidate must be implemented by subclass')
+  }
 
   abstract validate(): CnabValidationResult
 }

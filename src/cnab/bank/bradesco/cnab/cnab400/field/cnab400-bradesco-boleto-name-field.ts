@@ -1,35 +1,29 @@
 import { CnabField } from '@cnab/type/cnab-field'
-import { minLength } from '@cnab/utils/field-validator'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  createCnabValidationError,
-  CnabValidationErrorType
-} from '@cnab/type/cnab-validation-error'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
 export class Cnab400BradescoBoletoNameField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
   readonly range: [number, number] = [235, 274]
 
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+  static shouldValidate(rawLine: string): boolean {
+    return rawLine.startsWith('1')
   }
 
-  validate(): CnabValidationResult {
-    const value = this.parse()
-    const isValid = minLength(value, 3)
+  protected validateInternal(): CnabValidationResult {
+    const minLength = 3
+    const isValid = this.value !== null && (this.value as string).length >= minLength
     const errors = []
 
     if (!isValid) {
       errors.push(
-        createCnabValidationError({
-          message: 'Nome do sacado no boleto espera ao menos 3 caracteres',
-          errorType: CnabValidationErrorType.FIELD,
+        new CnabFieldMinLengthError({
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
-          range: this.range
+          range: this.range,
+          minLength
         })
       )
     }
@@ -41,6 +35,6 @@ export class Cnab400BradescoBoletoNameField extends CnabField {
   }
 
   parse(): string {
-    return this.getRangeValue().trim()
+    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
   }
 }

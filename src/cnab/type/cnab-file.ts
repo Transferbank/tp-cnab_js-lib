@@ -1,3 +1,4 @@
+import { Cnab } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
@@ -28,8 +29,8 @@ export class CnabFile {
     if (lines.length < 3) throw new CnabMinimumLinesNotReachedException()
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
-    cnabFile.format = cnabFile.detectFormat(cnabFile.rawLines[0])
-    cnabFile.bank = cnabFile.detectBank(cnabFile.rawLines[0], cnabFile.format)
+    cnabFile.format = CnabFile.detectFormat(cnabFile.rawLines[0])
+    cnabFile.bank = CnabFile.detectBank(cnabFile.rawLines[0], cnabFile.format)
     cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)
     return cnabFile
   }
@@ -41,13 +42,13 @@ export class CnabFile {
     return text.split(/\r?\n/).filter(line => line.length > 0)
   }
 
-  private detectFormat(header: string): CnabFormat {
+  private static detectFormat(header: string): CnabFormat {
     if (header.length === 240) return CnabFormat.CNAB240
     if (header.length === 400) return CnabFormat.CNAB400
     throw new CnabFormatNotRecognizedException(header.length)
   }
 
-  private detectBank(header: string, cnabFormat: CnabFormat): CnabBank {
+  private static detectBank(header: string, cnabFormat: CnabFormat): CnabBank {
     const code = cnabFormat === CnabFormat.CNAB240 
       ? header.substring(0, 3)
       : header.substring(76, 79)
@@ -62,15 +63,18 @@ export class CnabFile {
     return schema
   }
 
-  validate(withFeedback: boolean = false, fields?: (typeof CnabField)[]): CnabValidationResult {
+  validate(withFeedback: boolean = false, extraFields?: (typeof CnabField)[]): CnabValidationResult {
     return this.schema.validate(
       this.rawLines,
       !withFeedback,
-      fields ?? []
+      extraFields ?? []
     )
   }
 
-  read(_fields: (typeof CnabField)[]): CnabField[] {
-    throw new Error('Not implemented')
+  read(extraFields?: (typeof CnabField)[]): Cnab {
+    // TODO: Verificar resultado da validação e lançar erro se inválido
+    // Atualmente, erros de validação de campo não impedem o read()
+    this.validate(false, extraFields)
+    return this.schema.read(this.rawLines, extraFields ?? [])
   }
 }
