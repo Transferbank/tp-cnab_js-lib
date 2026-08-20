@@ -18,7 +18,7 @@ export function replaceLineRange(
   return rawLine.substring(0, start) + paddedValue + rawLine.substring(stop)
 }
 
-export function findCnab240SegmentLine(
+export function findFirstCnab240SegmentLine(
   lines: string[],
   segment: string
 ): string | undefined {

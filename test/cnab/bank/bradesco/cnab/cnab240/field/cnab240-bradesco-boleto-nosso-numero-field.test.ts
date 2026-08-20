@@ -3,7 +3,7 @@ import { resPath } from '@test/conftest'
 import { describe, it, expect } from '@jest/globals'
 import {
   readExampleLines,
-  findCnab240SegmentLine,
+  findFirstCnab240SegmentLine,
   filterValidatableLines,
   replaceLineRange,
   getFieldRange
@@ -26,11 +26,7 @@ describe('Cnab240BradescoBoletoNossoNumeroField', (): void => {
       it(`dado segmento ${segment} quando verificar shouldValidate então retorna ${expectedShouldValidate}`, (): void => {
         // Given
         const lines = readExampleLines(examplePath)
-        const rawLine = findCnab240SegmentLine(lines, segment)
-
-        if (!rawLine) {
-          throw new Error(`Linha com segmento ${segment} não encontrada`)
-        }
+        const rawLine = findFirstCnab240SegmentLine(lines, segment)!
 
         // When
         const shouldValidate = Cnab240BradescoBoletoNossoNumeroField.shouldValidate(rawLine)
@@ -70,11 +66,7 @@ describe('Cnab240BradescoBoletoNossoNumeroField', (): void => {
       const fieldRange = getFieldRange(Cnab240BradescoBoletoNossoNumeroField)
       
       const lines = readExampleLines(examplePath)
-      const rawLine = findCnab240SegmentLine(lines, 'P')
-
-      if (!rawLine) {
-        throw new Error('Linha segmento P não encontrada')
-      }
+      const rawLine = findFirstCnab240SegmentLine(lines, 'P')!
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABC12345XYZ')
       

@@ -11,9 +11,9 @@ import {
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab240BradescoBoletoNumeroDocumentoEmissorField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-numero-documento-emissor-field'
+import { Cnab240BradescoBoletoAbatimentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-abatimento-field'
 
-describe('Cnab240BradescoBoletoNumeroDocumentoEmissorField', (): void => {
+describe('Cnab240BradescoBoletoAbatimentoField', (): void => {
   const examplePath = path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')
 
   describe('shouldValidate', (): void => {
@@ -29,7 +29,7 @@ describe('Cnab240BradescoBoletoNumeroDocumentoEmissorField', (): void => {
         const rawLine = findFirstCnab240SegmentLine(lines, segment)!
 
         // When
-        const shouldValidate = Cnab240BradescoBoletoNumeroDocumentoEmissorField.shouldValidate(rawLine)
+        const shouldValidate = Cnab240BradescoBoletoAbatimentoField.shouldValidate(rawLine)
 
         // Then
         expect(shouldValidate).toBe(expectedShouldValidate)
@@ -38,20 +38,20 @@ describe('Cnab240BradescoBoletoNumeroDocumentoEmissorField', (): void => {
   })
 
   describe('parse e validate', (): void => {
-    it('dado linhas segmento P com documento emissor válido quando parsear e validar então aceita todas as linhas', (): void => {
+    it('dado linhas segmento P com abatimento válido quando parsear e validar então aceita todas as linhas', (): void => {
       // Given
       const lines = readExampleLines(examplePath)
-      const validatableLines = filterValidatableLines(lines, Cnab240BradescoBoletoNumeroDocumentoEmissorField)
+      const validatableLines = filterValidatableLines(lines, Cnab240BradescoBoletoAbatimentoField)
       
       const fields = validatableLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
-        new Cnab240BradescoBoletoNumeroDocumentoEmissorField({ rawLine, lineNumber })
+        new Cnab240BradescoBoletoAbatimentoField({ rawLine, lineNumber })
       )
-      const results = fields.map((field: Cnab240BradescoBoletoNumeroDocumentoEmissorField) => field.validate())
+      const results = fields.map((field: Cnab240BradescoBoletoAbatimentoField) => field.validate())
 
       // Then
       expect(validatableLines.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toBe('NF0000123')
-      expect(fields[0].value).toBe('NF0000123')
+      expect(fields[0].parse()).toBe('0.00')
+      expect(fields[0].value).toBe('0.00')
       
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
@@ -60,25 +60,25 @@ describe('Cnab240BradescoBoletoNumeroDocumentoEmissorField', (): void => {
   })
 
   describe('validate com erro', (): void => {
-    it('dado linha segmento P com documento emissor vazio quando validar então retorna erro de campo', (): void => {
+    it('dado linha segmento P com abatimento alfanumérico quando validar então retorna erro de campo', (): void => {
       // Given
       const dummyLineNumber = 42
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoNumeroDocumentoEmissorField)
+      const fieldRange = getFieldRange(Cnab240BradescoBoletoAbatimentoField)
       
       const lines = readExampleLines(examplePath)
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')!
 
-      const invalidLine = replaceLineRange(rawLine, fieldRange, '')
+      const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABC12345XYZ')
       
       const expectedError = new CnabGenericFieldError({
-        message: 'Campo documento emissor inválido: deve conter ao menos 1 caractere',
+        message: 'Campo abatimento inválido: deve conter apenas números',
         lineNumber: dummyLineNumber,
-        fieldName: 'documento emissor',
+        fieldName: 'abatimento',
         range: fieldRange
       })
 
       // When
-      const field = new Cnab240BradescoBoletoNumeroDocumentoEmissorField({
+      const field = new Cnab240BradescoBoletoAbatimentoField({
         rawLine: invalidLine,
         lineNumber: dummyLineNumber
       })
@@ -86,8 +86,6 @@ describe('Cnab240BradescoBoletoNumeroDocumentoEmissorField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(field.parse()).toBe('')
-      expect(field.value).toBe(null)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
