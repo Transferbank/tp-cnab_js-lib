@@ -3,11 +3,11 @@ import { resPath } from '@test/conftest'
 import { describe, it, expect } from '@jest/globals'
 import * as TestUtils from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-name-field'
+import { Cnab400BradescoBoletoNossoNumeroField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-nosso-numero-field'
 
-describe('Cnab400BradescoBoletoNameField', (): void => {
+describe('Cnab400BradescoBoletoNossoNumeroField', (): void => {
   const examplePath = path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt')
 
   describe('shouldValidate', (): void => {
@@ -23,7 +23,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         const rawLine = TestUtils.findFirstCnab400RecordLine(lines, recordType)!
 
         // When
-        const shouldValidate = Cnab400BradescoBoletoNameField.shouldValidate(rawLine)
+        const shouldValidate = Cnab400BradescoBoletoNossoNumeroField.shouldValidate(rawLine)
 
         // Then
         expect(shouldValidate).toBe(expectedShouldValidate)
@@ -32,24 +32,20 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   })
 
   describe('parse e validate', (): void => {
-    it('dado linhas de boleto com nome válido quando parsear e validar então aceita todas as linhas', (): void => {
+    it('dado linhas de boleto com nosso numero válido quando parsear e validar então aceita todas as linhas', (): void => {
       // Given
       const lines = TestUtils.readExampleLines(examplePath)
-      const boletoLines = lines
-        .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
-        .filter(({ rawLine }: { rawLine: string }) =>
-          Cnab400BradescoBoletoNameField.shouldValidate(rawLine)
-        )
-
-      const fields = boletoLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) =>
-        new Cnab400BradescoBoletoNameField({ rawLine, lineNumber })
+      const validatableLines = TestUtils.filterValidatableLines(lines, Cnab400BradescoBoletoNossoNumeroField)
+      
+      const fields = validatableLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
+        new Cnab400BradescoBoletoNossoNumeroField({ rawLine, lineNumber })
       )
-      const results = fields.map((field: Cnab400BradescoBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab400BradescoBoletoNossoNumeroField) => field.validate())
 
       // Then
-      expect(boletoLines.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toBe('COMERCIAL ALFA LTDA')
-      expect(fields[0].value).toBe('COMERCIAL ALFA LTDA')
+      expect(validatableLines.length).toBeGreaterThan(0)
+      expect(fields[0].parse()).toBe('09100010629')
+      expect(fields[0].value).toBe('09100010629')
       
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
@@ -58,25 +54,25 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   })
 
   describe('validate com erro', (): void => {
-    it('dado linha de boleto com nome em branco quando validar então retorna erro de campo', (): void => {
+    it('dado linha de boleto com nosso numero alfanumérico quando validar então retorna erro de campo', (): void => {
       // Given
-      const dummyLineNumber = 37
-      const fieldRange = TestUtils.getFieldRange(Cnab400BradescoBoletoNameField)
-
+      const dummyLineNumber = 42
+      const fieldRange = TestUtils.getFieldRange(Cnab400BradescoBoletoNossoNumeroField)
+      
       const lines = TestUtils.readExampleLines(examplePath)
       const rawLine = TestUtils.findFirstCnab400RecordLine(lines, '1')!
 
-      const invalidLine = TestUtils.replaceLineRange(rawLine, fieldRange, '')
-
-      const expectedError = new CnabFieldMinLengthError({
+      const invalidLine = TestUtils.replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJK')
+      
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo nosso numero inválido: deve conter apenas números',
         lineNumber: dummyLineNumber,
-        fieldName: 'nome do sacado',
-        range: fieldRange,
-        minLength: 3
+        fieldName: 'nosso numero',
+        range: fieldRange
       })
 
       // When
-      const field = new Cnab400BradescoBoletoNameField({
+      const field = new Cnab400BradescoBoletoNossoNumeroField({
         rawLine: invalidLine,
         lineNumber: dummyLineNumber
       })
@@ -84,11 +80,9 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(field.parse()).toBe('')
-      expect(field.value).toBe(null)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
-      expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
       expect(result.errors[0].message).toBe(expectedError.message)
       expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })

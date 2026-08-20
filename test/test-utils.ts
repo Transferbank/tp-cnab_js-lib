@@ -27,6 +27,13 @@ export function findFirstCnab240SegmentLine(
   )
 }
 
+export function findFirstCnab400RecordLine(
+  lines: string[],
+  recordType: string
+): string | undefined {
+  return lines.find((line: string) => line.startsWith(recordType))
+}
+
 export function filterValidatableLines<T extends typeof CnabField>(
   lines: string[],
   FieldClass: T

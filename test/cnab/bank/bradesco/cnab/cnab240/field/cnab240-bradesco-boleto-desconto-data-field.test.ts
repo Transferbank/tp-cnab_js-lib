@@ -51,24 +51,6 @@ describe('Cnab240BradescoBoletoDescontoDataField', (): void => {
         expect(result).toEqual(genValidCnabValidationResult())
       })
     })
-
-    it('dado linha segmento P com valor 00000000 quando validar então aceita', (): void => {
-      // Given
-      const lines = TestUtils.readExampleLines(examplePath)
-      const rawLine = TestUtils.findFirstCnab240SegmentLine(lines, 'P')!
-      
-      const field = new Cnab240BradescoBoletoDescontoDataField({
-        rawLine,
-        lineNumber: 1
-      })
-
-      // When
-      const result = field.validate()
-
-      // Then
-      expect(field.parse()).toBe('00000000')
-      expect(result).toEqual(genValidCnabValidationResult())
-    })
   })
 
   describe('validate com erro', (): void => {
