@@ -49,3 +49,5 @@ export abstract class CnabField {
   protected abstract validateInternal(): CnabValidationResult
   abstract parse(): string
 }
+
+export type CnabFieldClass = typeof CnabField

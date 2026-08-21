@@ -1,10 +1,10 @@
 import { Cnab } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { 
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
@@ -63,7 +63,7 @@ export class CnabFile {
     return schema
   }
 
-  validate(withFeedback: boolean = false, extraFields?: (typeof CnabField)[]): CnabValidationResult {
+  validate(withFeedback: boolean = false, extraFields?: CnabFieldClass[]): CnabValidationResult {
     return this.schema.validate(
       this.rawLines,
       !withFeedback,
@@ -71,7 +71,7 @@ export class CnabFile {
     )
   }
 
-  read(extraFields?: (typeof CnabField)[]): Cnab {
+  read(extraFields?: CnabFieldClass[]): Cnab {
     // TODO: Verificar resultado da validação e lançar erro se inválido
     // Atualmente, erros de validação de campo não impedem o read()
     this.validate(false, extraFields)
