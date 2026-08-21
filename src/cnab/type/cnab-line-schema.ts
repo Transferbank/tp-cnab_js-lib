@@ -10,7 +10,7 @@ import {
   Cnab400LineSizeValidator
 } from '@cnab/validators/cnab-line-size-validator'
 
-interface ValidationTypeWithShouldValidate {
+interface CnabValidatableConstructor {
   shouldValidate(rawLine: string): boolean
   new (params: { rawLine: string; lineNumber: number }): CnabLineValidator | CnabField
 }
@@ -110,11 +110,11 @@ export class CnabLineSchema {
     }
 
     const extraFieldsList = extraFields ?? []
-    const validationTypes: ValidationTypeWithShouldValidate[] = [
+    const validationTypes = [
       ...this.validators,
       ...this.fields,
       ...extraFieldsList
-    ] as ValidationTypeWithShouldValidate[]
+    ] as CnabValidatableConstructor[]
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const [lineNumber, rawLine] of group) {
