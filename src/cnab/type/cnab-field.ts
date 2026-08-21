@@ -1,50 +1,77 @@
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
+﻿import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
-export abstract class CnabField {
+export abstract class CnabField<T = string> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
   abstract readonly fieldName: string
+  // O range come├ºa a partir de start + 1, seguindo as documenta├º├Áes dos arquivos cnab
   abstract readonly range: [number, number]
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
-  private cachedValue?: unknown | null
+  private cachedValue?: T | null
 
-  constructor(rawLine: string, lineNumber: number) {
-    this.rawLine = rawLine
-    this.lineNumber = lineNumber
+  constructor(config: { rawLine: string; lineNumber: number }) {
+    this.rawLine = config.rawLine
+    this.lineNumber = config.lineNumber
   }
 
-  get value(): unknown | null {
-    if (this.cachedValue !== undefined) {
-      return this.cachedValue
+  get value(): T | null {
+    if (this.cachedValue === undefined) {
+      try {
+        // 1. Extrai o valor bruto da linha (sempre string)
+        const rawValue = this.extractRawValue()
+        
+        // 2. Se vazio (n├úo preenchido no arquivo) ÔåÆ null
+        if (this.isRawValueEmpty(rawValue)) {
+          this.cachedValue = null
+        } else {
+          // 3. Tem conte├║do ÔåÆ parseia para o tipo correto
+          this.cachedValue = this.parseValue(rawValue)
+        }
+      } catch (error) {
+        const isOptional = (this.constructor as typeof CnabField).isOptional
+        if (isOptional) {
+          this.cachedValue = null
+        } else {
+          throw error
+        }
+      }
     }
-
-    try {
-      const parsed = this.parse()
-      this.cachedValue = parsed === '' ? null : parsed
-    } catch (error) {
-      const isOptional = (this.constructor as typeof CnabField).isOptional
-      if (!isOptional) throw error
-      this.cachedValue = null
-    }
-
     return this.cachedValue
   }
 
-  abstract shouldValidate(): boolean
+  protected extractRawValue(): string {
+    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+  }
+
+  protected isRawValueEmpty(rawValue: string): boolean {
+    return rawValue === ''
+  }
+
+  static shouldValidate(_rawLine: string): boolean {
+    throw new Error(`${this.name}.shouldValidate() must be implemented by subclass`)
+  }
 
   validate(): CnabValidationResult {
     const isOptional = (this.constructor as typeof CnabField).isOptional
-    if (isOptional && this.value == null) {
+    if (isOptional && this.value === null) {
       return { isValid: true, errors: [] }
     }
-    return this.performValidation()
+    return this.validateInternal()
   }
 
-  protected abstract performValidation(): CnabValidationResult
-  abstract parse(): string
+  protected abstract validateInternal(): CnabValidationResult
+  protected abstract parseValue(rawValue: string): T
+  
+  parse(): T {
+    const rawValue = this.extractRawValue()
+    if (this.isRawValueEmpty(rawValue)) {
+      throw new Error(`Cannot parse empty value for field ${this.fieldName}`)
+    }
+    return this.parseValue(rawValue)
+  }
 }
 
-export type CnabFieldClass = typeof CnabField
+export type CnabFieldClass<T = string> = typeof CnabField<T>

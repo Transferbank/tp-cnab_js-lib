@@ -1,4 +1,4 @@
-import { CnabField } from '@cnab/type/cnab-field'
+﻿import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
@@ -8,13 +8,13 @@ export class Cnab240BradescoBoletoNameField extends CnabField {
   readonly fieldName = 'nome do sacado'
   readonly range: [number, number] = [34, 73]
 
-  shouldValidate(): boolean {
-    return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'Q'
+  static shouldValidate(rawLine: string): boolean {
+    return rawLine.length > 13 && rawLine[7] === '3' && rawLine[13] === 'Q'
   }
 
-  protected performValidation(): CnabValidationResult {
+  protected validateInternal(): CnabValidationResult {
     const minLength = 3
-    const isValid = this.value != null && (this.value as string).length >= minLength
+    const isValid = this.value !== null && (this.value as string).length >= minLength
     const errors = []
 
     if (!isValid) {
@@ -36,5 +36,9 @@ export class Cnab240BradescoBoletoNameField extends CnabField {
 
   parse(): string {
     return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
   }
 }
