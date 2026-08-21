@@ -5,6 +5,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidator, CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabLineData } from '@cnab/type/cnab-line-data'
 import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator
@@ -140,5 +141,20 @@ export class CnabLineSchema {
     }
 
     return result
+  }
+
+  instantiate(rawLine: string, lineNumber: number, extraFields?: CnabFieldClass[]): CnabLineData {
+    const extraFieldsList = extraFields ?? []
+    const allFields = [...this.fields, ...extraFieldsList]
+    
+    const instantiatedFields = allFields
+      .filter(FieldClass => FieldClass.shouldValidate(rawLine))
+      .map(FieldClass => new (FieldClass as unknown as new (config: { rawLine: string; lineNumber: number }) => CnabField<unknown>)({ rawLine, lineNumber }))
+    
+    return new CnabLineData({
+      rawLine,
+      lineNumber,
+      fields: instantiatedFields
+    })
   }
 }

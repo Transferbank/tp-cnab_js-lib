@@ -4,7 +4,11 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
-import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
+import { 
+  Cnab240BradescoBoletoNameField,
+  Cnab240BradescoBoletoValorTituloField,
+  Cnab240BradescoBoletoDataEmissaoField
+} from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import { Cnab240BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab240/cnab-240-bradesco-group-rule'
 import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
@@ -29,7 +33,11 @@ function _registerCnabSchemas(): CnabSchema[] {
       }),
       boleto: new CnabLineSchema({
         fieldType: CnabFieldType.BOLETO,
-        fields: [Cnab240BradescoBoletoNameField]
+        fields: [
+          Cnab240BradescoBoletoNameField,
+          Cnab240BradescoBoletoValorTituloField,
+          Cnab240BradescoBoletoDataEmissaoField
+        ]
       })
     }),
     new CnabSchema({

@@ -5,6 +5,8 @@ import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabBoleto } from '@cnab/type/cnab-boleto'
+import { CnabLineData } from '@cnab/type/cnab-line-data'
 
 export class CnabSchema {
   readonly bank: CnabBank
@@ -75,10 +77,33 @@ export class CnabSchema {
     return result
   }
 
-  read(_rawLines: string[], _extraFields?: CnabFieldClass[]): Cnab {
-    // TODO: Implementar método read que retorna objeto Cnab com header, trailer e boletos
-    // Necessário para CnabFile.read() funcionar corretamente
-    // Deve processar: rawLines[0] (header), rawLines[length-1] (trailer), slice(1,-1) (boletos)
-    throw new Error('Método read() ainda não implementado')
+  read(rawLines: string[], extraFields?: CnabFieldClass[]): Cnab {
+    const headerLine = this.header.instantiate(rawLines[0], 0, extraFields)
+    
+    const trailerLine = this.trailer.instantiate(
+      rawLines[rawLines.length - 1],
+      rawLines.length - 1,
+      extraFields
+    )
+    
+    const boletoRawLines = rawLines.slice(1, -1)
+    const boletos: CnabBoleto[] = []
+    
+    for (const group of this.boleto.genLineGroups(boletoRawLines, 1)) {
+      const boletoLines: CnabLineData[] = []
+      
+      for (const [lineNumber, rawLine] of group) {
+        const lineData = this.boleto.instantiate(rawLine, lineNumber, extraFields)
+        boletoLines.push(lineData)
+      }
+      
+      boletos.push(new CnabBoleto(boletoLines))
+    }
+    
+    return new Cnab({
+      header: headerLine,
+      trailer: trailerLine,
+      boletos
+    })
   }
 }
