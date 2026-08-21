@@ -74,4 +74,4 @@ export abstract class CnabField<T = string> {
   }
 }
 
-export type CnabFieldClass<T = string> = typeof CnabField<T>
+export type CnabFieldClass = typeof CnabField<unknown>
