@@ -10,7 +10,7 @@ export abstract class CnabLineValidator {
   }
 
   static shouldValidate(_rawLine: string): boolean {
-    throw new Error('shouldValidate must be implemented by subclass')
+    throw new Error(`${this.name}.shouldValidate() must be implemented by subclass`)
   }
 
   abstract validate(): CnabValidationResult
