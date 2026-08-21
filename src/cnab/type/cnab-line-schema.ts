@@ -9,8 +9,10 @@ import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator
 } from '@cnab/validators/cnab-line-size-validator'
-type ValidatorConstructor = new (params: {rawLine: string, lineNumber: number}) => CnabLineValidator
-interface ValidationTypeWithShouldValidate {
+
+type CnabLineValidatorClass = new (params: {rawLine: string, lineNumber: number}) => CnabLineValidator
+
+interface CnabValidatableConstructor {
   shouldValidate(rawLine: string): boolean
   new (params: { rawLine: string; lineNumber: number }): CnabLineValidator | CnabField
 }
@@ -18,17 +20,17 @@ interface ValidationTypeWithShouldValidate {
 export class CnabLineSchema {
   readonly fieldType: CnabFieldType
   readonly fields: CnabFieldClass[]
-  readonly declaredValidators: ValidatorConstructor[]
+  readonly declaredValidators: CnabLineValidatorClass[]
 
   bank: CnabBank | null = null
   fmt: CnabFormat | null = null
   boletoGroupRule: typeof CnabBoletoGroupRule | null = null
-  private _validators?: ValidatorConstructor[]
+  private _validators?: CnabLineValidatorClass[]
 
   constructor(config: {
     fieldType: CnabFieldType
     fields: CnabFieldClass[]
-    validators?: ValidatorConstructor[]
+    validators?: CnabLineValidatorClass[]
   }) {
     this.fieldType = config.fieldType
     this.fields = config.fields
@@ -46,11 +48,11 @@ export class CnabLineSchema {
     delete this._validators // limpa o cache
   }
 
-  get validators(): ValidatorConstructor[] {
+  get validators(): CnabLineValidatorClass[] {
     if (this._validators == null) {
-      const lineSizeValidators: Record<CnabFormat, ValidatorConstructor> = {
-        [CnabFormat.CNAB240]: Cnab240LineSizeValidator as ValidatorConstructor,
-        [CnabFormat.CNAB400]: Cnab400LineSizeValidator as ValidatorConstructor
+      const lineSizeValidators: Record<CnabFormat, CnabLineValidatorClass> = {
+        [CnabFormat.CNAB240]: Cnab240LineSizeValidator,
+        [CnabFormat.CNAB400]: Cnab400LineSizeValidator
       }
 
       this._validators = [
@@ -110,11 +112,11 @@ export class CnabLineSchema {
     }
 
     const extraFieldsList = extraFields ?? []
-    const validationTypes: ValidationTypeWithShouldValidate[] = [
+    const validationTypes = [
       ...this.validators,
       ...this.fields,
       ...extraFieldsList
-    ] as ValidationTypeWithShouldValidate[]
+    ] as CnabValidatableConstructor[]
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const [lineNumber, rawLine] of group) {
