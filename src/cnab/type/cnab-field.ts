@@ -1,5 +1,6 @@
 ﻿import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabField<T = string> {
   static readonly fieldType: CnabFieldType
@@ -68,7 +69,7 @@ export abstract class CnabField<T = string> {
   parse(): T {
     const rawValue = this.extractRawValue()
     if (this.isRawValueEmpty(rawValue)) {
-      throw new Error(`Cannot parse empty value for field ${this.fieldName}`)
+      throw new CnabFieldEmptyValueError(this.fieldName)
     }
     return this.parseValue(rawValue)
   }
