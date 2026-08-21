@@ -1,7 +1,7 @@
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
-export abstract class CnabField {
+export abstract class CnabField<T = string> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
   abstract readonly fieldName: string
@@ -10,18 +10,26 @@ export abstract class CnabField {
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
-  private cachedValue?: unknown | null
+  private cachedValue?: T | null
 
   constructor(config: { rawLine: string; lineNumber: number }) {
     this.rawLine = config.rawLine
     this.lineNumber = config.lineNumber
   }
 
-  get value(): unknown | null {
+  get value(): T | null {
     if (this.cachedValue === undefined) {
       try {
-        const parsed = this.parse()
-        this.cachedValue = parsed === '' ? null : parsed
+        // 1. Extrai o valor bruto da linha (sempre string)
+        const rawValue = this.extractRawValue()
+        
+        // 2. Se vazio (não preenchido no arquivo) → null
+        if (this.isRawValueEmpty(rawValue)) {
+          this.cachedValue = null
+        } else {
+          // 3. Tem conteúdo → parseia para o tipo correto
+          this.cachedValue = this.parseValue(rawValue)
+        }
       } catch (error) {
         const isOptional = (this.constructor as typeof CnabField).isOptional
         if (isOptional) {
@@ -32,6 +40,14 @@ export abstract class CnabField {
       }
     }
     return this.cachedValue
+  }
+
+  protected extractRawValue(): string {
+    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+  }
+
+  protected isRawValueEmpty(rawValue: string): boolean {
+    return rawValue === ''
   }
 
   static shouldValidate(_rawLine: string): boolean {
@@ -47,7 +63,15 @@ export abstract class CnabField {
   }
 
   protected abstract validateInternal(): CnabValidationResult
-  abstract parse(): string
+  protected abstract parseValue(rawValue: string): T
+  
+  parse(): T {
+    const rawValue = this.extractRawValue()
+    if (this.isRawValueEmpty(rawValue)) {
+      throw new Error(`Cannot parse empty value for field ${this.fieldName}`)
+    }
+    return this.parseValue(rawValue)
+  }
 }
 
-export type CnabFieldClass = typeof CnabField
+export type CnabFieldClass<T = string> = typeof CnabField<T>

@@ -49,7 +49,7 @@ describe('cnab-bank-schemas', (): void => {
 
   it('dado registro de schemas quando ler campos declarados então cada campo corresponde ao seu tipo de linha', (): void => {
     // Given
-    const declaredFields: Array<[string, typeof CnabField]> = []
+    const declaredFields: Array<[string, typeof CnabField<unknown>]> = []
     for (const schemasByFormat of Object.values(CNAB_BANK_SCHEMAS)) {
       for (const schema of Object.values(
         schemasByFormat as Record<string, unknown>
