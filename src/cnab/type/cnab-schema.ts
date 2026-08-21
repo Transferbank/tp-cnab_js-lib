@@ -1,10 +1,10 @@
 import { Cnab } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabFieldClass } from '@cnab/type/cnab-field'
 
 export class CnabSchema {
   readonly bank: CnabBank
@@ -41,7 +41,7 @@ export class CnabSchema {
   validate(
     rawLines: string[],
     eagerEnabled: boolean,
-    extraFields?: Array<typeof CnabField>
+    extraFields?: CnabFieldClass[]
   ): CnabValidationResult {
     const result: CnabValidationResult = { isValid: true, errors: [] }
 
@@ -54,7 +54,7 @@ export class CnabSchema {
     for (const item of items) {
       const [group, lines, firstLine] = item
       const groupExtraFields = (extraFields ?? []).filter(
-        (field: typeof CnabField) => field.fieldType === group.fieldType
+        (field: CnabFieldClass) => field.fieldType === group.fieldType
       )
 
       const groupResult = group.validate(
@@ -75,7 +75,7 @@ export class CnabSchema {
     return result
   }
 
-  read(_rawLines: string[], _extraFields?: Array<typeof CnabField>): Cnab {
+  read(_rawLines: string[], _extraFields?: CnabFieldClass[]): Cnab {
     // TODO: Implementar método read que retorna objeto Cnab com header, trailer e boletos
     // Necessário para CnabFile.read() funcionar corretamente
     // Deve processar: rawLines[0] (header), rawLines[length-1] (trailer), slice(1,-1) (boletos)

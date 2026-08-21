@@ -1,5 +1,5 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
@@ -9,8 +9,6 @@ import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator
 } from '@cnab/validators/cnab-line-size-validator'
-
-type FieldClass = typeof CnabField
 type ValidatorConstructor = new (params: {rawLine: string, lineNumber: number}) => CnabLineValidator
 interface ValidationTypeWithShouldValidate {
   shouldValidate(rawLine: string): boolean
@@ -19,7 +17,7 @@ interface ValidationTypeWithShouldValidate {
 
 export class CnabLineSchema {
   readonly fieldType: CnabFieldType
-  readonly fields: FieldClass[]
+  readonly fields: CnabFieldClass[]
   readonly declaredValidators: ValidatorConstructor[]
 
   bank: CnabBank | null = null
@@ -29,7 +27,7 @@ export class CnabLineSchema {
 
   constructor(config: {
     fieldType: CnabFieldType
-    fields: FieldClass[]
+    fields: CnabFieldClass[]
     validators?: ValidatorConstructor[]
   }) {
     this.fieldType = config.fieldType
@@ -104,7 +102,7 @@ export class CnabLineSchema {
     rawLines: string[],
     eagerEnabled: boolean,
     firstLine: number,
-    extraFields?: FieldClass[]
+    extraFields?: CnabFieldClass[]
   ): CnabValidationResult {
     const result: CnabValidationResult = {
       isValid: true,
