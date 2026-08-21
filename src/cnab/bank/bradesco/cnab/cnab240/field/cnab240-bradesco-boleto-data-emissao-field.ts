@@ -3,7 +3,6 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { 
   CnabGenericFieldError,
-  CnabFieldEmptyValueError,
   CnabFieldInvalidDateError
 } from '@cnab/type/cnab-validation-error'
 
@@ -50,13 +49,5 @@ export class Cnab240BradescoBoletoDataEmissaoField extends CnabField<Date> {
     }
     
     return date
-  }
-
-  parse(): Date {
-    const rawValue = this.extractRawValue()
-    if (this.isRawValueEmpty(rawValue)) {
-      throw new CnabFieldEmptyValueError(this.fieldName)
-    }
-    return this.parseValue(rawValue)
   }
 }

@@ -3,7 +3,6 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { 
   CnabGenericFieldError,
-  CnabFieldEmptyValueError,
   CnabFieldInvalidNumberError
 } from '@cnab/type/cnab-validation-error'
 
@@ -45,13 +44,5 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
     }
     
     return centavos / 100
-  }
-
-  parse(): number {
-    const rawValue = this.extractRawValue()
-    if (this.isRawValueEmpty(rawValue)) {
-      throw new CnabFieldEmptyValueError(this.fieldName)
-    }
-    return this.parseValue(rawValue)
   }
 }
