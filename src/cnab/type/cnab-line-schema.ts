@@ -24,7 +24,7 @@ export class CnabLineSchema {
   bank: CnabBank | null = null
   fmt: CnabFormat | null = null
   boletoGroupRule: CnabBoletoGroupRule | null = null
-  private _validators?: CnabLineValidatorClass[]
+  private cachedValidators?: CnabLineValidatorClass[]
 
   constructor(config: {
     fieldType: CnabFieldType
@@ -44,22 +44,22 @@ export class CnabLineSchema {
     this.bank = bank
     this.fmt = fmt
     this.boletoGroupRule = boletoGroupRule
-    delete this._validators // limpa o cache
+    delete this.cachedValidators // limpa o cache
   }
 
   get validators(): CnabLineValidatorClass[] {
-    if (this._validators == null) {
+    if (this.cachedValidators == null) {
       const lineSizeValidators: Record<CnabFormat, CnabLineValidatorClass> = {
         [CnabFormat.CNAB240]: Cnab240LineSizeValidator,
         [CnabFormat.CNAB400]: Cnab400LineSizeValidator
       }
 
-      this._validators = [
+      this.cachedValidators = [
         lineSizeValidators[this.fmt!],
         ...this.declaredValidators
       ]
     }
-    return this._validators
+    return this.cachedValidators
   }
 
   isBoletoGroupStart(rawLine: string): boolean {
