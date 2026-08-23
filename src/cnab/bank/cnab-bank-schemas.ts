@@ -13,7 +13,7 @@ import {
   Cnab400TrailerLineStartValidator
 } from '@cnab/validators/cnab400/cnab400-line-start-validator'
 
-function _registerCnabSchemas(): CnabSchema[] {
+function registerCnabSchemas(): CnabSchema[] {
   return [
     new CnabSchema({
       bank: CnabBank.BRADESCO,
@@ -88,4 +88,4 @@ export function indexCnabSchemas(
   return indexed as Record<CnabBank, Record<CnabFormat, CnabSchema>>
 }
 
-export const CNAB_BANK_SCHEMAS: Record< CnabBank, Record<CnabFormat, CnabSchema>> = indexCnabSchemas(_registerCnabSchemas())
+export const CNAB_BANK_SCHEMAS: Record< CnabBank, Record<CnabFormat, CnabSchema>> = indexCnabSchemas(registerCnabSchemas())

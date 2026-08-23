@@ -28,8 +28,13 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
           throw new Error(`Linha com segmento ${segment} não encontrada`)
         }
 
+        const field = new Cnab240BradescoBoletoNameField({
+          rawLine,
+          lineNumber: 1
+        })
+
         // When
-        const shouldValidate = Cnab240BradescoBoletoNameField.shouldValidate(rawLine)
+        const shouldValidate = field.shouldValidate()
 
         // Then
         expect(shouldValidate).toBe(expectedShouldValidate)
@@ -43,9 +48,13 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const segmentQLines = lines
         .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
-        .filter(({ rawLine }: { rawLine: string }) => 
-          Cnab240BradescoBoletoNameField.shouldValidate(rawLine)
-        )
+        .filter(({ rawLine }: { rawLine: string }) => {
+          const field = new Cnab240BradescoBoletoNameField({
+            rawLine,
+            lineNumber: 1
+          })
+          return field.shouldValidate()
+        })
 
       const fields = segmentQLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
         new Cnab240BradescoBoletoNameField({
@@ -78,8 +87,13 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = lines.find(
-        (line: string) => 
-          Cnab240BradescoBoletoNameField.shouldValidate(line)
+        (line: string) => {
+          const field = new Cnab240BradescoBoletoNameField({
+            rawLine: line,
+            lineNumber: 1
+          })
+          return field.shouldValidate()
+        }
       )
 
       if (!rawLine) {

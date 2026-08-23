@@ -13,7 +13,6 @@ import {
 type CnabLineValidatorClass = new (params: {rawLine: string, lineNumber: number}) => CnabLineValidator
 
 interface CnabValidatableConstructor {
-  shouldValidate(rawLine: string): boolean
   new (params: { rawLine: string; lineNumber: number }): CnabLineValidator | CnabField
 }
 
@@ -121,14 +120,14 @@ export class CnabLineSchema {
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const [lineNumber, rawLine] of group) {
         for (const validationType of validationTypes) {
-          if (!validationType.shouldValidate(rawLine)) {
-            continue
-          }
-
           const instance = new validationType({
             rawLine,
             lineNumber
           })
+
+          if (!instance.shouldValidate()) {
+            continue
+          }
 
           const validationResult = instance.validate()
           result.isValid = result.isValid && validationResult.isValid

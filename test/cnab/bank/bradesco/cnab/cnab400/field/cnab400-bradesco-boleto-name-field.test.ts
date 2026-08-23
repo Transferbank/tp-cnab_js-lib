@@ -26,8 +26,13 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
           throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
+        const field = new Cnab400BradescoBoletoNameField({
+          rawLine,
+          lineNumber: 1
+        })
+
         // When
-        const shouldValidate = Cnab400BradescoBoletoNameField.shouldValidate(rawLine)
+        const shouldValidate = field.shouldValidate()
 
         // Then
         expect(shouldValidate).toBe(expectedShouldValidate)
@@ -41,9 +46,13 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const boletoLines = lines
         .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
-        .filter(({ rawLine }: { rawLine: string }) =>
-          Cnab400BradescoBoletoNameField.shouldValidate(rawLine)
-        )
+        .filter(({ rawLine }: { rawLine: string }) => {
+          const field = new Cnab400BradescoBoletoNameField({
+            rawLine,
+            lineNumber: 1
+          })
+          return field.shouldValidate()
+        })
 
       // When
       const results = boletoLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) =>
@@ -66,9 +75,13 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       // Given
       const dummyLineNumber = 37
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = lines.find((line: string) =>
-        Cnab400BradescoBoletoNameField.shouldValidate(line)
-      )
+      const rawLine = lines.find((line: string) => {
+        const field = new Cnab400BradescoBoletoNameField({
+          rawLine: line,
+          lineNumber: 1
+        })
+        return field.shouldValidate()
+      })
 
       if (!rawLine) {
         throw new Error('Linha de boleto não encontrada')
@@ -96,9 +109,13 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       }).range
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = lines.find((line: string) =>
-        Cnab400BradescoBoletoNameField.shouldValidate(line)
-      )
+      const rawLine = lines.find((line: string) => {
+        const field = new Cnab400BradescoBoletoNameField({
+          rawLine: line,
+          lineNumber: 1
+        })
+        return field.shouldValidate()
+      })
 
       if (!rawLine) {
         throw new Error('Linha de boleto não encontrada')
