@@ -17,7 +17,7 @@ export function genCnabSchemaStub(config?: {
   return new CnabSchema({
     bank,
     fmt: format,
-    boletoGroupRule: Cnab400BradescoGroupRule,
+    boletoGroupRule: new Cnab400BradescoGroupRule(),
     header: new CnabLineSchema({
       fieldType: CnabFieldType.HEADER,
       fields: []

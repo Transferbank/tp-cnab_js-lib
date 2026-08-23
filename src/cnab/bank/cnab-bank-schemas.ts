@@ -18,7 +18,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: Cnab240BradescoGroupRule,
+      boletoGroupRule: new Cnab240BradescoGroupRule(),
       header: new CnabLineSchema({
         fieldType: CnabFieldType.HEADER,
         fields: []
@@ -35,7 +35,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB400,
-      boletoGroupRule: Cnab400BradescoGroupRule,
+      boletoGroupRule: new Cnab400BradescoGroupRule(),
       header: new CnabLineSchema({
         fieldType: CnabFieldType.HEADER,
         fields: [],

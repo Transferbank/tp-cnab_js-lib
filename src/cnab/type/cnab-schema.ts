@@ -9,7 +9,7 @@ import { CnabFieldClass } from '@cnab/type/cnab-field'
 export class CnabSchema {
   readonly bank: CnabBank
   readonly fmt: CnabFormat
-  readonly boletoGroupRule: typeof CnabBoletoGroupRule
+  readonly boletoGroupRule: CnabBoletoGroupRule
   readonly header: CnabLineSchema
   readonly trailer: CnabLineSchema
   readonly boleto: CnabLineSchema
@@ -17,7 +17,7 @@ export class CnabSchema {
   constructor(config: {
     bank: CnabBank
     fmt: CnabFormat
-    boletoGroupRule: typeof CnabBoletoGroupRule
+    boletoGroupRule: CnabBoletoGroupRule
     header: CnabLineSchema
     trailer: CnabLineSchema
     boleto: CnabLineSchema

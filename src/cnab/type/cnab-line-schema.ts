@@ -23,7 +23,7 @@ export class CnabLineSchema {
 
   bank: CnabBank | null = null
   fmt: CnabFormat | null = null
-  boletoGroupRule: typeof CnabBoletoGroupRule | null = null
+  boletoGroupRule: CnabBoletoGroupRule | null = null
   private _validators?: CnabLineValidatorClass[]
 
   constructor(config: {
@@ -39,7 +39,7 @@ export class CnabLineSchema {
   init(
     bank: CnabBank,
     fmt: CnabFormat,
-    boletoGroupRule: typeof CnabBoletoGroupRule
+    boletoGroupRule: CnabBoletoGroupRule
   ): void {
     this.bank = bank
     this.fmt = fmt
