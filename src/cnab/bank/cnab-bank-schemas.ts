@@ -67,12 +67,12 @@ export function indexCnabSchemas(
     counts[key] = (counts[key] ?? 0) + 1
   }
 
-  const duplicated_key = Object.entries(counts).find(
+  const duplicatedKey = Object.entries(counts).find(
     ([, count]: [string, number]) => count > 1
   )
 
-  if (duplicated_key != null) {
-    const [key] = duplicated_key
+  if (duplicatedKey != null) {
+    const [key] = duplicatedKey
     const [bank, fmt] = key.split(':') as [CnabBank, CnabFormat]
     throw new CnabSchemaRegistrationException(bank, fmt)
   }
