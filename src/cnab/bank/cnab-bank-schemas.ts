@@ -1,8 +1,7 @@
-import { CnabBank } from '@cnab/type/cnab-bank'
+﻿import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
@@ -16,47 +15,48 @@ function registerCnabSchemas(): CnabSchema[] {
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB240,
       boletoGroupRule: new Cnab240BradescoGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
-        fields: []
-      }),
-      trailer: new CnabLineSchema({
+        fields: [],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
-        fields: []
-      }),
-      boleto: new CnabLineSchema({
+        fields: [],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
-        fields: [Cnab240BradescoBoletoNameField]
-      })
+        fields: [Cnab240BradescoBoletoNameField],
+      },
     }),
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB400,
       boletoGroupRule: new Cnab400BradescoGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
-        validators: [Cnab400HeaderLineStartValidator]
-      }),
-      trailer: new CnabLineSchema({
+        validators: [Cnab400HeaderLineStartValidator],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
-        validators: [Cnab400TrailerLineStartValidator]
-      }),
-      boleto: new CnabLineSchema({
+        validators: [Cnab400TrailerLineStartValidator],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
-        fields: [Cnab400BradescoBoletoNameField]
-      })
-    })
+        fields: [Cnab400BradescoBoletoNameField],
+      },
+    }),
   ]
 }
 
 export function indexCnabSchemas(
   schemas: CnabSchema[]
 ): Record<CnabBank, Record<CnabFormat, CnabSchema>> {
-  const keys = schemas.map(
-    (schema: CnabSchema): [CnabBank, CnabFormat] => [schema.bank, schema.fmt]
-  )
+  const keys = schemas.map((schema: CnabSchema): [CnabBank, CnabFormat] => [
+    schema.bank,
+    schema.fmt,
+  ])
 
   const counts: Record<string, number> = {}
   for (const [bank, fmt] of keys) {
@@ -64,9 +64,7 @@ export function indexCnabSchemas(
     counts[key] = (counts[key] ?? 0) + 1
   }
 
-  const duplicatedKey = Object.entries(counts).find(
-    ([, count]: [string, number]) => count > 1
-  )
+  const duplicatedKey = Object.entries(counts).find(([, count]: [string, number]) => count > 1)
 
   if (duplicatedKey != null) {
     const [key] = duplicatedKey

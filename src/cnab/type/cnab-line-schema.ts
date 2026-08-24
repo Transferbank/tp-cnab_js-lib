@@ -1,62 +1,61 @@
-import { CnabBank } from '@cnab/type/cnab-bank'
+﻿import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CnabLineValidator } from '@cnab/type/cnab-line-validator'
+import { CnabLineValidator, CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   Cnab240LineSizeValidator,
-  Cnab400LineSizeValidator
+  Cnab400LineSizeValidator,
 } from '@cnab/validators/cnab-line-size-validator'
-import { CnabLineSchemaNotInitializedException } from '@cnab/exception/cnab-exception'
-
-type CnabLineValidatorClass = new (rawLine: string, lineNumber: number) => CnabLineValidator
 
 interface CnabValidatableConstructor {
-  new (rawLine: string, lineNumber: number): CnabLineValidator | CnabField
+  new (params: { rawLine: string; lineNumber: number }): CnabLineValidator | CnabField
 }
 
 export class CnabLineSchema {
+  readonly bank: CnabBank
+  readonly fmt: CnabFormat
+  readonly boletoGroupRule: CnabBoletoGroupRule
   readonly fieldType: CnabFieldType
   readonly fields: CnabFieldClass[]
   readonly declaredValidators: CnabLineValidatorClass[]
 
-  bank: CnabBank | null = null
-  fmt: CnabFormat | null = null
-  boletoGroupRule: CnabBoletoGroupRule | null = null
   private cachedValidators?: CnabLineValidatorClass[]
 
-  constructor(config: {
+  private constructor(config: {
+    bank: CnabBank
+    fmt: CnabFormat
+    boletoGroupRule: CnabBoletoGroupRule
     fieldType: CnabFieldType
     fields: CnabFieldClass[]
     validators?: CnabLineValidatorClass[]
   }) {
+    this.bank = config.bank
+    this.fmt = config.fmt
+    this.boletoGroupRule = config.boletoGroupRule
     this.fieldType = config.fieldType
     this.fields = config.fields
     this.declaredValidators = config.validators ?? []
   }
 
-  init(
-    bank: CnabBank,
-    fmt: CnabFormat,
+  static create(config: {
+    bank: CnabBank
+    fmt: CnabFormat
     boletoGroupRule: CnabBoletoGroupRule
-  ): void {
-    this.bank = bank
-    this.fmt = fmt
-    this.boletoGroupRule = boletoGroupRule
-    delete this.cachedValidators // limpa o cache
+    fieldType: CnabFieldType
+    fields: CnabFieldClass[]
+    validators?: CnabLineValidatorClass[]
+  }): CnabLineSchema {
+    return new CnabLineSchema(config)
   }
 
   get validators(): CnabLineValidatorClass[] {
     if (this.cachedValidators == null) {
-      if (this.fmt == null) {
-        throw new CnabLineSchemaNotInitializedException()
-      }
-
       const lineSizeValidators: Record<CnabFormat, CnabLineValidatorClass> = {
         [CnabFormat.CNAB240]: Cnab240LineSizeValidator,
-        [CnabFormat.CNAB400]: Cnab400LineSizeValidator
+        [CnabFormat.CNAB400]: Cnab400LineSizeValidator,
       }
 
       this.cachedValidators = [lineSizeValidators[this.fmt], ...this.declaredValidators]
@@ -65,19 +64,13 @@ export class CnabLineSchema {
   }
 
   isBoletoGroupStart(rawLine: string): boolean {
-    if(this.boletoGroupRule == null) {
-      throw new CnabLineSchemaNotInitializedException()
-    }
     return this.boletoGroupRule.check(rawLine)
   }
 
-  *genLineGroups( rawLines: string[], firstLine: number): Generator<Array<[number, string]>> {
+  *genLineGroups(rawLines: string[], firstLine: number): Generator<Array<[number, string]>> {
     const numberedLines: Array<[number, string]> = Array.from(
       rawLines,
-      (line: string, index: number): [number, string] => [
-        firstLine + index,
-        line
-      ]
+      (line: string, index: number): [number, string] => [firstLine + index, line]
     )
 
     if (this.fieldType !== CnabFieldType.BOLETO) {
@@ -112,20 +105,23 @@ export class CnabLineSchema {
   ): CnabValidationResult {
     const result: CnabValidationResult = {
       isValid: true,
-      errors: []
+      errors: [],
     }
 
     const extraFieldsList = extraFields ?? []
     const validationTypes = [
       ...this.validators,
       ...this.fields,
-      ...extraFieldsList
+      ...extraFieldsList,
     ] as CnabValidatableConstructor[]
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const [lineNumber, rawLine] of group) {
         for (const validationType of validationTypes) {
-          const instance = new validationType(rawLine, lineNumber)
+          const instance = new validationType({
+            rawLine,
+            lineNumber,
+          })
 
           if (!instance.shouldValidate()) {
             continue
