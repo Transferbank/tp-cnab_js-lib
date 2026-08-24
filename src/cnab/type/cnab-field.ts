@@ -38,13 +38,13 @@ export abstract class CnabField {
 
   validate(): CnabValidationResult {
     const isOptional = (this.constructor as typeof CnabField).isOptional
-    if (isOptional && this.value === null) {
+    if (isOptional && this.value == null) {
       return { isValid: true, errors: [] }
     }
-    return this.validateInternal()
+    return this.performValidation()
   }
 
-  protected abstract validateInternal(): CnabValidationResult
+  protected abstract performValidation(): CnabValidationResult
   abstract parse(): string
 }
 
