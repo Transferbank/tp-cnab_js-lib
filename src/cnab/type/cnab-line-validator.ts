@@ -1,4 +1,4 @@
-import { CnabValidationResult } from './cnab-validation-result'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
 export abstract class CnabLineValidator {
   protected readonly rawLine: string

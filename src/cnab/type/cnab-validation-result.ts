@@ -1,4 +1,4 @@
-import { CnabValidationError } from './cnab-validation-error'
+import { CnabValidationError } from '@cnab/type/cnab-validation-error'
 
 export interface CnabValidationResult {
   isValid: boolean
