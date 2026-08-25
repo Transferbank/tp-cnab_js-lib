@@ -16,8 +16,8 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       { segment: 'Q', expectedShouldValidate: true },
       { segment: 'R', expectedShouldValidate: false },
       { segment: 'S', expectedShouldValidate: false }
-    ])('casos parametrizados', ({ segment, expectedShouldValidate }): void => {
-      it(`dado segmento ${segment} quando verificar shouldValidate então retorna ${expectedShouldValidate}`, (): void => {
+    ])('parameterized cases', ({ segment, expectedShouldValidate }): void => {
+      it(`given segment ${segment} when checking shouldValidate then returns ${expectedShouldValidate}`, (): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = lines.find(
@@ -42,8 +42,8 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
     })
   })
 
-  describe('parse e validate', (): void => {
-    it('dado linhas segmento Q com nome válido quando parsear e validar então aceita todas as linhas', (): void => {
+  describe('parse and validate', (): void => {
+    it('given segment Q lines with valid name when parsing and validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const segmentQLines = lines
@@ -76,8 +76,8 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
     })
   })
 
-  describe('validate com erro', (): void => {
-    it('dado linha segmento Q com nome em branco quando validar então retorna erro de campo', (): void => {
+  describe('validate with error', (): void => {
+    it('given segment Q line with blank name when validating then returns field error', (): void => {
       // Given
       const dummyLineNumber = 37
       const fieldRange = new Cnab240BradescoBoletoNameField({ 

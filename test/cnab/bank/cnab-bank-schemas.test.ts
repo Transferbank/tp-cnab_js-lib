@@ -8,7 +8,7 @@ import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import {CNAB_BANK_SCHEMAS, indexCnabSchemas} from '@cnab/bank/cnab-bank-schemas'
 
 describe('cnab-bank-schemas', (): void => {
-  it('dado schemas quando indexar então chaves vêm de cada schema', (): void => {
+  it('given schemas when indexing then keys come from each schema', (): void => {
     // Given
     const schemas = [
       genCnabSchemaStub({ bank: CnabBank.BRADESCO, format: CnabFormat.CNAB240 }),
@@ -34,7 +34,7 @@ describe('cnab-bank-schemas', (): void => {
 
   })
 
-  it('dado mesmo banco e formato duas vezes quando indexar então lança exception', (): void => {
+  it('given same bank and format twice when indexing then throws exception', (): void => {
     // Given
     const schemas = [
       genCnabSchemaStub({ format: CnabFormat.CNAB400 }),
@@ -47,7 +47,7 @@ describe('cnab-bank-schemas', (): void => {
     )
   })
 
-  it('dado registro de schemas quando ler campos declarados então cada campo corresponde ao seu tipo de linha', (): void => {
+  it('given schema registry when reading declared fields then each field matches its line type', (): void => {
     // Given
     const declaredFields: Array<[string, typeof CnabField]> = []
     for (const schemasByFormat of Object.values(CNAB_BANK_SCHEMAS)) {

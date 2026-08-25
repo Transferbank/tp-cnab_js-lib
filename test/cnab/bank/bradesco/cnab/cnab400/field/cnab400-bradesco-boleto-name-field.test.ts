@@ -16,8 +16,8 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       { recordType: '1', expectedShouldValidate: true },
       { recordType: '2', expectedShouldValidate: false },
       { recordType: '9', expectedShouldValidate: false }
-    ])('casos parametrizados', ({ recordType, expectedShouldValidate }): void => {
-      it(`dado tipo de registro ${recordType} quando verificar shouldValidate então retorna ${expectedShouldValidate}`, (): void => {
+    ])('parameterized cases', ({ recordType, expectedShouldValidate }): void => {
+      it(`given record type ${recordType} when checking shouldValidate then returns ${expectedShouldValidate}`, (): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = lines.find((line: string) => line.startsWith(recordType))
@@ -41,7 +41,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   })
 
   describe('validate', (): void => {
-    it('dado linhas de boleto com nome válido quando validar então aceita todas as linhas', (): void => {
+    it('given boleto lines with valid name when validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const boletoLines = lines
@@ -71,7 +71,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   })
 
   describe('parse', (): void => {
-    it('dado linha de boleto de referência quando parsear nome então retorna nome válido', (): void => {
+    it('given reference boleto line when parsing name then returns valid name', (): void => {
       // Given
       const dummyLineNumber = 37
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -99,8 +99,8 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
     })
   })
 
-  describe('validate com erro', (): void => {
-    it('dado linha de boleto com nome em branco quando validar então retorna erro de campo', (): void => {
+  describe('validate with error', (): void => {
+    it('given boleto line with blank name when validating then returns field error', (): void => {
       // Given
       const dummyLineNumber = 37
       const fieldRange = new Cnab400BradescoBoletoNameField({

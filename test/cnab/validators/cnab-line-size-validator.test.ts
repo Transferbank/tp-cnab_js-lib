@@ -34,8 +34,8 @@ describe('CnabLineSizeValidator', (): void => {
   testCases.forEach(({ validatorType, examplePath, expectedSize }): void => {
     const validatorName = validatorType.name
 
-    describe(`${validatorName} - Linhas Válidas`, (): void => {
-      it('dado linhas de documento válido quando validar tamanho então aceita todas as linhas', (): void => {
+    describe(`${validatorName} - Valid Lines`, (): void => {
+      it('given valid document lines when validating size then accepts all lines', (): void => {
         // Given
         const rawLines = readExampleLines(path.join(resPath(), examplePath))
         expect(rawLines.length).toBeGreaterThan(0)
@@ -55,8 +55,8 @@ describe('CnabLineSizeValidator', (): void => {
       })
     })
 
-    describe(`${validatorName} - Linhas Inválidas`, (): void => {
-      it('dado linha com tamanho menor quando validar então retorna erro', (): void => {
+    describe(`${validatorName} - Invalid Lines`, (): void => {
+      it('given line with smaller size when validating then returns error', (): void => {
         // Given
         const rawLines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = rawLines[0]
@@ -81,7 +81,7 @@ describe('CnabLineSizeValidator', (): void => {
         expect(result.errors[0].lineNumber).toBe(dummyLineNumber)
       })
 
-      it('dado linha com tamanho maior quando validar então retorna erro', (): void => {
+      it('given line with larger size when validating then returns error', (): void => {
         // Given
         const rawLines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = rawLines[0]

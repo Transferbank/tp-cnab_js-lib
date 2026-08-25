@@ -17,7 +17,7 @@ describe('cnab-file', (): void => {
     ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 16],
     ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76]
   ])(
-    'dado arquivo de documento quando abrir então detecta banco, formato e linhas',
+    'given document file when opening then detects bank, format and lines',
     async (
       examplePath: string,
       expectedBank: string,
@@ -43,7 +43,7 @@ describe('cnab-file', (): void => {
     ['bradesco/cnab240/bradesco_cnab_240.txt'],
     ['bradesco/cnab400/bradesco_cnab_400.txt']
   ])(
-    'dado arquivo de documento válido quando validar então não reporta erros',
+    'given valid document file when validating then reports no errors',
     async (examplePath: string): Promise<void> => {
       // Given
       const fullPath = path.join(RES_PATH, examplePath)
