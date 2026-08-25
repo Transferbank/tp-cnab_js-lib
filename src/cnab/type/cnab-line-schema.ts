@@ -11,7 +11,7 @@ import {
 } from '@cnab/validators/cnab-line-size-validator'
 
 interface CnabValidatableConstructor {
-  new (params: { rawLine: string; lineNumber: number }): CnabLineValidator | CnabField
+  new (rawLine: string, lineNumber: number): CnabLineValidator | CnabField
 }
 
 export class CnabLineSchema {
@@ -118,10 +118,7 @@ export class CnabLineSchema {
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const [lineNumber, rawLine] of group) {
         for (const validationType of validationTypes) {
-          const instance = new validationType({
-            rawLine,
-            lineNumber,
-          })
+          const instance = new validationType(rawLine, lineNumber)
 
           if (!instance.shouldValidate()) {
             continue
