@@ -18,20 +18,19 @@ export abstract class CnabField {
   }
 
   get value(): unknown | null {
-    if (this.cachedValue === undefined) {
+    if (this.cachedValue !== undefined) {
+      return this.cachedValue
+    }
+
       try {
         const parsed = this.parse()
         this.cachedValue = parsed === '' ? null : parsed
       } catch (error) {
         const isOptional = (this.constructor as typeof CnabField).isOptional
-        if (isOptional) {
+        if(!isOptional) throw error
           this.cachedValue = null
-        } else {
-          throw error
-        }
       }
-    }
-    return this.cachedValue
+    
   }
 
   abstract shouldValidate(): boolean
