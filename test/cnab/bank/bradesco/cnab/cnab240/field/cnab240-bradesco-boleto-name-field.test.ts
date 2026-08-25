@@ -50,7 +50,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
           return field.shouldValidate()
         })
 
-      const fields = segmentQLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
+      const fields = segmentQLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) =>
         new Cnab240BradescoBoletoNameField(rawLine, lineNumber)
       )
 
@@ -60,7 +60,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       expect(segmentQLines.length).toBeGreaterThan(0)
       expect(fields[0].parse()).toBe('JOAO EXEMPLO SILVA')
       expect(fields[0].value).toBe('JOAO EXEMPLO SILVA')
-      
+
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
       })
@@ -72,7 +72,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       // Given
       const dummyLineNumber = 37
       const fieldRange = new Cnab240BradescoBoletoNameField('', 0).range
-      
+
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = lines.find(
         (line: string) => {
@@ -86,7 +86,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       }
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-      
+
       const expectedError = new CnabFieldMinLengthError({
         lineNumber: dummyLineNumber,
         fieldName: 'nome do sacado',

@@ -14,6 +14,6 @@ export function replaceLineRange(
   const start = fieldRange[0] - 1
   const stop = fieldRange[1]
   const fieldSize = stop - start
-  const paddedValue = value.padEnd(fieldSize, ' ').substring(0, fieldSize)  
+  const paddedValue = value.padEnd(fieldSize, ' ').substring(0, fieldSize)
   return rawLine.substring(0, start) + paddedValue + rawLine.substring(stop)
 }
