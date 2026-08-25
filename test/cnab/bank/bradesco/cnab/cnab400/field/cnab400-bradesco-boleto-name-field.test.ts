@@ -26,10 +26,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
           throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
-        const field = new Cnab400BradescoBoletoNameField({
-          rawLine,
-          lineNumber: 1
-        })
+        const field = new Cnab400BradescoBoletoNameField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -47,19 +44,13 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const boletoLines = lines
         .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
         .filter(({ rawLine }: { rawLine: string }) => {
-          const field = new Cnab400BradescoBoletoNameField({
-            rawLine,
-            lineNumber: 1
-          })
+          const field = new Cnab400BradescoBoletoNameField(rawLine, 1)
           return field.shouldValidate()
         })
 
       // When
       const results = boletoLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) =>
-        new Cnab400BradescoBoletoNameField({
-          rawLine,
-          lineNumber
-        }).validate()
+        new Cnab400BradescoBoletoNameField(rawLine, lineNumber).validate()
       )
 
       // Then
@@ -76,10 +67,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const dummyLineNumber = 37
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = lines.find((line: string) => {
-        const field = new Cnab400BradescoBoletoNameField({
-          rawLine: line,
-          lineNumber: 1
-        })
+        const field = new Cnab400BradescoBoletoNameField(line, 1)
         return field.shouldValidate()
       })
 
@@ -88,10 +76,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       }
 
       // When
-      const field = new Cnab400BradescoBoletoNameField({
-        rawLine,
-        lineNumber: dummyLineNumber
-      })
+      const field = new Cnab400BradescoBoletoNameField(rawLine, dummyLineNumber)
 
       // Then
       expect(field.parse()).toBe('COMERCIAL ALFA LTDA')
@@ -103,17 +88,11 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
     it('given boleto line with blank name when validating then returns field error', (): void => {
       // Given
       const dummyLineNumber = 37
-      const fieldRange = new Cnab400BradescoBoletoNameField({
-        rawLine: '',
-        lineNumber: 0
-      }).range
+      const fieldRange = new Cnab400BradescoBoletoNameField('', 0).range
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = lines.find((line: string) => {
-        const field = new Cnab400BradescoBoletoNameField({
-          rawLine: line,
-          lineNumber: 1
-        })
+        const field = new Cnab400BradescoBoletoNameField(line, 1)
         return field.shouldValidate()
       })
 
@@ -131,10 +110,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       })
 
       // When
-      const field = new Cnab400BradescoBoletoNameField({
-        rawLine: invalidLine,
-        lineNumber: dummyLineNumber
-      })
+      const field = new Cnab400BradescoBoletoNameField(invalidLine, dummyLineNumber)
       const result = field.validate()
 
       // Then

@@ -9,7 +9,7 @@ import {
 } from '@cnab/validators/cnab-line-size-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 
-type ValidatorConstructor = new (params: { rawLine: string; lineNumber: number }) => CnabLineSizeValidator
+type ValidatorConstructor = new (rawLine: string, lineNumber: number) => CnabLineSizeValidator
 
 interface TestCase {
   validatorType: ValidatorConstructor
@@ -42,10 +42,7 @@ describe('CnabLineSizeValidator', (): void => {
 
         // When
         const results = rawLines.map((rawLine: string, index: number) => {
-          const validator = new validatorType({
-            rawLine,
-            lineNumber: index
-          })
+          const validator = new validatorType(rawLine, index)
           return validator.validate()
         })
 
@@ -65,10 +62,7 @@ describe('CnabLineSizeValidator', (): void => {
         const dummyLineNumber = 37
 
         // When
-        const validator = new validatorType({
-          rawLine: invalidLine,
-          lineNumber: dummyLineNumber
-        })
+        const validator = new validatorType(invalidLine, dummyLineNumber)
         const result = validator.validate()
 
         // Then
@@ -90,10 +84,7 @@ describe('CnabLineSizeValidator', (): void => {
         const dummyLineNumber = 42
 
         // When
-        const validator = new validatorType({
-          rawLine: invalidLine,
-          lineNumber: dummyLineNumber
-        })
+        const validator = new validatorType(invalidLine, dummyLineNumber)
         const result = validator.validate()
 
         // Then

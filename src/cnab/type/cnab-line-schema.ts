@@ -9,12 +9,12 @@ import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator
 } from '@cnab/validators/cnab-line-size-validator'
-import { CnabLineSchemaNotInitializedException } from '../exception/cnab-exception'
+import { CnabLineSchemaNotInitializedException } from '@cnab/exception/cnab-exception'
 
-type CnabLineValidatorClass = new (params: {rawLine: string, lineNumber: number}) => CnabLineValidator
+type CnabLineValidatorClass = new (rawLine: string, lineNumber: number) => CnabLineValidator
 
 interface CnabValidatableConstructor {
-  new (params: { rawLine: string; lineNumber: number }): CnabLineValidator | CnabField
+  new (rawLine: string, lineNumber: number): CnabLineValidator | CnabField
 }
 
 export class CnabLineSchema {
@@ -50,7 +50,7 @@ export class CnabLineSchema {
 
   get validators(): CnabLineValidatorClass[] {
     if (this.cachedValidators == null) {
-      if(this.fmt == null) {
+      if (this.fmt == null) {
         throw new CnabLineSchemaNotInitializedException()
       }
 
@@ -59,12 +59,8 @@ export class CnabLineSchema {
         [CnabFormat.CNAB400]: Cnab400LineSizeValidator
       }
 
-      this.cachedValidators = [
-        lineSizeValidators[this.fmt],
-        ...this.declaredValidators
-      ]
-      this.cachedValidators = [lineSizeValidators[this.fmt], ...this.declaredValidators] 
-   }
+      this.cachedValidators = [lineSizeValidators[this.fmt], ...this.declaredValidators]
+    }
     return this.cachedValidators
   }
 
@@ -129,10 +125,7 @@ export class CnabLineSchema {
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const [lineNumber, rawLine] of group) {
         for (const validationType of validationTypes) {
-          const instance = new validationType({
-            rawLine,
-            lineNumber
-          })
+          const instance = new validationType(rawLine, lineNumber)
 
           if (!instance.shouldValidate()) {
             continue

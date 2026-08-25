@@ -28,10 +28,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
           throw new Error(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BradescoBoletoNameField({
-          rawLine,
-          lineNumber: 1
-        })
+        const field = new Cnab240BradescoBoletoNameField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -49,18 +46,12 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       const segmentQLines = lines
         .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
         .filter(({ rawLine }: { rawLine: string }) => {
-          const field = new Cnab240BradescoBoletoNameField({
-            rawLine,
-            lineNumber: 1
-          })
+          const field = new Cnab240BradescoBoletoNameField(rawLine, 1)
           return field.shouldValidate()
         })
 
       const fields = segmentQLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
-        new Cnab240BradescoBoletoNameField({
-          rawLine,
-          lineNumber
-        })
+        new Cnab240BradescoBoletoNameField(rawLine, lineNumber)
       )
 
       const results = fields.map((field: Cnab240BradescoBoletoNameField) => field.validate())
@@ -80,18 +71,12 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
     it('given segment Q line with blank name when validating then returns field error', (): void => {
       // Given
       const dummyLineNumber = 37
-      const fieldRange = new Cnab240BradescoBoletoNameField({ 
-        rawLine: '', 
-        lineNumber: 0 
-      }).range
+      const fieldRange = new Cnab240BradescoBoletoNameField('', 0).range
       
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = lines.find(
         (line: string) => {
-          const field = new Cnab240BradescoBoletoNameField({
-            rawLine: line,
-            lineNumber: 1
-          })
+          const field = new Cnab240BradescoBoletoNameField(line, 1)
           return field.shouldValidate()
         }
       )
@@ -110,10 +95,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       })
 
       // When
-      const field = new Cnab240BradescoBoletoNameField({
-        rawLine: invalidLine,
-        lineNumber: dummyLineNumber
-      })
+      const field = new Cnab240BradescoBoletoNameField(invalidLine, dummyLineNumber)
       const result = field.validate()
 
       // Then

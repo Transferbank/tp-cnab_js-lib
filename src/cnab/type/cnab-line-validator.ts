@@ -4,9 +4,9 @@ export abstract class CnabLineValidator {
   protected readonly rawLine: string
   protected readonly lineNumber: number
 
-  constructor(config: { rawLine: string; lineNumber: number }) {
-    this.rawLine = config.rawLine
-    this.lineNumber = config.lineNumber
+  constructor(rawLine: string, lineNumber: number) {
+    this.rawLine = rawLine
+    this.lineNumber = lineNumber
   }
 
   abstract shouldValidate(): boolean

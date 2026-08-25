@@ -5,16 +5,15 @@ export abstract class CnabField {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
   abstract readonly fieldName: string
-  // O range começa a partir de start + 1, seguindo as documentações dos arquivos cnab
   abstract readonly range: [number, number]
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
   private cachedValue?: unknown | null
 
-  constructor(config: { rawLine: string; lineNumber: number }) {
-    this.rawLine = config.rawLine
-    this.lineNumber = config.lineNumber
+  constructor(rawLine: string, lineNumber: number) {
+    this.rawLine = rawLine
+    this.lineNumber = lineNumber
   }
 
   get value(): unknown | null {
@@ -22,15 +21,16 @@ export abstract class CnabField {
       return this.cachedValue
     }
 
-      try {
-        const parsed = this.parse()
-        this.cachedValue = parsed === '' ? null : parsed
-      } catch (error) {
-        const isOptional = (this.constructor as typeof CnabField).isOptional
-        if(!isOptional) throw error
-          this.cachedValue = null
-      }
-    
+    try {
+      const parsed = this.parse()
+      this.cachedValue = parsed === '' ? null : parsed
+    } catch (error) {
+      const isOptional = (this.constructor as typeof CnabField).isOptional
+      if (!isOptional) throw error
+      this.cachedValue = null
+    }
+
+    return this.cachedValue
   }
 
   abstract shouldValidate(): boolean

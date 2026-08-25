@@ -11,8 +11,8 @@ describe('cnab-bank-schemas', (): void => {
   it('given schemas when indexing then keys come from each schema', (): void => {
     // Given
     const schemas = [
-      genCnabSchemaStub({ bank: CnabBank.BRADESCO, format: CnabFormat.CNAB240 }),
-      genCnabSchemaStub({ bank: CnabBank.BRADESCO, format: CnabFormat.CNAB400 })
+      genCnabSchemaStub(CnabBank.BRADESCO, CnabFormat.CNAB240),
+      genCnabSchemaStub(CnabBank.BRADESCO, CnabFormat.CNAB400)
     ]
     const expectedKeys = schemas.map((schema) => [schema.bank, schema.fmt])
 
@@ -37,8 +37,8 @@ describe('cnab-bank-schemas', (): void => {
   it('given same bank and format twice when indexing then throws exception', (): void => {
     // Given
     const schemas = [
-      genCnabSchemaStub({ format: CnabFormat.CNAB400 }),
-      genCnabSchemaStub({ format: CnabFormat.CNAB400 })
+      genCnabSchemaStub(CnabBank.BRADESCO, CnabFormat.CNAB400),
+      genCnabSchemaStub(CnabBank.BRADESCO, CnabFormat.CNAB400)
     ]
 
     // Then
