@@ -9,6 +9,7 @@ import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator
 } from '@cnab/validators/cnab-line-size-validator'
+import { CnabLineSchemaNotInitializedException } from '../exception/cnab-exception'
 
 type CnabLineValidatorClass = new (params: {rawLine: string, lineNumber: number}) => CnabLineValidator
 
@@ -49,21 +50,29 @@ export class CnabLineSchema {
 
   get validators(): CnabLineValidatorClass[] {
     if (this.cachedValidators == null) {
+      if(this.fmt == null) {
+        throw new CnabLineSchemaNotInitializedException()
+      }
+
       const lineSizeValidators: Record<CnabFormat, CnabLineValidatorClass> = {
         [CnabFormat.CNAB240]: Cnab240LineSizeValidator,
         [CnabFormat.CNAB400]: Cnab400LineSizeValidator
       }
 
       this.cachedValidators = [
-        lineSizeValidators[this.fmt!],
+        lineSizeValidators[this.fmt],
         ...this.declaredValidators
       ]
-    }
+      this.cachedValidators = [lineSizeValidators[this.fmt], ...this.declaredValidators] 
+   }
     return this.cachedValidators
   }
 
   isBoletoGroupStart(rawLine: string): boolean {
-    return this.boletoGroupRule!.check(rawLine)
+    if(this.boletoGroupRule == null) {
+      throw new CnabLineSchemaNotInitializedException()
+    }
+    return this.boletoGroupRule.check(rawLine)
   }
 
   *genLineGroups( rawLines: string[], firstLine: number): Generator<Array<[number, string]>> {
