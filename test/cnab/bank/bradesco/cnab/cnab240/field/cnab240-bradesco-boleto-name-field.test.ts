@@ -81,7 +81,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
         }
       )
 
-      if (!rawLine) {
+      if (rawLine == null) {
         throw new Error('Linha segmento Q não encontrada')
       }
 
