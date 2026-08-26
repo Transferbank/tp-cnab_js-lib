@@ -24,7 +24,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
           (line: string) => line[7] === '3' && line[13] === segment
         )
 
-        if (!rawLine) {
+        if (rawLine == null) {
           throw new Error(`Linha com segmento ${segment} não encontrada`)
         }
 

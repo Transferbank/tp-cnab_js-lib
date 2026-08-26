@@ -96,7 +96,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         return field.shouldValidate()
       })
 
-      if (!rawLine) {
+      if (rawLine == null) {
         throw new Error('Linha de boleto não encontrada')
       }
 
