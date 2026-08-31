@@ -15,7 +15,7 @@ export class Cnab240BradescoBoletoDataEmissaoField extends CnabField<Date> {
     return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'P'
   }
 
-  protected validateInternal(): CnabValidationResult {
+  protected performValidation(): CnabValidationResult {
     const isValid = this.value !== null && !isNaN(this.value.getTime())
     const errors = []
 
