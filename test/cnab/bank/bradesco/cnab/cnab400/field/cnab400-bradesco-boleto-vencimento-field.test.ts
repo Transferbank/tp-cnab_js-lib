@@ -10,7 +10,7 @@ import {
   getFieldRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldInvalidDateError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldInvalidDateError, CnabFieldEmptyValueError, CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BradescoBoletoVencimentoField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-vencimento-field'
 
@@ -67,7 +67,7 @@ describe('Cnab400BradescoBoletoVencimentoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    it('given detail line with blank due date when validating then returns field error', (): void => {
+    it('given detail line with blank due date when validating then returns null value and field error', (): void => {
       // Given
       const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoVencimentoField)
@@ -81,13 +81,26 @@ describe('Cnab400BradescoBoletoVencimentoField', (): void => {
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo data de vencimento inválido: deve ser data no formato DDMMAA',
+        lineNumber: dummyLineNumber,
+        fieldName: 'data de vencimento',
+        range: fieldRange
+      })
+
       // When
       const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const result = field.validate()
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
+      expect(field.value).toBeNull()
       expect(() => field.parse()).toThrow(CnabFieldEmptyValueError)
-      expect(field.value).toBe(null)
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given detail line with invalid date when validating then throws error', (): void => {
