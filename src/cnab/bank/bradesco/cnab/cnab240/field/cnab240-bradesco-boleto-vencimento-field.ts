@@ -6,6 +6,7 @@ import {
   CnabFieldInvalidDateError
 } from '@cnab/type/cnab-validation-error'
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BradescoBoletoVencimentoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -13,7 +14,7 @@ export class Cnab240BradescoBoletoVencimentoField extends CnabField<Date> {
   readonly range: [number, number] = [78, 85]
 
   shouldValidate(): boolean {
-    return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'P'
+    return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
   }
 
   protected performValidation(): CnabValidationResult {
