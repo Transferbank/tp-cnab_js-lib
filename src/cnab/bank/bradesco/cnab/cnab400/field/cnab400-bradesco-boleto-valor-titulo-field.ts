@@ -7,7 +7,7 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 export class Cnab400BradescoBoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor do título'
-  readonly range: [number, number] = [126, 138]
+  readonly range: [number, number] = [127, 139]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine)

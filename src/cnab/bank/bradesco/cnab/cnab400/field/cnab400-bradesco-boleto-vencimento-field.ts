@@ -8,7 +8,7 @@ import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cna
 export class Cnab400BradescoBoletoVencimentoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'data de vencimento'
-  readonly range: [number, number] = [110, 115]
+  readonly range: [number, number] = [121, 126]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
