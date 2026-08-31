@@ -66,7 +66,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    it('given detail line with blank document when validating then throws empty value error', (): void => {
+    it('given detail line with blank document when validating then returns null value and field error', (): void => {
       // Given
       const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoSacadoDocumentoField)
@@ -80,12 +80,25 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
+        lineNumber: dummyLineNumber,
+        fieldName: 'documento do sacado',
+        range: fieldRange
+      })
+
       // When
       const field = new Cnab400BradescoBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
+      const result = field.validate()
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(field.value).toBe(null)
+      expect(field.value).toBeNull()
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given detail line with invalid document when validating then returns field error', (): void => {

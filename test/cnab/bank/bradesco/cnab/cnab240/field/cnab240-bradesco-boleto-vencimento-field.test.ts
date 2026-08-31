@@ -10,7 +10,7 @@ import {
   getFieldRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldInvalidDateError, CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BradescoBoletoVencimentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-vencimento-field'
 
@@ -66,7 +66,7 @@ describe('Cnab240BradescoBoletoVencimentoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    it('given segment P line with blank date when validating then throws error and returns null value', (): void => {
+    it('given segment P line with blank date when validating then returns null value and field error', (): void => {
       // Given
       const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240BradescoBoletoVencimentoField)
@@ -80,10 +80,25 @@ describe('Cnab240BradescoBoletoVencimentoField', (): void => {
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
-      // When / Then
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo data de vencimento inválido: deve ser data no formato DDMMAAAA',
+        lineNumber: dummyLineNumber,
+        fieldName: 'data de vencimento',
+        range: fieldRange
+      })
+
+      // When
       const field = new Cnab240BradescoBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const result = field.validate()
+
+      // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(field.value).toBe(null)
+      expect(field.value).toBeNull()
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given segment P line with invalid date when validating then throws error', (): void => {
