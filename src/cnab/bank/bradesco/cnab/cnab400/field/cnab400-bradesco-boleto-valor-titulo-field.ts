@@ -2,7 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 
 export class Cnab400BradescoBoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -40,7 +40,7 @@ export class Cnab400BradescoBoletoValorTituloField extends CnabField<number> {
     const valueInt = parseInt(valueStr, 10)
     
     if (isNaN(valueInt)) {
-      return 0
+      throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
     }
     
     return valueInt / 100

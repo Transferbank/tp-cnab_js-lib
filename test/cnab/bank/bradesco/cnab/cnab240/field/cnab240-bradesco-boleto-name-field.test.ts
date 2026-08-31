@@ -1,6 +1,14 @@
 import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
-import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
+import {
+  readExampleLines,
+  replaceLineRange,
+  resPath,
+  findFirstCnab240SegmentLine,
+  filterValidatableLines,
+  createFieldsFromLines,
+  getFieldRange
+} from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
@@ -19,9 +27,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       it(`given segment ${segment} when checking shouldValidate then returns ${expectedShouldValidate}`, (): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
-        const rawLine = lines.find(
-          (line: string) => line[7] === '3' && line[13] === segment
-        )
+        const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
         if (rawLine == null) {
           throw new Error(`Linha com segmento ${segment} não encontrada`)
@@ -42,21 +48,15 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
     it('given segment Q lines with valid name when reading value and validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const segmentQLines = lines
-        .map((line: string, lineNumber: number) => ({ rawLine: line, lineNumber }))
-        .filter(({ rawLine }: { rawLine: string }) => {
-          const field = new Cnab240BradescoBoletoNameField(rawLine, 1)
-          return field.shouldValidate()
-        })
-
-      const fields = segmentQLines.map(({ rawLine, lineNumber }: { rawLine: string; lineNumber: number }) => 
-        new Cnab240BradescoBoletoNameField(rawLine, lineNumber)
+      const fields = createFieldsFromLines(
+        filterValidatableLines(lines, Cnab240BradescoBoletoNameField),
+        Cnab240BradescoBoletoNameField
       )
 
       const results = fields.map((field: Cnab240BradescoBoletoNameField) => field.validate())
 
       // Then
-      expect(segmentQLines.length).toBeGreaterThan(0)
+      expect(fields.length).toBeGreaterThan(0)
       expect(fields[0].value).toBe('JOAO EXEMPLO SILVA')
       
       results.forEach((result: CnabValidationResult) => {
@@ -69,15 +69,10 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
     it('given segment Q line with blank name when validating then returns field error', (): void => {
       // Given
       const dummyLineNumber = 37
-      const fieldRange = new Cnab240BradescoBoletoNameField('', 0).range
-      
+      const fieldRange = getFieldRange(Cnab240BradescoBoletoNameField)
+
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = lines.find(
-        (line: string) => {
-          const field = new Cnab240BradescoBoletoNameField(line, 1)
-          return field.shouldValidate()
-        }
-      )
+      const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
       if (!rawLine) {
         throw new Error('Linha segmento Q não encontrada')
