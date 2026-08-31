@@ -1,6 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import { CnabField } from '@cnab/type/cnab-field'
 
+type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
+  new (rawLine: string, lineNumber: number) => T
 
 export function resPath(): string {
   return path.join(process.cwd(), 'res')
@@ -21,4 +24,30 @@ export function replaceLineRange(
   const fieldSize = stop - start
   const paddedValue = value.padEnd(fieldSize, ' ').substring(0, fieldSize)
   return rawLine.substring(0, start) + paddedValue + rawLine.substring(stop)
+}
+
+export function findFirstCnab240SegmentLine(lines: string[], segment: string): string | undefined {
+  return lines.find(line => line.length >= 14 && line[13] === segment)
+}
+
+export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
+  return lines.find(line => line.length >= 1 && line[0] === recordType)
+}
+
+export function filterValidatableLines<T extends CnabField<unknown>>(
+  lines: string[],
+  FieldClass: CnabFieldConstructor<T>
+): string[] {
+  return lines.filter(line => new FieldClass(line, 1).shouldValidate())
+}
+
+export function createFieldsFromLines<T extends CnabField<unknown>>(
+  lines: string[],
+  FieldClass: CnabFieldConstructor<T>
+): T[] {
+  return lines.map((line, index) => new FieldClass(line, index + 1))
+}
+
+export function getFieldRange(FieldClass: CnabFieldConstructor): [number, number] {
+  return new FieldClass(''.padEnd(400, ' '), 1).range
 }
