@@ -10,7 +10,7 @@ import {
   getFieldRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldInvalidNumberError, CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BradescoBoletoValorTituloField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-valor-titulo-field'
 
@@ -104,6 +104,40 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const field = new Cnab240BradescoBoletoValorTituloField(invalidLine, dummyLineNumber)
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
+    })
+
+    it('given segment P line with zero value when validating then returns field error', (): void => {
+      // Given
+      const dummyLineNumber = 37
+      const fieldRange = getFieldRange(Cnab240BradescoBoletoValorTituloField)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab240SegmentLine(lines, 'P')
+
+      if (rawLine == null) {
+        throw new Error('Linha segmento P não encontrada')
+      }
+
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
+
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo valor do título inválido: deve ser maior que zero',
+        lineNumber: dummyLineNumber,
+        fieldName: 'valor do título',
+        range: fieldRange
+      })
+
+      // When
+      const field = new Cnab240BradescoBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const result = field.validate()
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
   })
 })
