@@ -52,12 +52,12 @@ export abstract class CnabField<T = string> {
     if (isOptional && this.value === null) {
       return { isValid: true, errors: [] }
     }
-    return this.validateInternal()
+    return this.performValidation()
   }
 
   abstract shouldValidate(): boolean
   protected abstract parseValue(rawValue: string): T
-  protected abstract validateInternal(): CnabValidationResult
+  protected abstract performValidation(): CnabValidationResult
 
   parse(): T {
     const rawValue = this.extractRawValue()
