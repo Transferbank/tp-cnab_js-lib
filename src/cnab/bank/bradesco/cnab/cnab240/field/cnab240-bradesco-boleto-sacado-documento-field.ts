@@ -3,6 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { validateDocument } from '@cnab/utils/document-parser'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BradescoBoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -10,7 +11,7 @@ export class Cnab240BradescoBoletoSacadoDocumentoField extends CnabField<string>
   readonly range: [number, number] = [19, 33]
 
   shouldValidate(): boolean {
-    return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'Q'
+    return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
   }
 
   protected performValidation(): CnabValidationResult {

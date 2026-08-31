@@ -5,6 +5,7 @@ import {
   CnabGenericFieldError,
   CnabFieldInvalidNumberError
 } from '@cnab/type/cnab-validation-error'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -12,7 +13,7 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   readonly range: [number, number] = [86, 100]
 
   shouldValidate(): boolean {
-    return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'P'
+    return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
   }
 
   protected performValidation(): CnabValidationResult {
