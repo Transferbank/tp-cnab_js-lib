@@ -1,6 +1,10 @@
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
+import {
+  CnabFieldEmptyValueError,
+  CnabFieldParseError,
+  CnabGenericFieldError
+} from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabField<T = string> {
   static readonly fieldType: CnabFieldType
@@ -49,7 +53,28 @@ export abstract class CnabField<T = string> {
 
   validate(): CnabValidationResult {
     const isOptional = (this.constructor as typeof CnabField).isOptional
-    if (isOptional && this.value === null) {
+
+    let value: T | null
+    try {
+      value = this.value
+    } catch (error) {
+      if (error instanceof CnabFieldParseError) {
+        return {
+          isValid: false,
+          errors: [
+            new CnabGenericFieldError({
+              message: `Campo ${this.fieldName} com formato inválido: ${error.rawValue}`,
+              lineNumber: this.lineNumber,
+              fieldName: this.fieldName,
+              range: this.range
+            })
+          ]
+        }
+      }
+      throw error
+    }
+
+    if (isOptional && value === null) {
       return { isValid: true, errors: [] }
     }
     return this.performValidation()
