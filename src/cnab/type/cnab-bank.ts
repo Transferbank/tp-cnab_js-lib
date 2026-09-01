@@ -11,6 +11,7 @@ export namespace CnabBank {
   export function fromCode(code: string): CnabBank | null {
     switch (code) {
       case '237': return CnabBank.BRADESCO
+      case '341': return CnabBank.ITAU
       default: return null
     }
   }
