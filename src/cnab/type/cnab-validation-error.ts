@@ -118,6 +118,19 @@ export class CnabGenericFieldError extends CnabFieldValidationError {
   }
 }
 
+
+export abstract class CnabFieldParseError extends Error {
+  readonly fieldName: string
+  readonly rawValue: string
+
+  constructor(message: string, fieldName: string, rawValue: string) {
+    super(message)
+    this.name = this.constructor.name
+    this.fieldName = fieldName
+    this.rawValue = rawValue
+  }
+}
+
 export class CnabFieldEmptyValueError extends Error {
   constructor(fieldName: string) {
     super(`Não é possível parsear valor vazio para o campo ${fieldName}`)
@@ -125,16 +138,14 @@ export class CnabFieldEmptyValueError extends Error {
   }
 }
 
-export class CnabFieldInvalidNumberError extends Error {
+export class CnabFieldInvalidNumberError extends CnabFieldParseError {
   constructor(fieldName: string, rawValue: string) {
-    super(`Valor numérico inválido no campo ${fieldName}: ${rawValue}`)
-    this.name = 'CnabFieldInvalidNumberError'
+    super(`Valor numérico inválido no campo ${fieldName}: ${rawValue}`, fieldName, rawValue)
   }
 }
 
-export class CnabFieldInvalidDateError extends Error {
+export class CnabFieldInvalidDateError extends CnabFieldParseError {
   constructor(fieldName: string, rawValue: string) {
-    super(`Data inválida no campo ${fieldName}: ${rawValue}`)
-    this.name = 'CnabFieldInvalidDateError'
+    super(`Data inválida no campo ${fieldName}: ${rawValue}`, fieldName, rawValue)
   }
 }
