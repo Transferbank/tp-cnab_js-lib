@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
-import { Cnab240BancoDoBrasilBoletoNameField } from '@cnab/bank/banco do brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-name-field'
+import { Cnab240BancoDoBrasilBoletoNameField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-name-field'
 import { readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
