@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 export enum CnabBank {
   ITAU = 'itau',
+  CAIXA = 'caixa',
   BRADESCO = 'bradesco',
   SANTANDER = 'santander',
   BANCODOBRASIL = 'bancodobrasil'
@@ -13,6 +14,7 @@ export namespace CnabBank {
   export function fromCode(code: string): CnabBank | null {
     switch (code) {
       case '341': return CnabBank.ITAU
+      case '104': return CnabBank.CAIXA
       case '237': return CnabBank.BRADESCO
       case '033': return CnabBank.SANTANDER
       case '001': return CnabBank.BANCODOBRASIL
