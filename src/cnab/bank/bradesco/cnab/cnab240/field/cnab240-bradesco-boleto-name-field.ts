@@ -3,13 +3,13 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-export class Cnab400BradescoBoletoNameField extends CnabField {
+export class Cnab240BradescoBoletoNameField extends CnabField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [235, 274]
+  readonly range: [number, number] = [34, 73]
 
   shouldValidate(): boolean {
-    return this.rawLine.startsWith('1')
+    return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'Q'
   }
 
   protected performValidation(): CnabValidationResult {

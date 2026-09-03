@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/test'],
   testMatch: ['**/*.test.ts'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverageFrom: [
@@ -16,11 +16,11 @@ module.exports = {
   verbose: true,
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@tp-types/(.*)$': '<rootDir>/src/types/$1',
-    '^@validators/(.*)$': '<rootDir>/src/validators/$1',
-    '^@parser/(.*)$': '<rootDir>/src/parser/$1',
-    '^@schemas/(.*)$': '<rootDir>/src/schemas/$1',
-    '^@banks/(.*)$': '<rootDir>/src/banks/$1',
-    '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^@cnab/type/(.*)$': '<rootDir>/src/cnab/type/$1',
+    '^@cnab/exception/(.*)$': '<rootDir>/src/cnab/exception/$1',
+    '^@cnab/validators/(.*)$': '<rootDir>/src/cnab/validators/$1',
+    '^@cnab/utils/(.*)$': '<rootDir>/src/cnab/utils/$1',
+    '^@cnab/bank/(.*)$': '<rootDir>/src/cnab/bank/$1',
+    '^@test/(.*)$': '<rootDir>/test/$1',
   },
 }

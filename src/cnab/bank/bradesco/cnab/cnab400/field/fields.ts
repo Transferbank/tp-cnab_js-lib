@@ -1,1 +1,1 @@
-export { Cnab400BradescoBoletoNameField } from './cnab400-bradesco-boleto-name-field'
+export { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-name-field'

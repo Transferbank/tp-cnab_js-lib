@@ -41,6 +41,9 @@ Thumbs.db
 
 # Test
 .nyc_output/
+test/**/*.js
+test/**/*.d.ts
+test/**/*.d.ts.map
 
 # Optional npm cache
 .npm
