@@ -5,8 +5,7 @@ import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { readExampleLines } from '@test/test-utils'
-
-const RES_PATH = path.resolve(__dirname, '../../../res')
+import { resPath } from '@test/conftest'
 
 function createFileFromPath(filePath: string): File {
   const buffer = fs.readFileSync(filePath)
@@ -27,7 +26,7 @@ describe('cnab-file', (): void => {
       expectedLineCount: number
     ): Promise<void> => {
       // Given
-      const fullPath = path.join(RES_PATH, examplePath)
+      const fullPath = path.join(resPath(), examplePath)
       const file = createFileFromPath(fullPath)
 
       // When
@@ -48,7 +47,7 @@ describe('cnab-file', (): void => {
     'given valid document file when validating then reports no errors',
     async (examplePath: string): Promise<void> => {
       // Given
-      const fullPath = path.join(RES_PATH, examplePath)
+      const fullPath = path.join(resPath(), examplePath)
       const file = createFileFromPath(fullPath)
       const cnabFile = await CnabFile.open(file)
       const expectedResult = genValidCnabValidationResult()
@@ -69,7 +68,7 @@ describe('cnab-file', (): void => {
     (examplePath: string, truncatedLineNumber: number, expectedSize: number): void => {
       // Given
       const truncatedSize = 5
-      const fullPath = path.join(RES_PATH, examplePath)
+      const fullPath = path.join(resPath(), examplePath)
       const rawLines = readExampleLines(fullPath)
       rawLines[truncatedLineNumber] = rawLines[truncatedLineNumber].substring(0, truncatedSize)
 
