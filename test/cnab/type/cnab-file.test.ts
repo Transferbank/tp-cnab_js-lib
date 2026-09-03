@@ -4,8 +4,7 @@ import * as path from 'path'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { readExampleLines } from '@test/test-utils'
-import { resPath } from '@test/conftest'
+import { readExampleLines, resPath } from '@test/test-utils'
 
 function createFileFromPath(filePath: string): File {
   const buffer = fs.readFileSync(filePath)

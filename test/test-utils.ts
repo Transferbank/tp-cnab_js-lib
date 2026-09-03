@@ -1,5 +1,10 @@
 import * as fs from 'fs'
+import * as path from 'path'
 
+
+export function resPath(): string {
+  return path.join(process.cwd(), 'res')
+}
 
 export function readExampleLines(filePath: string): string[] {
   const content = fs.readFileSync(filePath, 'latin1')

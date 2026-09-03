@@ -28,7 +28,7 @@ describe('cnab-bank-schemas', (): void => {
     }
     expect(actualKeys).toEqual(expectedKeys)
 
-    expect( Object.values(indexed).flatMap((schemasByFormat) =>
+    expect(Object.values(indexed).flatMap((schemasByFormat) =>
       Object.values(schemasByFormat as Record<string, unknown>)
     )).toEqual(schemas)
 

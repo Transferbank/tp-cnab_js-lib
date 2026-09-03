@@ -1,6 +1,5 @@
 import * as path from 'path'
-import { resPath } from '@test/conftest'
-import { readExampleLines } from '@test/test-utils'
+import { readExampleLines, resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import {
   Cnab240LineSizeValidator,

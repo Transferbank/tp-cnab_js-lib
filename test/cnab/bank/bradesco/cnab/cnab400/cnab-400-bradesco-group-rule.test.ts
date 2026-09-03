@@ -1,7 +1,6 @@
 import * as path from 'path'
-import { resPath } from '@test/conftest'
 import { describe, it, expect } from '@jest/globals'
-import { readExampleLines } from '@test/test-utils'
+import { readExampleLines, resPath } from '@test/test-utils'
 import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
 
 describe('Cnab400BradescoGroupRule', (): void => {
