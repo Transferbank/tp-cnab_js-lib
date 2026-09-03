@@ -9,14 +9,14 @@ export abstract class CnabField {
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
-  private cachedValue?: unknown | null
+  private cachedValue?: unknown
 
   constructor(rawLine: string, lineNumber: number) {
     this.rawLine = rawLine
     this.lineNumber = lineNumber
   }
 
-  get value(): unknown | null {
+  get value(): unknown {
     if (this.cachedValue !== undefined) {
       return this.cachedValue
     }
