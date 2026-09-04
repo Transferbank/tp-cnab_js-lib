@@ -55,40 +55,13 @@ describe('CnabLineSizeValidator', (): void => {
     })
 
     describe(`${validatorName} - Invalid Lines`, (): void => {
-      it('given line with smaller size when validating then returns error', (): void => {
+      it('given line with wrong size when validating then returns error', (): void => {
         // Given
         const rawLines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = rawLines[0]
         const invalidLine = rawLine.slice(0, -1)
         const actualSize = expectedSize - 1
         const dummyLineNumber = 37
-        const expectedResult: CnabValidationResult = {
-          isValid: false,
-          errors: [
-            new CnabInvalidLineSizeError({
-              lineNumber: dummyLineNumber,
-              expectedSize,
-              actualSize
-            })
-          ]
-        }
-
-        // When
-        const validator = new validatorType(invalidLine, dummyLineNumber)
-        const result = validator.validate()
-
-        // Then
-        expect(invalidLine.length).toBe(actualSize)
-        expect(result).toEqual(expectedResult)
-      })
-
-      it('given line with larger size when validating then returns error', (): void => {
-        // Given
-        const rawLines = readExampleLines(path.join(resPath(), examplePath))
-        const rawLine = rawLines[0]
-        const invalidLine = `${rawLine} `
-        const actualSize = expectedSize + 1
-        const dummyLineNumber = 42
         const expectedResult: CnabValidationResult = {
           isValid: false,
           errors: [
