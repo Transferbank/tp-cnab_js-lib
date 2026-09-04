@@ -8,10 +8,7 @@ import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import { Cnab240BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab240/cnab-240-bradesco-group-rule'
 import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
-import {
-  Cnab400HeaderLineStartValidator,
-  Cnab400TrailerLineStartValidator
-} from '@cnab/validators/cnab400/cnab400-line-start-validator'
+import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400/cnab400-line-start-validator'
 
 function registerCnabSchemas(): CnabSchema[] {
   return [
@@ -88,4 +85,4 @@ export function indexCnabSchemas(
   return indexed as Record<CnabBank, Record<CnabFormat, CnabSchema>>
 }
 
-export const CNAB_BANK_SCHEMAS: Record< CnabBank, Record<CnabFormat, CnabSchema>> = indexCnabSchemas(registerCnabSchemas())
+export const CNAB_BANK_SCHEMAS: Record<CnabBank, Record<CnabFormat, CnabSchema>> = indexCnabSchemas(registerCnabSchemas())

@@ -1,5 +1,10 @@
 import * as fs from 'fs'
+import * as path from 'path'
 
+
+export function resPath(): string {
+  return path.join(process.cwd(), 'res')
+}
 
 export function readExampleLines(filePath: string): string[] {
   const content = fs.readFileSync(filePath, 'latin1')
@@ -14,6 +19,6 @@ export function replaceLineRange(
   const start = fieldRange[0] - 1
   const stop = fieldRange[1]
   const fieldSize = stop - start
-  const paddedValue = value.padEnd(fieldSize, ' ').substring(0, fieldSize)  
+  const paddedValue = value.padEnd(fieldSize, ' ').substring(0, fieldSize)
   return rawLine.substring(0, start) + paddedValue + rawLine.substring(stop)
 }

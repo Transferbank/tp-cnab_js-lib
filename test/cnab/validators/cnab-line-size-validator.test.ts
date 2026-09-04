@@ -1,6 +1,5 @@
 import * as path from 'path'
-import { resPath } from '@test/conftest'
-import { readExampleLines } from '@test/test-utils'
+import { readExampleLines, resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import {
   Cnab240LineSizeValidator,
@@ -8,6 +7,8 @@ import {
   CnabLineSizeValidator
 } from '@cnab/validators/cnab-line-size-validator'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 
 type ValidatorConstructor = new (rawLine: string, lineNumber: number) => CnabLineSizeValidator
 
@@ -38,7 +39,7 @@ describe('CnabLineSizeValidator', (): void => {
       it('given valid document lines when validating size then accepts all lines', (): void => {
         // Given
         const rawLines = readExampleLines(path.join(resPath(), examplePath))
-        expect(rawLines.length).toBeGreaterThan(0)
+        const expectedResults = rawLines.map(() => genValidCnabValidationResult())
 
         // When
         const results = rawLines.map((rawLine: string, index: number) => {
@@ -47,8 +48,9 @@ describe('CnabLineSizeValidator', (): void => {
         })
 
         // Then
-        expect(results.every((result: CnabValidationResult) => result.isValid)).toBe(true)
-        expect(results.every((result: CnabValidationResult) => result.errors.length === 0)).toBe(true)
+        const lineSizes = new Set(rawLines.map((line: string) => line.length))
+        expect(lineSizes).toEqual(new Set([expectedSize]))
+        expect(results).toEqual(expectedResults)
       })
     })
 
@@ -60,6 +62,16 @@ describe('CnabLineSizeValidator', (): void => {
         const invalidLine = rawLine.slice(0, -1)
         const actualSize = expectedSize - 1
         const dummyLineNumber = 37
+        const expectedResult: CnabValidationResult = {
+          isValid: false,
+          errors: [
+            new CnabInvalidLineSizeError({
+              lineNumber: dummyLineNumber,
+              expectedSize,
+              actualSize
+            })
+          ]
+        }
 
         // When
         const validator = new validatorType(invalidLine, dummyLineNumber)
@@ -67,12 +79,7 @@ describe('CnabLineSizeValidator', (): void => {
 
         // Then
         expect(invalidLine.length).toBe(actualSize)
-        expect(result.isValid).toBe(false)
-        expect(result.errors).toHaveLength(1)
-        expect(result.errors[0].message).toBe(
-          `Tamanho de linha inválido: esperado ${expectedSize}, recebido ${actualSize}`
-        )
-        expect(result.errors[0].lineNumber).toBe(dummyLineNumber)
+        expect(result).toEqual(expectedResult)
       })
 
       it('given line with larger size when validating then returns error', (): void => {
@@ -82,6 +89,16 @@ describe('CnabLineSizeValidator', (): void => {
         const invalidLine = `${rawLine} `
         const actualSize = expectedSize + 1
         const dummyLineNumber = 42
+        const expectedResult: CnabValidationResult = {
+          isValid: false,
+          errors: [
+            new CnabInvalidLineSizeError({
+              lineNumber: dummyLineNumber,
+              expectedSize,
+              actualSize
+            })
+          ]
+        }
 
         // When
         const validator = new validatorType(invalidLine, dummyLineNumber)
@@ -89,12 +106,7 @@ describe('CnabLineSizeValidator', (): void => {
 
         // Then
         expect(invalidLine.length).toBe(actualSize)
-        expect(result.isValid).toBe(false)
-        expect(result.errors).toHaveLength(1)
-        expect(result.errors[0].message).toBe(
-          `Tamanho de linha inválido: esperado ${expectedSize}, recebido ${actualSize}`
-        )
-        expect(result.errors[0].lineNumber).toBe(dummyLineNumber)
+        expect(result).toEqual(expectedResult)
       })
     })
   })
