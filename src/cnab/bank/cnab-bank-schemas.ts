@@ -10,6 +10,7 @@ import * as ItauFields240 from '@cnab/bank/itau/cnab/cnab240/field/fields'
 import * as ItauFields400 from '@cnab/bank/itau/cnab/cnab400/field/fields'
 import * as CaixaFields240 from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import * as CaixaFields400 from '@cnab/bank/caixa/cnab/cnab400/field/fields'
+import * as SicoobFields240 from '@cnab/bank/sicoob/cnab/cnab240/field/fields'
 import * as SicoobFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
 import * as SicrediFields240 from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
 import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
@@ -24,6 +25,7 @@ import { Cnab240ItauGroupRule } from '@cnab/bank/itau/cnab/cnab240/cnab-240-itau
 import { Cnab400ItauGroupRule } from '@cnab/bank/itau/cnab/cnab400/cnab-400-itau-group-rule'
 import { Cnab240CaixaGroupRule } from '@cnab/bank/caixa/cnab/cnab240/cnab-240-caixa-group-rule'
 import { Cnab400CaixaGroupRule } from '@cnab/bank/caixa/cnab/cnab400/cnab-400-caixa-group-rule'
+import { Cnab240SicoobGroupRule } from '@cnab/bank/sicoob/cnab/cnab240/cnab-240-sicoob-group-rule'
 import { Cnab400SicoobGroupRule } from '@cnab/bank/sicoob/cnab/cnab400/cnab-400-sicoob-group-rule'
 import { Cnab240SicrediGroupRule } from '@cnab/bank/sicredi/cnab/cnab240/cnab-240-sicredi-group-rule'
 import { Cnab400SicrediGroupRule } from '@cnab/bank/sicredi/cnab/cnab400/cnab-400-sicredi-group-rule'
@@ -320,6 +322,28 @@ function registerCnabSchemas(): CnabSchema[] {
       })
     }),
     //SICOOB
+    new CnabSchema({
+      bank: CnabBank.SICOOB,
+      fmt: CnabFormat.CNAB240,
+      boletoGroupRule: new Cnab240SicoobGroupRule(),
+      header: new CnabLineSchema({
+        fieldType: CnabFieldType.HEADER,
+        fields: []
+      }),
+      trailer: new CnabLineSchema({
+        fieldType: CnabFieldType.TRAILER,
+        fields: []
+      }),
+      boleto: new CnabLineSchema({
+        fieldType: CnabFieldType.BOLETO,
+        fields: [
+          SicoobFields240.Cnab240SicoobBoletoNameField,
+          SicoobFields240.Cnab240SicoobBoletoVencimentoField,
+          SicoobFields240.Cnab240SicoobBoletoValorTituloField,
+          SicoobFields240.Cnab240SicoobBoletoSacadoDocumentoField
+        ]
+      })
+    }),
     new CnabSchema({
       bank: CnabBank.SICOOB,
       fmt: CnabFormat.CNAB400,
