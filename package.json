@@ -4,6 +4,18 @@
   "description": "Biblioteca TypeScript para processamento e validação de arquivos CNAB 240 e 400",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Transferbank/tp-cnab_js-lib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Transferbank/tp-cnab_js-lib/issues"
+  },
+  "homepage": "https://github.com/Transferbank/tp-cnab_js-lib#readme",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "npm run clean && tsc && tsc-alias",
@@ -22,7 +34,7 @@
     "banking",
     "brazil"
   ],
-  "author": "transferbank",
+  "author": "Transferbank",
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.15.0",
