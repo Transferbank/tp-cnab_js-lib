@@ -5,6 +5,7 @@
 export enum CnabBank {
   ITAU = 'itau',
   CAIXA = 'caixa',
+  SICOOB = 'sicoob',
   SICREDI = 'sicredi',
   BRADESCO = 'bradesco',
   SANTANDER = 'santander',
@@ -17,6 +18,7 @@ export namespace CnabBank {
       case '341': return CnabBank.ITAU
       case '104': return CnabBank.CAIXA
       case '748': return CnabBank.SICREDI
+      case '756': return CnabBank.SICOOB
       case '237': return CnabBank.BRADESCO
       case '033': return CnabBank.SANTANDER
       case '001': return CnabBank.BANCODOBRASIL
