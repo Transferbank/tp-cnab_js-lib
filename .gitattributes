@@ -3,3 +3,4 @@
 
 # Binários — sem conversão de fim de linha
 *.pdf binary
+*.xls binary
