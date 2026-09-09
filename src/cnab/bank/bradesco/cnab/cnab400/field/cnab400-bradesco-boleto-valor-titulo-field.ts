@@ -36,13 +36,10 @@ export class Cnab400BradescoBoletoValorTituloField extends CnabField<number> {
   }
 
   protected parseValue(rawValue: string): number {
-    const valueStr = rawValue.trim()
-    const valueInt = parseInt(valueStr, 10)
-    
-    if (isNaN(valueInt)) {
+    if (!/^\d+$/.test(rawValue)) {
       throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
     }
-    
-    return valueInt / 100
+
+    return parseInt(rawValue, 10) / 100
   }
 }

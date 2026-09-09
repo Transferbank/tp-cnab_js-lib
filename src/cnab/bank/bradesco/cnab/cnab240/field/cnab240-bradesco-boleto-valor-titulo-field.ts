@@ -1,7 +1,7 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { 
+import {
   CnabGenericFieldError,
   CnabFieldInvalidNumberError
 } from '@cnab/type/cnab-validation-error'
