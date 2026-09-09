@@ -64,6 +64,30 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
         expect(result).toEqual(genValidCnabValidationResult())
       })
     })
+
+    it('given detail line with a zero-padded CPF when validating then accepts it', (): void => {
+      // Given
+      const dummyLineNumber = 7
+      const fieldRange = getFieldRange(Cnab400BradescoBoletoSacadoDocumentoField)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        throw new Error('Linha detalhe não encontrada')
+      }
+
+      // CPF 123.456.789-09 gravado à direita num campo de 14 posições
+      const lineWithCpf = replaceLineRange(rawLine, fieldRange, '00012345678909')
+
+      // When
+      const field = new Cnab400BradescoBoletoSacadoDocumentoField(lineWithCpf, dummyLineNumber)
+      const result = field.validate()
+
+      // Then
+      expect(field.value).toBe('00012345678909')
+      expect(result).toEqual(genValidCnabValidationResult())
+    })
   })
 
   describe('validate with error', (): void => {
