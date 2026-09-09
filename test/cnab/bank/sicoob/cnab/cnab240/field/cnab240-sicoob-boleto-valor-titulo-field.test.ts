@@ -75,9 +75,9 @@ describe('Cnab240SicoobBoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       const expectedError = new CnabGenericFieldError({
-        message: 'Campo valor titulo inválido: deve ser maior que zero',
+        message: 'Campo valor do título inválido: deve ser maior que zero',
         lineNumber: dummyLineNumber,
-        fieldName: 'valor titulo',
+        fieldName: 'valor do título',
         range: fieldRange
       })
 
@@ -164,7 +164,7 @@ describe('Cnab240SicoobBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe('Campo valor titulo com formato inválido: ABCDEFGHIJKLMNO')
+      expect(result.errors[0].message).toBe('Campo valor do título com formato inválido: ABCDEFGHIJKLMNO')
       expect(result.errors[0].lineNumber).toBe(dummyLineNumber)
     })
   })
