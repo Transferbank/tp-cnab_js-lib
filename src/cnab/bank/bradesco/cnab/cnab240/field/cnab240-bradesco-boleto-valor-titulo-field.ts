@@ -1,7 +1,7 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { 
+import {
   CnabGenericFieldError,
   CnabFieldInvalidNumberError
 } from '@cnab/type/cnab-validation-error'
@@ -9,7 +9,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'valor titulo'
+  readonly fieldName = 'valor do título'
   readonly range: [number, number] = [86, 100]
 
   shouldValidate(): boolean {
@@ -23,7 +23,7 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
     if (!isValid) {
       errors.push(
         new CnabGenericFieldError({
-          message: 'Campo valor titulo inválido: deve ser maior que zero',
+          message: 'Campo valor do título inválido: deve ser maior que zero',
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range
@@ -39,11 +39,11 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
 
   protected parseValue(rawValue: string): number {
     const centavos = parseInt(rawValue, 10)
-    
+
     if (isNaN(centavos)) {
       throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
     }
-    
+
     return centavos / 100
   }
 }

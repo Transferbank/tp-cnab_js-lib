@@ -86,9 +86,9 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       const expectedError = new CnabGenericFieldError({
-        message: 'Campo valor titulo inválido: deve ser maior que zero',
+        message: 'Campo valor do título inválido: deve ser maior que zero',
         lineNumber: dummyLineNumber,
-        fieldName: 'valor titulo',
+        fieldName: 'valor do título',
         range: fieldRange
       })
 
@@ -142,9 +142,9 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
       const expectedError = new CnabGenericFieldError({
-        message: 'Campo valor titulo inválido: deve ser maior que zero',
+        message: 'Campo valor do título inválido: deve ser maior que zero',
         lineNumber: dummyLineNumber,
-        fieldName: 'valor titulo',
+        fieldName: 'valor do título',
         range: fieldRange
       })
 
