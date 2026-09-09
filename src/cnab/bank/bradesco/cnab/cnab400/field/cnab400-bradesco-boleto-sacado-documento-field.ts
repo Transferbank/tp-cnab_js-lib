@@ -1,6 +1,6 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { isValidCPF, isValidCNPJ } from '@cnab/utils/document-parser'
+import { validateDocument } from '@cnab/utils/document-parser'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -16,7 +16,7 @@ export class Cnab400BradescoBoletoSacadoDocumentoField extends CnabField<string>
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value !== null && (isValidCPF(value) || isValidCNPJ(value))
+    const isValid = value !== null && validateDocument(value)
     const errors = []
 
     if (!isValid) {
@@ -37,6 +37,6 @@ export class Cnab400BradescoBoletoSacadoDocumentoField extends CnabField<string>
   }
 
   protected parseValue(rawValue: string): string {
-    return rawValue.trim()
+    return rawValue
   }
 }
