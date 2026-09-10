@@ -15,13 +15,14 @@ export class Cnab400BradescoBoletoVencimentoField extends CnabField<Date> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const isValid = this.value !== null && !isNaN(this.value.getTime())
+    const value = this.value
+    const isValid = value !== null
     const errors = []
 
     if (!isValid) {
       errors.push(
         new CnabGenericFieldError({
-          message: 'Campo data de vencimento inválido: deve ser data no formato DDMMAA',
+          message: 'Campo data de vencimento é obrigatório',
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range

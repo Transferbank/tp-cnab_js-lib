@@ -82,7 +82,7 @@ describe('Cnab400BradescoBoletoVencimentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       const expectedError = new CnabGenericFieldError({
-        message: 'Campo data de vencimento inválido: deve ser data no formato DDMMAA',
+        message: 'Campo data de vencimento é obrigatório',
         lineNumber: dummyLineNumber,
         fieldName: 'data de vencimento',
         range: fieldRange
