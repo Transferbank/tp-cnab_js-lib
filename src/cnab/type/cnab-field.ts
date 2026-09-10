@@ -23,9 +23,9 @@ export abstract class CnabField<T = string> {
       try {
         // 1. Extrai o valor bruto da linha (sempre string)
         const rawValue = this.extractRawValue()
-        
+
         // 2. Se vazio (não preenchido no arquivo) -> null
-        if (this.isRawValueEmpty(rawValue)) {
+        if (rawValue === '') {
           this.cachedValue = null
         } else {
           // 3. Tem conteúdo -> parseia para o tipo correto
@@ -47,10 +47,6 @@ export abstract class CnabField<T = string> {
     return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
   }
 
-  protected isRawValueEmpty(rawValue: string): boolean {
-    return rawValue === ''
-  }
-
   validate(): CnabValidationResult {
     const isOptional = (this.constructor as typeof CnabField).isOptional
     if (isOptional && this.value === null) {
@@ -65,7 +61,7 @@ export abstract class CnabField<T = string> {
 
   parse(): T {
     const rawValue = this.extractRawValue()
-    if (this.isRawValueEmpty(rawValue)) {
+    if (rawValue === '') {
       throw new CnabFieldEmptyValueError(this.fieldName)
     }
     return this.parseValue(rawValue)
