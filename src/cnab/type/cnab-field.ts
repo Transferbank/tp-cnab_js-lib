@@ -1,4 +1,4 @@
-﻿import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
 
@@ -6,7 +6,7 @@ export abstract class CnabField<T = string> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
   abstract readonly fieldName: string
-  // O range come├ºa a partir de start + 1, seguindo as documenta├º├Áes dos arquivos cnab
+  // O range começa a partir de start + 1, seguindo as documentações dos arquivos cnab
   abstract readonly range: [number, number]
 
   protected readonly rawLine: string
@@ -24,11 +24,11 @@ export abstract class CnabField<T = string> {
         // 1. Extrai o valor bruto da linha (sempre string)
         const rawValue = this.extractRawValue()
         
-        // 2. Se vazio (n├úo preenchido no arquivo) ÔåÆ null
+        // 2. Se vazio (não preenchido no arquivo) -> null
         if (this.isRawValueEmpty(rawValue)) {
           this.cachedValue = null
         } else {
-          // 3. Tem conte├║do ÔåÆ parseia para o tipo correto
+          // 3. Tem conteúdo -> parseia para o tipo correto
           this.cachedValue = this.parseValue(rawValue)
         }
       } catch (error) {
