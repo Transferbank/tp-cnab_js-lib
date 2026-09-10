@@ -8,8 +8,8 @@ export class Cnab400BradescoBoletoNameField extends CnabField<string> {
   readonly fieldName = 'nome do sacado'
   readonly range: [number, number] = [235, 274]
 
-  static shouldValidate(rawLine: string): boolean {
-    return rawLine.startsWith('1')
+  shouldValidate(): boolean {
+    return this.rawLine.startsWith('1')
   }
 
   protected validateInternal(): CnabValidationResult {

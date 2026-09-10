@@ -11,8 +11,8 @@ export class Cnab240BradescoBoletoDataEmissaoField extends CnabField<Date> {
   readonly fieldName = 'data de emissão'
   readonly range: [number, number] = [110, 117]
 
-  static shouldValidate(rawLine: string): boolean {
-    return rawLine.length > 13 && rawLine[7] === '3' && rawLine[13] === 'P'
+  shouldValidate(): boolean {
+    return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'P'
   }
 
   protected validateInternal(): CnabValidationResult {

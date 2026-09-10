@@ -51,10 +51,6 @@ export abstract class CnabField<T = string> {
     return rawValue === ''
   }
 
-  static shouldValidate(_rawLine: string): boolean {
-    throw new Error(`${this.name}.shouldValidate() must be implemented by subclass`)
-  }
-
   validate(): CnabValidationResult {
     const isOptional = (this.constructor as typeof CnabField).isOptional
     if (isOptional && this.value === null) {
@@ -63,9 +59,10 @@ export abstract class CnabField<T = string> {
     return this.validateInternal()
   }
 
-  protected abstract validateInternal(): CnabValidationResult
+  abstract shouldValidate(): boolean
   protected abstract parseValue(rawValue: string): T
-  
+  protected abstract validateInternal(): CnabValidationResult
+
   parse(): T {
     const rawValue = this.extractRawValue()
     if (this.isRawValueEmpty(rawValue)) {

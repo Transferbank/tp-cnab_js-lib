@@ -11,8 +11,8 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   readonly fieldName = 'valor titulo'
   readonly range: [number, number] = [86, 100]
 
-  static shouldValidate(rawLine: string): boolean {
-    return rawLine.length > 13 && rawLine[7] === '3' && rawLine[13] === 'P'
+  shouldValidate(): boolean {
+    return this.rawLine.length > 13 && this.rawLine[7] === '3' && this.rawLine[13] === 'P'
   }
 
   protected validateInternal(): CnabValidationResult {
