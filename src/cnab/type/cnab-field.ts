@@ -13,9 +13,9 @@ export abstract class CnabField<T = string> {
   protected readonly lineNumber: number
   private cachedValue?: T | null
 
-  constructor(config: { rawLine: string; lineNumber: number }) {
-    this.rawLine = config.rawLine
-    this.lineNumber = config.lineNumber
+  constructor(rawLine: string, lineNumber: number) {
+    this.rawLine = rawLine
+    this.lineNumber = lineNumber
   }
 
   get value(): T | null {
