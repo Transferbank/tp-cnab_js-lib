@@ -5,10 +5,6 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { validateDocument } from '@cnab/utils/document-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-// Base compartilhada pelos 7 bancos - range, fieldName, shouldValidate, performValidation
-// e parseValue sao identicos em todos hoje (confirmado byte a byte antes de colapsar).
-// Se um banco divergir no futuro, a subclasse dele sobrescreve so o que for diferente,
-// sem tocar nos outros 6 (ver cnab240-boleto-name-field.ts para um exemplo real disso).
 export abstract class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'

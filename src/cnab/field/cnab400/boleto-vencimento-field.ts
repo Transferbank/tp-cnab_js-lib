@@ -5,10 +5,6 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 
-// Base compartilhada pelos 7 bancos - range, fieldName, performValidation e parseValue
-// sao identicos em todos hoje. A unica divergencia real e o shouldValidate do Banco do
-// Brasil, que usa um registro de detalhe CNAB400 nao-padrao comecando com '7' em vez de
-// '1' (ver cnab400-banco-do-brasil-boleto-vencimento-field.ts).
 export abstract class Cnab400BoletoVencimentoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'data de vencimento'

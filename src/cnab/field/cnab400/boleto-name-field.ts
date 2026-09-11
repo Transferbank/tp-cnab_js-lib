@@ -4,13 +4,6 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-// Base compartilhada pelos 7 bancos - fieldName, performValidation e parseValue sao
-// identicos em todos hoje. Ha duas divergencias reais: o range tem 3 variantes (Itau
-// [235,264], Banco do Brasil [235,271], os outros 4 [235,274] - o default aqui) e o
-// shouldValidate do Banco do Brasil usa um registro de detalhe CNAB400 nao-padrao
-// comecando com '7' em vez de '1'. Cada uma dessas subclasses sobrescreve so o que
-// diverge (ver cnab400-itau-boleto-name-field.ts e
-// cnab400-banco-do-brasil-boleto-name-field.ts).
 export abstract class Cnab400BoletoNameField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'

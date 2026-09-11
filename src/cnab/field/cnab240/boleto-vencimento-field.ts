@@ -5,11 +5,6 @@ import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cna
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-// Base compartilhada pelos 7 bancos - range, fieldName, shouldValidate,
-// performValidation e parseValue sao identicos em todos hoje (confirmado byte a byte
-// antes de colapsar; o Bradesco tinha uma mensagem diferente aqui, ja corrigida em
-// commit anterior). Se um banco divergir no futuro, a subclasse dele sobrescreve so
-// o que for diferente, sem tocar nos outros 6.
 export abstract class Cnab240BoletoVencimentoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'data de vencimento'
