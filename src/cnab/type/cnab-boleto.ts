@@ -9,6 +9,10 @@ export class CnabBoleto {
     this.lines = lines
     this.fieldIndex = this.buildFieldIndex(lines)
 
+    // TODO: considerar também ownKeys + getOwnPropertyDescriptor, pra Object.keys(boleto)/
+    // {...boleto}/console.log enumerarem os campos dinâmicos (hoje só lines aparece). Fica
+    // pra depois: as invariantes de ownKeys do Proxy exigem descriptor coerente pra cada
+    // chave reportada, senão lança TypeError.
     return new Proxy(this, {
       get(target, prop: string | symbol): unknown {
         if (prop in target) {
@@ -20,9 +24,20 @@ export class CnabBoleto {
           if (line != null) {
             return line.get(prop)
           }
+          throw new Error(
+            `Campo desconhecido: '${prop}'. Campos disponíveis: ${[...target.fieldIndex.keys()].join(', ')}`
+          )
         }
 
         return undefined
+      },
+
+      set(_target, prop): never {
+        throw new Error(`CnabBoleto é somente leitura — não é possível definir '${String(prop)}'`)
+      },
+
+      has(target, prop): boolean {
+        return prop in target || (typeof prop === 'string' && target.fieldIndex.has(prop))
       }
     })
   }
