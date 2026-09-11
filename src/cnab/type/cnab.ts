@@ -1,17 +1,18 @@
-import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+import { CnabBoleto } from '@cnab/type/cnab-boleto'
+import { CnabLineData } from '@cnab/type/cnab-line-data'
 
 export class Cnab {
-  readonly header: CnabLineSchema
-  readonly trailer: CnabLineSchema
-  readonly boletos: CnabLineSchema[]
+  readonly header: CnabLineData
+  readonly trailer: CnabLineData
+  readonly boletos: CnabBoleto[]
 
   constructor(config: {
-    header: CnabLineSchema
-    trailer: CnabLineSchema
-    boletos?: CnabLineSchema[]
+    header: CnabLineData
+    trailer: CnabLineData
+    boletos: CnabBoleto[]
   }) {
     this.header = config.header
     this.trailer = config.trailer
-    this.boletos = config.boletos ?? []
+    this.boletos = config.boletos
   }
 }

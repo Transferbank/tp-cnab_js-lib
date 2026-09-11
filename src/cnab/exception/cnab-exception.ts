@@ -1,5 +1,6 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabValidationError } from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabException extends Error {
   constructor(message: string) {
@@ -43,5 +44,23 @@ export class CnabSchemaRegistrationException extends CnabException {
     super(
       `Registro de schemas CNAB inválido: CNAB${cnabFormat} do banco ${bank} registrado mais de uma vez`
     )
+  }
+}
+export class CnabValidationFailedException extends CnabException {
+  readonly errors: CnabValidationError[]
+
+  constructor(errors: CnabValidationError[]) {
+    const errorCount = errors.length
+    const errorList = errors
+      .slice(0, 3)
+      .map(e => `  - ${e.message}`)
+      .join('\n')
+    const moreErrors = errorCount > 3 ? `\n  ... e mais ${errorCount - 3} erros` : ''
+
+    super(
+      `Arquivo CNAB contém ${errorCount} erro(s) de validação:\n${errorList}${moreErrors}`
+    )
+
+    this.errors = errors
   }
 }
