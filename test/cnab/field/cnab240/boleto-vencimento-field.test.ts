@@ -16,7 +16,7 @@ import {
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab240BoletoVencimentoField } from '@cnab/field/cnab240-boleto-vencimento-field'
+import { Cnab240BoletoVencimentoField } from '@cnab/field/cnab240/boleto-vencimento-field'
 import { Cnab240BancoDoBrasilBoletoVencimentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-vencimento-field'
 import { Cnab240BradescoBoletoVencimentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-vencimento-field'
 import { Cnab240CaixaBoletoVencimentoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-vencimento-field'

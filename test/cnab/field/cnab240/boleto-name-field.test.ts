@@ -12,7 +12,7 @@ import {
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab240BoletoNameField } from '@cnab/field/cnab240-boleto-name-field'
+import { Cnab240BoletoNameField } from '@cnab/field/cnab240/boleto-name-field'
 import { Cnab240BancoDoBrasilBoletoNameField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-name-field'
 import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 import { Cnab240CaixaBoletoNameField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-name-field'

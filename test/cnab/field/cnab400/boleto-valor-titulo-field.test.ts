@@ -16,7 +16,7 @@ import {
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BoletoValorTituloField } from '@cnab/field/cnab400-boleto-valor-titulo-field'
+import { Cnab400BoletoValorTituloField } from '@cnab/field/cnab400/boleto-valor-titulo-field'
 import { Cnab400BancoDoBrasilBoletoValorTituloField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-valor-titulo-field'
 import { Cnab400BradescoBoletoValorTituloField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-valor-titulo-field'
 import { Cnab400CaixaBoletoValorTituloField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-valor-titulo-field'

@@ -1,4 +1,4 @@
-import { Cnab400BoletoValorTituloField } from '@cnab/field/cnab400-boleto-valor-titulo-field'
+import { Cnab400BoletoValorTituloField } from '@cnab/field/cnab400/boleto-valor-titulo-field'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 // Banco do Brasil usa um registro de detalhe CNAB400 nao-padrao (comeca com '7' em vez
