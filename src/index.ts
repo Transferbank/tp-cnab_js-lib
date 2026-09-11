@@ -17,6 +17,9 @@ export function openCnabFileFromLines(lines: string[]): CnabFile {
 }
 
 export { CnabFile } from '@cnab/type/cnab-file'
+export { Cnab } from '@cnab/type/cnab'
+export { CnabBoleto } from '@cnab/type/cnab-boleto'
+export { CnabLineData } from '@cnab/type/cnab-line-data'
 export { CnabBank } from '@cnab/type/cnab-bank'
 export { CnabFormat } from '@cnab/type/cnab-format'
 export { CnabFieldType } from '@cnab/type/cnab-field-type'
@@ -40,7 +43,8 @@ export {
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,
-  CnabBankSchemaNotFoundException
+  CnabBankSchemaNotFoundException,
+  CnabValidationFailedException
 } from '@cnab/exception/cnab-exception'
 
 export {

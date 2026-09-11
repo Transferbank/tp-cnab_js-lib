@@ -10,8 +10,10 @@ import {
   Cnab400LineSizeValidator
 } from '@cnab/validators/cnab-line-size-validator'
 import { CnabLineSchemaNotInitializedException } from '@cnab/exception/cnab-exception'
+import { CnabLineData } from '@cnab/type/cnab-line-data'
 
 type CnabLineValidatorClass = new (rawLine: string, lineNumber: number) => CnabLineValidator
+type CnabFieldConstructor = new (rawLine: string, lineNumber: number) => CnabField<unknown>
 
 interface CnabValidatableConstructor {
   new (rawLine: string, lineNumber: number): CnabLineValidator | CnabField<unknown>
@@ -143,5 +145,20 @@ export class CnabLineSchema {
     }
 
     return result
+  }
+
+  instantiate(rawLine: string, lineNumber: number, extraFields?: CnabFieldClass[]): CnabLineData {
+    const extraFieldsList = extraFields ?? []
+    const allFields = [...this.fields, ...extraFieldsList] as unknown as CnabFieldConstructor[]
+
+    const instantiatedFields = allFields
+      .map((FieldClass) => new FieldClass(rawLine, lineNumber))
+      .filter((field) => field.shouldValidate())
+
+    return new CnabLineData({
+      rawLine,
+      lineNumber,
+      fields: instantiatedFields
+    })
   }
 }
