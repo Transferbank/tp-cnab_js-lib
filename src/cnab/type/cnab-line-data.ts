@@ -13,10 +13,12 @@ export class CnabLineData {
   }) {
     this.rawLine = config.rawLine
     this.lineNumber = config.lineNumber
-    this.fieldsMap = new Map(
-      config.fields.map(field => [field.fieldName, field])
-    )
+    this.fieldsMap = new Map(config.fields.map(field => [field.fieldName, field]))
 
+    // TODO: considerar também ownKeys + getOwnPropertyDescriptor, pra Object.keys(lineData)/
+    // {...lineData}/console.log enumerarem os campos dinâmicos (hoje só rawLine/lineNumber
+    // aparecem). Fica pra depois: as invariantes de ownKeys do Proxy exigem descriptor
+    // coerente pra cada chave reportada, senão lança TypeError.
     return new Proxy(this, {
       get(target, prop: string | symbol): unknown {
         if (prop in target) {
@@ -24,13 +26,23 @@ export class CnabLineData {
         }
 
         if (typeof prop === 'string') {
-          const field = target.fieldsMap.get(prop)
-          if (field != null) {
-            return field.value
+          if (target.fieldsMap.has(prop)) {
+            return target.fieldsMap.get(prop)!.value
           }
+          throw new Error(
+            `Campo desconhecido: '${prop}'. Campos disponíveis: ${[...target.fieldsMap.keys()].join(', ')}`
+          )
         }
 
         return undefined
+      },
+
+      set(_target, prop): never {
+        throw new Error(`CnabLineData é somente leitura — não é possível definir '${String(prop)}'`)
+      },
+
+      has(target, prop): boolean {
+        return prop in target || (typeof prop === 'string' && target.fieldsMap.has(prop))
       }
     })
   }
