@@ -1,8 +1,8 @@
 import * as path from 'path'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import { 
-  readExampleLines, 
+import {
+  readExampleLines,
   replaceLineRange,
   findFirstCnab240SegmentLine,
   filterValidatableLines,
@@ -12,12 +12,27 @@ import {
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
+import { Cnab240BoletoSacadoDocumentoField } from '@cnab/field/cnab240-boleto-sacado-documento-field'
+import { Cnab240BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-sacado-documento-field'
 import { Cnab240BradescoBoletoSacadoDocumentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-sacado-documento-field'
+import { Cnab240CaixaBoletoSacadoDocumentoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-sacado-documento-field'
+import { Cnab240ItauBoletoSacadoDocumentoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-sacado-documento-field'
+import { Cnab240SantanderBoletoSacadoDocumentoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-sacado-documento-field'
+import { Cnab240SicoobBoletoSacadoDocumentoField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-sacado-documento-field'
+import { Cnab240SicrediBoletoSacadoDocumentoField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-sacado-documento-field'
 
-describe('Cnab240BradescoBoletoSacadoDocumentoField', (): void => {
-  const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoSacadoDocumentoField
 
+// Cada banco tem sua propria classe (Cnab240<Banco>BoletoSacadoDocumentoField), todas
+// herdando de Cnab240BoletoSacadoDocumentoField sem sobrescrever nada - range, fieldName
+// e a validacao de CPF/CNPJ (validateDocument) sao identicos nos 7 hoje. O caminho feliz
+// roda a classe de cada banco contra o arquivo de exemplo real dele; os casos de erro
+// (em branco, documento invalido) rodam uma vez com a classe do Bradesco, ja que testam
+// comportamento herdado, nao especifico de banco.
+describe('Cnab240BoletoSacadoDocumentoField', (): void => {
   describe('shouldValidate', (): void => {
+    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+
     describe.each([
       { segment: 'P', expectedShouldValidate: false },
       { segment: 'Q', expectedShouldValidate: true },
@@ -45,28 +60,45 @@ describe('Cnab240BradescoBoletoSacadoDocumentoField', (): void => {
   })
 
   describe('parse and validate', (): void => {
-    it('given segment Q lines with valid document when parsing and validating then accepts all lines', (): void => {
-      // Given
-      const lines = readExampleLines(path.join(resPath(), examplePath))
-      const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab240BradescoBoletoSacadoDocumentoField),
-        Cnab240BradescoBoletoSacadoDocumentoField
-      )
+    it.each([
+      { FieldClass: Cnab240BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240BradescoBoletoSacadoDocumentoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '000010000791989' },
+      { FieldClass: Cnab240CaixaBoletoSacadoDocumentoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240ItauBoletoSacadoDocumentoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240SantanderBoletoSacadoDocumentoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240SicoobBoletoSacadoDocumentoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240SicrediBoletoSacadoDocumentoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '000011122233396' }
+    ])(
+      'given segment Q lines with valid document ($FieldClass.name) when parsing and validating then accepts all lines',
+      ({ FieldClass, examplePath, expectedFirstDocument }: {
+        FieldClass: SacadoDocumentoFieldClass
+        examplePath: string
+        expectedFirstDocument: string
+      }): void => {
+        // Given
+        const lines = readExampleLines(path.join(resPath(), examplePath))
+        const fields = createFieldsFromLines(
+          filterValidatableLines(lines, FieldClass),
+          FieldClass
+        )
 
-      const results = fields.map((field: Cnab240BradescoBoletoSacadoDocumentoField) => field.validate())
+        const results = fields.map((field: Cnab240BoletoSacadoDocumentoField) => field.validate())
 
-      // Then
-      expect(fields.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toBe('000010000791989')
-      expect(fields[0].value).toBe('000010000791989')
-      
-      results.forEach((result: CnabValidationResult) => {
-        expect(result).toEqual(genValidCnabValidationResult())
-      })
-    })
+        // Then
+        expect(fields.length).toBeGreaterThan(0)
+        expect(fields[0].parse()).toBe(expectedFirstDocument)
+        expect(fields[0].value).toBe(expectedFirstDocument)
+
+        results.forEach((result: CnabValidationResult) => {
+          expect(result).toEqual(genValidCnabValidationResult())
+        })
+      }
+    )
   })
 
   describe('validate with error', (): void => {
+    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+
     it('given segment Q line with blank document when validating then returns null value and field error', (): void => {
       // Given
       const dummyLineNumber = 37
