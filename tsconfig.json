@@ -20,6 +20,7 @@
     "paths": {
       "@/*": ["src/*"],
       "@cnab/type/*": ["src/cnab/type/*"],
+      "@cnab/field/*": ["src/cnab/field/*"],
       "@cnab/exception/*": ["src/cnab/exception/*"],
       "@cnab/validators/*": ["src/cnab/validators/*"],
       "@cnab/utils/*": ["src/cnab/utils/*"],

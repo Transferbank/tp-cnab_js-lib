@@ -17,6 +17,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@cnab/type/(.*)$': '<rootDir>/src/cnab/type/$1',
+    '^@cnab/field/(.*)$': '<rootDir>/src/cnab/field/$1',
     '^@cnab/exception/(.*)$': '<rootDir>/src/cnab/exception/$1',
     '^@cnab/validators/(.*)$': '<rootDir>/src/cnab/validators/$1',
     '^@cnab/utils/(.*)$': '<rootDir>/src/cnab/utils/$1',

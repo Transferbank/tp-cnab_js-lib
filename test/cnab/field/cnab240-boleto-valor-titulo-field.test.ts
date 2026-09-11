@@ -1,8 +1,8 @@
 import * as path from 'path'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import { 
-  readExampleLines, 
+import {
+  readExampleLines,
   replaceLineRange,
   findFirstCnab240SegmentLine,
   filterValidatableLines,
@@ -10,18 +10,33 @@ import {
   getFieldRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { 
-  CnabFieldInvalidNumberError, 
+import {
+  CnabFieldInvalidNumberError,
   CnabFieldEmptyValueError,
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
+import { Cnab240BoletoValorTituloField } from '@cnab/field/cnab240-boleto-valor-titulo-field'
+import { Cnab240BancoDoBrasilBoletoValorTituloField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-valor-titulo-field'
 import { Cnab240BradescoBoletoValorTituloField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-valor-titulo-field'
+import { Cnab240CaixaBoletoValorTituloField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-valor-titulo-field'
+import { Cnab240ItauBoletoValorTituloField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-valor-titulo-field'
+import { Cnab240SantanderBoletoValorTituloField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-valor-titulo-field'
+import { Cnab240SicoobBoletoValorTituloField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-valor-titulo-field'
+import { Cnab240SicrediBoletoValorTituloField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-valor-titulo-field'
 
-describe('Cnab240BradescoBoletoValorTituloField', (): void => {
-  const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+type ValorTituloFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoValorTituloField
 
+// Cada banco tem sua propria classe (Cnab240<Banco>BoletoValorTituloField), mas todas
+// herdam de Cnab240BoletoValorTituloField sem sobrescrever nada - hoje range, mensagem e
+// comportamento sao identicos nos 7. O caminho feliz roda a classe de cada banco contra o
+// arquivo de exemplo real dele; os casos de erro (em branco, zero, alfanumerico) so
+// precisam rodar uma vez (aqui com a classe do Bradesco), ja que testam a base herdada,
+// nao algo especifico de banco.
+describe('Cnab240BoletoValorTituloField', (): void => {
   describe('shouldValidate', (): void => {
+    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+
     describe.each([
       { segment: 'P', expectedShouldValidate: true },
       { segment: 'Q', expectedShouldValidate: false },
@@ -49,28 +64,45 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
   })
 
   describe('parse and validate', (): void => {
-    it('given segment P lines with valid title value when parsing and validating then accepts all lines', (): void => {
-      // Given
-      const lines = readExampleLines(path.join(resPath(), examplePath))
-      const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab240BradescoBoletoValorTituloField),
-        Cnab240BradescoBoletoValorTituloField
-      )
+    it.each([
+      { FieldClass: Cnab240BancoDoBrasilBoletoValorTituloField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 1234.50 },
+      { FieldClass: Cnab240BradescoBoletoValorTituloField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 100 },
+      { FieldClass: Cnab240CaixaBoletoValorTituloField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 1234.50 },
+      { FieldClass: Cnab240ItauBoletoValorTituloField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 10000 },
+      { FieldClass: Cnab240SantanderBoletoValorTituloField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 1234.50 },
+      { FieldClass: Cnab240SicoobBoletoValorTituloField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 10000 },
+      { FieldClass: Cnab240SicrediBoletoValorTituloField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 1234.50 }
+    ])(
+      'given segment P lines with valid title value ($FieldClass.name) when parsing and validating then accepts all lines',
+      ({ FieldClass, examplePath, expectedFirstValue }: {
+        FieldClass: ValorTituloFieldClass
+        examplePath: string
+        expectedFirstValue: number
+      }): void => {
+        // Given
+        const lines = readExampleLines(path.join(resPath(), examplePath))
+        const fields = createFieldsFromLines(
+          filterValidatableLines(lines, FieldClass),
+          FieldClass
+        )
 
-      const results = fields.map((field: Cnab240BradescoBoletoValorTituloField) => field.validate())
+        const results = fields.map((field: Cnab240BoletoValorTituloField) => field.validate())
 
-      // Then
-      expect(fields.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toBe(100)
-      expect(fields[0].value).toBe(100)
-      
-      results.forEach((result: CnabValidationResult) => {
-        expect(result).toEqual(genValidCnabValidationResult())
-      })
-    })
+        // Then
+        expect(fields.length).toBeGreaterThan(0)
+        expect(fields[0].parse()).toBe(expectedFirstValue)
+        expect(fields[0].value).toBe(expectedFirstValue)
+
+        results.forEach((result: CnabValidationResult) => {
+          expect(result).toEqual(genValidCnabValidationResult())
+        })
+      }
+    )
   })
 
   describe('validate with error', (): void => {
+    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+
     it('given segment P line with blank value when validating then returns null value and field error', (): void => {
       // Given
       const dummyLineNumber = 37
