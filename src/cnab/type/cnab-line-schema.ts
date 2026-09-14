@@ -14,7 +14,7 @@ import { CnabLineSchemaNotInitializedException } from '@cnab/exception/cnab-exce
 type CnabLineValidatorClass = new (rawLine: string, lineNumber: number) => CnabLineValidator
 
 interface CnabValidatableConstructor {
-  new (rawLine: string, lineNumber: number): CnabLineValidator | CnabField
+  new (rawLine: string, lineNumber: number): CnabLineValidator | CnabField<unknown>
 }
 
 export class CnabLineSchema {
