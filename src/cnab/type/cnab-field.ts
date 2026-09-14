@@ -19,27 +19,30 @@ export abstract class CnabField<T = string> {
   }
 
   get value(): T | null {
-    if (this.cachedValue === undefined) {
-      try {
-        // 1. Extrai o valor bruto da linha (sempre string)
-        const rawValue = this.extractRawValue()
+    if (this.cachedValue !== undefined) {
+      return this.cachedValue
+    }
 
-        // 2. Se vazio (não preenchido no arquivo) -> null
-        if (rawValue === '') {
-          this.cachedValue = null
-        } else {
-          // 3. Tem conteúdo -> parseia para o tipo correto
-          this.cachedValue = this.parseValue(rawValue)
-        }
-      } catch (error) {
-        const isOptional = (this.constructor as typeof CnabField).isOptional
-        if (isOptional) {
-          this.cachedValue = null
-        } else {
-          throw error
-        }
+    try {
+      // 1. Extrai o valor bruto da linha (sempre string)
+      const rawValue = this.extractRawValue()
+
+      // 2. Se vazio (não preenchido no arquivo) -> null
+      if (rawValue === '') {
+        this.cachedValue = null
+      } else {
+        // 3. Tem conteúdo -> parseia para o tipo correto
+        this.cachedValue = this.parseValue(rawValue)
+      }
+    } catch (error) {
+      const isOptional = (this.constructor as typeof CnabField).isOptional
+      if (isOptional) {
+        this.cachedValue = null
+      } else {
+        throw error
       }
     }
+
     return this.cachedValue
   }
 
