@@ -131,13 +131,6 @@ export abstract class CnabFieldParseError extends Error {
   }
 }
 
-export class CnabFieldEmptyValueError extends Error {
-  constructor(fieldName: string) {
-    super(`Não é possível parsear valor vazio para o campo ${fieldName}`)
-    this.name = 'CnabFieldEmptyValueError'
-  }
-}
-
 export class CnabFieldInvalidNumberError extends CnabFieldParseError {
   constructor(fieldName: string, rawValue: string) {
     super(`Valor numérico inválido no campo ${fieldName}: ${rawValue}`, fieldName, rawValue)
