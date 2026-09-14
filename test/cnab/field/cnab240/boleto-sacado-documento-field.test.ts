@@ -1,34 +1,24 @@
 import * as path from 'path'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import {
-  readExampleLines,
-  replaceLineRange,
-  findFirstCnab240SegmentLine,
-  filterValidatableLines,
-  createFieldsFromLines,
-  getFieldRange
-} from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BoletoSacadoDocumentoField } from '@cnab/field/cnab240/boleto-sacado-documento-field'
-import { Cnab240BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-sacado-documento-field'
-import { Cnab240BradescoBoletoSacadoDocumentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-sacado-documento-field'
-import { Cnab240CaixaBoletoSacadoDocumentoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-sacado-documento-field'
 import { Cnab240ItauBoletoSacadoDocumentoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-sacado-documento-field'
-import { Cnab240SantanderBoletoSacadoDocumentoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-sacado-documento-field'
+import { Cnab240CaixaBoletoSacadoDocumentoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-sacado-documento-field'
 import { Cnab240SicoobBoletoSacadoDocumentoField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-sacado-documento-field'
 import { Cnab240SicrediBoletoSacadoDocumentoField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-sacado-documento-field'
-
+import { Cnab240BradescoBoletoSacadoDocumentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-sacado-documento-field'
+import { Cnab240SantanderBoletoSacadoDocumentoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-sacado-documento-field'
+import { Cnab240BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-sacado-documento-field'
+import { readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
+  filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoSacadoDocumentoField
 
 // Cada banco tem sua propria classe (Cnab240<Banco>BoletoSacadoDocumentoField), todas
 // herdando de Cnab240BoletoSacadoDocumentoField sem sobrescrever nada - range, fieldName
-// e a validacao de CPF/CNPJ (validateDocument) sao identicos nos 7 hoje. O caminho feliz
-// roda a classe de cada banco contra o arquivo de exemplo real dele; os casos de erro
-// (em branco, documento invalido) rodam uma vez com a classe do Bradesco, ja que testam
-// comportamento herdado, nao especifico de banco.
+// e a validacao de CPF/CNPJ (validateDocument) sao identicos nos 7 hoje. 
 describe('Cnab240BoletoSacadoDocumentoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'

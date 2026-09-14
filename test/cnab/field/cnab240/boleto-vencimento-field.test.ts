@@ -1,38 +1,25 @@
 import * as path from 'path'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import {
-  readExampleLines,
-  replaceLineRange,
-  findFirstCnab240SegmentLine,
-  filterValidatableLines,
-  createFieldsFromLines,
-  getFieldRange
-} from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  CnabFieldInvalidDateError,
-  CnabFieldEmptyValueError,
-  CnabGenericFieldError
-} from '@cnab/type/cnab-validation-error'
-import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BoletoVencimentoField } from '@cnab/field/cnab240/boleto-vencimento-field'
-import { Cnab240BancoDoBrasilBoletoVencimentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-vencimento-field'
-import { Cnab240BradescoBoletoVencimentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-vencimento-field'
-import { Cnab240CaixaBoletoVencimentoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-vencimento-field'
+import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240ItauBoletoVencimentoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-vencimento-field'
-import { Cnab240SantanderBoletoVencimentoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-vencimento-field'
+import { CnabFieldInvalidDateError, CnabFieldEmptyValueError, CnabGenericFieldError} from '@cnab/type/cnab-validation-error'
+import { Cnab240CaixaBoletoVencimentoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-vencimento-field'
 import { Cnab240SicoobBoletoVencimentoField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-vencimento-field'
 import { Cnab240SicrediBoletoVencimentoField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-vencimento-field'
+import { Cnab240BradescoBoletoVencimentoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-vencimento-field'
+import { Cnab240SantanderBoletoVencimentoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-vencimento-field'
+import { Cnab240BancoDoBrasilBoletoVencimentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-vencimento-field'
+import { readExampleLines, replaceLineRange, findFirstCnab240SegmentLine, 
+  filterValidatableLines, createFieldsFromLines, getFieldRange} from '@test/test-utils'
 
 type VencimentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoVencimentoField
 
 // Cada banco tem sua propria classe (Cnab240<Banco>BoletoVencimentoField), todas herdando
 // de Cnab240BoletoVencimentoField sem sobrescrever nada - range, fieldName e o parse de
-// data (DDMMAAAA) sao identicos nos 7 hoje. O caminho feliz roda a classe de cada banco
-// contra o arquivo de exemplo real dele; os casos de erro (em branco, data invalida)
-// rodam uma vez com a classe do Bradesco, ja que testam comportamento herdado, nao
-// especifico de banco.
+// data (DDMMAAAA) sao identicos nos 7 hoje. 
 describe('Cnab240BoletoVencimentoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'

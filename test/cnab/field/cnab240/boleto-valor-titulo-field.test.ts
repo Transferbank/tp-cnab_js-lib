@@ -1,38 +1,25 @@
 import * as path from 'path'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import {
-  readExampleLines,
-  replaceLineRange,
-  findFirstCnab240SegmentLine,
-  filterValidatableLines,
-  createFieldsFromLines,
-  getFieldRange
-} from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import {
-  CnabFieldInvalidNumberError,
-  CnabFieldEmptyValueError,
-  CnabGenericFieldError
-} from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BoletoValorTituloField } from '@cnab/field/cnab240/boleto-valor-titulo-field'
-import { Cnab240BancoDoBrasilBoletoValorTituloField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-valor-titulo-field'
-import { Cnab240BradescoBoletoValorTituloField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-valor-titulo-field'
-import { Cnab240CaixaBoletoValorTituloField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-valor-titulo-field'
 import { Cnab240ItauBoletoValorTituloField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-valor-titulo-field'
-import { Cnab240SantanderBoletoValorTituloField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-valor-titulo-field'
+import { CnabFieldInvalidNumberError, CnabFieldEmptyValueError, CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { Cnab240CaixaBoletoValorTituloField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-valor-titulo-field'
 import { Cnab240SicoobBoletoValorTituloField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-valor-titulo-field'
 import { Cnab240SicrediBoletoValorTituloField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-valor-titulo-field'
+import { Cnab240BradescoBoletoValorTituloField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-valor-titulo-field'
+import { Cnab240SantanderBoletoValorTituloField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-valor-titulo-field'
+import { Cnab240BancoDoBrasilBoletoValorTituloField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-valor-titulo-field'
+import { readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
+  filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 type ValorTituloFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoValorTituloField
 
 // Cada banco tem sua propria classe (Cnab240<Banco>BoletoValorTituloField), mas todas
 // herdam de Cnab240BoletoValorTituloField sem sobrescrever nada - hoje range, mensagem e
-// comportamento sao identicos nos 7. O caminho feliz roda a classe de cada banco contra o
-// arquivo de exemplo real dele; os casos de erro (em branco, zero, alfanumerico) so
-// precisam rodar uma vez (aqui com a classe do Bradesco), ja que testam a base herdada,
-// nao algo especifico de banco.
+// comportamento sao identicos nos 7.
 describe('Cnab240BoletoValorTituloField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
