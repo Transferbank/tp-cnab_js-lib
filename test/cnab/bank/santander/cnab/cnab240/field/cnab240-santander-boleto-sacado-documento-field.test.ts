@@ -3,7 +3,7 @@ import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { CnabGenericFieldError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240SantanderBoletoSacadoDocumentoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-sacado-documento-field'
 import { readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
@@ -37,8 +37,8 @@ describe('Cnab240SantanderBoletoSacadoDocumentoField', (): void => {
     })
   })
 
-  describe('parse and validate', (): void => {
-    it('given segment Q lines with valid document when parsing and validating then accepts all lines', (): void => {
+  describe('value and validate', (): void => {
+    it('given segment Q lines with valid document when reading value and validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
@@ -50,7 +50,6 @@ describe('Cnab240SantanderBoletoSacadoDocumentoField', (): void => {
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toBe('000011122233396')
       expect(fields[0].value).toBe('000011122233396')
 
       results.forEach((result: CnabValidationResult) => {
@@ -88,7 +87,6 @@ describe('Cnab240SantanderBoletoSacadoDocumentoField', (): void => {
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(field.value).toBeNull()
-      expect(() => field.parse()).toThrow(CnabFieldEmptyValueError)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
