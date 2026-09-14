@@ -1,6 +1,5 @@
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabField<T = string> {
   static readonly fieldType: CnabFieldType
@@ -61,14 +60,6 @@ export abstract class CnabField<T = string> {
   abstract shouldValidate(): boolean
   protected abstract parseValue(rawValue: string): T
   protected abstract validateInternal(): CnabValidationResult
-
-  parse(): T {
-    const rawValue = this.extractRawValue()
-    if (rawValue === '') {
-      throw new CnabFieldEmptyValueError(this.fieldName)
-    }
-    return this.parseValue(rawValue)
-  }
 }
 
 export type CnabFieldClass = typeof CnabField<unknown>

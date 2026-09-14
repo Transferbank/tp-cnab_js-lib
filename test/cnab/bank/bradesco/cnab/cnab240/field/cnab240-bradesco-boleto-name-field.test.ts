@@ -2,7 +2,7 @@ import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-name-field'
 
@@ -23,7 +23,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
           (line: string) => line[7] === '3' && line[13] === segment
         )
 
-        if (!rawLine) {
+        if (rawLine == null) {
           throw new Error(`Linha com segmento ${segment} não encontrada`)
         }
 
@@ -38,8 +38,8 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
     })
   })
 
-  describe('parse and validate', (): void => {
-    it('given segment Q lines with valid name when parsing and validating then accepts all lines', (): void => {
+  describe('value and validate', (): void => {
+    it('given segment Q lines with valid name when reading value and validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const segmentQLines = lines
@@ -57,7 +57,6 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
 
       // Then
       expect(segmentQLines.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toBe('JOAO EXEMPLO SILVA')
       expect(fields[0].value).toBe('JOAO EXEMPLO SILVA')
       
       results.forEach((result: CnabValidationResult) => {
@@ -99,7 +98,6 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(() => field.parse()).toThrow(CnabFieldEmptyValueError)
       expect(field.value).toBe(null)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)

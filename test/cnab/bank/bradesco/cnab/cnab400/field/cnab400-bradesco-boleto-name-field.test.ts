@@ -2,7 +2,7 @@ import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-name-field'
 
@@ -60,8 +60,8 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
     })
   })
 
-  describe('parse', (): void => {
-    it('given reference boleto line when parsing name then returns valid name', (): void => {
+  describe('value', (): void => {
+    it('given reference boleto line when reading value then returns valid name', (): void => {
       // Given
       const dummyLineNumber = 37
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -78,7 +78,6 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const field = new Cnab400BradescoBoletoNameField(rawLine, dummyLineNumber)
 
       // Then
-      expect(field.parse()).toBe('COMERCIAL ALFA LTDA')
       expect(field.value).toBe('COMERCIAL ALFA LTDA')
     })
   })
@@ -114,7 +113,6 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(() => field.parse()).toThrow(CnabFieldEmptyValueError)
       expect(field.value).toBe(null)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
