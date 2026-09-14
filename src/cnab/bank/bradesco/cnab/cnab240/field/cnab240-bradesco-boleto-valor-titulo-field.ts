@@ -8,7 +8,7 @@ import {
 
 export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'valor titulo'
+  readonly fieldName = 'valor do título'
   readonly range: [number, number] = [86, 100]
 
   shouldValidate(): boolean {
@@ -16,13 +16,13 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   }
 
   protected validateInternal(): CnabValidationResult {
-    const isValid = this.value !== null && this.value >= 0
+    const isValid = this.value !== null && this.value > 0
     const errors = []
 
     if (!isValid) {
       errors.push(
         new CnabGenericFieldError({
-          message: 'Campo valor titulo inválido: deve ser um valor numérico positivo',
+          message: 'Campo valor do título inválido: deve ser maior que zero',
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range
@@ -37,12 +37,10 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   }
 
   protected parseValue(rawValue: string): number {
-    const centavos = parseInt(rawValue, 10)
-    
-    if (isNaN(centavos)) {
+    if (!/^\d+$/.test(rawValue)) {
       throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
     }
-    
-    return centavos / 100
+
+    return parseInt(rawValue, 10) / 100
   }
 }
