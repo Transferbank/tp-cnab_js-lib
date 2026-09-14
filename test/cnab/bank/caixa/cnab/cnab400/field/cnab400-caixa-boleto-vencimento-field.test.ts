@@ -3,7 +3,7 @@ import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { CnabGenericFieldError, CnabFieldInvalidDateError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { Cnab400CaixaBoletoVencimentoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-vencimento-field'
 import { readExampleLines, replaceLineRange, findFirstCnab400RecordLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
@@ -37,8 +37,8 @@ describe('Cnab400CaixaBoletoVencimentoField', (): void => {
     })
   })
 
-  describe('parse and validate', (): void => {
-    it('given detail lines with valid due date when parsing and validating then accepts all lines', (): void => {
+  describe('value and validate', (): void => {
+    it('given detail lines with valid due date when reading value and validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
@@ -50,7 +50,6 @@ describe('Cnab400CaixaBoletoVencimentoField', (): void => {
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
-      expect(fields[0].parse()).toEqual(new Date(2026, 7, 15))
       expect(fields[0].value).toEqual(new Date(2026, 7, 15))
 
       results.forEach((result: CnabValidationResult) => {
@@ -88,7 +87,6 @@ describe('Cnab400CaixaBoletoVencimentoField', (): void => {
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(field.value).toBeNull()
-      expect(() => field.parse()).toThrow(CnabFieldEmptyValueError)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
@@ -96,7 +94,7 @@ describe('Cnab400CaixaBoletoVencimentoField', (): void => {
       expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
-    it('given detail line with invalid date when parsing then throws error', (): void => {
+    it('given detail line with invalid date when reading value then throws error', (): void => {
       // Given
       const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400CaixaBoletoVencimentoField)
@@ -113,7 +111,7 @@ describe('Cnab400CaixaBoletoVencimentoField', (): void => {
       // When / Then
       const field = new Cnab400CaixaBoletoVencimentoField(invalidLine, dummyLineNumber)
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(() => field.parse()).toThrow(CnabFieldInvalidDateError)
+      expect(() => field.value).toThrow(CnabFieldInvalidDateError)
     })
 
     it('given detail line with invalid date when validating then returns format error', (): void => {
