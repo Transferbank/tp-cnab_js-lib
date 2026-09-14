@@ -5,7 +5,7 @@ import {
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 
-export abstract class CnabField<T = string> {
+export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
   abstract readonly fieldName: string
@@ -38,7 +38,7 @@ export abstract class CnabField<T = string> {
         this.cachedValue = this.parseValue(rawValue)
       }
     } catch (error) {
-      const isOptional = (this.constructor as typeof CnabField).isOptional
+      const isOptional = (this.constructor as typeof CnabField<T>).isOptional
       if (isOptional) {
         this.cachedValue = null
       } else {
@@ -54,7 +54,7 @@ export abstract class CnabField<T = string> {
   }
 
   validate(): CnabValidationResult {
-    const isOptional = (this.constructor as typeof CnabField).isOptional
+    const isOptional = (this.constructor as typeof CnabField<T>).isOptional
 
     let value: T | null
     try {
