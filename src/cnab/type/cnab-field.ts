@@ -52,6 +52,11 @@ export abstract class CnabField<T> {
   }
 
   protected extractRawValue(): string {
+    // Linha que nao é do tipo/segmento deste campo: trata como ausente,
+    // igual a campo em branco. Sem isso, value() extrairia bytes de
+    // outro campo qualquer que por coincidencia ocupa essa faixa na
+    // linha errada, e reportaria como se fosse um valor de verdade.
+    if (!this.shouldValidate()) return ''
     return this.extractRangeFromLine(this.range[0] - 1, this.range[1])
   }
 
@@ -63,6 +68,16 @@ export abstract class CnabField<T> {
   }
 
   validate(): CnabValidationResult {
+    // Linha que nao é do tipo/segmento deste campo: nao há nada aqui
+    // pra validar. Sem isso, um campo obrigatorio chamado direto numa
+    // linha errada relataria "campo obrigatorio" - impreciso, ja que o
+    // problema real e que o campo nem se aplica a esta linha. No
+    // orquestrador (CnabLineSchema) isso ja é filtrado por fora antes
+    // de chamar validate(); esta guarda protege quem chama direto.
+    if (!this.shouldValidate()) {
+      return { isValid: true, errors: [] }
+    }
+
     const isOptional = (this.constructor as typeof CnabField).isOptional
 
     let value: T | null
