@@ -57,7 +57,9 @@ function registerCnabSchemas(): CnabSchema[] {
           BradescoFields240.Cnab240BradescoBoletoNameField,
           BradescoFields240.Cnab240BradescoBoletoVencimentoField,
           BradescoFields240.Cnab240BradescoBoletoValorTituloField,
-          BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField
+          BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField,
+          BradescoFields240.Cnab240BradescoBoletoDataEmissaoField,
+          BradescoFields240.Cnab240BradescoBoletoCodigoMovimentoField
         ],
       },
     }),
