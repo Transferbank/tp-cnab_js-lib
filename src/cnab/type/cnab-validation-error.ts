@@ -141,3 +141,13 @@ export class CnabFieldInvalidDateError extends CnabFieldParseError {
     super(`Data inválida no campo ${fieldName}: ${rawValue}`, fieldName, rawValue)
   }
 }
+
+export class CnabFieldUnexpectedParseError extends CnabFieldParseError {
+  readonly cause: unknown
+
+  constructor(fieldName: string, rawValue: string, cause: unknown) {
+    const causeMessage = cause instanceof Error ? cause.message : String(cause)
+    super(`Erro inesperado ao parsear o campo ${fieldName}: ${causeMessage}`, fieldName, rawValue)
+    this.cause = cause
+  }
+}

@@ -2,6 +2,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabFieldParseError,
+  CnabFieldUnexpectedParseError,
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 
@@ -26,23 +27,24 @@ export abstract class CnabField<T> {
       return this.cachedValue
     }
 
-    try {
-      // 1. Extrai o valor bruto da linha (sempre string)
-      const rawValue = this.extractRawValue()
+    // Vazio (não preenchido no arquivo) -> null. Conteúdo malformado
+    // sempre propaga - opcional significa "pode estar em branco", não
+    // "pode conter lixo". Qualquer erro que não seja já um
+    // CnabFieldParseError é normalizado como tal, para que validate()
+    // sempre saiba reconhecer um erro de parse independente de como a
+    // classe concreta de parseValue() o lançou.
+    const rawValue = this.extractRawValue()
 
-      // 2. Se vazio (não preenchido no arquivo) -> null
-      if (rawValue === '') {
-        this.cachedValue = null
-      } else {
-        // 3. Tem conteúdo -> parseia para o tipo correto
+    if (rawValue === '') {
+      this.cachedValue = null
+    } else {
+      try {
         this.cachedValue = this.parseValue(rawValue)
-      }
-    } catch (error) {
-      const isOptional = (this.constructor as typeof CnabField<T>).isOptional
-      if (isOptional) {
-        this.cachedValue = null
-      } else {
-        throw error
+      } catch (error) {
+        if (error instanceof CnabFieldParseError) {
+          throw error
+        }
+        throw new CnabFieldUnexpectedParseError(this.fieldName, rawValue, error)
       }
     }
 
@@ -61,7 +63,7 @@ export abstract class CnabField<T> {
   }
 
   validate(): CnabValidationResult {
-    const isOptional = (this.constructor as typeof CnabField<T>).isOptional
+    const isOptional = (this.constructor as typeof CnabField).isOptional
 
     let value: T | null
     try {
