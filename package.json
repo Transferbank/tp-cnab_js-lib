@@ -1,6 +1,6 @@
 {
   "name": "@transferbank/cnab-lib-ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Biblioteca TypeScript para processamento e validação de arquivos CNAB 240 e 400",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
