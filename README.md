@@ -1,6 +1,6 @@
-# @transferbank/cnab-lib-ts
+# @transferhub/cnab-lib-ts
 
-[![npm version](https://img.shields.io/npm/v/@transferbank/cnab-lib-ts.svg)](https://www.npmjs.com/package/@transferbank/cnab-lib-ts)
+[![npm version](https://img.shields.io/npm/v/@transferhub/cnab-lib-ts.svg)](https://www.npmjs.com/package/@transferhub/cnab-lib-ts)
 
 Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de remessa
 **CNAB 240** e **CNAB 400** (cobrança / boleto) no padrão FEBRABAN.
@@ -29,9 +29,9 @@ Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de 
 ## Instalação
 
 ```bash
-npm install @transferbank/cnab-lib-ts
+npm install @transferhub/cnab-lib-ts
 # ou
-yarn add @transferbank/cnab-lib-ts
+yarn add @transferhub/cnab-lib-ts
 ```
 
 Requer Node.js 18+ (usa `TextDecoder` e a Web File API, disponíveis globalmente a
@@ -42,7 +42,7 @@ partir dessa versão).
 ### A partir de um `File` (browser ou Node 20+)
 
 ```ts
-import { openCnabFile } from '@transferbank/cnab-lib-ts'
+import { openCnabFile } from '@transferhub/cnab-lib-ts'
 
 const cnab = await openCnabFile(file) // file: File
 
@@ -61,7 +61,7 @@ if (!result.isValid) {
 
 ```ts
 import { readFileSync } from 'node:fs'
-import { openCnabFileFromLines } from '@transferbank/cnab-lib-ts'
+import { openCnabFileFromLines } from '@transferhub/cnab-lib-ts'
 
 // arquivos CNAB usam codificação latin1 (ISO-8859-1)
 const conteudo = readFileSync('remessa.rem', 'latin1')
@@ -87,7 +87,7 @@ const result = cnab.validate(true)
 além das que a biblioteca já verifica:
 
 ```ts
-import { openCnabFileFromLines, CnabField, CnabFieldType } from '@transferbank/cnab-lib-ts'
+import { openCnabFileFromLines, CnabField, CnabFieldType } from '@transferhub/cnab-lib-ts'
 
 class MeuNossoNumeroField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -108,7 +108,7 @@ Se a validação falhar, lança `CnabValidationFailedException` (contém `errors
 a mesma lista que `validate()` retornaria).
 
 ```ts
-import { openCnabFileFromLines, CnabValidationFailedException } from '@transferbank/cnab-lib-ts'
+import { openCnabFileFromLines, CnabValidationFailedException } from '@transferhub/cnab-lib-ts'
 
 const cnab = openCnabFileFromLines(linhas)
 
@@ -220,7 +220,7 @@ quando o arquivo não passa na validação.
 ### Utilitários
 
 ```ts
-import { validateDocument, parseDateDDMMAAAA, formatDateBR } from '@transferbank/cnab-lib-ts'
+import { validateDocument, parseDateDDMMAAAA, formatDateBR } from '@transferhub/cnab-lib-ts'
 
 validateDocument('00011122233396')       // valida CPF/CNPJ (módulo 11)
 parseDateDDMMAAAA('15122026')            // Date
