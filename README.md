@@ -11,9 +11,8 @@ Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de 
 - Suporte a **7 bancos** 
 - Sem dependências de runtime; tipagem estrita; funciona em Node e no browser
 
-> **Status:** validação, detecção e leitura (`CnabFile.read()`) estão prontas.
-> Validação e detecção são cobertas por testes; `read()` ainda não tem
-> testes automatizados — ver [Limitações](#limitações).
+> **Status:** validação, detecção e leitura (`CnabFile.read()`) estão prontas
+> e cobertas por testes.
 
 ## Bancos suportados
 
@@ -241,8 +240,6 @@ No CNAB 240 as linhas de boleto são agrupadas a partir do Segmento P
 
 ## Limitações
 
-- `CnabFile.read()` funciona mas ainda não tem testes automatizados cobrindo
-  o retorno (`Cnab`/`CnabBoleto`/`CnabLineData`) — validado manualmente.
 - A validação cobre os campos do sacado; não valida somatórios de trailer,
   sequência de registros nem dígitos verificadores de nosso número.
 
