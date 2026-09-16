@@ -1,5 +1,7 @@
 # @transferbank/cnab-lib-ts
 
+[![npm version](https://img.shields.io/npm/v/@transferbank/cnab-lib-ts.svg)](https://www.npmjs.com/package/@transferbank/cnab-lib-ts)
+
 Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de remessa
 **CNAB 240** e **CNAB 400** (cobrança / boleto) no padrão FEBRABAN.
 
@@ -9,9 +11,9 @@ Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de 
 - Suporte a **7 bancos** 
 - Sem dependências de runtime; tipagem estrita; funciona em Node e no browser
 
-> **Status:** validação e detecção estão prontas e cobertas por testes.
-> O parsing completo do arquivo para um objeto de domínio (`CnabFile.read()`)
-> ainda **não está implementado** — ver [Limitações](#limitações).
+> **Status:** validação, detecção e leitura (`CnabFile.read()`) estão prontas.
+> Validação e detecção são cobertas por testes; `read()` ainda não tem
+> testes automatizados — ver [Limitações](#limitações).
 
 ## Bancos suportados
 
@@ -98,6 +100,63 @@ class MeuNossoNumeroField extends CnabField<string> {
 cnab.validate(true, [MeuNossoNumeroField])
 ```
 
+### Lendo os dados do boleto (`read()`)
+
+`read()` valida o arquivo primeiro (para no primeiro erro) e, se estiver tudo
+certo, devolve um objeto `Cnab` com `header`, `trailer` e um `CnabBoleto[]` —
+já com os campos parseados para o tipo certo (`string`, `number`, `Date`...).
+Se a validação falhar, lança `CnabValidationFailedException` (contém `errors`,
+a mesma lista que `validate()` retornaria).
+
+```ts
+import { openCnabFileFromLines, CnabValidationFailedException } from '@transferbank/cnab-lib-ts'
+
+const cnab = openCnabFileFromLines(linhas)
+
+try {
+  const dados = cnab.read()
+
+  console.log(dados.boletos.length) // quantidade de boletos no arquivo
+
+  const boleto = dados.boletos[0]
+  console.log(boleto['nome do sacado'])      // 'JOAO EXEMPLO SILVA'
+  console.log(boleto['valor do título'])     // 100 (number)
+  console.log(boleto['data de vencimento'])  // Date
+  console.log(boleto['documento do sacado']) // '000010000791989'
+} catch (error) {
+  if (error instanceof CnabValidationFailedException) {
+    console.log(error.errors) // CnabValidationError[]
+  }
+}
+```
+
+**Acessando os campos:** o nome de cada campo é a mesma string usada em
+`fieldName` na classe do campo (em português, com acentos e espaços — por
+isso o acesso é `boleto['valor do título']`, não `boleto.valorDoTitulo`).
+`CnabBoleto` e `CnabLineData` (`header`/`trailer`) funcionam da mesma forma:
+são objetos somente-leitura (`Proxy`) que expõem cada campo válido para
+aquela linha como uma propriedade dinâmica. Ler um campo que não existe
+lança erro listando os campos disponíveis.
+
+Formas alternativas de acessar, quando o nome do campo é dinâmico ou você
+quer evitar o `throw` em campo inexistente:
+
+```ts
+boleto.hasField('valor do título')     // boolean
+boleto.getField('valor do título')     // instância de CnabField, ou undefined
+boleto.lineCount                       // quantas linhas (segmentos) o boleto tem
+boleto.lines                           // CnabLineData[], uma por linha (segmento)
+
+dados.header.get('...')                // mesma API em CnabLineData
+dados.header.toJSON()                  // objeto plano, útil para serializar/logar
+```
+
+Cada linha de um boleto só expõe os campos que se aplicam **àquela linha**
+(ex.: no CNAB 240, nome do sacado vem do segmento Q, valor e vencimento do
+segmento P) — mas `CnabBoleto` já indexa todos os campos de todas as linhas
+do boleto, então `boleto['nome do sacado']` funciona sem você precisar saber
+em qual segmento/linha o campo mora.
+
 ## API
 
 ### `openCnabFile(file: File): Promise<CnabFile>`
@@ -117,7 +176,7 @@ Mesma detecção, a partir de um array de linhas já lido. Lança
 | `format: CnabFormat`                              | `'240'` ou `'400'`                                             |
 | `rawLines: string[]`                              | Linhas originais do arquivo                                     |
 | `validate(withFeedback?, extraFields?)`           | Valida o arquivo e retorna `CnabValidationResult`             |
-| `read(extraFields?)`                              | **Ainda não implementado** — lança erro                        |
+| `read(extraFields?)`                              | Valida e retorna `Cnab` (`header`, `trailer`, `boletos`); lança `CnabValidationFailedException` se inválido |
 
 ### `CnabValidationResult`
 
@@ -133,11 +192,31 @@ Cada `CnabValidationError` expõe `lineNumber`, `errorType` (`'line'` | `'field'
 `range`. Subclasses concretas exportadas: `CnabInvalidLineSizeError`,
 `CnabInvalidLineStartError`, `CnabFieldMinLengthError`, `CnabGenericFieldError`.
 
+### `Cnab`, `CnabBoleto`, `CnabLineData`
+
+Retornados por `CnabFile.read()`.
+
+| Tipo           | Membro                                    | Descrição                                          |
+| -------------- | ------------------------------------------ | --------------------------------------------------- |
+| `Cnab`         | `header`, `trailer: CnabLineData`          | Linha de header/trailer já parseada                  |
+| `Cnab`         | `boletos: CnabBoleto[]`                    | Um item por boleto (grupo de linhas) no arquivo      |
+| `CnabBoleto`   | `[fieldName]: unknown`                     | Acesso dinâmico ao valor de qualquer campo do boleto |
+| `CnabBoleto`   | `lines: CnabLineData[]`                    | As linhas (segmentos) que compõem o boleto           |
+| `CnabBoleto`   | `lineCount: number`                        | Quantidade de linhas do boleto                       |
+| `CnabBoleto`   | `hasField(name): boolean`                  | Se algum campo do boleto tem esse nome               |
+| `CnabLineData` | `[fieldName]: unknown`                     | Acesso dinâmico ao valor de um campo da linha        |
+| `CnabLineData` | `rawLine: string`, `lineNumber: number`    | Linha original e número da linha no arquivo          |
+| `CnabLineData` | `get<T>(name)`, `getField<T>(name)`        | Valor do campo, ou a instância de `CnabField`        |
+| `CnabLineData` | `fields`, `fieldNames`, `hasField(name)`   | Introspecção dos campos disponíveis nessa linha      |
+| `CnabLineData` | `toJSON()`                                 | Objeto plano `{ [fieldName]: valor, _meta }`         |
+
 ### Exceções
 
 Lançadas pela detecção (todas estendem `CnabException`):
 `CnabMinimumLinesNotReachedException`, `CnabFormatNotRecognizedException`,
-`CnabBankCodeNotFoundException`, `CnabBankSchemaNotFoundException`.
+`CnabBankCodeNotFoundException`, `CnabBankSchemaNotFoundException`. `read()`
+lança `CnabValidationFailedException` (traz `errors: CnabValidationError[]`)
+quando o arquivo não passa na validação.
 
 ### Utilitários
 
@@ -162,8 +241,8 @@ No CNAB 240 as linhas de boleto são agrupadas a partir do Segmento P
 
 ## Limitações
 
-- `CnabFile.read()` (montar um objeto de domínio com header, boletos e trailer)
-  ainda não foi implementado.
+- `CnabFile.read()` funciona mas ainda não tem testes automatizados cobrindo
+  o retorno (`Cnab`/`CnabBoleto`/`CnabLineData`) — validado manualmente.
 - A validação cobre os campos do sacado; não valida somatórios de trailer,
   sequência de registros nem dígitos verificadores de nosso número.
 
