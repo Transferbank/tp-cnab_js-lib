@@ -2,7 +2,7 @@ import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldUnexpectedParseError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab240BradescoBoletoDataEmissaoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-data-emissao-field'
 
@@ -112,12 +112,7 @@ describe('Cnab240BradescoBoletoDataEmissaoField', (): void => {
 
       // Campo opcional significa "pode estar em branco", nao "pode conter lixo":
       // conteudo presente porem malformado deve reportar erro, mesmo sendo opcional.
-      // NOTA: parseValue aqui lanca um Error puro de proposito (nao
-      // CnabFieldParseError), simulando um autor de campo que esqueceu da
-      // convencao - value() normaliza isso para CnabFieldUnexpectedParseError,
-      // entao validate() continua devolvendo um CnabValidationResult normal
-      // em vez de deixar o erro escapar cru.
-      expect(() => field.value).toThrow(CnabFieldUnexpectedParseError)
+      expect(() => field.value).toThrow(CnabFieldInvalidDateError)
       expect(field.validate().isValid).toBe(false)
     })
   })
