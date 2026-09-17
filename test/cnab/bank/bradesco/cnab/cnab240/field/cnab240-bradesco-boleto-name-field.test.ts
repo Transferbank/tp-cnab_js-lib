@@ -74,7 +74,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      if (!rawLine) {
+      if (rawLine == null) {
         throw new Error('Linha segmento Q não encontrada')
       }
 
