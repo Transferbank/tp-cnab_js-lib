@@ -47,14 +47,9 @@ export function validateDocument(rawDocument: string): boolean {
   const digits = rawDocument.trim()
   if (digits.length === 0) return false
 
-  // O campo CNAB e preenchido com zero a esquerda ate uma largura fixa, sem
-  // indicar se o conteudo e CPF ou CNPJ - por isso o documento real esta
-  // sempre nos digitos mais a direita. Descobrir CPF vs CNPJ removendo
-  // zeros e adivinhando pelo tamanho resultante e ambiguo: um CNPJ cuja
-  // raiz comece com zero, somado ao padding do campo, pode sobrar com
-  // exatamente 11 digitos e ser validado como CPF por engano. Testar as
-  // duas leituras fixas (ultimos 11 digitos como CPF, ultimos 14 como
-  // CNPJ) evita essa ambiguidade.
+  // O documento real esta sempre nos digitos mais a direita (o campo e
+  // preenchido com zero a esquerda), entao testamos as duas leituras fixas
+  // em vez de adivinhar CPF/CNPJ pelo tamanho apos remover zeros.
   const asCPF = digits.slice(-11)
   const asCNPJ = digits.slice(-14).padStart(14, '0')
 
