@@ -4,6 +4,10 @@ export enum DateFormat {
   AAAAMMDD = 'AAAAMMDD'
 }
 
+// new Date(ano, mes, dia) faz rollover de datas de calendario inexistentes
+// (ex.: 31 de fevereiro vira 3 de marco) em vez de retornar Invalid Date -
+// por isso conferimos se os componentes da data construida ainda batem com
+// o que foi lido da string original.
 function isValidDate(date: Date, year: number, month: number, day: number): boolean {
   return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
 }

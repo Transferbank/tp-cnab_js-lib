@@ -115,5 +115,29 @@ describe('Cnab240BradescoBoletoDataEmissaoField', (): void => {
       expect(() => field.value).toThrow(CnabFieldInvalidDateError)
       expect(field.validate().isValid).toBe(false)
     })
+
+    it('given segment P line with a calendar date that does not exist when validating then does not silently roll it over', (): void => {
+      // Given
+      const fieldRange = new Cnab240BradescoBoletoDataEmissaoField('', 0).range
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = lines.find(
+        (line: string) => line[7] === '3' && line[13] === 'P'
+      )
+
+      if (rawLine == null) {
+        throw new Error('Linha segmento P não encontrada')
+      }
+
+      // 31/02/2026 nao existe - new Date(2026, 1, 31) faria rollover pra 03/03/2026
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '31022026')
+
+      // When / Then
+      const field = new Cnab240BradescoBoletoDataEmissaoField(invalidLine, 37)
+      expect(invalidLine.length).toBe(rawLine.length)
+
+      expect(() => field.value).toThrow(CnabFieldInvalidDateError)
+      expect(field.validate().isValid).toBe(false)
+    })
   })
 })
