@@ -9,7 +9,7 @@
     "prepare": "npm run build",
     "dev": "tsc --watch",
     "test": "jest",
-    "lint": "eslint src"
+    "lint": "eslint src test"
   },
   "keywords": [
     "cnab",
