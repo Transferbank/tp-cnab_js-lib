@@ -1,6 +1,5 @@
-// O padrão namespace+enum é idiomático e recomendado pelo próprio
-// TypeScript Handbook para adicionar métodos a enums
-// Mas causa warning , que pode ser suprimido sem problema
+// Namespace+enum é idiomático (recomendado pelo TypeScript Handbook para
+// adicionar métodos a enums), mas dispara um warning que pode ser suprimido.
 /* eslint-disable @typescript-eslint/no-namespace */
 export enum CnabBank {
   ITAU = 'itau',

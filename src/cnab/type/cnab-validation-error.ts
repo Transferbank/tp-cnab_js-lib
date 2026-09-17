@@ -14,7 +14,6 @@ export abstract class CnabValidationError {
   abstract get message(): string
 }
 
-// Classe base para erros de linha
 export abstract class CnabLineValidationError extends CnabValidationError {
   get errorType(): CnabValidationErrorType {
     return CnabValidationErrorType.LINE
