@@ -29,7 +29,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        if (!rawLine) {
+        if (rawLine == null) {
           throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
@@ -74,7 +74,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      if (!rawLine) {
+      if (rawLine == null) {
         throw new Error('Linha de boleto não encontrada')
       }
 
