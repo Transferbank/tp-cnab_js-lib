@@ -21,7 +21,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = lines.find((line: string) => line.startsWith(recordType))
 
-        if (!rawLine) {
+        if (rawLine == null) {
           throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
@@ -70,7 +70,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         return field.shouldValidate()
       })
 
-      if (!rawLine) {
+      if (rawLine == null) {
         throw new Error('Linha de boleto não encontrada')
       }
 
@@ -94,7 +94,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         return field.shouldValidate()
       })
 
-      if (!rawLine) {
+      if (rawLine == null) {
         throw new Error('Linha de boleto não encontrada')
       }
 
