@@ -17,14 +17,8 @@ export class Cnab240BradescoBoletoSacadoDocumentoField extends CnabField<string>
   protected performValidation(): CnabValidationResult {
     const value = this.value
 
-    // O layout Febraban (Segmento Q, posicao 18) ja informa se o numero de
-    // inscricao e CPF ("1") ou CNPJ ("2") - lemos o byte direto aqui em vez
-    // de criar um CnabField dedicado, ja que nenhum outro lugar precisa
-    // desse valor. Usar o indicador evita ter que adivinhar pelo checksum
-    // (como validateDocument() faz): tentar CPF e CNPJ e aceitar se
-    // qualquer um bater tem ~1% de chance de aceitar um CNPJ com digito
-    // verificador errado so porque os ultimos 11 digitos coincidem com um
-    // CPF valido.
+    // Segmento Q, posicao 18 (layout Febraban): "1"=CPF, "2"=CNPJ. Usar o
+    // indicador evita adivinhar pelo checksum, que erra em ~1% dos casos.
     const tipoInscricao = this.rawLine[17]
     let isValid = false
     if (value !== null) {
