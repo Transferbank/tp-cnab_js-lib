@@ -1,7 +1,7 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { 
+import {
   CnabGenericFieldError,
   CnabFieldInvalidDateError
 } from '@cnab/type/cnab-validation-error'
@@ -41,11 +41,11 @@ export class Cnab240BradescoBoletoVencimentoField extends CnabField<Date> {
 
   protected parseValue(rawValue: string): Date {
     const date = parseDateDDMMAAAA(rawValue)
-    
+
     if (date === null) {
       throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
     }
-    
+
     return date
   }
 }
