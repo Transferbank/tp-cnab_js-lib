@@ -55,7 +55,14 @@ export abstract class CnabField<T> {
 
   // start/end sao indices 0-based de substring (end exclusivo) - para uma
   // posicao 1-based inclusiva N da documentacao do CNAB, use (N - 1, N).
+  // Nao valida contra o tamanho da linha: linha mais curta que o esperado
+  // e um caso normal (campo nao se aplica ao segmento) e so resulta em
+  // string vazia. O guard e so contra intervalo nonsense (fim <= inicio),
+  // que sempre indica erro de quem chamou - ja aconteceu (extractRangeFromLine(17,17)).
   protected extractRangeFromLine(start: number, end: number): string {
+    if (start < 0 || end <= start) {
+      throw new RangeError(`extractRangeFromLine: intervalo invalido (start=${start}, end=${end})`)
+    }
     return this.rawLine.substring(start, end).trim()
   }
 
