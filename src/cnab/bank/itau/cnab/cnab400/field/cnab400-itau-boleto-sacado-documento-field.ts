@@ -1,6 +1,6 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { validateDocument } from '@cnab/utils/document-parser'
+import { isValidCPF, isValidCNPJ } from '@cnab/utils/document-parser'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -15,8 +15,18 @@ export class Cnab400ItauBoletoSacadoDocumentoField extends CnabField<string> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const value = this.value as string | null
-    const isValid = value !== null && validateDocument(value)
+    const value = this.value
+
+    // Posicao 219-220 (layout Itau CNAB400): "01"=CPF, "02"=CNPJ, logo
+    // antes do numero de inscricao em 221-234. Usar o indicador evita
+    // adivinhar pelo checksum, que erra em ~1% dos casos.
+    const tipoInscricao = this.rawLine.substring(218, 220)
+    let isValid = false
+    if (value !== null) {
+      if (tipoInscricao === '01') isValid = isValidCPF(value.slice(-11))
+      else if (tipoInscricao === '02') isValid = isValidCNPJ(value.slice(-14).padStart(14, '0'))
+    }
+
     const errors = []
 
     if (!isValid) {
