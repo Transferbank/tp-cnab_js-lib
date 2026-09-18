@@ -1,9 +1,9 @@
 import * as path from 'path'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import { 
-  readExampleLines, 
-  replaceLineRange, 
+import {
+  readExampleLines,
+  replaceLineRange,
   findFirstCnab400RecordLine,
   filterValidatableLines,
   createFieldsFromLines,
@@ -58,7 +58,7 @@ describe('Cnab400BradescoBoletoVencimentoField', (): void => {
       // Then
       expect(fields.length).toBeGreaterThan(0)
       expect(fields[0].value).toEqual(new Date(2026, 7, 24))
-      
+
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
       })

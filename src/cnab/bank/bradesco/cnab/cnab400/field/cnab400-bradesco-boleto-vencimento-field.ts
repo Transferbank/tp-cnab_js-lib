@@ -38,11 +38,11 @@ export class Cnab400BradescoBoletoVencimentoField extends CnabField<Date> {
 
   protected parseValue(rawValue: string): Date {
     const date = parseDateDDMMAA(rawValue)
-    
+
     if (date === null) {
       throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
     }
-    
+
     return date
   }
 }
