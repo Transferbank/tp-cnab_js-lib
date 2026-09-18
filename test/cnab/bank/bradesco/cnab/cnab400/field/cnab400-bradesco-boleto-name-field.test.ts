@@ -58,7 +58,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       // Then
       expect(fields.length).toBeGreaterThan(0)
       expect(fields[0].value).toBe('COMERCIAL ALFA LTDA')
-      
+
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
       })
