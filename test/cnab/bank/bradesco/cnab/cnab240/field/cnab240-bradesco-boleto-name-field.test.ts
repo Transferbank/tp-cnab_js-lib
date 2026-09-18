@@ -58,7 +58,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       // Then
       expect(fields.length).toBeGreaterThan(0)
       expect(fields[0].value).toBe('JOAO EXEMPLO SILVA')
-      
+
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
       })
@@ -79,7 +79,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       }
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-      
+
       const expectedError = new CnabFieldMinLengthError({
         lineNumber: dummyLineNumber,
         fieldName: 'nome do sacado',
