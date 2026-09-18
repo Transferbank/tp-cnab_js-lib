@@ -27,7 +27,7 @@ export function replaceLineRange(
 }
 
 export function findFirstCnab240SegmentLine(lines: string[], segment: string): string | undefined {
-  return lines.find(line => line.length >= 14 && line[13] === segment)
+  return lines.find(line => line.length >= 14 && line[7] === '3' && line[13] === segment)
 }
 
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
