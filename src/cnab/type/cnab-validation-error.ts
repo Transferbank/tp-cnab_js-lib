@@ -118,7 +118,6 @@ export class CnabGenericFieldError extends CnabFieldValidationError {
   }
 }
 
-
 export abstract class CnabFieldParseError extends Error {
   readonly fieldName: string
   readonly rawValue: string
