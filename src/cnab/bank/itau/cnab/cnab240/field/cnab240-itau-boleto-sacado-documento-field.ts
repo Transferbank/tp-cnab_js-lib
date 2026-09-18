@@ -2,7 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { isValidCPF, isValidCNPJ } from '@cnab/utils/document-parser'
+import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240ItauBoletoSacadoDocumentoField extends CnabField<string> {
@@ -19,12 +19,8 @@ export class Cnab240ItauBoletoSacadoDocumentoField extends CnabField<string> {
 
     // Segmento Q, posicao 18 (layout Febraban): "1"=CPF, "2"=CNPJ. Usar o
     // indicador evita adivinhar pelo checksum, que erra em ~1% dos casos.
-    const tipoInscricao = this.rawLine[17]
-    let isValid = false
-    if (value !== null) {
-      if (tipoInscricao === '1') isValid = isValidCPF(value.slice(-11))
-      else if (tipoInscricao === '2') isValid = isValidCNPJ(value.slice(-14).padStart(14, '0'))
-    }
+    const tipoInscricao = this.extractRangeFromLine(17, 18)
+    const isValid = value !== null && validateDocumentByIndicator(value, tipoInscricao, '1', '2')
 
     const errors = []
 
