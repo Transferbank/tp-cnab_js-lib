@@ -138,6 +138,28 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
 
+    it('given segment P line with digits followed by garbage when reading value then throws error instead of truncating', (): void => {
+      // Given
+      const dummyLineNumber = 37
+      const fieldRange = getFieldRange(Cnab240ItauBoletoValorTituloField)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab240SegmentLine(lines, 'P')
+
+      if (rawLine == null) {
+        throw new Error('Linha segmento P não encontrada')
+      }
+
+      // parseInt('00000012345ABCD', 10) retorna 12345 em vez de NaN -
+      // sem a checagem de formato, isso passaria como R$123.45 valido.
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '00000012345ABCD')
+
+      // When / Then
+      const field = new Cnab240ItauBoletoValorTituloField(invalidLine, dummyLineNumber)
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
+    })
+
     it('given segment P line with invalid alphanumeric value when validating then returns format error', (): void => {
       // Given
       const dummyLineNumber = 37

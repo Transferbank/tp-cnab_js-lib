@@ -36,10 +36,10 @@ export class Cnab240ItauBoletoValorTituloField extends CnabField<number> {
   }
 
   protected parseValue(rawValue: string): number {
-    const centavos = parseInt(rawValue, 10)
-    if (isNaN(centavos)) {
+    if (!/^\d+$/.test(rawValue)) {
       throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
     }
-    return centavos / 100
+
+    return parseInt(rawValue, 10) / 100
   }
 }
