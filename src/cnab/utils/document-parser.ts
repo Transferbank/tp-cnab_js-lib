@@ -55,3 +55,19 @@ export function validateDocument(rawDocument: string): boolean {
 
   return isValidCpfCnpj(asCPF) || isValidCpfCnpj(asCNPJ)
 }
+
+// Alguns layouts (Segmento Q do CNAB240, campo de pagador do CNAB400 do
+// Itau) trazem um indicador explicito de tipo de inscricao ao lado do
+// documento, evitando a ambiguidade de validateDocument(). O tamanho do
+// codigo varia por banco/formato (ex.: "1"/"2" no CNAB240, "01"/"02" no
+// CNAB400 do Itau), por isso os codigos sao parametros.
+export function validateDocumentByIndicator(
+  document: string,
+  tipoInscricao: string,
+  cpfIndicator: string,
+  cnpjIndicator: string
+): boolean {
+  if (tipoInscricao === cpfIndicator) return isValidCPF(document.slice(-11))
+  if (tipoInscricao === cnpjIndicator) return isValidCNPJ(document.slice(-14).padStart(14, '0'))
+  return false
+}
