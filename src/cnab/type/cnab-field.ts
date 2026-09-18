@@ -50,7 +50,13 @@ export abstract class CnabField<T> {
   }
 
   protected extractRawValue(): string {
-    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+    return this.extractRangeFromLine(this.range[0] - 1, this.range[1])
+  }
+
+  // start/end sao indices 0-based de substring (end exclusivo) - para uma
+  // posicao 1-based inclusiva N da documentacao do CNAB, use (N - 1, N).
+  protected extractRangeFromLine(start: number, end: number): string {
+    return this.rawLine.substring(start, end).trim()
   }
 
   validate(): CnabValidationResult {
