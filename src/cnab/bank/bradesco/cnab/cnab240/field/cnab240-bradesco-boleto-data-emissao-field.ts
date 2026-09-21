@@ -16,7 +16,7 @@ export class Cnab240BradescoBoletoDataEmissaoField extends CnabField<Date> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const isValid = this.value !== null && !isNaN(this.value.getTime())
+    const isValid = this.value != null && !isNaN(this.value.getTime())
     const errors = []
 
     if (!isValid) {
