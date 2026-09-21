@@ -74,5 +74,23 @@ describe('document-parser', (): void => {
     it('given a CNPJ formatted with punctuation when validating then returns false', (): void => {
       expect(isValidCNPJ('00.123.400/0100-76')).toBe(false)
     })
+
+    it('given a valid alphanumeric CNPJ when validating then returns true', (): void => {
+      // Raiz alfanumerica "12ABC34501" + ordem "DE" + DV "35", conforme o
+      // novo formato da Receita Federal (digitos verificadores continuam numericos)
+      expect(isValidCNPJ('12ABC34501DE35')).toBe(true)
+    })
+
+    it('given an alphanumeric CNPJ with lowercase letters when validating then returns true', (): void => {
+      expect(isValidCNPJ('12abc34501de35')).toBe(true)
+    })
+
+    it('given an alphanumeric CNPJ with a wrong check digit when validating then returns false', (): void => {
+      expect(isValidCNPJ('12ABC34501DE36')).toBe(false)
+    })
+
+    it('given an alphanumeric CNPJ with a letter in the check digit positions when validating then returns false', (): void => {
+      expect(isValidCNPJ('12ABC34501DEA5')).toBe(false)
+    })
   })
 })
