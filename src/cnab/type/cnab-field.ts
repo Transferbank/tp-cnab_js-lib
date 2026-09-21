@@ -51,7 +51,7 @@ export abstract class CnabField<T = string> {
 
   validate(): CnabValidationResult {
     const isOptional = (this.constructor as typeof CnabField).isOptional
-    if (isOptional && this.value === null) {
+    if (isOptional && this.value == null) {
       return { isValid: true, errors: [] }
     }
     return this.performValidation()
