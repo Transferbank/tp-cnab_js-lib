@@ -94,4 +94,8 @@ export abstract class CnabField<T> {
   protected abstract performValidation(): CnabValidationResult
 }
 
-export type CnabFieldClass = typeof CnabField<unknown>
+export interface CnabFieldClass<T = unknown> {
+  readonly fieldType: CnabFieldType
+  readonly isOptional: boolean
+  new (rawLine: string, lineNumber: number): CnabField<T>
+}
