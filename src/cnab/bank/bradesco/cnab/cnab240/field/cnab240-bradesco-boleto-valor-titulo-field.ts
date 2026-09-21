@@ -17,7 +17,7 @@ export class Cnab240BradescoBoletoValorTituloField extends CnabField<number> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const isValid = this.value !== null && this.value > 0
+    const isValid = this.value != null && this.value > 0
     const errors = []
 
     if (!isValid) {
