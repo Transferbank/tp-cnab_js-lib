@@ -76,8 +76,10 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
         throw new Error('Linha detalhe não encontrada')
       }
 
-      // CPF 123.456.789-09 gravado à direita num campo de 14 posições
-      const lineWithCpf = replaceLineRange(rawLine, fieldRange, '00012345678909')
+      // CPF 123.456.789-09 gravado à direita num campo de 14 posições, com o
+      // indicador de tipo de inscrição (posições 219-220) marcado como "01"
+      const lineWithCpfIndicator = replaceLineRange(rawLine, [219, 220], '01')
+      const lineWithCpf = replaceLineRange(lineWithCpfIndicator, fieldRange, '00012345678909')
 
       // When
       const field = new Cnab400BradescoBoletoSacadoDocumentoField(lineWithCpf, dummyLineNumber)
@@ -86,6 +88,31 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       // Then
       expect(field.value).toBe('00012345678909')
       expect(result).toEqual(genValidCnabValidationResult())
+    })
+
+    it('given detail line indicating CNPJ whose last 11 digits form a valid CPF when validating then rejects it', (): void => {
+      // Given
+      const dummyLineNumber = 7
+      const fieldRange = getFieldRange(Cnab400BradescoBoletoSacadoDocumentoField)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        throw new Error('Linha detalhe não encontrada')
+      }
+
+      // Indicador "02" (CNPJ), mas o valor so forma um CNPJ valido se
+      // adivinhado como CPF pelos ultimos 11 digitos
+      const lineWithCnpjIndicator = replaceLineRange(rawLine, [219, 220], '02')
+      const lineWithAmbiguousDocument = replaceLineRange(lineWithCnpjIndicator, fieldRange, '99912345678909')
+
+      // When
+      const field = new Cnab400BradescoBoletoSacadoDocumentoField(lineWithAmbiguousDocument, dummyLineNumber)
+      const result = field.validate()
+
+      // Then
+      expect(result.isValid).toBe(false)
     })
   })
 

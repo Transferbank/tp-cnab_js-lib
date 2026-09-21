@@ -1,5 +1,10 @@
 import { describe, it, expect } from '@jest/globals'
-import { validateDocument, isValidCPF, isValidCNPJ } from '@cnab/utils/document-parser'
+import {
+  validateDocument,
+  validateDocumentByIndicator,
+  isValidCPF,
+  isValidCNPJ
+} from '@cnab/utils/document-parser'
 
 describe('document-parser', (): void => {
   describe('validateDocument', (): void => {
@@ -31,6 +36,16 @@ describe('document-parser', (): void => {
     it('given an invalid document when validating then rejects it', (): void => {
       expect(validateDocument('12345678900')).toBe(false)
     })
+
+    it('given a CPF formatted with punctuation when validating then rejects it', (): void => {
+      expect(validateDocument('123.456.789-09')).toBe(false)
+    })
+  })
+
+  describe('validateDocumentByIndicator', (): void => {
+    it('given a CPF indicator with alphabetic padding before the digits when validating then rejects it', (): void => {
+      expect(validateDocumentByIndicator('ABCD12345678909', '1', '1', '2')).toBe(false)
+    })
   })
 
   describe('isValidCPF', (): void => {
@@ -41,6 +56,10 @@ describe('document-parser', (): void => {
     it('given a CPF with all repeated digits when validating then returns false', (): void => {
       expect(isValidCPF('11111111111')).toBe(false)
     })
+
+    it('given a CPF formatted with punctuation when validating then returns false', (): void => {
+      expect(isValidCPF('123.456.789-09')).toBe(false)
+    })
   })
 
   describe('isValidCNPJ', (): void => {
@@ -50,6 +69,28 @@ describe('document-parser', (): void => {
 
     it('given a CNPJ with all repeated digits when validating then returns false', (): void => {
       expect(isValidCNPJ('11111111111111')).toBe(false)
+    })
+
+    it('given a CNPJ formatted with punctuation when validating then returns false', (): void => {
+      expect(isValidCNPJ('00.123.400/0100-76')).toBe(false)
+    })
+
+    it('given a valid alphanumeric CNPJ when validating then returns true', (): void => {
+      // Raiz alfanumerica "12ABC34501" + ordem "DE" + DV "35", conforme o
+      // novo formato da Receita Federal (digitos verificadores continuam numericos)
+      expect(isValidCNPJ('12ABC34501DE35')).toBe(true)
+    })
+
+    it('given an alphanumeric CNPJ with lowercase letters when validating then returns true', (): void => {
+      expect(isValidCNPJ('12abc34501de35')).toBe(true)
+    })
+
+    it('given an alphanumeric CNPJ with a wrong check digit when validating then returns false', (): void => {
+      expect(isValidCNPJ('12ABC34501DE36')).toBe(false)
+    })
+
+    it('given an alphanumeric CNPJ with a letter in the check digit positions when validating then returns false', (): void => {
+      expect(isValidCNPJ('12ABC34501DEA5')).toBe(false)
     })
   })
 })
