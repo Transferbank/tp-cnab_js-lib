@@ -45,8 +45,3 @@ export class CnabSchemaRegistrationException extends CnabException {
     )
   }
 }
-export class CnabLineSchemaNotInitializedException extends CnabException {
-  constructor() {
-    super('CnabLineSchema deve ser inicializado com init() antes de ser usado')
-  }
-}

@@ -1,8 +1,7 @@
-import { CnabBank } from '@cnab/type/cnab-bank'
+﻿import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator} from '@cnab/validators/cnab400/cnab400-line-start-validator'
 
@@ -28,151 +27,152 @@ function registerCnabSchemas(): CnabSchema[] {
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB240,
       boletoGroupRule: new Cnab240BradescoGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
-        fields: []
-      }),
-      trailer: new CnabLineSchema({
+        fields: [],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
-        fields: []
-      }),
-      boleto: new CnabLineSchema({
+        fields: [],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           BradescoFields240.Cnab240BradescoBoletoNameField,
           BradescoFields240.Cnab240BradescoBoletoVencimentoField,
           BradescoFields240.Cnab240BradescoBoletoValorTituloField,
           BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField
-        ]
-      })
+        ],
+      },
     }),
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB400,
       boletoGroupRule: new Cnab400BradescoGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
-        validators: [Cnab400HeaderLineStartValidator]
-      }),
-      trailer: new CnabLineSchema({
+        validators: [Cnab400HeaderLineStartValidator],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
-        validators: [Cnab400TrailerLineStartValidator]
-      }),
-      boleto: new CnabLineSchema({
+        validators: [Cnab400TrailerLineStartValidator],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           BradescoFields400.Cnab400BradescoBoletoNameField,
           BradescoFields400.Cnab400BradescoBoletoVencimentoField,
           BradescoFields400.Cnab400BradescoBoletoValorTituloField,
           BradescoFields400.Cnab400BradescoBoletoSacadoDocumentoField
-        ]
-      })
+        ],
+      },
     }),
     //ITAU
     new CnabSchema({
       bank: CnabBank.ITAU,
       fmt: CnabFormat.CNAB240,
       boletoGroupRule: new Cnab240ItauGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
-        fields: []
-      }),
-      trailer: new CnabLineSchema({
+        fields: [],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
-        fields: []
-      }),
-      boleto: new CnabLineSchema({
+        fields: [],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           ItauFields240.Cnab240ItauBoletoNameField,
           ItauFields240.Cnab240ItauBoletoVencimentoField,
           ItauFields240.Cnab240ItauBoletoValorTituloField,
           ItauFields240.Cnab240ItauBoletoSacadoDocumentoField
-        ]
-      })
+        ],
+      },
     }),
     new CnabSchema({
       bank: CnabBank.ITAU,
       fmt: CnabFormat.CNAB400,
       boletoGroupRule: new Cnab400ItauGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
-        validators: [Cnab400HeaderLineStartValidator]
-      }),
-      trailer: new CnabLineSchema({
+        validators: [Cnab400HeaderLineStartValidator],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
-        validators: [Cnab400TrailerLineStartValidator]
-      }),
-      boleto: new CnabLineSchema({
+        validators: [Cnab400TrailerLineStartValidator],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           ItauFields400.Cnab400ItauBoletoNameField,
           ItauFields400.Cnab400ItauBoletoVencimentoField,
           ItauFields400.Cnab400ItauBoletoValorTituloField,
           ItauFields400.Cnab400ItauBoletoSacadoDocumentoField
-        ]
-      })
+        ],
+      },
     }),
     //SANTANDER
     new CnabSchema({
       bank: CnabBank.SANTANDER,
       fmt: CnabFormat.CNAB240,
       boletoGroupRule: new Cnab240SantanderGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
-        fields: []
-      }),
-      trailer: new CnabLineSchema({
+        fields: [],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
-        fields: []
-      }),
-      boleto: new CnabLineSchema({
+        fields: [],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           SantanderFields240.Cnab240SantanderBoletoNameField,
           SantanderFields240.Cnab240SantanderBoletoVencimentoField,
           SantanderFields240.Cnab240SantanderBoletoValorTituloField,
           SantanderFields240.Cnab240SantanderBoletoSacadoDocumentoField
-        ]
-      })
+        ],
+      },
     }),
     new CnabSchema({
       bank: CnabBank.SANTANDER,
       fmt: CnabFormat.CNAB400,
       boletoGroupRule: new Cnab400SantanderGroupRule(),
-      header: new CnabLineSchema({
+      header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
-        validators: [Cnab400HeaderLineStartValidator]
-      }),
-      trailer: new CnabLineSchema({
+        validators: [Cnab400HeaderLineStartValidator],
+      },
+      trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
-        validators: [Cnab400TrailerLineStartValidator]
-      }),
-      boleto: new CnabLineSchema({
+        validators: [Cnab400TrailerLineStartValidator],
+      },
+      boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           SantanderFields400.Cnab400SantanderBoletoNameField,
           SantanderFields400.Cnab400SantanderBoletoVencimentoField,
           SantanderFields400.Cnab400SantanderBoletoValorTituloField,
           SantanderFields400.Cnab400SantanderBoletoSacadoDocumentoField
-        ]
-      })
-    })
+        ],
+      },
+    }),
   ]
 }
 
 export function indexCnabSchemas(
   schemas: CnabSchema[]
 ): Record<CnabBank, Record<CnabFormat, CnabSchema>> {
-  const keys = schemas.map(
-    (schema: CnabSchema): [CnabBank, CnabFormat] => [schema.bank, schema.fmt]
-  )
+  const keys = schemas.map((schema: CnabSchema): [CnabBank, CnabFormat] => [
+    schema.bank,
+    schema.fmt,
+  ])
 
   const counts: Record<string, number> = {}
   for (const [bank, fmt] of keys) {
@@ -180,9 +180,7 @@ export function indexCnabSchemas(
     counts[key] = (counts[key] ?? 0) + 1
   }
 
-  const duplicatedKey = Object.entries(counts).find(
-    ([, count]: [string, number]) => count > 1
-  )
+  const duplicatedKey = Object.entries(counts).find(([, count]: [string, number]) => count > 1)
 
   if (duplicatedKey != null) {
     const [key] = duplicatedKey
