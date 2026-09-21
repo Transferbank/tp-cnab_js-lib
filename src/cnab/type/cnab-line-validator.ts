@@ -14,4 +14,6 @@ export abstract class CnabLineValidator {
   abstract validate(): CnabValidationResult
 }
 
-export type CnabLineValidatorClass = typeof CnabLineValidator
+export interface CnabLineValidatorClass {
+  new (rawLine: string, lineNumber: number): CnabLineValidator
+}
