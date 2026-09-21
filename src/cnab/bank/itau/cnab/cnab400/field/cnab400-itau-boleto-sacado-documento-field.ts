@@ -21,7 +21,7 @@ export class Cnab400ItauBoletoSacadoDocumentoField extends CnabField<string> {
     // antes do numero de inscricao em 221-234. Usar o indicador evita
     // adivinhar pelo checksum, que erra em ~1% dos casos.
     const tipoInscricao = this.extractRangeFromLine(218, 220)
-    const isValid = value !== null && validateDocumentByIndicator(value, tipoInscricao, '01', '02')
+    const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '01', '02')
 
     const errors = []
 
