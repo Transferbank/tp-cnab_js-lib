@@ -49,12 +49,6 @@ export function isValidCNPJ(cnpj: string): boolean {
   return digit2 === charValue(value[13])
 }
 
-export function isValidCpfCnpj(document: string): boolean {
-  if (document.length === 11) return isValidCPF(document)
-  if (document.length === 14) return isValidCNPJ(document)
-  return false
-}
-
 function isDigitsOnly(value: string): boolean {
   return /^\d+$/.test(value)
 }
