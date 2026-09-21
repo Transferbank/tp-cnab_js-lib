@@ -5,7 +5,7 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { describe, it, expect } from '@jest/globals'
 import { genCnabSchemaStub } from '@test/cnab/doubles/cnab-schema-stub'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
-import { CNAB_BANK_SCHEMAS, indexCnabSchemas} from '@cnab/bank/cnab-bank-schemas'
+import { CNAB_BANK_SCHEMAS, indexCnabSchemas } from '@cnab/bank/cnab-bank-schemas'
 
 describe('cnab-bank-schemas', (): void => {
   it('given schemas when indexing then keys come from each schema', (): void => {
