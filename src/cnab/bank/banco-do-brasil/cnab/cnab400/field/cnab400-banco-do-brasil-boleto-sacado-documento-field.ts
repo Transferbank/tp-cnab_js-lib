@@ -16,7 +16,7 @@ export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends CnabField<st
 
   protected performValidation(): CnabValidationResult {
     const value = this.value as string | null
-    const isValid = value !== null && validateDocument(value)
+    const isValid = value != null && validateDocument(value)
     const errors = []
 
     if (!isValid) {
