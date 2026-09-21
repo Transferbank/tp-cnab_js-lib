@@ -1,10 +1,18 @@
-import { Cnab } from '@cnab/type/cnab'
+﻿import { Cnab } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
+
+type CnabLineSchemaConfig = {
+  fieldType: CnabFieldType
+  fields: CnabFieldClass[]
+  validators?: CnabLineValidatorClass[]
+}
 
 export class CnabSchema {
   readonly bank: CnabBank
@@ -18,20 +26,23 @@ export class CnabSchema {
     bank: CnabBank
     fmt: CnabFormat
     boletoGroupRule: CnabBoletoGroupRule
-    header: CnabLineSchema
-    trailer: CnabLineSchema
-    boleto: CnabLineSchema
+    header: CnabLineSchemaConfig
+    trailer: CnabLineSchemaConfig
+    boleto: CnabLineSchemaConfig
   }) {
     this.bank = config.bank
     this.fmt = config.fmt
     this.boletoGroupRule = config.boletoGroupRule
-    this.header = config.header
-    this.trailer = config.trailer
-    this.boleto = config.boleto
 
-    for (const lineSchema of this.lineSchemas) {
-      lineSchema.init(this.bank, this.fmt, this.boletoGroupRule)
+    const sharedConfig = {
+      bank: this.bank,
+      fmt: this.fmt,
+      boletoGroupRule: this.boletoGroupRule,
     }
+
+    this.header = CnabLineSchema.create({ ...sharedConfig, ...config.header })
+    this.trailer = CnabLineSchema.create({ ...sharedConfig, ...config.trailer })
+    this.boleto = CnabLineSchema.create({ ...sharedConfig, ...config.boleto })
   }
 
   get lineSchemas(): CnabLineSchema[] {
@@ -48,7 +59,7 @@ export class CnabSchema {
     const items: Array<[CnabLineSchema, string[], number]> = [
       [this.header, [rawLines[0]], 0],
       [this.trailer, [rawLines[rawLines.length - 1]], rawLines.length - 1],
-      [this.boleto, rawLines.slice(1, -1), 1]
+      [this.boleto, rawLines.slice(1, -1), 1],
     ]
 
     for (const item of items) {
@@ -57,12 +68,7 @@ export class CnabSchema {
         (field: CnabFieldClass) => field.fieldType === group.fieldType
       )
 
-      const groupResult = group.validate(
-        lines,
-        eagerEnabled,
-        firstLine,
-        groupExtraFields
-      )
+      const groupResult = group.validate(lines, eagerEnabled, firstLine, groupExtraFields)
 
       result.isValid = result.isValid && groupResult.isValid
       result.errors.push(...groupResult.errors)
@@ -79,6 +85,6 @@ export class CnabSchema {
     // TODO: Implementar método read que retorna objeto Cnab com header, trailer e boletos
     // Necessário para CnabFile.read() funcionar corretamente
     // Deve processar: rawLines[0] (header), rawLines[length-1] (trailer), slice(1,-1) (boletos)
-    throw new Error('Método read() ainda não implementado')
+    throw new Error('M├®todo read() ainda n├úo implementado')
   }
 }
