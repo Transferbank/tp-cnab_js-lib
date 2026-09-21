@@ -19,7 +19,7 @@ export class Cnab240BradescoBoletoVencimentoField extends CnabField<Date> {
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value !== null
+    const isValid = value != null
     const errors = []
 
     if (!isValid) {
@@ -42,7 +42,7 @@ export class Cnab240BradescoBoletoVencimentoField extends CnabField<Date> {
   protected parseValue(rawValue: string): Date {
     const date = parseDateDDMMAAAA(rawValue)
 
-    if (date === null) {
+    if (date == null) {
       throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
     }
 
