@@ -20,7 +20,7 @@ export class Cnab240ItauBoletoSacadoDocumentoField extends CnabField<string> {
     // Segmento Q, posicao 18 (layout Febraban): "1"=CPF, "2"=CNPJ. Usar o
     // indicador evita adivinhar pelo checksum, que erra em ~1% dos casos.
     const tipoInscricao = this.extractRangeFromLine(17, 18)
-    const isValid = value !== null && validateDocumentByIndicator(value, tipoInscricao, '1', '2')
+    const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '1', '2')
 
     const errors = []
 
