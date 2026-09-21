@@ -83,7 +83,7 @@ export abstract class CnabField<T> {
       throw error
     }
 
-    if (isOptional && value === null) {
+    if (isOptional && value == null) {
       return { isValid: true, errors: [] }
     }
     return this.performValidation()
