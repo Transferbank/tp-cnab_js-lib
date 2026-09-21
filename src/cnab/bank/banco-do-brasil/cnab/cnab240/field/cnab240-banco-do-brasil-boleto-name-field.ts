@@ -16,7 +16,7 @@ export class Cnab240BancoDoBrasilBoletoNameField extends CnabField<string> {
   protected performValidation(): CnabValidationResult {
     const minLength = 3
     const value = this.value
-    const isValid = value !== null && value.length >= minLength
+    const isValid = value != null && value.length >= minLength
     const errors = []
 
     if (!isValid) {
