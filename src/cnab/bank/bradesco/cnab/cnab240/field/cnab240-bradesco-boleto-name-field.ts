@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-export class Cnab240BradescoBoletoNameField extends CnabField {
+export class Cnab240BradescoBoletoNameField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
   readonly range: [number, number] = [34, 73]
@@ -14,7 +14,8 @@ export class Cnab240BradescoBoletoNameField extends CnabField {
 
   protected performValidation(): CnabValidationResult {
     const minLength = 3
-    const isValid = this.value != null && (this.value as string).length >= minLength
+    const value = this.value
+    const isValid = value != null && value.length >= minLength
     const errors = []
 
     if (!isValid) {
@@ -34,7 +35,7 @@ export class Cnab240BradescoBoletoNameField extends CnabField {
     }
   }
 
-  parse(): string {
-    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+  protected parseValue(rawValue: string): string {
+    return rawValue
   }
 }

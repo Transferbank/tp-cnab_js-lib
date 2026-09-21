@@ -95,3 +95,46 @@ export class CnabFieldMinLengthError extends CnabFieldValidationError {
     return `${capitalizedFieldName} espera ao menos ${this.minLength} caracteres`
   }
 }
+
+export class CnabGenericFieldError extends CnabFieldValidationError {
+  readonly customMessage: string
+
+  constructor(params: {
+    message: string
+    lineNumber: number
+    fieldName: string
+    range: [number, number]
+  }) {
+    super({
+      lineNumber: params.lineNumber,
+      fieldName: params.fieldName,
+      range: params.range
+    })
+    this.customMessage = params.message
+  }
+
+  get message(): string {
+    return this.customMessage
+  }
+}
+
+export class CnabFieldEmptyValueError extends Error {
+  constructor(fieldName: string) {
+    super(`Não é possível parsear valor vazio para o campo ${fieldName}`)
+    this.name = 'CnabFieldEmptyValueError'
+  }
+}
+
+export class CnabFieldInvalidNumberError extends Error {
+  constructor(fieldName: string, rawValue: string) {
+    super(`Valor numérico inválido no campo ${fieldName}: ${rawValue}`)
+    this.name = 'CnabFieldInvalidNumberError'
+  }
+}
+
+export class CnabFieldInvalidDateError extends Error {
+  constructor(fieldName: string, rawValue: string) {
+    super(`Data inválida no campo ${fieldName}: ${rawValue}`)
+    this.name = 'CnabFieldInvalidDateError'
+  }
+}
