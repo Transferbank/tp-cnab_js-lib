@@ -12,37 +12,37 @@ export function isValidCPF(cpf: string): boolean {
   for (let i = 0; i < 9; i++) sum += parseInt(clean[i]) * (10 - i)
   let digit1 = 11 - (sum % 11)
   if (digit1 >= 10) digit1 = 0
-  if (digit1 !== parseInt(clean[9])) return false
+  if (digit1 != parseInt(clean[9])) return false
   sum = 0
   for (let i = 0; i < 10; i++) sum += parseInt(clean[i]) * (11 - i)
   let digit2 = 11 - (sum % 11)
   if (digit2 >= 10) digit2 = 0
-  return digit2 === parseInt(clean[10])
+  return digit2 == parseInt(clean[10])
 }
 
 export function isValidCNPJ(cnpj: string): boolean {
   const value = cnpj.replace(/[.\-/]/g, '').toUpperCase()
-  if (!CNPJ_PATTERN.test(value) || value === value[0].repeat(14)) return false
+  if (!CNPJ_PATTERN.test(value) || value == value[0].repeat(14)) return false
 
   let sum = 0
   let weight = 5
   for (let i = 0; i < 12; i++) {
     sum += charValue(value[i]) * weight
-    weight = weight === 2 ? 9 : weight - 1
+    weight = weight == 2 ? 9 : weight - 1
   }
   let digit1 = sum % 11
   digit1 = digit1 < 2 ? 0 : 11 - digit1
-  if (digit1 !== charValue(value[12])) return false
+  if (digit1 != charValue(value[12])) return false
 
   sum = 0
   weight = 6
   for (let i = 0; i < 13; i++) {
     sum += charValue(value[i]) * weight
-    weight = weight === 2 ? 9 : weight - 1
+    weight = weight == 2 ? 9 : weight - 1
   }
   let digit2 = sum % 11
   digit2 = digit2 < 2 ? 0 : 11 - digit2
-  return digit2 === charValue(value[13])
+  return digit2 == charValue(value[13])
 }
 
 function isDigitsOnly(value: string): boolean {
@@ -55,7 +55,7 @@ function isAlphanumeric(value: string): boolean {
 
 export function validateDocument(rawDocument: string): boolean {
   const digits = rawDocument.trim()
-  if (digits.length === 0 || !isAlphanumeric(digits)) return false
+  if (digits.length == 0 || !isAlphanumeric(digits)) return false
 
   const asCPF = digits.slice(-11)
   const asCNPJ = digits.slice(-14).padStart(14, '0')
@@ -77,7 +77,7 @@ export function validateDocumentByIndicator(
   cpfIndicator: string,
   cnpjIndicator: string
 ): boolean {
-  if (tipoInscricao === cpfIndicator) return isDigitsOnly(document) && isValidCPF(document.slice(-11))
-  if (tipoInscricao === cnpjIndicator) return isAlphanumeric(document) && isValidCNPJ(document.slice(-14).padStart(14, '0'))
+  if (tipoInscricao == cpfIndicator) return isDigitsOnly(document) && isValidCPF(document.slice(-11))
+  if (tipoInscricao == cnpjIndicator) return isAlphanumeric(document) && isValidCNPJ(document.slice(-14).padStart(14, '0'))
   return false
 }
