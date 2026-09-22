@@ -1,8 +1,8 @@
 ﻿import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CnabLineValidator, CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
+import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
@@ -10,8 +10,13 @@ import {
   Cnab400LineSizeValidator,
 } from '@cnab/validators/cnab-line-size-validator'
 
+interface CnabValidatable {
+  shouldValidate(): boolean
+  validate(): CnabValidationResult
+}
+
 interface CnabValidatableConstructor {
-  new (rawLine: string, lineNumber: number): CnabLineValidator | CnabField
+  new (rawLine: string, lineNumber: number): CnabValidatable
 }
 
 export class CnabLineSchema {

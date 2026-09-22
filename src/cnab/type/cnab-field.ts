@@ -1,7 +1,11 @@
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import {
+  CnabFieldParseError,
+  CnabGenericFieldError
+} from '@cnab/type/cnab-validation-error'
 
-export abstract class CnabField<T = string> {
+export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
   abstract readonly fieldName: string
@@ -34,7 +38,7 @@ export abstract class CnabField<T = string> {
         this.cachedValue = this.parseValue(rawValue)
       }
     } catch (error) {
-      const isOptional = (this.constructor as typeof CnabField).isOptional
+      const isOptional = (this.constructor as typeof CnabField<T>).isOptional
       if (isOptional) {
         this.cachedValue = null
       } else {
@@ -46,12 +50,40 @@ export abstract class CnabField<T = string> {
   }
 
   protected extractRawValue(): string {
-    return this.rawLine.substring(this.range[0] - 1, this.range[1]).trim()
+    return this.extractRangeFromLine(this.range[0] - 1, this.range[1])
+  }
+
+  protected extractRangeFromLine(start: number, end: number): string {
+    if (start < 0 || end <= start) {
+      throw new RangeError(`extractRangeFromLine: intervalo invalido (start=${start}, end=${end})`)
+    }
+    return this.rawLine.substring(start, end).trim()
   }
 
   validate(): CnabValidationResult {
-    const isOptional = (this.constructor as typeof CnabField).isOptional
-    if (isOptional && this.value == null) {
+    const isOptional = (this.constructor as typeof CnabField<T>).isOptional
+
+    let value: T | null
+    try {
+      value = this.value
+    } catch (error) {
+      if (error instanceof CnabFieldParseError) {
+        return {
+          isValid: false,
+          errors: [
+            new CnabGenericFieldError({
+              message: `Campo ${this.fieldName} com formato inválido: ${error.rawValue}`,
+              lineNumber: this.lineNumber,
+              fieldName: this.fieldName,
+              range: this.range
+            })
+          ]
+        }
+      }
+      throw error
+    }
+
+    if (isOptional && value == null) {
       return { isValid: true, errors: [] }
     }
     return this.performValidation()
@@ -62,4 +94,8 @@ export abstract class CnabField<T = string> {
   protected abstract performValidation(): CnabValidationResult
 }
 
-export type CnabFieldClass = typeof CnabField<unknown>
+export interface CnabFieldClass<T = unknown> {
+  readonly fieldType: CnabFieldType
+  readonly isOptional: boolean
+  new (rawLine: string, lineNumber: number): CnabField<T>
+}

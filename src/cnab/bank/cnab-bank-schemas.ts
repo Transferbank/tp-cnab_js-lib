@@ -3,8 +3,8 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
-import { Cnab240BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
-import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
+import * as BradescoFields240 from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
+import * as BradescoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import { Cnab240BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab240/cnab-240-bradesco-group-rule'
 import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400/cnab400-line-start-validator'
@@ -25,7 +25,12 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
-        fields: [Cnab240BradescoBoletoNameField],
+        fields: [
+          BradescoFields240.Cnab240BradescoBoletoNameField,
+          BradescoFields240.Cnab240BradescoBoletoVencimentoField,
+          BradescoFields240.Cnab240BradescoBoletoValorTituloField,
+          BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField
+        ],
       },
     }),
     new CnabSchema({
@@ -44,7 +49,12 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
-        fields: [Cnab400BradescoBoletoNameField],
+        fields: [
+          BradescoFields400.Cnab400BradescoBoletoNameField,
+          BradescoFields400.Cnab400BradescoBoletoVencimentoField,
+          BradescoFields400.Cnab400BradescoBoletoValorTituloField,
+          BradescoFields400.Cnab400BradescoBoletoSacadoDocumentoField
+        ],
       },
     }),
   ]
