@@ -1,9 +1,10 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import {
-  assertDefined,
   readExampleLines,
   replaceLineRange,
+  realLineNumber,
   resPath,
   findFirstCnab400RecordLine,
   filterValidatableLines,
@@ -30,7 +31,9 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        assertDefined(rawLine)
+        if (rawLine == null) {
+          assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
+        }
 
         const field = new Cnab400BradescoBoletoNameField(rawLine, 1)
 
@@ -67,18 +70,20 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   describe('validate with error', (): void => {
     it('given boleto line with blank name when validating then returns field error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400BradescoBoletoNameField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha de boleto não encontrada')
+      }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BradescoBoletoNameField(invalidLine, dummyLineNumber)
+      const field = new Cnab400BradescoBoletoNameField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -87,6 +92,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })

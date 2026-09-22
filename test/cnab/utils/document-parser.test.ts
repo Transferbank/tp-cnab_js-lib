@@ -8,141 +8,148 @@ import {
 
 describe('document-parser', (): void => {
   describe('isValidCPF', (): void => {
-    it('given a valid CPF when validating then returns true', (): void => {
-      expect(isValidCPF('12345678909')).toBe(true)
+    describe.each([
+      { cpf: '12345678909', description: 'plain digits' },
+      { cpf: '123.456.789-09', description: 'formatted with punctuation' }
+    ])('given a valid CPF: $description', ({ cpf }): void => {
+      it('when validating then returns true', (): void => {
+        expect(isValidCPF(cpf)).toBe(true)
+      })
     })
 
-    it('given a CPF with all repeated digits when validating then returns false', (): void => {
-      expect(isValidCPF('11111111111')).toBe(false)
-    })
-
-    it('given a CPF formatted with punctuation when validating then returns true', (): void => {
-      // isValidCPF/isValidCNPJ sao utilitarios de proposito geral (tambem
-      // exportados na API publica da lib) e limpam a formatacao antes de
-      // validar; quem le campo bruto do CNAB (validateDocument/
-      // validateDocumentByIndicator) reprova pontuacao na propria camada,
-      // antes mesmo de chegar aqui.
-      expect(isValidCPF('123.456.789-09')).toBe(true)
-    })
-
-    it('given a CPF containing a letter when validating then returns false', (): void => {
-      expect(isValidCPF('1234567890A')).toBe(false)
+    describe.each([
+      { cpf: '11111111111', description: 'all repeated digits' },
+      { cpf: '1234567890A', description: 'containing a letter' }
+    ])('given an invalid CPF: $description', ({ cpf }): void => {
+      it('when validating then returns false', (): void => {
+        expect(isValidCPF(cpf)).toBe(false)
+      })
     })
   })
 
   describe('isValidCNPJ', (): void => {
-    it('given a valid numeric CNPJ when validating then returns true', (): void => {
-      expect(isValidCNPJ('00123400010076')).toBe(true)
+    describe.each([
+      { cnpj: '00123400010076', description: 'plain numeric digits' },
+      { cnpj: '00.123.400/0100-76', description: 'formatted with punctuation' },
+      { cnpj: '12ABC34501DE35', description: 'alphanumeric' },
+      { cnpj: '12abc34501de35', description: 'alphanumeric with lowercase letters' }
+    ])('given a valid CNPJ: $description', ({ cnpj }): void => {
+      it('when validating then returns true', (): void => {
+        expect(isValidCNPJ(cnpj)).toBe(true)
+      })
     })
 
-    it('given a CNPJ with all repeated digits when validating then returns false', (): void => {
-      expect(isValidCNPJ('11111111111111')).toBe(false)
-    })
-
-    it('given a CNPJ formatted with punctuation when validating then returns true', (): void => {
-      expect(isValidCNPJ('00.123.400/0100-76')).toBe(true)
-    })
-
-    it('given a valid alphanumeric CNPJ when validating then returns true', (): void => {
-      // Raiz alfanumerica "12ABC345" + ordem "01DE" + DV "35", conforme o
-      // novo formato da Receita Federal (digitos verificadores continuam numericos)
-      expect(isValidCNPJ('12ABC34501DE35')).toBe(true)
-    })
-
-    it('given an alphanumeric CNPJ with lowercase letters when validating then returns true', (): void => {
-      expect(isValidCNPJ('12abc34501de35')).toBe(true)
-    })
-
-    it('given an alphanumeric CNPJ with a wrong check digit when validating then returns false', (): void => {
-      expect(isValidCNPJ('12ABC34501DE36')).toBe(false)
-    })
-
-    it('given an alphanumeric CNPJ with a letter in the check digit positions when validating then returns false', (): void => {
-      // Os 2 digitos verificadores nunca sao alfanumericos, so a raiz/ordem
-      expect(isValidCNPJ('12ABC34501DEA5')).toBe(false)
+    describe.each([
+      { cnpj: '11111111111111', description: 'all repeated digits' },
+      { cnpj: '12ABC34501DE36', description: 'wrong check digit' },
+      { cnpj: '12ABC34501DEA5', description: 'letter in a check digit position' }
+    ])('given an invalid CNPJ: $description', ({ cnpj }): void => {
+      it('when validating then returns false', (): void => {
+        expect(isValidCNPJ(cnpj)).toBe(false)
+      })
     })
   })
 
   describe('validateDocument', (): void => {
-    it('given a valid CPF right-padded with zeros when validating then accepts it', (): void => {
-      expect(validateDocument('00012345678909')).toBe(true)
+    describe.each([
+      { document: '00012345678909', description: 'CPF right-padded with zeros' },
+      { document: '0000123400010076', description: 'numeric CNPJ right-padded with zeros' },
+      // CNPJ 00023400010002 (raiz comeca com "000") armazenado num campo de 15
+      // posicoes com 1 zero de padding a mais: stripar todos os zeros (bug
+      // antigo) sobra com exatamente 11 digitos e valida como CPF por engano.
+      { document: '000023400010002', description: 'CNPJ whose root itself starts with zeros' },
+      { document: '12ABC34501DE35', description: 'alphanumeric CNPJ' },
+      { document: '12abc34501de35', description: 'alphanumeric CNPJ with lowercase letters' }
+    ])('given a valid document: $description', ({ document }): void => {
+      it('when validating then accepts it', (): void => {
+        expect(validateDocument(document)).toBe(true)
+      })
     })
 
-    it('given a valid numeric CNPJ right-padded with zeros when validating then accepts it', (): void => {
-      expect(validateDocument('0000123400010076')).toBe(true)
-    })
-
-    it('given a valid CNPJ whose root itself starts with zeros when validating then does not misread it as a CPF', (): void => {
-      // CNPJ 00023400010002 (raiz comeca com "000") armazenado num campo
-      // de 15 posicoes com 1 zero de padding a mais: soma 4 zeros a
-      // esquerda no total. Stripar todos os zeros (bug antigo) sobra com
-      // exatamente 11 digitos e valida como CPF por engano, rejeitando
-      // um CNPJ legitimo.
-      expect(validateDocument('000023400010002')).toBe(true)
-    })
-
-    it('given a valid alphanumeric CNPJ when validating then accepts it', (): void => {
-      // CNPJ tem sempre 14 caracteres fixos, entao nao sobra padding a
-      // considerar quando o campo ja vem alfanumerico.
-      expect(validateDocument('12ABC34501DE35')).toBe(true)
-    })
-
-    it('given an alphanumeric CNPJ with lowercase letters when validating then accepts it', (): void => {
-      expect(validateDocument('12abc34501de35')).toBe(true)
-    })
-
-    it('given an all zero document when validating then rejects it', (): void => {
-      expect(validateDocument('000000000000000')).toBe(false)
-    })
-
-    it('given a blank document when validating then rejects it', (): void => {
-      expect(validateDocument('')).toBe(false)
-    })
-
-    it('given an invalid document when validating then rejects it', (): void => {
-      expect(validateDocument('12345678900')).toBe(false)
-    })
-
-    it('given a CPF formatted with punctuation when validating then rejects it', (): void => {
-      expect(validateDocument('123.456.789-09')).toBe(false)
-    })
-
-    it('given a CPF with alphabetic padding before the digits when validating then rejects it', (): void => {
-      expect(validateDocument('ABCD12345678909')).toBe(false)
+    describe.each([
+      { document: '000000000000000', description: 'all zeros, fails the repeated-digit check' },
+      { document: '', description: 'blank value' },
+      { document: '12345678900', description: 'wrong check digits' },
+      {
+        document: '123.456.789-09',
+        description: 'CPF formatted with punctuation, rejected because unlike isValidCPF this does not strip formatting'
+      }
+    ])('given an invalid document: $description', ({ document }): void => {
+      it('when validating then rejects it', (): void => {
+        expect(validateDocument(document)).toBe(false)
+      })
     })
   })
 
   describe('validateDocumentByIndicator', (): void => {
-    it('given a CPF indicator with a valid CPF when validating then accepts it', (): void => {
-      expect(validateDocumentByIndicator('12345678909', '01', '01', '02')).toBe(true)
+    describe.each([
+      {
+        description: 'CPF indicator with a valid CPF',
+        document: '12345678909',
+        tipoInscricao: '01',
+        cpfIndicator: '01',
+        cnpjIndicator: '02'
+      },
+      {
+        description: 'CNPJ indicator with a valid numeric CNPJ',
+        document: '00123400010076',
+        tipoInscricao: '02',
+        cpfIndicator: '01',
+        cnpjIndicator: '02'
+      },
+      {
+        description: 'CNPJ indicator with a valid alphanumeric CNPJ',
+        document: '12ABC34501DE35',
+        tipoInscricao: '02',
+        cpfIndicator: '01',
+        cnpjIndicator: '02'
+      }
+    ])('given a $description', ({ document, tipoInscricao, cpfIndicator, cnpjIndicator }): void => {
+      it('when validating then accepts it', (): void => {
+        expect(validateDocumentByIndicator(document, tipoInscricao, cpfIndicator, cnpjIndicator)).toBe(true)
+      })
     })
 
-    it('given a CNPJ indicator with a valid numeric CNPJ when validating then accepts it', (): void => {
-      expect(validateDocumentByIndicator('00123400010076', '02', '01', '02')).toBe(true)
-    })
-
-    it('given a CNPJ indicator with a valid alphanumeric CNPJ when validating then accepts it', (): void => {
-      expect(validateDocumentByIndicator('12ABC34501DE35', '02', '01', '02')).toBe(true)
-    })
-
-    it('given a CPF indicator with an invalid CPF when validating then rejects it', (): void => {
-      expect(validateDocumentByIndicator('11111111111', '01', '01', '02')).toBe(false)
-    })
-
-    it('given a CNPJ indicator with an alphanumeric CNPJ with wrong check digit when validating then rejects it', (): void => {
-      expect(validateDocumentByIndicator('12ABC34501DE36', '02', '01', '02')).toBe(false)
-    })
-
-    it('given a CPF indicator with alphabetic padding before the digits when validating then rejects it', (): void => {
-      expect(validateDocumentByIndicator('ABCD12345678909', '1', '1', '2')).toBe(false)
-    })
-
-    it('given a CNPJ indicator with punctuation in the document when validating then rejects it', (): void => {
-      expect(validateDocumentByIndicator('001.234.000/1007-6', '02', '01', '02')).toBe(false)
-    })
-
-    it('given a tipo de inscricao that matches neither indicator when validating then rejects it', (): void => {
-      expect(validateDocumentByIndicator('12345678909', '99', '01', '02')).toBe(false)
+    describe.each([
+      {
+        description: 'CPF indicator with an invalid CPF',
+        document: '11111111111',
+        tipoInscricao: '01',
+        cpfIndicator: '01',
+        cnpjIndicator: '02'
+      },
+      {
+        description: 'CPF indicator with alphabetic padding before the digits',
+        document: 'ABCD12345678909',
+        tipoInscricao: '1',
+        cpfIndicator: '1',
+        cnpjIndicator: '2'
+      },
+      {
+        description: 'CNPJ indicator with an alphanumeric CNPJ with wrong check digit',
+        document: '12ABC34501DE36',
+        tipoInscricao: '02',
+        cpfIndicator: '01',
+        cnpjIndicator: '02'
+      },
+      {
+        description: 'CNPJ indicator with punctuation in the document, rejected because unlike isValidCNPJ this does not strip formatting',
+        document: '001.234.000/1007-6',
+        tipoInscricao: '02',
+        cpfIndicator: '01',
+        cnpjIndicator: '02'
+      },
+      {
+        description: 'tipo de inscricao that matches neither indicator, falling through to rejection',
+        document: '12345678909',
+        tipoInscricao: '99',
+        cpfIndicator: '01',
+        cnpjIndicator: '02'
+      }
+    ])('given a $description', ({ document, tipoInscricao, cpfIndicator, cnpjIndicator }): void => {
+      it('when validating then rejects it', (): void => {
+        expect(validateDocumentByIndicator(document, tipoInscricao, cpfIndicator, cnpjIndicator)).toBe(false)
+      })
     })
   })
 })

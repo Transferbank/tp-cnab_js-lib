@@ -1,11 +1,12 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240ItauBoletoSacadoDocumentoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-sacado-documento-field'
-import { assertDefined, readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
+import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
@@ -22,7 +23,9 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        assertDefined(rawLine)
+        if (rawLine == null) {
+          assert.fail(`Linha com segmento ${segment} não encontrada`)
+        }
 
         const field = new Cnab240ItauBoletoSacadoDocumentoField(rawLine, 1)
 
@@ -59,18 +62,20 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
   describe('validate with error', (): void => {
     it('given segment Q line with blank document when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoSacadoDocumentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha segmento Q não encontrada')
+      }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240ItauBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab240ItauBoletoSacadoDocumentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -79,21 +84,24 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given segment Q line with invalid document when validating then returns error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoSacadoDocumentoField)
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha segmento Q não encontrada')
+      }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
       // When
-      const field = new Cnab240ItauBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab240ItauBoletoSacadoDocumentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -101,6 +109,7 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })
