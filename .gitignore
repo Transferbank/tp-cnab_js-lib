@@ -48,5 +48,8 @@ test/**/*.d.ts.map
 # Optional npm cache
 .npm
 
+# Base de conhecimento local sobre como escrever testes (mds/skills)
+.claude/testing-knowledge/
+
 # Optional REPL history
 .node_repl_history
