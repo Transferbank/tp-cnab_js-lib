@@ -1,11 +1,12 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab400ItauBoletoValorTituloField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-valor-titulo-field'
-import { assertDefined, readExampleLines, replaceLineRange, findFirstCnab400RecordLine,
+import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab400RecordLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab400ItauBoletoValorTituloField', (): void => {
@@ -23,7 +24,9 @@ describe('Cnab400ItauBoletoValorTituloField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        assertDefined(rawLine)
+        if (rawLine == null) {
+          assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
+        }
 
         const field = new Cnab400ItauBoletoValorTituloField(rawLine, 1)
 
@@ -60,18 +63,20 @@ describe('Cnab400ItauBoletoValorTituloField', (): void => {
   describe('validate with error', (): void => {
     it('given detail line with blank amount when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -80,22 +85,25 @@ describe('Cnab400ItauBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given detail line with zero amount when validating then returns error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '0000000000000')
 
       // When
-      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -106,56 +114,63 @@ describe('Cnab400ItauBoletoValorTituloField', (): void => {
 
     it('given detail line with invalid alphanumeric value when reading value then throws error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
 
       // When / Then
-      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, lineNumber)
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
 
     it('given detail line with digits followed by garbage when reading value then throws error instead of truncating', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
+
+      const lineNumber = realLineNumber(lines, rawLine)
 
       // parseInt('0000012345ABC', 10) retorna 12345 em vez de NaN -
       // sem a checagem de formato, isso passaria como R$123.45 valido.
       const invalidLine = replaceLineRange(rawLine, fieldRange, '0000012345ABC')
 
       // When / Then
-      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, lineNumber)
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
 
     it('given detail line with invalid alphanumeric value when validating then returns format error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
 
       // When
-      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -164,6 +179,7 @@ describe('Cnab400ItauBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })
