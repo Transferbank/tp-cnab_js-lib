@@ -31,7 +31,8 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        assertDefined(rawLine, `Linha com segmento ${segment} não encontrada`)
+        expect(rawLine).toBeDefinedWithMessage(`Linha com segmento ${segment} não encontrada`)
+        assertDefined(rawLine)
 
         const field = new Cnab240BradescoBoletoNameField(rawLine, 1)
 
@@ -73,7 +74,8 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      assertDefined(rawLine, 'Linha segmento Q não encontrada')
+      expect(rawLine).toBeDefinedWithMessage('Linha segmento Q não encontrada')
+      assertDefined(rawLine)
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')

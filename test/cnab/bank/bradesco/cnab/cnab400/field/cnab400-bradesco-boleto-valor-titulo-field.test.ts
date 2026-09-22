@@ -31,7 +31,8 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        assertDefined(rawLine, `Linha com tipo de registro ${recordType} não encontrada`)
+        expect(rawLine).toBeDefinedWithMessage(`Linha com tipo de registro ${recordType} não encontrada`)
+        assertDefined(rawLine)
 
         const field = new Cnab400BradescoBoletoValorTituloField(rawLine, 1)
 
@@ -73,7 +74,8 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine, 'Linha detalhe não encontrada')
+      expect(rawLine).toBeDefinedWithMessage('Linha detalhe não encontrada')
+      assertDefined(rawLine)
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
@@ -98,7 +100,8 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine, 'Linha detalhe não encontrada')
+      expect(rawLine).toBeDefinedWithMessage('Linha detalhe não encontrada')
+      assertDefined(rawLine)
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
@@ -116,7 +119,8 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine, 'Linha detalhe não encontrada')
+      expect(rawLine).toBeDefinedWithMessage('Linha detalhe não encontrada')
+      assertDefined(rawLine)
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '0000000000000')

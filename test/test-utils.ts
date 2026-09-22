@@ -1,9 +1,27 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import { expect } from '@jest/globals'
+import type { SyncExpectationResult } from 'expect'
 import { CnabField } from '@cnab/type/cnab-field'
 
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
+
+declare module 'expect' {
+  interface Matchers<R> {
+    toBeDefinedWithMessage(message: string): R
+  }
+}
+
+// Matcher nativo do Jest com mensagem customizada - expect() do Jest nao
+// aceita um segundo parametro de mensagem como assert()/chai, entao isso
+// precisa ser um matcher registrado via expect.extend().
+expect.extend({
+  toBeDefinedWithMessage(received: unknown, message: string): SyncExpectationResult {
+    const pass = received !== null && received !== undefined
+    return { pass, message: () => message }
+  }
+})
 
 export class TestFixtureNotFoundException extends Error {
   constructor(message: string) {
@@ -12,9 +30,12 @@ export class TestFixtureNotFoundException extends Error {
   }
 }
 
-export function assertDefined<T>(value: T | null | undefined, message: string): asserts value is T {
+// So estreita o tipo pro TypeScript (elimina o '!' depois); a mensagem
+// descritiva de qual fixture nao foi encontrada fica a cargo do
+// expect(...).toBeDefinedWithMessage(...) chamado antes.
+export function assertDefined<T>(value: T | null | undefined): asserts value is T {
   if (value == null) {
-    throw new TestFixtureNotFoundException(message)
+    throw new TestFixtureNotFoundException('Valor esperado não pode ser nulo ou indefinido')
   }
 }
 
