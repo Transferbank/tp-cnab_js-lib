@@ -5,6 +5,7 @@ import {
   assertDefined,
   readExampleLines,
   replaceLineRange,
+  realLineNumber,
   findFirstCnab400RecordLine,
   filterValidatableLines,
   createFieldsFromLines,
@@ -30,7 +31,7 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        assertDefined(rawLine)
+        assertDefined(rawLine, `Linha com tipo de registro ${recordType} não encontrada`)
 
         const field = new Cnab400BradescoBoletoValorTituloField(rawLine, 1)
 
@@ -67,18 +68,18 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
   describe('validate with error', (): void => {
     it('given detail line with blank value when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha detalhe não encontrada')
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BradescoBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400BradescoBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -87,40 +88,41 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given detail line with invalid alphanumeric value when validating then throws error', (): void => {
       // Given
-      const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha detalhe não encontrada')
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
 
       // When / Then
-      const field = new Cnab400BradescoBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400BradescoBoletoValorTituloField(invalidLine, lineNumber)
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
 
     it('given detail line with negative value when validating then returns field error', (): void => {
       // Given
-      const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha detalhe não encontrada')
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '0000000000000')
 
       // When
-      const field = new Cnab400BradescoBoletoValorTituloField(invalidLine, dummyLineNumber)
+      const field = new Cnab400BradescoBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -128,6 +130,7 @@ describe('Cnab400BradescoBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })
