@@ -1,8 +1,8 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import {
-  assertDefined,
   readExampleLines,
   replaceLineRange,
   realLineNumber,
@@ -31,7 +31,9 @@ describe('Cnab400BradescoBoletoVencimentoField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        assertDefined(rawLine, `Linha com tipo de registro ${recordType} não encontrada`)
+        if (rawLine == null) {
+          assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
+        }
 
         const field = new Cnab400BradescoBoletoVencimentoField(rawLine, 1)
 
@@ -73,7 +75,9 @@ describe('Cnab400BradescoBoletoVencimentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine, 'Linha detalhe não encontrada')
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
@@ -98,7 +102,9 @@ describe('Cnab400BradescoBoletoVencimentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      assertDefined(rawLine, 'Linha detalhe não encontrada')
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')

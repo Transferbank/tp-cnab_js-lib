@@ -1,8 +1,8 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import {
-  assertDefined,
   readExampleLines,
   replaceLineRange,
   realLineNumber,
@@ -31,7 +31,9 @@ describe('Cnab240BradescoBoletoVencimentoField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        assertDefined(rawLine, `Linha com segmento ${segment} não encontrada`)
+        if (rawLine == null) {
+          assert.fail(`Linha com segmento ${segment} não encontrada`)
+        }
 
         const field = new Cnab240BradescoBoletoVencimentoField(rawLine, 1)
 
@@ -73,7 +75,9 @@ describe('Cnab240BradescoBoletoVencimentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      assertDefined(rawLine, 'Linha segmento P não encontrada')
+      if (rawLine == null) {
+        assert.fail('Linha segmento P não encontrada')
+      }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
@@ -98,7 +102,9 @@ describe('Cnab240BradescoBoletoVencimentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      assertDefined(rawLine, 'Linha segmento P não encontrada')
+      if (rawLine == null) {
+        assert.fail('Linha segmento P não encontrada')
+      }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '99999999')

@@ -5,19 +5,6 @@ import { CnabField } from '@cnab/type/cnab-field'
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
 
-export class TestFixtureNotFoundException extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'TestFixtureNotFoundException'
-  }
-}
-
-export function assertDefined<T>(value: T | null | undefined, message: string): asserts value is T {
-  if (value == null) {
-    throw new TestFixtureNotFoundException(message)
-  }
-}
-
 export function resPath(): string {
   return path.join(process.cwd(), 'res')
 }
