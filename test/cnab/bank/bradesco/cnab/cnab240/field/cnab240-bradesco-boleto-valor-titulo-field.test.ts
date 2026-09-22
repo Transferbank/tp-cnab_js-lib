@@ -31,8 +31,7 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        expect(rawLine).toBeDefinedWithMessage(`Linha com segmento ${segment} não encontrada`)
-        assertDefined(rawLine)
+        assertDefined(rawLine, `Linha com segmento ${segment} não encontrada`)
 
         const field = new Cnab240BradescoBoletoValorTituloField(rawLine, 1)
 
@@ -74,8 +73,7 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      expect(rawLine).toBeDefinedWithMessage('Linha segmento P não encontrada')
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento P não encontrada')
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
@@ -100,8 +98,7 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      expect(rawLine).toBeDefinedWithMessage('Linha segmento P não encontrada')
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento P não encontrada')
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
@@ -119,8 +116,7 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      expect(rawLine).toBeDefinedWithMessage('Linha segmento P não encontrada')
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento P não encontrada')
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')

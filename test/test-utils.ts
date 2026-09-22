@@ -1,41 +1,16 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { expect } from '@jest/globals'
-import type { SyncExpectationResult } from 'expect'
+import assert from 'node:assert'
 import { CnabField } from '@cnab/type/cnab-field'
 
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
 
-declare module 'expect' {
-  interface Matchers<R> {
-    toBeDefinedWithMessage(message: string): R
-  }
-}
-
-// Matcher nativo do Jest com mensagem customizada - expect() do Jest nao
-// aceita um segundo parametro de mensagem como assert()/chai, entao isso
-// precisa ser um matcher registrado via expect.extend().
-expect.extend({
-  toBeDefinedWithMessage(received: unknown, message: string): SyncExpectationResult {
-    const pass = received !== null && received !== undefined
-    return { pass, message: () => message }
-  }
-})
-
-export class TestFixtureNotFoundException extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'TestFixtureNotFoundException'
-  }
-}
-
-// So estreita o tipo pro TypeScript (elimina o '!' depois); a mensagem
-// descritiva de qual fixture nao foi encontrada fica a cargo do
-// expect(...).toBeDefinedWithMessage(...) chamado antes.
-export function assertDefined<T>(value: T | null | undefined): asserts value is T {
+// assert.fail lanca um AssertionError nativo do Node (com mensagem) sem
+// depender de checagem por truthy - mantem a comparação explicita com null.
+export function assertDefined<T>(value: T | null | undefined, message: string): asserts value is T {
   if (value == null) {
-    throw new TestFixtureNotFoundException('Valor esperado não pode ser nulo ou indefinido')
+    assert.fail(message)
   }
 }
 

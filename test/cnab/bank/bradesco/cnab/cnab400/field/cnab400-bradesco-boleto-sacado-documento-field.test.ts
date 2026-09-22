@@ -31,8 +31,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        expect(rawLine).toBeDefinedWithMessage(`Linha com tipo de registro ${recordType} não encontrada`)
-        assertDefined(rawLine)
+        assertDefined(rawLine, `Linha com tipo de registro ${recordType} não encontrada`)
 
         const field = new Cnab400BradescoBoletoSacadoDocumentoField(rawLine, 1)
 
@@ -72,8 +71,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      expect(rawLine).toBeDefinedWithMessage('Linha detalhe não encontrada')
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha detalhe não encontrada')
 
       const lineNumber = realLineNumber(lines, rawLine)
 
@@ -98,8 +96,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      expect(rawLine).toBeDefinedWithMessage('Linha detalhe não encontrada')
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha detalhe não encontrada')
 
       const lineNumber = realLineNumber(lines, rawLine)
 
@@ -125,8 +122,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      expect(rawLine).toBeDefinedWithMessage('Linha detalhe não encontrada')
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha detalhe não encontrada')
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
@@ -151,8 +147,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      expect(rawLine).toBeDefinedWithMessage('Linha detalhe não encontrada')
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha detalhe não encontrada')
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '00000000000000')
