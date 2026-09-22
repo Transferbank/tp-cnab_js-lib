@@ -1,18 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import assert from 'node:assert'
 import { CnabField } from '@cnab/type/cnab-field'
 
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
-
-// assert.fail lanca um AssertionError nativo do Node (com mensagem) sem
-// depender de checagem por truthy - mantem a comparação explicita com null.
-export function assertDefined<T>(value: T | null | undefined, message: string): asserts value is T {
-  if (value == null) {
-    assert.fail(message)
-  }
-}
 
 export function resPath(): string {
   return path.join(process.cwd(), 'res')

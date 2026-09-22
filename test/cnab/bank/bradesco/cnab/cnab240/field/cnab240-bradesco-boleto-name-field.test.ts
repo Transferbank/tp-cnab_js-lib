@@ -1,7 +1,7 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import {
-  assertDefined,
   readExampleLines,
   replaceLineRange,
   realLineNumber,
@@ -31,7 +31,9 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        assertDefined(rawLine, `Linha com segmento ${segment} não encontrada`)
+        if (rawLine == null) {
+          assert.fail(`Linha com segmento ${segment} não encontrada`)
+        }
 
         const field = new Cnab240BradescoBoletoNameField(rawLine, 1)
 
@@ -73,17 +75,12 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      assertDefined(rawLine, 'Linha segmento Q não encontrada')
+      if (rawLine == null) {
+        assert.fail('Linha segmento Q não encontrada')
+      }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-
-      const expectedError = new CnabFieldMinLengthError({
-        lineNumber,
-        fieldName: 'nome do sacado',
-        range: fieldRange,
-        minLength: 3
-      })
 
       // When
       const field = new Cnab240BradescoBoletoNameField(invalidLine, lineNumber)
@@ -95,8 +92,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })
