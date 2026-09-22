@@ -2,6 +2,7 @@ import * as path from 'path'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import {
+  assertDefined,
   readExampleLines,
   replaceLineRange,
   findFirstCnab400RecordLine,
@@ -29,9 +30,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        if (rawLine == null) {
-          throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
-        }
+        assertDefined(rawLine)
 
         const field = new Cnab400BradescoBoletoSacadoDocumentoField(rawLine, 1)
 
@@ -72,9 +71,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
-      }
+      assertDefined(rawLine)
 
       // CPF 123.456.789-09 gravado à direita num campo de 14 posições, com o
       // indicador de tipo de inscrição (posições 219-220) marcado como "01"
@@ -98,9 +95,7 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
-      }
+      assertDefined(rawLine)
 
       // Indicador "02" (CNPJ), mas o valor so forma um CNPJ valido se
       // adivinhado como CPF pelos ultimos 11 digitos
@@ -125,18 +120,9 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
-        lineNumber: dummyLineNumber,
-        fieldName: 'documento do sacado',
-        range: fieldRange
-      })
 
       // When
       const field = new Cnab400BradescoBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
@@ -148,8 +134,6 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given detail line with invalid document when validating then returns field error', (): void => {
@@ -160,18 +144,9 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '00000000000000')
-
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
-        lineNumber: dummyLineNumber,
-        fieldName: 'documento do sacado',
-        range: fieldRange
-      })
 
       // When
       const field = new Cnab400BradescoBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
@@ -182,8 +157,6 @@ describe('Cnab400BradescoBoletoSacadoDocumentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
   })
 })

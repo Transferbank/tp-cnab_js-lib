@@ -1,9 +1,15 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import { expect } from '@jest/globals'
 import { CnabField } from '@cnab/type/cnab-field'
 
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
+
+export function assertDefined<T>(value: T | null | undefined): asserts value is T {
+  expect(value).not.toBeNull()
+  expect(value).not.toBeUndefined()
+}
 
 export function resPath(): string {
   return path.join(process.cwd(), 'res')

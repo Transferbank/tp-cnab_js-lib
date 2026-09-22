@@ -1,31 +1,27 @@
 const CPF_PATTERN = /^\d{11}$/
 const CNPJ_PATTERN = /^[A-Z0-9]{12}\d{2}$/
 
-// CNPJ alfanumerico (Receita Federal, vigente desde 01/08/2026): o digito
-// verificador usa o codigo ASCII do caractere menos 48, que para digitos
-// coincide com o proprio valor numerico (ord('0') - 48 == 0).
 function charValue(char: string): number {
   return char.charCodeAt(0) - 48
 }
 
 export function isValidCPF(cpf: string): boolean {
-  if (!CPF_PATTERN.test(cpf) || cpf === cpf[0].repeat(11)) return false
+  const clean = cpf.replace(/\D/g, '')
+  if (!CPF_PATTERN.test(clean) || clean === clean[0].repeat(11)) return false
   let sum = 0
-  for (let i = 0; i < 9; i++) sum += parseInt(cpf[i]) * (10 - i)
+  for (let i = 0; i < 9; i++) sum += parseInt(clean[i]) * (10 - i)
   let digit1 = 11 - (sum % 11)
   if (digit1 >= 10) digit1 = 0
-  if (digit1 !== parseInt(cpf[9])) return false
+  if (digit1 !== parseInt(clean[9])) return false
   sum = 0
-  for (let i = 0; i < 10; i++) sum += parseInt(cpf[i]) * (11 - i)
+  for (let i = 0; i < 10; i++) sum += parseInt(clean[i]) * (11 - i)
   let digit2 = 11 - (sum % 11)
   if (digit2 >= 10) digit2 = 0
-  return digit2 === parseInt(cpf[10])
+  return digit2 === parseInt(clean[10])
 }
 
-// As 12 primeiras posicoes aceitam letras A-Z alem de digitos; os 2 digitos
-// verificadores continuam sempre numericos.
 export function isValidCNPJ(cnpj: string): boolean {
-  const value = cnpj.toUpperCase()
+  const value = cnpj.replace(/[.\-/]/g, '').toUpperCase()
   if (!CNPJ_PATTERN.test(value) || value === value[0].repeat(14)) return false
 
   let sum = 0
@@ -61,15 +57,9 @@ export function validateDocument(rawDocument: string): boolean {
   const digits = rawDocument.trim()
   if (digits.length === 0 || !isAlphanumeric(digits)) return false
 
-  // O documento real esta sempre nos caracteres mais a direita quando o
-  // campo é numerico (zero-padding a esquerda); campos alfanumericos já
-  // chegam sem padding após o trim, então o slice vira um no-op.
   const asCPF = digits.slice(-11)
   const asCNPJ = digits.slice(-14).padStart(14, '0')
 
-  // isDigitsOnly(digits) roda no valor inteiro (não só no slice) para
-  // reprovar letras fora da janela dos 11 digitos, como um CPF com lixo
-  // alfabetico de padding que "some" no slice.
   const cpfMatches = isDigitsOnly(digits) && isValidCPF(asCPF)
   const cnpjMatches = isValidCNPJ(asCNPJ)
 

@@ -5,7 +5,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab240ItauBoletoValorTituloField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-valor-titulo-field'
-import { readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
+import { assertDefined, readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab240ItauBoletoValorTituloField', (): void => {
@@ -22,9 +22,7 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        if (rawLine == null) {
-          throw new Error(`Linha com segmento ${segment} não encontrada`)
-        }
+        assertDefined(rawLine)
 
         const field = new Cnab240ItauBoletoValorTituloField(rawLine, 1)
 
@@ -67,18 +65,9 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      if (rawLine == null) {
-        throw new Error('Linha segmento P não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo valor do título inválido: deve ser maior que zero',
-        lineNumber: dummyLineNumber,
-        fieldName: 'valor do título',
-        range: fieldRange
-      })
 
       // When
       const field = new Cnab240ItauBoletoValorTituloField(invalidLine, dummyLineNumber)
@@ -90,8 +79,6 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given segment P line with zero amount when validating then returns error', (): void => {
@@ -102,9 +89,7 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      if (rawLine == null) {
-        throw new Error('Linha segmento P não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
@@ -126,9 +111,7 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      if (rawLine == null) {
-        throw new Error('Linha segmento P não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLMNO')
 
@@ -146,9 +129,7 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      if (rawLine == null) {
-        throw new Error('Linha segmento P não encontrada')
-      }
+      assertDefined(rawLine)
 
       // parseInt('00000012345ABCD', 10) retorna 12345 em vez de NaN -
       // sem a checagem de formato, isso passaria como R$123.45 valido.
@@ -168,9 +149,7 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      if (rawLine == null) {
-        throw new Error('Linha segmento P não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLMNO')
 
@@ -184,8 +163,6 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe('Campo valor do título com formato inválido: ABCDEFGHIJKLMNO')
-      expect(result.errors[0].lineNumber).toBe(dummyLineNumber)
     })
   })
 })

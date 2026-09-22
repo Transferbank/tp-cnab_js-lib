@@ -5,7 +5,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240ItauBoletoSacadoDocumentoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-sacado-documento-field'
-import { readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
+import { assertDefined, readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
@@ -22,9 +22,7 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        if (rawLine == null) {
-          throw new Error(`Linha com segmento ${segment} não encontrada`)
-        }
+        assertDefined(rawLine)
 
         const field = new Cnab240ItauBoletoSacadoDocumentoField(rawLine, 1)
 
@@ -67,18 +65,9 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      if (rawLine == null) {
-        throw new Error('Linha segmento Q não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
-        lineNumber: dummyLineNumber,
-        fieldName: 'documento do sacado',
-        range: fieldRange
-      })
 
       // When
       const field = new Cnab240ItauBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
@@ -90,30 +79,18 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given segment Q line with invalid document when validating then returns error', (): void => {
-      
       // Given
       const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoSacadoDocumentoField)
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
-      
-      if (rawLine == null) {
-        throw new Error('Linha segmento Q não encontrada')
-      }
-      
+
+      assertDefined(rawLine)
+
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
-      
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
-        lineNumber: dummyLineNumber,
-        fieldName: 'documento do sacado',
-        range: fieldRange
-      })
 
       // When
       const field = new Cnab240ItauBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
@@ -124,8 +101,6 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
   })
 })

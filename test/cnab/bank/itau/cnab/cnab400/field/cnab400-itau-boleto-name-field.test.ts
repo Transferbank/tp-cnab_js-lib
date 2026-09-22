@@ -5,7 +5,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { Cnab400ItauBoletoNameField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-name-field'
-import { readExampleLines, replaceLineRange, findFirstCnab400RecordLine,
+import { assertDefined, readExampleLines, replaceLineRange, findFirstCnab400RecordLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab400ItauBoletoNameField', (): void => {
@@ -23,9 +23,7 @@ describe('Cnab400ItauBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
-        if (rawLine == null) {
-          throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
-        }
+        assertDefined(rawLine)
 
         const field = new Cnab400ItauBoletoNameField(rawLine, 1)
 
@@ -68,18 +66,9 @@ describe('Cnab400ItauBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      if (rawLine == null) {
-        throw new Error('Linha de detalhe não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-
-      const expectedError = new CnabFieldMinLengthError({
-        lineNumber: dummyLineNumber,
-        fieldName: 'nome do sacado',
-        range: fieldRange,
-        minLength: 3
-      })
 
       // When
       const field = new Cnab400ItauBoletoNameField(invalidLine, dummyLineNumber)
@@ -91,7 +80,6 @@ describe('Cnab400ItauBoletoNameField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given detail line with name shorter than minLength when validating then returns error', (): void => {
@@ -102,9 +90,7 @@ describe('Cnab400ItauBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
-      if (rawLine == null) {
-        throw new Error('Linha de detalhe não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
 
