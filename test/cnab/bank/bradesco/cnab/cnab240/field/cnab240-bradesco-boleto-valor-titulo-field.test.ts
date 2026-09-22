@@ -78,6 +78,13 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo valor do título inválido: deve ser maior que zero',
+        lineNumber,
+        fieldName: 'valor do título',
+        range: fieldRange
+      })
+
       // When
       const field = new Cnab240BradescoBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
@@ -88,7 +95,8 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].lineNumber).toBe(lineNumber)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given segment P line with invalid alphanumeric value when validating then throws error', (): void => {
@@ -121,6 +129,13 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo valor do título inválido: deve ser maior que zero',
+        lineNumber,
+        fieldName: 'valor do título',
+        range: fieldRange
+      })
+
       // When
       const field = new Cnab240BradescoBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
@@ -130,7 +145,8 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].lineNumber).toBe(lineNumber)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
   })
 })

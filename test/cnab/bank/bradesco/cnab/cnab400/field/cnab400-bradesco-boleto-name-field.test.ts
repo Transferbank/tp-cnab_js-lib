@@ -78,6 +78,13 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
+      const expectedError = new CnabFieldMinLengthError({
+        lineNumber,
+        fieldName: 'nome do sacado',
+        range: fieldRange,
+        minLength: 3
+      })
+
       // When
       const field = new Cnab400BradescoBoletoNameField(invalidLine, lineNumber)
       const result = field.validate()
@@ -88,7 +95,8 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
-      expect(result.errors[0].lineNumber).toBe(lineNumber)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
   })
 })

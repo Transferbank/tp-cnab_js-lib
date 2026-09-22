@@ -78,6 +78,13 @@ describe('Cnab240BradescoBoletoVencimentoField', (): void => {
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
+      const expectedError = new CnabGenericFieldError({
+        message: 'Campo data de vencimento é obrigatório',
+        lineNumber,
+        fieldName: 'data de vencimento',
+        range: fieldRange
+      })
+
       // When
       const field = new Cnab240BradescoBoletoVencimentoField(invalidLine, lineNumber)
       const result = field.validate()
@@ -88,7 +95,8 @@ describe('Cnab240BradescoBoletoVencimentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].lineNumber).toBe(lineNumber)
+      expect(result.errors[0].message).toBe(expectedError.message)
+      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
 
     it('given segment P line with invalid date when validating then throws error', (): void => {
