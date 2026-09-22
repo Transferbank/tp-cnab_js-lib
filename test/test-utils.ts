@@ -1,14 +1,21 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { expect } from '@jest/globals'
 import { CnabField } from '@cnab/type/cnab-field'
 
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
 
-export function assertDefined<T>(value: T | null | undefined): asserts value is T {
-  expect(value).not.toBeNull()
-  expect(value).not.toBeUndefined()
+export class TestFixtureNotFoundException extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'TestFixtureNotFoundException'
+  }
+}
+
+export function assertDefined<T>(value: T | null | undefined, message: string): asserts value is T {
+  if (value == null) {
+    throw new TestFixtureNotFoundException(message)
+  }
 }
 
 export function resPath(): string {
@@ -38,6 +45,10 @@ export function findFirstCnab240SegmentLine(lines: string[], segment: string): s
 
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
   return lines.find(line => line.length >= 1 && line[0] === recordType)
+}
+
+export function realLineNumber(lines: string[], rawLine: string): number {
+  return lines.indexOf(rawLine) + 1
 }
 
 export function filterValidatableLines<T extends CnabField<unknown>>(
