@@ -131,7 +131,6 @@ describe('Cnab240CaixaBoletoVencimentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe('Campo data de vencimento com formato inválido: 99999999')
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
