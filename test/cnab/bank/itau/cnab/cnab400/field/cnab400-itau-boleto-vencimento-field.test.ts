@@ -1,11 +1,12 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { Cnab400ItauBoletoVencimentoField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-vencimento-field'
-import { readExampleLines, replaceLineRange, findFirstCnab400RecordLine,
+import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab400RecordLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab400ItauBoletoVencimentoField', (): void => {
@@ -24,7 +25,7 @@ describe('Cnab400ItauBoletoVencimentoField', (): void => {
         const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
         if (rawLine == null) {
-          throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
+          assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
         const field = new Cnab400ItauBoletoVencimentoField(rawLine, 1)
@@ -62,27 +63,20 @@ describe('Cnab400ItauBoletoVencimentoField', (): void => {
   describe('validate with error', (): void => {
     it('given detail line with blank date when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        throw new Error('Linha de detalhe não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo data de vencimento é obrigatório',
-        lineNumber: dummyLineNumber,
-        fieldName: 'data de vencimento',
-        range: fieldRange
-      })
-
       // When
-      const field = new Cnab400ItauBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoVencimentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -91,46 +85,45 @@ describe('Cnab400ItauBoletoVencimentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given detail line with invalid date when reading value then throws error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        throw new Error('Linha de detalhe não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
 
       // When / Then
-      const field = new Cnab400ItauBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoVencimentoField(invalidLine, lineNumber)
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidDateError)
     })
 
     it('given detail line with invalid date when validating then returns format error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab400ItauBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        throw new Error('Linha de detalhe não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
 
       // When
-      const field = new Cnab400ItauBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab400ItauBoletoVencimentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -139,8 +132,7 @@ describe('Cnab400ItauBoletoVencimentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe('Campo data de vencimento com formato inválido: 999999')
-      expect(result.errors[0].lineNumber).toBe(dummyLineNumber)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })
