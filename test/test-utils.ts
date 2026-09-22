@@ -34,6 +34,10 @@ export function findFirstCnab400RecordLine(lines: string[], recordType: string):
   return lines.find(line => line.length >= 1 && line[0] === recordType)
 }
 
+export function realLineNumber(lines: string[], rawLine: string): number {
+  return lines.indexOf(rawLine) + 1
+}
+
 export function filterValidatableLines<T extends CnabField<unknown>>(
   lines: string[],
   FieldClass: CnabFieldConstructor<T>
