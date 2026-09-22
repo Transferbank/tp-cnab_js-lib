@@ -67,10 +67,13 @@ describe('document-parser', (): void => {
     })
 
     describe.each([
-      { document: '000000000000000', description: 'all zeros' },
+      { document: '000000000000000', description: 'all zeros, fails the repeated-digit check' },
       { document: '', description: 'blank value' },
       { document: '12345678900', description: 'wrong check digits' },
-      { document: '123.456.789-09', description: 'CPF formatted with punctuation' }
+      {
+        document: '123.456.789-09',
+        description: 'CPF formatted with punctuation, rejected because unlike isValidCPF this does not strip formatting'
+      }
     ])('given an invalid document: $description', ({ document }): void => {
       it('when validating then rejects it', (): void => {
         expect(validateDocument(document)).toBe(false)
@@ -130,14 +133,14 @@ describe('document-parser', (): void => {
         cnpjIndicator: '02'
       },
       {
-        description: 'CNPJ indicator with punctuation in the document',
+        description: 'CNPJ indicator with punctuation in the document, rejected because unlike isValidCNPJ this does not strip formatting',
         document: '001.234.000/1007-6',
         tipoInscricao: '02',
         cpfIndicator: '01',
         cnpjIndicator: '02'
       },
       {
-        description: 'tipo de inscricao that matches neither indicator',
+        description: 'tipo de inscricao that matches neither indicator, falling through to rejection',
         document: '12345678909',
         tipoInscricao: '99',
         cpfIndicator: '01',
