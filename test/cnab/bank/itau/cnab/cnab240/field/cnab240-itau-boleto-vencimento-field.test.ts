@@ -5,7 +5,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { Cnab240ItauBoletoVencimentoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-vencimento-field'
-import { assertDefined, readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
+import { assertDefined, readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab240ItauBoletoVencimentoField', (): void => {
@@ -22,7 +22,7 @@ describe('Cnab240ItauBoletoVencimentoField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        assertDefined(rawLine)
+        assertDefined(rawLine, `Linha com segmento ${segment} não encontrada`)
 
         const field = new Cnab240ItauBoletoVencimentoField(rawLine, 1)
 
@@ -59,18 +59,18 @@ describe('Cnab240ItauBoletoVencimentoField', (): void => {
   describe('validate with error', (): void => {
     it('given segment P line with blank date when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento P não encontrada')
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240ItauBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab240ItauBoletoVencimentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -79,40 +79,40 @@ describe('Cnab240ItauBoletoVencimentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given segment P line with invalid date when reading value then throws error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento P não encontrada')
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '99999999')
 
       // When / Then
-      const field = new Cnab240ItauBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab240ItauBoletoVencimentoField(invalidLine, realLineNumber(lines, rawLine))
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidDateError)
     })
 
     it('given segment P line with invalid date when validating then returns format error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento P não encontrada')
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '99999999')
 
       // When
-      const field = new Cnab240ItauBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab240ItauBoletoVencimentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -121,6 +121,7 @@ describe('Cnab240ItauBoletoVencimentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })

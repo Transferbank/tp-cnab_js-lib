@@ -5,7 +5,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { Cnab240ItauBoletoNameField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-name-field'
-import { assertDefined, readExampleLines, replaceLineRange, findFirstCnab240SegmentLine,
+import { assertDefined, readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
 describe('Cnab240ItauBoletoNameField', (): void => {
@@ -22,7 +22,7 @@ describe('Cnab240ItauBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        assertDefined(rawLine)
+        assertDefined(rawLine, `Linha com segmento ${segment} não encontrada`)
 
         const field = new Cnab240ItauBoletoNameField(rawLine, 1)
 
@@ -59,18 +59,18 @@ describe('Cnab240ItauBoletoNameField', (): void => {
   describe('validate with error', (): void => {
     it('given segment Q line with blank name when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoNameField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento Q não encontrada')
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240ItauBoletoNameField(invalidLine, dummyLineNumber)
+      const field = new Cnab240ItauBoletoNameField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -79,22 +79,22 @@ describe('Cnab240ItauBoletoNameField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given segment Q line with name shorter than minLength when validating then returns error', (): void => {
       // Given
-      const dummyLineNumber = 37
       const fieldRange = getFieldRange(Cnab240ItauBoletoNameField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      assertDefined(rawLine)
+      assertDefined(rawLine, 'Linha segmento Q não encontrada')
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
 
       // When
-      const field = new Cnab240ItauBoletoNameField(invalidLine, dummyLineNumber)
+      const field = new Cnab240ItauBoletoNameField(invalidLine, realLineNumber(lines, rawLine))
       const result = field.validate()
 
       // Then
