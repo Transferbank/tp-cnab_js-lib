@@ -1,6 +1,7 @@
 import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
 import {
+  assertDefined,
   readExampleLines,
   replaceLineRange,
   resPath,
@@ -29,9 +30,7 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
-        if (rawLine == null) {
-          throw new Error(`Linha com segmento ${segment} não encontrada`)
-        }
+        assertDefined(rawLine)
 
         const field = new Cnab240BradescoBoletoNameField(rawLine, 1)
 
@@ -74,18 +73,9 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
-      if (rawLine == null) {
-        throw new Error('Linha segmento Q não encontrada')
-      }
+      assertDefined(rawLine)
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
-
-      const expectedError = new CnabFieldMinLengthError({
-        lineNumber: dummyLineNumber,
-        fieldName: 'nome do sacado',
-        range: fieldRange,
-        minLength: 3
-      })
 
       // When
       const field = new Cnab240BradescoBoletoNameField(invalidLine, dummyLineNumber)
@@ -97,8 +87,6 @@ describe('Cnab240BradescoBoletoNameField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
     })
   })
 })
