@@ -102,8 +102,10 @@ describe('Cnab400ItauBoletoVencimentoField', (): void => {
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
 
-      // When / Then
+      // When
       const field = new Cnab400ItauBoletoVencimentoField(invalidLine, lineNumber)
+
+      // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidDateError)
     })
@@ -128,7 +130,6 @@ describe('Cnab400ItauBoletoVencimentoField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(() => field.validate()).not.toThrow()
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
