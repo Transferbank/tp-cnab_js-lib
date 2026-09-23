@@ -125,8 +125,10 @@ describe('Cnab240SicoobBoletoValorTituloField', (): void => {
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLMNO')
 
-      // When / Then
+      // When
       const field = new Cnab240SicoobBoletoValorTituloField(invalidLine, lineNumber)
+
+      // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
@@ -151,7 +153,6 @@ describe('Cnab240SicoobBoletoValorTituloField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(() => field.validate()).not.toThrow()
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
