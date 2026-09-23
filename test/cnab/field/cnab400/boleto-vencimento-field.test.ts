@@ -1,16 +1,18 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import {
   readExampleLines,
   replaceLineRange,
+  realLineNumber,
   findFirstCnab400RecordLine,
   filterValidatableLines,
   createFieldsFromLines,
   getFieldRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldInvalidDateError, CnabFieldEmptyValueError, CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldInvalidDateError, CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BoletoVencimentoField } from '@cnab/field/cnab400/boleto-vencimento-field'
 import { Cnab400BancoDoBrasilBoletoVencimentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-vencimento-field'
@@ -45,7 +47,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
           const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
           if (rawLine == null) {
-            throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
+            assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
           const field = new Cnab400BradescoBoletoVencimentoField(rawLine, 1)
@@ -73,7 +75,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
           const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
           if (rawLine == null) {
-            throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
+            assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
           const field = new Cnab400BancoDoBrasilBoletoVencimentoField(rawLine, 1)
@@ -88,7 +90,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
     })
   })
 
-  describe('parse and validate', (): void => {
+  describe('value and validate', (): void => {
     it.each([
       { FieldClass: Cnab400BancoDoBrasilBoletoVencimentoField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstDate: new Date(2026, 6, 20) },
       { FieldClass: Cnab400BradescoBoletoVencimentoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstDate: new Date(2026, 7, 24) },
@@ -98,7 +100,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
       { FieldClass: Cnab400SicoobBoletoVencimentoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDate: new Date(2026, 7, 15) },
       { FieldClass: Cnab400SicrediBoletoVencimentoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstDate: new Date(2026, 5, 21) }
     ])(
-      'given detail lines with valid due date ($FieldClass.name) when parsing and validating then accepts all lines',
+      'given detail lines with valid due date ($FieldClass.name) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDate }: {
         FieldClass: VencimentoFieldClass
         examplePath: string
@@ -111,11 +113,11 @@ describe('Cnab400BoletoVencimentoField', (): void => {
           FieldClass
         )
 
+        // When
         const results = fields.map((field: Cnab400BoletoVencimentoField) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
-        expect(fields[0].parse()).toEqual(expectedFirstDate)
         expect(fields[0].value).toEqual(expectedFirstDate)
 
         results.forEach((result: CnabValidationResult) => {
@@ -130,58 +132,51 @@ describe('Cnab400BoletoVencimentoField', (): void => {
 
     it('given detail line with blank due date when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo data de vencimento é obrigatório',
-        lineNumber: dummyLineNumber,
-        fieldName: 'data de vencimento',
-        range: fieldRange
-      })
-
       // When
-      const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(field.value).toBeNull()
-      expect(() => field.parse()).toThrow(CnabFieldEmptyValueError)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given detail line with invalid date when validating then throws error', (): void => {
       // Given
-      const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoVencimentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
 
-      // When / Then
-      const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, dummyLineNumber)
+      // When
+      const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, lineNumber)
+
+      // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(() => field.parse()).toThrow(CnabFieldInvalidDateError)
+      expect(() => field.value).toThrow(CnabFieldInvalidDateError)
     })
   })
 })

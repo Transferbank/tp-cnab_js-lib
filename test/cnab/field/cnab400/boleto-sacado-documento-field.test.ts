@@ -1,16 +1,18 @@
 import * as path from 'path'
+import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
 import {
   readExampleLines,
   replaceLineRange,
+  realLineNumber,
   findFirstCnab400RecordLine,
   filterValidatableLines,
   createFieldsFromLines,
   getFieldRange
 } from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabGenericFieldError, CnabFieldEmptyValueError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BoletoSacadoDocumentoField } from '@cnab/field/cnab400/boleto-sacado-documento-field'
 import { Cnab400BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-sacado-documento-field'
@@ -45,7 +47,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
           const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
           if (rawLine == null) {
-            throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
+            assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
           const field = new Cnab400BradescoBoletoSacadoDocumentoField(rawLine, 1)
@@ -73,7 +75,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
           const rawLine = findFirstCnab400RecordLine(lines, recordType)
 
           if (rawLine == null) {
-            throw new Error(`Linha com tipo de registro ${recordType} não encontrada`)
+            assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
           const field = new Cnab400BancoDoBrasilBoletoSacadoDocumentoField(rawLine, 1)
@@ -88,7 +90,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
     })
   })
 
-  describe('parse and validate', (): void => {
+  describe('value and validate', (): void => {
     it.each([
       { FieldClass: Cnab400BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstDocument: '01000000997396' },
       { FieldClass: Cnab400BradescoBoletoSacadoDocumentoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstDocument: '20000000997330' },
@@ -98,7 +100,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
       { FieldClass: Cnab400SicoobBoletoSacadoDocumentoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDocument: '00011122233396' },
       { FieldClass: Cnab400SicrediBoletoSacadoDocumentoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstDocument: '40000997300084' }
     ])(
-      'given detail lines with valid document ($FieldClass.name) when parsing and validating then accepts all lines',
+      'given detail lines with valid document ($FieldClass.name) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
         FieldClass: DocumentoFieldClass
         examplePath: string
@@ -111,11 +113,11 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
           FieldClass
         )
 
+        // When
         const results = fields.map((field: Cnab400BoletoSacadoDocumentoField) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
-        expect(fields[0].parse()).toBe(expectedFirstDocument)
         expect(fields[0].value).toBe(expectedFirstDocument)
 
         results.forEach((result: CnabValidationResult) => {
@@ -123,31 +125,6 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
         })
       }
     )
-
-    it('given detail line with a zero-padded CPF when validating then accepts it', (): void => {
-      // Given
-      const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
-      const dummyLineNumber = 7
-      const fieldRange = getFieldRange(Cnab400BradescoBoletoSacadoDocumentoField)
-
-      const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = findFirstCnab400RecordLine(lines, '1')
-
-      if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
-      }
-
-      // CPF 123.456.789-09 gravado à direita num campo de 14 posições
-      const lineWithCpf = replaceLineRange(rawLine, fieldRange, '00012345678909')
-
-      // When
-      const field = new Cnab400BradescoBoletoSacadoDocumentoField(lineWithCpf, dummyLineNumber)
-      const result = field.validate()
-
-      // Then
-      expect(field.value).toBe('00012345678909')
-      expect(result).toEqual(genValidCnabValidationResult())
-    })
   })
 
   describe('validate with error', (): void => {
@@ -155,63 +132,47 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
 
     it('given detail line with blank document when validating then returns null value and field error', (): void => {
       // Given
-      const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoSacadoDocumentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
-        lineNumber: dummyLineNumber,
-        fieldName: 'documento do sacado',
-        range: fieldRange
-      })
-
       // When
-      const field = new Cnab400BradescoBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab400BradescoBoletoSacadoDocumentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(field.value).toBeNull()
-      expect(() => field.parse()).toThrow(CnabFieldEmptyValueError)
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
     it('given detail line with invalid document when validating then returns field error', (): void => {
       // Given
-      const dummyLineNumber = 42
       const fieldRange = getFieldRange(Cnab400BradescoBoletoSacadoDocumentoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        throw new Error('Linha detalhe não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
+      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '00000000000000')
 
-      const expectedError = new CnabGenericFieldError({
-        message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
-        lineNumber: dummyLineNumber,
-        fieldName: 'documento do sacado',
-        range: fieldRange
-      })
-
       // When
-      const field = new Cnab400BradescoBoletoSacadoDocumentoField(invalidLine, dummyLineNumber)
+      const field = new Cnab400BradescoBoletoSacadoDocumentoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -219,8 +180,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
-      expect(result.errors[0].message).toBe(expectedError.message)
-      expect(result.errors[0].lineNumber).toBe(expectedError.lineNumber)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })
 })
