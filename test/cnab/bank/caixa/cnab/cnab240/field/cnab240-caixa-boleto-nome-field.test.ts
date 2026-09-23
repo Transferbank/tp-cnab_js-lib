@@ -5,11 +5,11 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
-import { Cnab240CaixaBoletoNameField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-name-field'
+import { Cnab240CaixaBoletoNomeField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-nome-field'
 import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
-describe('Cnab240CaixaBoletoNameField', (): void => {
+describe('Cnab240CaixaBoletoNomeField', (): void => {
   const examplePath = 'caixa/cnab240/caixa_cnab_240.txt'
 
   describe('shouldValidate', (): void => {
@@ -27,7 +27,7 @@ describe('Cnab240CaixaBoletoNameField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240CaixaBoletoNameField(rawLine, 1)
+        const field = new Cnab240CaixaBoletoNomeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -43,11 +43,11 @@ describe('Cnab240CaixaBoletoNameField', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab240CaixaBoletoNameField),
-        Cnab240CaixaBoletoNameField
+        filterValidatableLines(lines, Cnab240CaixaBoletoNomeField),
+        Cnab240CaixaBoletoNomeField
       )
 
-      const results = fields.map((field: Cnab240CaixaBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab240CaixaBoletoNomeField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
@@ -62,7 +62,7 @@ describe('Cnab240CaixaBoletoNameField', (): void => {
   describe('validate with error', (): void => {
     it('given segment Q line with blank name when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240CaixaBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240CaixaBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -75,7 +75,7 @@ describe('Cnab240CaixaBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240CaixaBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240CaixaBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -89,7 +89,7 @@ describe('Cnab240CaixaBoletoNameField', (): void => {
 
     it('given segment Q line with name shorter than minLength when validating then returns error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240CaixaBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240CaixaBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -102,7 +102,7 @@ describe('Cnab240CaixaBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
 
       // When
-      const field = new Cnab240CaixaBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240CaixaBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

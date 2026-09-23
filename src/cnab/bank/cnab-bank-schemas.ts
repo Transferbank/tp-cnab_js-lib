@@ -234,7 +234,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          CaixaFields240.Cnab240CaixaBoletoNameField,
+          CaixaFields240.Cnab240CaixaBoletoNomeField,
           CaixaFields240.Cnab240CaixaBoletoVencimentoField,
           CaixaFields240.Cnab240CaixaBoletoValorTituloField,
           CaixaFields240.Cnab240CaixaBoletoSacadoDocumentoField
@@ -258,7 +258,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          CaixaFields400.Cnab400CaixaBoletoNameField,
+          CaixaFields400.Cnab400CaixaBoletoNomeField,
           CaixaFields400.Cnab400CaixaBoletoVencimentoField,
           CaixaFields400.Cnab400CaixaBoletoValorTituloField,
           CaixaFields400.Cnab400CaixaBoletoSacadoDocumentoField
