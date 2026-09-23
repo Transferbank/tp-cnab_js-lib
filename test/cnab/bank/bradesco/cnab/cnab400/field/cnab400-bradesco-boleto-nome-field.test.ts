@@ -14,9 +14,9 @@ import {
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-name-field'
+import { Cnab400BradescoBoletoNomeField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-nome-field'
 
-describe('Cnab400BradescoBoletoNameField', (): void => {
+describe('Cnab400BradescoBoletoNomeField', (): void => {
   const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
 
   describe('shouldValidate', (): void => {
@@ -35,7 +35,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
           assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
-        const field = new Cnab400BradescoBoletoNameField(rawLine, 1)
+        const field = new Cnab400BradescoBoletoNomeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -51,11 +51,11 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab400BradescoBoletoNameField),
-        Cnab400BradescoBoletoNameField
+        filterValidatableLines(lines, Cnab400BradescoBoletoNomeField),
+        Cnab400BradescoBoletoNomeField
       )
 
-      const results = fields.map((field: Cnab400BradescoBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab400BradescoBoletoNomeField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
@@ -70,7 +70,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   describe('validate with error', (): void => {
     it('given boleto line with blank name when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BradescoBoletoNameField)
+      const fieldRange = getFieldRange(Cnab400BradescoBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -83,7 +83,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BradescoBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab400BradescoBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
