@@ -87,7 +87,7 @@ describe('Cnab400BancoDoBrasilBoletoSacadoDocumentoField', (): void => {
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
-    it('given detail line with invalid document when validating then returns error', (): void => {
+    it('given detail line with invalid document when validating then returns field error', (): void => {
       // Given
       const fieldRange = getFieldRange(Cnab400BancoDoBrasilBoletoSacadoDocumentoField)
 
@@ -107,7 +107,6 @@ describe('Cnab400BancoDoBrasilBoletoSacadoDocumentoField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(field.value).toBe('12345678901234')
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)

@@ -5,12 +5,12 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
-import { Cnab240SicrediBoletoNameField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-name-field'
+import { Cnab240ItauBoletoNomeField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-nome-field'
 import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
-describe('Cnab240SicrediBoletoNameField', (): void => {
-  const examplePath = 'sicredi/cnab240/sicredi_cnab_240.txt'
+describe('Cnab240ItauBoletoNomeField', (): void => {
+  const examplePath = 'itau/cnab240/itau_cnab_240.txt'
 
   describe('shouldValidate', (): void => {
     describe.each([
@@ -27,7 +27,7 @@ describe('Cnab240SicrediBoletoNameField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240SicrediBoletoNameField(rawLine, 1)
+        const field = new Cnab240ItauBoletoNomeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -43,11 +43,11 @@ describe('Cnab240SicrediBoletoNameField', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab240SicrediBoletoNameField),
-        Cnab240SicrediBoletoNameField
+        filterValidatableLines(lines, Cnab240ItauBoletoNomeField),
+        Cnab240ItauBoletoNomeField
       )
 
-      const results = fields.map((field: Cnab240SicrediBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab240ItauBoletoNomeField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
@@ -62,7 +62,7 @@ describe('Cnab240SicrediBoletoNameField', (): void => {
   describe('validate with error', (): void => {
     it('given segment Q line with blank name when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SicrediBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240ItauBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -75,7 +75,7 @@ describe('Cnab240SicrediBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240SicrediBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240ItauBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -87,9 +87,9 @@ describe('Cnab240SicrediBoletoNameField', (): void => {
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
-    it('given segment Q line with name shorter than minLength when validating then returns error', (): void => {
+    it('given segment Q line with name shorter than minLength when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SicrediBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240ItauBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -98,11 +98,10 @@ describe('Cnab240SicrediBoletoNameField', (): void => {
         assert.fail('Linha segmento Q não encontrada')
       }
 
-      const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
 
       // When
-      const field = new Cnab240SicrediBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240ItauBoletoNomeField(invalidLine, realLineNumber(lines, rawLine))
       const result = field.validate()
 
       // Then

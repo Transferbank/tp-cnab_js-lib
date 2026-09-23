@@ -5,17 +5,17 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
-import { Cnab400SicrediBoletoNameField } from '@cnab/bank/sicredi/cnab/cnab400/field/cnab400-sicredi-boleto-name-field'
+import { Cnab400BancoDoBrasilBoletoNomeField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-nome-field'
 import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab400RecordLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
-describe('Cnab400SicrediBoletoNameField', (): void => {
-  const examplePath = 'sicredi/cnab400/sicredi_cnab_400.REM'
+describe('Cnab400BancoDoBrasilBoletoNomeField', (): void => {
+  const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
 
   describe('shouldValidate', (): void => {
     describe.each([
       { recordType: '0', expectedShouldValidate: false },
-      { recordType: '1', expectedShouldValidate: true },
+      { recordType: '7', expectedShouldValidate: true },
       { recordType: '9', expectedShouldValidate: false }
     ])('parameterized cases', ({ recordType, expectedShouldValidate }): void => {
       it(`given record type ${recordType} when checking shouldValidate then returns ${expectedShouldValidate}`, (): void => {
@@ -27,7 +27,7 @@ describe('Cnab400SicrediBoletoNameField', (): void => {
           assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
-        const field = new Cnab400SicrediBoletoNameField(rawLine, 1)
+        const field = new Cnab400BancoDoBrasilBoletoNomeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -43,11 +43,11 @@ describe('Cnab400SicrediBoletoNameField', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab400SicrediBoletoNameField),
-        Cnab400SicrediBoletoNameField
+        filterValidatableLines(lines, Cnab400BancoDoBrasilBoletoNomeField),
+        Cnab400BancoDoBrasilBoletoNomeField
       )
 
-      const results = fields.map((field: Cnab400SicrediBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab400BancoDoBrasilBoletoNomeField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
@@ -62,10 +62,10 @@ describe('Cnab400SicrediBoletoNameField', (): void => {
   describe('validate with error', (): void => {
     it('given detail line with blank name when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400SicrediBoletoNameField)
+      const fieldRange = getFieldRange(Cnab400BancoDoBrasilBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = findFirstCnab400RecordLine(lines, '1')
+      const rawLine = findFirstCnab400RecordLine(lines, '7')
 
       if (rawLine == null) {
         assert.fail('Linha detalhe não encontrada')
@@ -75,7 +75,7 @@ describe('Cnab400SicrediBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400SicrediBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab400BancoDoBrasilBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -87,12 +87,12 @@ describe('Cnab400SicrediBoletoNameField', (): void => {
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
-    it('given detail line with name shorter than minLength when validating then returns error', (): void => {
+    it('given detail line with name shorter than minLength when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400SicrediBoletoNameField)
+      const fieldRange = getFieldRange(Cnab400BancoDoBrasilBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = findFirstCnab400RecordLine(lines, '1')
+      const rawLine = findFirstCnab400RecordLine(lines, '7')
 
       if (rawLine == null) {
         assert.fail('Linha detalhe não encontrada')
@@ -102,7 +102,7 @@ describe('Cnab400SicrediBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
 
       // When
-      const field = new Cnab400SicrediBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab400BancoDoBrasilBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

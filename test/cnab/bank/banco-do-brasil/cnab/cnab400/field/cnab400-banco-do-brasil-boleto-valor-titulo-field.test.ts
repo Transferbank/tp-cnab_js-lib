@@ -87,7 +87,7 @@ describe('Cnab400BancoDoBrasilBoletoValorTituloField', (): void => {
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
-    it('given detail line with zero amount when validating then returns error', (): void => {
+    it('given detail line with zero amount when validating then returns field error', (): void => {
       // Given
       const fieldRange = getFieldRange(Cnab400BancoDoBrasilBoletoValorTituloField)
 

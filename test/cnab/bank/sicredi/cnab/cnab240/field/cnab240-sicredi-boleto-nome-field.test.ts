@@ -5,12 +5,12 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
-import { Cnab240SantanderBoletoNameField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-name-field'
+import { Cnab240SicrediBoletoNomeField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-nome-field'
 import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
-describe('Cnab240SantanderBoletoNameField', (): void => {
-  const examplePath = 'santander/cnab240/santander_cnab_240.txt'
+describe('Cnab240SicrediBoletoNomeField', (): void => {
+  const examplePath = 'sicredi/cnab240/sicredi_cnab_240.txt'
 
   describe('shouldValidate', (): void => {
     describe.each([
@@ -27,7 +27,7 @@ describe('Cnab240SantanderBoletoNameField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240SantanderBoletoNameField(rawLine, 1)
+        const field = new Cnab240SicrediBoletoNomeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -43,11 +43,11 @@ describe('Cnab240SantanderBoletoNameField', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab240SantanderBoletoNameField),
-        Cnab240SantanderBoletoNameField
+        filterValidatableLines(lines, Cnab240SicrediBoletoNomeField),
+        Cnab240SicrediBoletoNomeField
       )
 
-      const results = fields.map((field: Cnab240SantanderBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab240SicrediBoletoNomeField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
@@ -62,7 +62,7 @@ describe('Cnab240SantanderBoletoNameField', (): void => {
   describe('validate with error', (): void => {
     it('given segment Q line with blank name when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SantanderBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240SicrediBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -75,7 +75,7 @@ describe('Cnab240SantanderBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240SantanderBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240SicrediBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -89,7 +89,7 @@ describe('Cnab240SantanderBoletoNameField', (): void => {
 
     it('given segment Q line with name shorter than minLength when validating then returns error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SantanderBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240SicrediBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -102,7 +102,7 @@ describe('Cnab240SantanderBoletoNameField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
 
       // When
-      const field = new Cnab240SantanderBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240SicrediBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
