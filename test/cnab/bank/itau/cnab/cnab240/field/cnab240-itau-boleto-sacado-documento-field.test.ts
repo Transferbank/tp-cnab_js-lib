@@ -87,7 +87,7 @@ describe('Cnab240ItauBoletoSacadoDocumentoField', (): void => {
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
-    it('given segment Q line with invalid document when validating then returns error', (): void => {
+    it('given segment Q line with invalid document when validating then returns field error', (): void => {
       // Given
       const fieldRange = getFieldRange(Cnab240ItauBoletoSacadoDocumentoField)
       const lines = readExampleLines(path.join(resPath(), examplePath))

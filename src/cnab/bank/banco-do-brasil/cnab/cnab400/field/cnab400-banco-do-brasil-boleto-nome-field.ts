@@ -4,19 +4,19 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-export class Cnab400CaixaBoletoNameField extends CnabField<string> {
+export class Cnab400BancoDoBrasilBoletoNomeField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [235, 274]
+  readonly range: [number, number] = [235, 271]
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+    return Cnab400LineTypeChecker.isOptional(this.rawLine, '7')
   }
 
   protected performValidation(): CnabValidationResult {
     const minLength = 3
     const value = this.value
-    const isValid = value != null && (value as string).length >= minLength
+    const isValid = value != null && value.length >= minLength
     const errors = []
 
     if (!isValid) {

@@ -1,29 +1,21 @@
 import * as path from 'path'
 import assert from 'node:assert'
+import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import {
-  readExampleLines,
-  replaceLineRange,
-  realLineNumber,
-  resPath,
-  findFirstCnab400RecordLine,
-  filterValidatableLines,
-  createFieldsFromLines,
-  getFieldRange
-} from '@test/test-utils'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BradescoBoletoNameField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-name-field'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { Cnab400CaixaBoletoNomeField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-nome-field'
+import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab400RecordLine,
+  filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
-describe('Cnab400BradescoBoletoNameField', (): void => {
-  const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+describe('Cnab400CaixaBoletoNomeField', (): void => {
+  const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
 
   describe('shouldValidate', (): void => {
     describe.each([
       { recordType: '0', expectedShouldValidate: false },
       { recordType: '1', expectedShouldValidate: true },
-      { recordType: '2', expectedShouldValidate: false },
       { recordType: '9', expectedShouldValidate: false }
     ])('parameterized cases', ({ recordType, expectedShouldValidate }): void => {
       it(`given record type ${recordType} when checking shouldValidate then returns ${expectedShouldValidate}`, (): void => {
@@ -35,7 +27,7 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
           assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
         }
 
-        const field = new Cnab400BradescoBoletoNameField(rawLine, 1)
+        const field = new Cnab400CaixaBoletoNomeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -47,19 +39,19 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   })
 
   describe('value and validate', (): void => {
-    it('given boleto lines with valid name when reading value and validating then accepts all lines', (): void => {
+    it('given detail lines with valid name when reading value and validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab400BradescoBoletoNameField),
-        Cnab400BradescoBoletoNameField
+        filterValidatableLines(lines, Cnab400CaixaBoletoNomeField),
+        Cnab400CaixaBoletoNomeField
       )
 
-      const results = fields.map((field: Cnab400BradescoBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab400CaixaBoletoNomeField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
-      expect(fields[0].value).toBe('COMERCIAL ALFA LTDA')
+      expect(fields[0].value).toBe('JOAO DA SILVA EXEMPLO')
 
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
@@ -68,31 +60,54 @@ describe('Cnab400BradescoBoletoNameField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    it('given boleto line with blank name when validating then returns field error', (): void => {
+    it('given detail line with blank name when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BradescoBoletoNameField)
+      const fieldRange = getFieldRange(Cnab400CaixaBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
 
       if (rawLine == null) {
-        assert.fail('Linha de boleto não encontrada')
+        assert.fail('Linha detalhe não encontrada')
       }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BradescoBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab400CaixaBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(field.value).toBe(null)
+      expect(field.value).toBeNull()
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
       expect(result.errors[0].lineNumber).toBe(lineNumber)
+    })
+
+    it('given detail line with name shorter than minLength when validating then returns error', (): void => {
+      // Given
+      const fieldRange = getFieldRange(Cnab400CaixaBoletoNomeField)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
+
+      const lineNumber = realLineNumber(lines, rawLine)
+      const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
+
+      // When
+      const field = new Cnab400CaixaBoletoNomeField(invalidLine, lineNumber)
+      const result = field.validate()
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(result.isValid).toBe(false)
     })
   })
 })

@@ -5,29 +5,29 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
-import { Cnab400BancoDoBrasilBoletoNameField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-name-field'
-import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab400RecordLine,
+import { Cnab240SantanderBoletoNomeField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-nome-field'
+import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
-describe('Cnab400BancoDoBrasilBoletoNameField', (): void => {
-  const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+describe('Cnab240SantanderBoletoNomeField', (): void => {
+  const examplePath = 'santander/cnab240/santander_cnab_240.txt'
 
   describe('shouldValidate', (): void => {
     describe.each([
-      { recordType: '0', expectedShouldValidate: false },
-      { recordType: '7', expectedShouldValidate: true },
-      { recordType: '9', expectedShouldValidate: false }
-    ])('parameterized cases', ({ recordType, expectedShouldValidate }): void => {
-      it(`given record type ${recordType} when checking shouldValidate then returns ${expectedShouldValidate}`, (): void => {
+      { segment: 'P', expectedShouldValidate: false },
+      { segment: 'Q', expectedShouldValidate: true },
+      { segment: 'R', expectedShouldValidate: false }
+    ])('parameterized cases', ({ segment, expectedShouldValidate }): void => {
+      it(`given segment ${segment} when checking shouldValidate then returns ${expectedShouldValidate}`, (): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
-        const rawLine = findFirstCnab400RecordLine(lines, recordType)
+        const rawLine = findFirstCnab240SegmentLine(lines, segment)
 
         if (rawLine == null) {
-          assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
+          assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab400BancoDoBrasilBoletoNameField(rawLine, 1)
+        const field = new Cnab240SantanderBoletoNomeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -39,19 +39,19 @@ describe('Cnab400BancoDoBrasilBoletoNameField', (): void => {
   })
 
   describe('value and validate', (): void => {
-    it('given detail lines with valid name when reading value and validating then accepts all lines', (): void => {
+    it('given segment Q lines with valid name when reading value and validating then accepts all lines', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab400BancoDoBrasilBoletoNameField),
-        Cnab400BancoDoBrasilBoletoNameField
+        filterValidatableLines(lines, Cnab240SantanderBoletoNomeField),
+        Cnab240SantanderBoletoNomeField
       )
 
-      const results = fields.map((field: Cnab400BancoDoBrasilBoletoNameField) => field.validate())
+      const results = fields.map((field: Cnab240SantanderBoletoNomeField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
-      expect(fields[0].value).toBe('COMERCIAL ALFA LTDA')
+      expect(fields[0].value).toBe('JOAO EXEMPLO SILVA')
 
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
@@ -60,22 +60,22 @@ describe('Cnab400BancoDoBrasilBoletoNameField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    it('given detail line with blank name when validating then returns null value and field error', (): void => {
+    it('given segment Q line with blank name when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BancoDoBrasilBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240SantanderBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = findFirstCnab400RecordLine(lines, '7')
+      const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
       if (rawLine == null) {
-        assert.fail('Linha detalhe não encontrada')
+        assert.fail('Linha segmento Q não encontrada')
       }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BancoDoBrasilBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240SantanderBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -87,22 +87,22 @@ describe('Cnab400BancoDoBrasilBoletoNameField', (): void => {
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
-    it('given detail line with name shorter than minLength when validating then returns error', (): void => {
+    it('given segment Q line with name shorter than minLength when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BancoDoBrasilBoletoNameField)
+      const fieldRange = getFieldRange(Cnab240SantanderBoletoNomeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = findFirstCnab400RecordLine(lines, '7')
+      const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
 
       if (rawLine == null) {
-        assert.fail('Linha detalhe não encontrada')
+        assert.fail('Linha segmento Q não encontrada')
       }
 
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'AB')
 
       // When
-      const field = new Cnab400BancoDoBrasilBoletoNameField(invalidLine, lineNumber)
+      const field = new Cnab240SantanderBoletoNomeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
