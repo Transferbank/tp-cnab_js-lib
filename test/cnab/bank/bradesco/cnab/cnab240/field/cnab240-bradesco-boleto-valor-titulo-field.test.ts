@@ -109,8 +109,10 @@ describe('Cnab240BradescoBoletoValorTituloField', (): void => {
       const lineNumber = realLineNumber(lines, rawLine)
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
 
-      // When / Then
+      // When
       const field = new Cnab240BradescoBoletoValorTituloField(invalidLine, lineNumber)
+
+      // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
