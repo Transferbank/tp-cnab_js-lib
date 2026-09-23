@@ -1,42 +1,7 @@
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { Cnab400BoletoNameField } from '@cnab/field/cnab400/boleto-name-field'
 
-export class Cnab400ItauBoletoNameField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'nome do sacado'
+// Itau usa um range menor no CNAB400 (30 chars em vez de 40) para o nome do sacado -
+// unico banco, junto com o Banco do Brasil, que diverge da base hoje.
+export class Cnab400ItauBoletoNameField extends Cnab400BoletoNameField {
   readonly range: [number, number] = [235, 264]
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
-  }
-
-  protected performValidation(): CnabValidationResult {
-    const minLength = 3
-    const value = this.value
-    const isValid = value != null && (value as string).length >= minLength
-    const errors = []
-
-    if (!isValid) {
-      errors.push(
-        new CnabFieldMinLengthError({
-          lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
-          range: this.range,
-          minLength
-        })
-      )
-    }
-
-    return {
-      isValid,
-      errors
-    }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
-  }
 }
