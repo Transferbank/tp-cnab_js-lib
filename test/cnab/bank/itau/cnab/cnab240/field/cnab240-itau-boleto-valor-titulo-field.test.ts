@@ -123,8 +123,10 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
 
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLMNO')
 
-      // When / Then
+      // When
       const field = new Cnab240ItauBoletoValorTituloField(invalidLine, realLineNumber(lines, rawLine))
+
+      // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
@@ -144,8 +146,10 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
       // sem a checagem de formato, isso passaria como R$123.45 valido.
       const invalidLine = replaceLineRange(rawLine, fieldRange, '00000012345ABCD')
 
-      // When / Then
+      // When
       const field = new Cnab240ItauBoletoValorTituloField(invalidLine, realLineNumber(lines, rawLine))
+
+      // Then
       expect(invalidLine.length).toBe(rawLine.length)
       expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
@@ -170,7 +174,6 @@ describe('Cnab240ItauBoletoValorTituloField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
-      expect(() => field.validate()).not.toThrow()
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
       expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
