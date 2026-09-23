@@ -28,8 +28,10 @@ export abstract class CnabField<T> {
     }
 
     // Vazio -> null. Conteúdo malformado sempre propaga (opcional é "pode
-    // estar em branco", não "pode conter lixo"), normalizado como
-    // CnabFieldParseError para que validate() sempre saiba reconhecê-lo.
+    // estar em branco", não "pode conter lixo"),Sem a normalização do erro,
+    // se o autor de um campo esquecesse de lançar CnabFieldInvalidDateError
+    // CnabFieldInvalidNumberError e lançasse um Error,
+    // o erro cru vazaria pra fora de validate() sem virar um resultado de validação
     const rawValue = this.extractRawValue()
 
     if (rawValue === '') {
@@ -49,10 +51,6 @@ export abstract class CnabField<T> {
   }
 
   protected extractRawValue(): string {
-    // Linha que nao é do tipo/segmento deste campo: trata como ausente,
-    // igual a campo em branco. Sem isso, value() extrairia bytes de
-    // outro campo qualquer que por coincidencia ocupa essa faixa na
-    // linha errada, e reportaria como se fosse um valor de verdade.
     if (!this.shouldValidate()) return ''
     return this.extractRangeFromLine(this.range[0] - 1, this.range[1])
   }
@@ -65,9 +63,6 @@ export abstract class CnabField<T> {
   }
 
   validate(): CnabValidationResult {
-    // Linha que nao é do segmento deste campo: nao há nada a validar. Sem
-    // isso, chamar validate() direto numa linha errada relataria "campo
-    // obrigatorio" em vez do problema real (campo nem se aplica a linha).
     if (!this.shouldValidate()) {
       return { isValid: true, errors: [] }
     }
