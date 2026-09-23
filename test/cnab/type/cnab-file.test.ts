@@ -2,9 +2,12 @@ import { describe, it, expect } from '@jest/globals'
 import * as fs from 'fs'
 import * as path from 'path'
 import { CnabFile } from '@cnab/type/cnab-file'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError, CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { readExampleLines, resPath } from '@test/test-utils'
+import { Cnab240BradescoBoletoDataEmissaoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-data-emissao-field'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { CnabOptionalExtraFieldStub } from '@test/cnab/doubles/cnab-optional-extra-field-stub'
+import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function createFileFromPath(filePath: string): File {
   const buffer = fs.readFileSync(filePath)
@@ -88,4 +91,83 @@ describe('cnab-file', (): void => {
       expect(result.errors).toEqual(expectedErrors)
     }
   )
+
+  describe('optional fields', (): void => {
+    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+
+    describe.each([
+      {
+        description: 'a field registered directly in the schema',
+        fieldName: 'data de emissão do título',
+        fieldRange: new Cnab240BradescoBoletoDataEmissaoField('', 0).range,
+        malformedValue: 'ABCDEFGH',
+        extraFields: undefined
+      },
+      {
+        description: 'a field passed via extraFields',
+        fieldName: 'campo extra de teste',
+        fieldRange: new CnabOptionalExtraFieldStub('', 0).range,
+        malformedValue: 'ABCDEF',
+        extraFields: [CnabOptionalExtraFieldStub]
+      }
+    ])('given $description', ({ fieldName, fieldRange, malformedValue, extraFields }): void => {
+      it('given a blank value when validating then reports no errors', (): void => {
+        // Given
+        const fullPath = path.join(resPath(), examplePath)
+        const rawLines = readExampleLines(fullPath)
+        const segmentPLineNumber = rawLines.findIndex((line: string) => Cnab240LineTypeChecker.isSegmentoP(line))
+        rawLines[segmentPLineNumber] = replaceLineRange(rawLines[segmentPLineNumber], fieldRange, '')
+
+        const cnabFile = CnabFile.fromLines(rawLines)
+
+        // When
+        const result = cnabFile.validate(true, extraFields)
+
+        // Then
+        expect(result).toEqual(genValidCnabValidationResult())
+      })
+
+      it('given a malformed value when validating then reports a field error', (): void => {
+        // Given
+        const fullPath = path.join(resPath(), examplePath)
+        const rawLines = readExampleLines(fullPath)
+        const segmentPLineNumber = rawLines.findIndex((line: string) => Cnab240LineTypeChecker.isSegmentoP(line))
+        rawLines[segmentPLineNumber] = replaceLineRange(rawLines[segmentPLineNumber], fieldRange, malformedValue)
+
+        const cnabFile = CnabFile.fromLines(rawLines)
+        const expectedErrors = [
+          new CnabGenericFieldError({
+            message: `Campo ${fieldName} com formato inválido: ${malformedValue}`,
+            lineNumber: segmentPLineNumber,
+            fieldName,
+            range: fieldRange
+          })
+        ]
+
+        // When
+        const result = cnabFile.validate(true, extraFields)
+
+        // Then
+        expect(result.isValid).toBe(false)
+        expect(result.errors).toEqual(expectedErrors)
+      })
+    })
+
+    it('given document file with a malformed extra field when validating without passing extraFields then does not validate the extra field', (): void => {
+      // Given
+      const fieldRange = new CnabOptionalExtraFieldStub('', 0).range
+      const fullPath = path.join(resPath(), examplePath)
+      const rawLines = readExampleLines(fullPath)
+      const segmentPLineNumber = rawLines.findIndex((line: string) => Cnab240LineTypeChecker.isSegmentoP(line))
+      rawLines[segmentPLineNumber] = replaceLineRange(rawLines[segmentPLineNumber], fieldRange, 'ABCDEF')
+
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(result).toEqual(genValidCnabValidationResult())
+    })
+  })
 })

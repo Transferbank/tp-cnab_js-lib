@@ -28,10 +28,8 @@ export abstract class CnabField<T> {
     }
 
     // Vazio -> null. Conteúdo malformado sempre propaga (opcional é "pode
-    // estar em branco", não "pode conter lixo"),Sem a normalização do erro,
-    // se o autor de um campo esquecesse de lançar CnabFieldInvalidDateError
-    // CnabFieldInvalidNumberError e lançasse um Error,
-    // o erro cru vazaria pra fora de validate() sem virar um resultado de validação
+    // estar em branco", não "pode conter lixo"), normalizado como
+    // CnabFieldParseError para que validate() sempre saiba reconhecê-lo.
     const rawValue = this.extractRawValue()
 
     if (rawValue === '') {
