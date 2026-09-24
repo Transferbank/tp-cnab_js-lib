@@ -26,7 +26,7 @@ import { Cnab400BancoDoBrasilGroupRule } from '@cnab/bank/banco-do-brasil/cnab/c
 
 function registerCnabSchemas(): CnabSchema[] {
   return [
-    //BRADESCO
+    // BRADESCO
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB240,
@@ -73,7 +73,7 @@ function registerCnabSchemas(): CnabSchema[] {
         ],
       },
     }),
-    //ITAU
+    // ITAU
     new CnabSchema({
       bank: CnabBank.ITAU,
       fmt: CnabFormat.CNAB240,
@@ -120,7 +120,7 @@ function registerCnabSchemas(): CnabSchema[] {
         ],
       },
     }),
-    //SANTANDER
+    // SANTANDER
     new CnabSchema({
       bank: CnabBank.SANTANDER,
       fmt: CnabFormat.CNAB240,
@@ -167,7 +167,7 @@ function registerCnabSchemas(): CnabSchema[] {
         ],
       },
     }),
-    //BANCODOBRASIL
+    // BANCO DO BRASIL
     new CnabSchema({
       bank: CnabBank.BANCODOBRASIL,
       fmt: CnabFormat.CNAB240,
