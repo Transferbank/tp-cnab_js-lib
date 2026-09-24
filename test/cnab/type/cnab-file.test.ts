@@ -103,7 +103,7 @@ describe('cnab-file', (): void => {
       ['caixa/cnab240/caixa_cnab_240.txt', 3],
       ['itau/cnab240/itau_cnab_240.txt', 4],
       ['santander/cnab240/santander_cnab_240.txt', 3],
-      // sicoob temporariamente desativado, ver cnab-bank-schemas.ts
+      ['sicoob/cnab240/sicoob_cnab_240.txt', 3],
       ['sicredi/cnab240/sicredi_cnab_240.txt', 3]
     ])(
       'given valid document file from any bank when validating boletos then reports each boleto as valid',
