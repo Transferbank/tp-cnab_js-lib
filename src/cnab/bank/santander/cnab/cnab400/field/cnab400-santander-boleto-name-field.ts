@@ -4,10 +4,10 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-export class Cnab400ItauBoletoNameField extends CnabField<string> {
+export class Cnab400SantanderBoletoNameField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [235, 264]
+  readonly range: [number, number] = [235, 274]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
