@@ -2,30 +2,29 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 
-export class Cnab400ItauBoletoNomeField extends CnabField<string> {
+export class Cnab400SicoobBoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [235, 264]
+  readonly fieldName = 'valor do título'
+  readonly range: [number, number] = [127, 139]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
   }
 
   protected performValidation(): CnabValidationResult {
-    const minLength = 3
     const value = this.value
-    const isValid = value != null && value.length >= minLength
+    const isValid = value != null && value > 0
     const errors = []
 
     if (!isValid) {
       errors.push(
-        new CnabFieldMinLengthError({
+        new CnabGenericFieldError({
+          message: 'Campo valor do título inválido: deve ser maior que zero',
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
-          range: this.range,
-          minLength
+          range: this.range
         })
       )
     }
@@ -36,7 +35,11 @@ export class Cnab400ItauBoletoNomeField extends CnabField<string> {
     }
   }
 
-  protected parseValue(rawValue: string): string {
-    return rawValue
+  protected parseValue(rawValue: string): number {
+    const centavos = parseInt(rawValue, 10)
+    if (isNaN(centavos)) {
+      throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
+    }
+    return centavos / 100
   }
 }

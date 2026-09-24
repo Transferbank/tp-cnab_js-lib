@@ -1,16 +1,16 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab400ItauBoletoNomeField extends CnabField<string> {
+export class Cnab240CaixaBoletoNomeField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [235, 264]
+  readonly range: [number, number] = [34, 73]
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+    return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
   }
 
   protected performValidation(): CnabValidationResult {
