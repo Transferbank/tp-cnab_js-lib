@@ -1,15 +1,39 @@
 {
-  "name": "tp-cnab-lib",
-  "version": "0.1.0",
+  "name": "@transferhub/cnab-lib-ts",
+  "version": "0.2.0",
   "description": "Biblioteca TypeScript para processamento e validação de arquivos CNAB 240 e 400",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Transferbank/tp-cnab_js-lib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Transferbank/tp-cnab_js-lib/issues"
+  },
+  "homepage": "https://github.com/Transferbank/tp-cnab_js-lib#readme",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "build": "tsc",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc && tsc-alias",
     "prepare": "npm run build",
+    "prepublishOnly": "npm test",
     "dev": "tsc --watch",
     "test": "jest",
-    "lint": "eslint src test"
+    "lint": "eslint src test",
+    "demo": "ts-node -r tsconfig-paths/register main.ts"
   },
   "keywords": [
     "cnab",
@@ -20,9 +44,8 @@
     "banking",
     "brazil"
   ],
-  "author": "transferbank",
+  "author": "Transferbank",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@types/jest": "^29.5.0",
@@ -31,11 +54,14 @@
     "jest": "^29.5.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.0",
+    "tsc-alias": "^1.9.5",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.15.0"
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ]
 }
