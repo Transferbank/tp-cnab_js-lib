@@ -9,6 +9,10 @@ import * as ItauFields240 from '@cnab/bank/itau/cnab/cnab240/field/fields'
 import * as ItauFields400 from '@cnab/bank/itau/cnab/cnab400/field/fields'
 import * as CaixaFields240 from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import * as CaixaFields400 from '@cnab/bank/caixa/cnab/cnab400/field/fields'
+import * as SicoobFields240 from '@cnab/bank/sicoob/cnab/cnab240/field/fields'
+import * as SicoobFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
+import * as SicrediFields240 from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
+import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as BradescoFields240 from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import * as BradescoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import * as SantanderFields240 from '@cnab/bank/santander/cnab/cnab240/field/fields'
@@ -20,6 +24,10 @@ import { Cnab240ItauGroupRule } from '@cnab/bank/itau/cnab/cnab240/cnab-240-itau
 import { Cnab400ItauGroupRule } from '@cnab/bank/itau/cnab/cnab400/cnab-400-itau-group-rule'
 import { Cnab240CaixaGroupRule } from '@cnab/bank/caixa/cnab/cnab240/cnab-240-caixa-group-rule'
 import { Cnab400CaixaGroupRule } from '@cnab/bank/caixa/cnab/cnab400/cnab-400-caixa-group-rule'
+import { Cnab240SicoobGroupRule } from '@cnab/bank/sicoob/cnab/cnab240/cnab-240-sicoob-group-rule'
+import { Cnab400SicoobGroupRule } from '@cnab/bank/sicoob/cnab/cnab400/cnab-400-sicoob-group-rule'
+import { Cnab240SicrediGroupRule } from '@cnab/bank/sicredi/cnab/cnab240/cnab-240-sicredi-group-rule'
+import { Cnab400SicrediGroupRule } from '@cnab/bank/sicredi/cnab/cnab400/cnab-400-sicredi-group-rule'
 import { Cnab240BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab240/cnab-240-bradesco-group-rule'
 import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
 import { Cnab240SantanderGroupRule } from '@cnab/bank/santander/cnab/cnab240/cnab-240-santander-group-rule'
@@ -262,6 +270,100 @@ function registerCnabSchemas(): CnabSchema[] {
           CaixaFields400.Cnab400CaixaBoletoVencimentoField,
           CaixaFields400.Cnab400CaixaBoletoValorTituloField,
           CaixaFields400.Cnab400CaixaBoletoSacadoDocumentoField
+        ],
+      },
+    }),
+    // SICREDI
+    new CnabSchema({
+      bank: CnabBank.SICREDI,
+      fmt: CnabFormat.CNAB240,
+      boletoGroupRule: new Cnab240SicrediGroupRule(),
+      header: {
+        fieldType: CnabFieldType.HEADER,
+        fields: [],
+      },
+      trailer: {
+        fieldType: CnabFieldType.TRAILER,
+        fields: [],
+      },
+      boleto: {
+        fieldType: CnabFieldType.BOLETO,
+        fields: [
+          SicrediFields240.Cnab240SicrediBoletoNomeField,
+          SicrediFields240.Cnab240SicrediBoletoVencimentoField,
+          SicrediFields240.Cnab240SicrediBoletoValorTituloField,
+          SicrediFields240.Cnab240SicrediBoletoSacadoDocumentoField
+        ],
+      },
+    }),
+    new CnabSchema({
+      bank: CnabBank.SICREDI,
+      fmt: CnabFormat.CNAB400,
+      boletoGroupRule: new Cnab400SicrediGroupRule(),
+      header: {
+        fieldType: CnabFieldType.HEADER,
+        fields: [],
+        validators: [Cnab400HeaderLineStartValidator],
+      },
+      trailer: {
+        fieldType: CnabFieldType.TRAILER,
+        fields: [],
+        validators: [Cnab400TrailerLineStartValidator],
+      },
+      boleto: {
+        fieldType: CnabFieldType.BOLETO,
+        fields: [
+          SicrediFields400.Cnab400SicrediBoletoNomeField,
+          SicrediFields400.Cnab400SicrediBoletoVencimentoField,
+          SicrediFields400.Cnab400SicrediBoletoValorTituloField,
+          SicrediFields400.Cnab400SicrediBoletoSacadoDocumentoField
+        ],
+      },
+    }),
+    // SICOOB
+    new CnabSchema({
+      bank: CnabBank.SICOOB,
+      fmt: CnabFormat.CNAB240,
+      boletoGroupRule: new Cnab240SicoobGroupRule(),
+      header: {
+        fieldType: CnabFieldType.HEADER,
+        fields: [],
+      },
+      trailer: {
+        fieldType: CnabFieldType.TRAILER,
+        fields: [],
+      },
+      boleto: {
+        fieldType: CnabFieldType.BOLETO,
+        fields: [
+          SicoobFields240.Cnab240SicoobBoletoNomeField,
+          SicoobFields240.Cnab240SicoobBoletoVencimentoField,
+          SicoobFields240.Cnab240SicoobBoletoValorTituloField,
+          SicoobFields240.Cnab240SicoobBoletoSacadoDocumentoField
+        ],
+      },
+    }),
+    new CnabSchema({
+      bank: CnabBank.SICOOB,
+      fmt: CnabFormat.CNAB400,
+      boletoGroupRule: new Cnab400SicoobGroupRule(),
+      header: {
+        fieldType: CnabFieldType.HEADER,
+        fields: [],
+        validators: [Cnab400HeaderLineStartValidator],
+      },
+      trailer: {
+        fieldType: CnabFieldType.TRAILER,
+        fields: [],
+        validators: [Cnab400TrailerLineStartValidator],
+      },
+      boleto: {
+        fieldType: CnabFieldType.BOLETO,
+        fields: [
+          SicoobFields400.Cnab400SicoobBoletoNomeField,
+          SicoobFields400.Cnab400SicoobBoletoVencimentoField,
+          SicoobFields400.Cnab400SicoobBoletoValorTituloField,
+          SicoobFields400.Cnab400SicoobBoletoSacadoDocumentoField
         ],
       },
     }),
