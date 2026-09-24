@@ -6,6 +6,12 @@ import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { readExampleLines, resPath } from '@test/test-utils'
 
+function openExample(examplePath: string): CnabFile {
+  const fullPath = path.join(resPath(), examplePath)
+  const rawLines = readExampleLines(fullPath)
+  return CnabFile.fromLines(rawLines)
+}
+
 function createFileFromPath(filePath: string): File {
   const buffer = fs.readFileSync(filePath)
   const blob = new Blob([buffer])
@@ -88,4 +94,60 @@ describe('cnab-file', (): void => {
       expect(result.errors).toEqual(expectedErrors)
     }
   )
+
+  describe('validateBoletos', (): void => {
+    it.each([
+      ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 3],
+      ['bradesco/cnab240/bradesco_cnab_240.txt', 3],
+      ['bradesco/cnab400/bradesco_cnab_400.txt', 37],
+      ['caixa/cnab240/caixa_cnab_240.txt', 3],
+      ['itau/cnab240/itau_cnab_240.txt', 4],
+      ['santander/cnab240/santander_cnab_240.txt', 3],
+      ['sicoob/cnab240/sicoob_cnab_240.txt', 3],
+      ['sicredi/cnab240/sicredi_cnab_240.txt', 3]
+    ])(
+      'given valid document file from any bank when validating boletos then reports each boleto as valid',
+      (examplePath: string, expectedBoletoCount: number): void => {
+        // Given
+        const cnabFile = openExample(examplePath)
+
+        // When
+        const results = cnabFile.validateBoletos(true)
+
+        // Then
+        expect(results).toHaveLength(expectedBoletoCount)
+        results.forEach((result, index) => {
+          expect(result.index).toBe(index)
+          expect(result.isValid).toBe(true)
+          expect(result.errors).toEqual([])
+        })
+      }
+    )
+
+    it('given document file with one invalid boleto when validating boletos then reports only that boleto as invalid', (): void => {
+      // Given
+      const fullPath = path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')
+      const rawLines = readExampleLines(fullPath)
+      const truncatedSize = 5
+      const truncatedLineNumber = 7 // segunda linha do segundo boleto (índices 6-9)
+      rawLines[truncatedLineNumber] = rawLines[truncatedLineNumber].substring(0, truncatedSize)
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const results = cnabFile.validateBoletos(true)
+
+      // Then
+      expect(results).toHaveLength(3)
+      expect(results[0].isValid).toBe(true)
+      expect(results[1].isValid).toBe(false)
+      expect(results[1].errors).toEqual([
+        new CnabInvalidLineSizeError({
+          lineNumber: truncatedLineNumber,
+          expectedSize: 240,
+          actualSize: truncatedSize
+        })
+      ])
+      expect(results[2].isValid).toBe(true)
+    })
+  })
 })

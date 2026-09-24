@@ -3,7 +3,7 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabBoletoValidationResult, CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
@@ -81,10 +81,24 @@ export class CnabSchema {
     return result
   }
 
+  // Valida cada boleto do arquivo individualmente, permitindo saber quais
+  // boletos são válidos e quais não, em vez de só um veredito do arquivo inteiro.
+  validateBoletos(
+    rawLines: string[],
+    eagerEnabled: boolean,
+    extraFields?: CnabFieldClass[]
+  ): CnabBoletoValidationResult[] {
+    const boletoExtraFields = (extraFields ?? []).filter(
+      (field: CnabFieldClass) => field.fieldType === this.boleto.fieldType
+    )
+
+    return this.boleto.validateGroups(rawLines.slice(1, -1), eagerEnabled, 1, boletoExtraFields)
+  }
+
   read(_rawLines: string[], _extraFields?: CnabFieldClass[]): Cnab {
     // TODO: Implementar método read que retorna objeto Cnab com header, trailer e boletos
     // Necessário para CnabFile.read() funcionar corretamente
     // Deve processar: rawLines[0] (header), rawLines[length-1] (trailer), slice(1,-1) (boletos)
-    throw new Error('M├®todo read() ainda n├úo implementado')
+    throw new Error('Método read() ainda não implementado')
   }
 }

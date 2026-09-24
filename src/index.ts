@@ -7,3 +7,19 @@ export async function openCnabFile(file: File): Promise<CnabFile> {
 export function openCnabFileFromLines(lines: string[]): CnabFile {
   return CnabFile.fromLines(lines)
 }
+
+export { CnabFile }
+export { CnabValidationResult, CnabBoletoValidationResult } from '@cnab/type/cnab-validation-result'
+export {
+  CnabValidationError,
+  CnabValidationErrorType,
+  CnabLineValidationError,
+  CnabFieldValidationError,
+  CnabInvalidLineSizeError,
+  CnabInvalidLineStartError,
+  CnabFieldMinLengthError,
+  CnabGenericFieldError,
+  CnabFieldParseError,
+  CnabFieldInvalidNumberError,
+  CnabFieldInvalidDateError
+} from '@cnab/type/cnab-validation-error'
