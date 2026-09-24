@@ -11,6 +11,8 @@ import * as BradescoFields240 from '@cnab/bank/bradesco/cnab/cnab240/field/field
 import * as BradescoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import * as SantanderFields240 from '@cnab/bank/santander/cnab/cnab240/field/fields'
 import * as SantanderFields400 from '@cnab/bank/santander/cnab/cnab400/field/fields'
+import * as BancoDoBrasilFields240 from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import * as BancoDoBrasilFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
 
 import { Cnab240ItauGroupRule } from '@cnab/bank/itau/cnab/cnab240/cnab-240-itau-group-rule'
 import { Cnab400ItauGroupRule } from '@cnab/bank/itau/cnab/cnab400/cnab-400-itau-group-rule'
@@ -18,11 +20,13 @@ import { Cnab240BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab240/cnab-
 import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
 import { Cnab240SantanderGroupRule } from '@cnab/bank/santander/cnab/cnab240/cnab-240-santander-group-rule'
 import { Cnab400SantanderGroupRule } from '@cnab/bank/santander/cnab/cnab400/cnab-400-santander-group-rule'
+import { Cnab240BancoDoBrasilGroupRule } from '@cnab/bank/banco-do-brasil/cnab/cnab240/cnab-240-banco-do-brasil-group-rule'
+import { Cnab400BancoDoBrasilGroupRule } from '@cnab/bank/banco-do-brasil/cnab/cnab400/cnab-400-banco-do-brasil-group-rule'
 
 
 function registerCnabSchemas(): CnabSchema[] {
   return [
-    //BRADESCO
+    // BRADESCO
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB240,
@@ -38,7 +42,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          BradescoFields240.Cnab240BradescoBoletoNameField,
+          BradescoFields240.Cnab240BradescoBoletoNomeField,
           BradescoFields240.Cnab240BradescoBoletoVencimentoField,
           BradescoFields240.Cnab240BradescoBoletoValorTituloField,
           BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField
@@ -62,14 +66,14 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          BradescoFields400.Cnab400BradescoBoletoNameField,
+          BradescoFields400.Cnab400BradescoBoletoNomeField,
           BradescoFields400.Cnab400BradescoBoletoVencimentoField,
           BradescoFields400.Cnab400BradescoBoletoValorTituloField,
           BradescoFields400.Cnab400BradescoBoletoSacadoDocumentoField
         ],
       },
     }),
-    //ITAU
+    // ITAU
     new CnabSchema({
       bank: CnabBank.ITAU,
       fmt: CnabFormat.CNAB240,
@@ -85,7 +89,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          ItauFields240.Cnab240ItauBoletoNameField,
+          ItauFields240.Cnab240ItauBoletoNomeField,
           ItauFields240.Cnab240ItauBoletoVencimentoField,
           ItauFields240.Cnab240ItauBoletoValorTituloField,
           ItauFields240.Cnab240ItauBoletoSacadoDocumentoField
@@ -109,14 +113,14 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          ItauFields400.Cnab400ItauBoletoNameField,
+          ItauFields400.Cnab400ItauBoletoNomeField,
           ItauFields400.Cnab400ItauBoletoVencimentoField,
           ItauFields400.Cnab400ItauBoletoValorTituloField,
           ItauFields400.Cnab400ItauBoletoSacadoDocumentoField
         ],
       },
     }),
-    //SANTANDER
+    // SANTANDER
     new CnabSchema({
       bank: CnabBank.SANTANDER,
       fmt: CnabFormat.CNAB240,
@@ -132,7 +136,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          SantanderFields240.Cnab240SantanderBoletoNameField,
+          SantanderFields240.Cnab240SantanderBoletoNomeField,
           SantanderFields240.Cnab240SantanderBoletoVencimentoField,
           SantanderFields240.Cnab240SantanderBoletoValorTituloField,
           SantanderFields240.Cnab240SantanderBoletoSacadoDocumentoField
@@ -156,10 +160,57 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          SantanderFields400.Cnab400SantanderBoletoNameField,
+          SantanderFields400.Cnab400SantanderBoletoNomeField,
           SantanderFields400.Cnab400SantanderBoletoVencimentoField,
           SantanderFields400.Cnab400SantanderBoletoValorTituloField,
           SantanderFields400.Cnab400SantanderBoletoSacadoDocumentoField
+        ],
+      },
+    }),
+    // BANCO DO BRASIL
+    new CnabSchema({
+      bank: CnabBank.BANCODOBRASIL,
+      fmt: CnabFormat.CNAB240,
+      boletoGroupRule: new Cnab240BancoDoBrasilGroupRule(),
+      header: {
+        fieldType: CnabFieldType.HEADER,
+        fields: [],
+      },
+      trailer: {
+        fieldType: CnabFieldType.TRAILER,
+        fields: [],
+      },
+      boleto: {
+        fieldType: CnabFieldType.BOLETO,
+        fields: [
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoNomeField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoVencimentoField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoValorTituloField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoSacadoDocumentoField
+        ],
+      },
+    }),
+    new CnabSchema({
+      bank: CnabBank.BANCODOBRASIL,
+      fmt: CnabFormat.CNAB400,
+      boletoGroupRule: new Cnab400BancoDoBrasilGroupRule(),
+      header: {
+        fieldType: CnabFieldType.HEADER,
+        fields: [],
+        validators: [Cnab400HeaderLineStartValidator],
+      },
+      trailer: {
+        fieldType: CnabFieldType.TRAILER,
+        fields: [],
+        validators: [Cnab400TrailerLineStartValidator],
+      },
+      boleto: {
+        fieldType: CnabFieldType.BOLETO,
+        fields: [
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoNomeField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoVencimentoField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoValorTituloField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField
         ],
       },
     }),

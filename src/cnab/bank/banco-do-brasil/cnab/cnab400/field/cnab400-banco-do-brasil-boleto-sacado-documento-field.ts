@@ -1,31 +1,31 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { validateDocument } from '@cnab/utils/document-parser'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-export class Cnab400SantanderBoletoNameField extends CnabField<string> {
+export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [235, 274]
+  readonly fieldName = 'documento do sacado'
+  readonly range: [number, number] = [221, 234]
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+    return Cnab400LineTypeChecker.isOptional(this.rawLine, '7')
   }
 
   protected performValidation(): CnabValidationResult {
-    const minLength = 3
-    const value = this.value
-    const isValid = value != null && (value as string).length >= minLength
+    const value = this.value as string | null
+    const isValid = value != null && validateDocument(value)
     const errors = []
 
     if (!isValid) {
       errors.push(
-        new CnabFieldMinLengthError({
+        new CnabGenericFieldError({
+          message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
-          range: this.range,
-          minLength
+          range: this.range
         })
       )
     }

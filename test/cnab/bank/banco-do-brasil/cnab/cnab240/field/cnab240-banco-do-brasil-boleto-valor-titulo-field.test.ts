@@ -5,12 +5,12 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
-import { Cnab240SantanderBoletoValorTituloField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-valor-titulo-field'
+import { Cnab240BancoDoBrasilBoletoValorTituloField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-valor-titulo-field'
 import { readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange } from '@test/test-utils'
 
-describe('Cnab240SantanderBoletoValorTituloField', (): void => {
-  const examplePath = 'santander/cnab240/santander_cnab_240.txt'
+describe('Cnab240BancoDoBrasilBoletoValorTituloField', (): void => {
+  const examplePath = 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'
 
   describe('shouldValidate', (): void => {
     describe.each([
@@ -27,7 +27,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240SantanderBoletoValorTituloField(rawLine, 1)
+        const field = new Cnab240BancoDoBrasilBoletoValorTituloField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -43,11 +43,11 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
       // Given
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
-        filterValidatableLines(lines, Cnab240SantanderBoletoValorTituloField),
-        Cnab240SantanderBoletoValorTituloField
+        filterValidatableLines(lines, Cnab240BancoDoBrasilBoletoValorTituloField),
+        Cnab240BancoDoBrasilBoletoValorTituloField
       )
 
-      const results = fields.map((field: Cnab240SantanderBoletoValorTituloField) => field.validate())
+      const results = fields.map((field: Cnab240BancoDoBrasilBoletoValorTituloField) => field.validate())
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
@@ -62,7 +62,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
   describe('validate with error', (): void => {
     it('given segment P line with blank amount when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SantanderBoletoValorTituloField)
+      const fieldRange = getFieldRange(Cnab240BancoDoBrasilBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -75,7 +75,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240SantanderBoletoValorTituloField(invalidLine, lineNumber)
+      const field = new Cnab240BancoDoBrasilBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -89,7 +89,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
 
     it('given segment P line with zero amount when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SantanderBoletoValorTituloField)
+      const fieldRange = getFieldRange(Cnab240BancoDoBrasilBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -102,7 +102,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
       // When
-      const field = new Cnab240SantanderBoletoValorTituloField(invalidLine, lineNumber)
+      const field = new Cnab240BancoDoBrasilBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -113,7 +113,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
 
     it('given segment P line with invalid alphanumeric value when reading value then throws error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SantanderBoletoValorTituloField)
+      const fieldRange = getFieldRange(Cnab240BancoDoBrasilBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -126,7 +126,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLMNO')
 
       // When
-      const field = new Cnab240SantanderBoletoValorTituloField(invalidLine, lineNumber)
+      const field = new Cnab240BancoDoBrasilBoletoValorTituloField(invalidLine, lineNumber)
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
@@ -135,7 +135,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
 
     it('given segment P line with invalid alphanumeric value when validating then returns format error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240SantanderBoletoValorTituloField)
+      const fieldRange = getFieldRange(Cnab240BancoDoBrasilBoletoValorTituloField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -148,7 +148,7 @@ describe('Cnab240SantanderBoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLMNO')
 
       // When
-      const field = new Cnab240SantanderBoletoValorTituloField(invalidLine, lineNumber)
+      const field = new Cnab240BancoDoBrasilBoletoValorTituloField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
