@@ -34,15 +34,16 @@ export abstract class CnabField<T> {
 
     if (rawValue === '') {
       this.cachedValue = null
-    } else {
-      try {
-        this.cachedValue = this.parseValue(rawValue)
-      } catch (error) {
-        if (error instanceof CnabFieldParseError) {
-          throw error
-        }
-        throw new CnabFieldUnexpectedParseError(this.fieldName, rawValue, error)
+      return this.cachedValue
+    }
+
+    try {
+      this.cachedValue = this.parseValue(rawValue)
+    } catch (error) {
+      if (error instanceof CnabFieldParseError) {
+        throw error
       }
+      throw new CnabFieldUnexpectedParseError(this.fieldName, rawValue, error)
     }
 
     return this.cachedValue
