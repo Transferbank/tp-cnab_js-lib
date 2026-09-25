@@ -95,7 +95,3 @@ for (const error of result.errors) {
   }
 }
 ```
-
-## Exemplo completo
-
-Veja [main.ts](main.ts) para um exemplo executável (`npm run demo`) que abre arquivos reais de vários bancos, valida o arquivo inteiro e cada boleto individualmente, e mostra os erros encontrados.
