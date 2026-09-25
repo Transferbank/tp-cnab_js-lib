@@ -93,8 +93,13 @@ export class CnabSchema {
   }
 
   countBoletos(rawLines: string[]): number {
-    const boletoRawLines = rawLines.slice(1, -1)
-    return [...this.boleto.genLineGroups(boletoRawLines, 1)].length
+    let count = 0
+    for (let i = 1; i < rawLines.length - 1; i++) {
+      if (this.boleto.isBoletoGroupStart(rawLines[i])) {
+        count++
+      }
+    }
+    return count
   }
 
   read(_rawLines: string[], _extraFields?: CnabFieldClass[]): Cnab {
