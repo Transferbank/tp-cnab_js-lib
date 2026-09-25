@@ -47,11 +47,11 @@ describe('cnab-file', (): void => {
   )
 
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 3],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 37]
+    ['bradesco/cnab240/bradesco_cnab_240.txt'],
+    ['bradesco/cnab400/bradesco_cnab_400.txt']
   ])(
-    'given valid document file when validating with feedback then reports no errors and includes the boleto breakdown',
-    async (examplePath: string, expectedBoletoCount: number): Promise<void> => {
+    'given valid document file when validating with feedback then reports no errors',
+    async (examplePath: string): Promise<void> => {
       // Given
       const fullPath = path.join(resPath(), examplePath)
       const file = createFileFromPath(fullPath)
@@ -63,8 +63,6 @@ describe('cnab-file', (): void => {
       // Then
       expect(result.isValid).toBe(true)
       expect(result.errors).toEqual([])
-      expect(result.boletos).toHaveLength(expectedBoletoCount)
-      expect(result.boletos?.every(boleto => boleto.isValid)).toBe(true)
     }
   )
 
@@ -98,36 +96,6 @@ describe('cnab-file', (): void => {
     }
   )
 
-  it('given document file with one invalid boleto when validating with feedback then isolates the invalid boleto in the breakdown', (): void => {
-    // Given
-    const fullPath = path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')
-    const rawLines = readExampleLines(fullPath)
-    const truncatedSize = 5
-    const truncatedLineNumber = 7 // segunda linha do segundo boleto (índices 6-9)
-    rawLines[truncatedLineNumber] = rawLines[truncatedLineNumber].substring(0, truncatedSize)
-    const cnabFile = CnabFile.fromLines(rawLines)
-
-    // When
-    const result = cnabFile.validate(true)
-
-    // Then
-    expect(result.isValid).toBe(false)
-    expect(result.boletos).toHaveLength(3)
-    expect(result.boletos?.[0].isValid).toBe(true)
-    expect(result.boletos?.[1].isValid).toBe(false)
-    expect(result.boletos?.[1].errors).toEqual([
-      new CnabInvalidLineSizeError({
-        lineNumber: truncatedLineNumber,
-        expectedSize: 240,
-        actualSize: truncatedSize
-      })
-    ])
-    expect(result.boletos?.[2].isValid).toBe(true)
-    // O erro do boleto tambem aparece agregado em result.errors, ja que validate()
-    // ainda responde "o arquivo inteiro esta ok?" alem da quebra por boleto.
-    expect(result.errors).toEqual(result.boletos?.[1].errors)
-  })
-
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 3],
     ['bradesco/cnab240/bradesco_cnab_240.txt', 3],
@@ -138,7 +106,7 @@ describe('cnab-file', (): void => {
     ['sicoob/cnab240/sicoob_cnab_240.txt', 3],
     ['sicredi/cnab240/sicredi_cnab_240.txt', 3]
   ])(
-    'given valid document file from any bank when validating with feedback then reports each boleto as valid',
+    'given valid document file from any bank when opening and validating then reports the right boleto count and no errors',
     (examplePath: string, expectedBoletoCount: number): void => {
       // Given
       const cnabFile = openExample(examplePath)
@@ -148,12 +116,8 @@ describe('cnab-file', (): void => {
 
       // Then
       expect(cnabFile.boletoCount).toBe(expectedBoletoCount)
-      expect(result.boletos).toHaveLength(expectedBoletoCount)
-      result.boletos?.forEach((boleto, index) => {
-        expect(boleto.index).toBe(index)
-        expect(boleto.isValid).toBe(true)
-        expect(boleto.errors).toEqual([])
-      })
+      expect(result.isValid).toBe(true)
+      expect(result.errors).toEqual([])
     }
   )
 

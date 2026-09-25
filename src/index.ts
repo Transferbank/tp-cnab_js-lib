@@ -26,7 +26,6 @@ export { CnabFieldType } from '@cnab/type/cnab-field-type'
 export { CnabField } from '@cnab/type/cnab-field'
 export type { CnabFieldClass } from '@cnab/type/cnab-field'
 export type { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-export type { CnabBoletoValidationResult } from '@cnab/type/cnab-validation-result'
 
 export {
   CnabValidationError,

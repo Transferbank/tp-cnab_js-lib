@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
-import { CnabBoletoValidationResult, CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator,
@@ -127,30 +127,6 @@ export class CnabLineSchema {
     }
 
     return result
-  }
-
-validateGroups(
-    rawLines: string[],
-    eagerEnabled: boolean,
-    firstLine: number,
-    extraFields?: CnabFieldClass[]
-  ): CnabBoletoValidationResult[] {
-    const validationTypes = this.genValidationTypes(extraFields)
-    const results: CnabBoletoValidationResult[] = []
-
-    let index = 0
-    for (const group of this.genLineGroups(rawLines, firstLine)) {
-      const groupResult = this.validateGroup(group, eagerEnabled, validationTypes)
-
-      results.push({
-        ...groupResult,
-        index,
-        lineNumbers: group.map(([lineNumber]) => lineNumber),
-      })
-      index++
-    }
-
-    return results
   }
 
   private genValidationTypes(extraFields?: CnabFieldClass[]): CnabValidatableConstructor[] {

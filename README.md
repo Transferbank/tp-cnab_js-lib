@@ -4,7 +4,7 @@ Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de 
 **CNAB 240** e **CNAB 400** (cobrança / boleto) no padrão FEBRABAN.
 
 - Detecção automática de **banco**, **formato** e **quantidade de boletos**, a partir do próprio conteúdo do arquivo
-- Validação do arquivo inteiro, ou boleto a boleto individualmente (sabendo exatamente quais são válidos e quais não, e por quê)
+- Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
 - Leitura estruturada do arquivo (`read()`) para um objeto de domínio com header, boletos e trailer
 - Sem dependências de runtime; tipagem estrita; funciona em Node e no browser
 - Suporte a **7 bancos**, em CNAB 240 e CNAB 400
@@ -78,28 +78,11 @@ result.isValid // true | false
 result.errors  // lista de erros encontrados (vazia se válido)
 ```
 
-Por padrão `validate()` para no primeiro erro encontrado e não monta a quebra por boleto (mais rápido — é o modo pra quem só quer um `isValid` rápido). Passe `true` para coletar todos os erros do arquivo **e** receber `boletos`, com o resultado de cada boleto individualmente:
+Por padrão `validate()` para no primeiro erro encontrado. Para coletar todos os erros do arquivo em vez de parar no primeiro, passe `true`:
 
 ```ts
 const result = cnabFile.validate(true)
-
-result.isValid // veredito do arquivo inteiro
-result.errors  // todos os erros do arquivo (header, trailer e boletos), numa lista só
-result.boletos // um item por boleto, cada um com seu próprio isValid/errors
 ```
-
-```ts
-for (const boleto of result.boletos ?? []) {
-  console.log(
-    `Boleto ${boleto.index} (linhas ${boleto.lineNumbers.join(', ')}): ${
-      boleto.isValid ? 'válido' : 'inválido'
-    }`
-  )
-  boleto.errors.forEach(erro => console.log(`  - ${erro.message}`))
-}
-```
-
-Cada boleto do arquivo é avaliado individualmente e de forma independente: um boleto inválido não afeta a avaliação dos demais, e todos os boletos são sempre analisados, mesmo que o arquivo como um todo seja inválido. `boletos` só vem preenchido quando `validate(true)` é chamado — no modo padrão (`validate()`, sem argumento) ele fica `undefined`, já que montar a quebra por boleto tem um custo que nem todo chamador quer pagar.
 
 ### Lendo o arquivo
 
@@ -175,21 +158,15 @@ Mesma detecção, a partir de um array de linhas já lido. Lança
 | `format: CnabFormat`                      | `'240'` ou `'400'`                                                       |
 | `rawLines: string[]`                      | Linhas originais do arquivo                                              |
 | `boletoCount: number`                     | Quantidade de boletos, calculada uma vez na abertura                     |
-| `validate(withFeedback?, extraFields?)`   | Valida o arquivo; com `withFeedback: true`, inclui `boletos` no retorno  |
+| `validate(withFeedback?, extraFields?)`   | Valida o arquivo inteiro e retorna `CnabValidationResult`                |
 | `read(extraFields?)`                      | Valida e retorna um `Cnab` estruturado; lança `CnabValidationFailedException` se inválido |
 
-### `CnabValidationResult` / `CnabBoletoValidationResult`
+### `CnabValidationResult`
 
 ```ts
 interface CnabValidationResult {
   isValid: boolean
   errors: CnabValidationError[]
-  boletos?: CnabBoletoValidationResult[] // só preenchido com withFeedback: true
-}
-
-interface CnabBoletoValidationResult extends CnabValidationResult {
-  index: number
-  lineNumbers: number[]
 }
 ```
 
