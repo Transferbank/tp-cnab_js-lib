@@ -3,6 +3,6 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab400BancoDoBrasilGroupRule extends CnabBoletoGroupRule {
   check(rawLine: string): boolean {
-    return Cnab400LineTypeChecker.isOptional(rawLine, '7')
+    return Cnab400LineTypeChecker.isDetalhe(rawLine, '7')
   }
 }

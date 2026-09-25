@@ -7,6 +7,6 @@ export class Cnab400BancoDoBrasilBoletoNomeField extends Cnab400BoletoNomeField 
   readonly range: [number, number] = [235, 271]
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isOptional(this.rawLine, '7')
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, '7')
   }
 }

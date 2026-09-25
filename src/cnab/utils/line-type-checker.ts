@@ -3,16 +3,12 @@ export class Cnab400LineTypeChecker {
     return rawLine.startsWith('0')
   }
 
-  static isDetalhe(rawLine: string): boolean {
-    return rawLine.startsWith('1')
+  static isDetalhe(rawLine: string, detalheChar: string = '1'): boolean {
+    return rawLine.startsWith(detalheChar)
   }
 
   static isTrailer(rawLine: string): boolean {
     return rawLine.startsWith('9')
-  }
-
-  static isOptional(rawLine: string, optionalChar: string): boolean {
-    return rawLine.startsWith(optionalChar)
   }
 }
 

@@ -5,6 +5,6 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 // em vez do '1' usado pelos outros bancos.
 export class Cnab400BancoDoBrasilBoletoValorTituloField extends Cnab400BoletoValorTituloField {
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isOptional(this.rawLine, '7')
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, '7')
   }
 }
