@@ -62,8 +62,7 @@ export class CnabSchema {
       [this.boleto, rawLines.slice(1, -1), 1],
     ]
 
-    for (const item of items) {
-      const [group, lines, firstLine] = item
+    for (const [group, lines, firstLine] of items) {
       const groupExtraFields = (extraFields ?? []).filter(
         (field: CnabFieldClass) => field.fieldType === group.fieldType
       )
@@ -81,10 +80,20 @@ export class CnabSchema {
     return result
   }
 
+  countBoletos(rawLines: string[]): number {
+    let count = 0
+    for (let i = 1; i < rawLines.length - 1; i++) {
+      if (this.boleto.isBoletoGroupStart(rawLines[i])) {
+        count++
+      }
+    }
+    return count
+  }
+
   read(_rawLines: string[], _extraFields?: CnabFieldClass[]): Cnab {
     // TODO: Implementar método read que retorna objeto Cnab com header, trailer e boletos
     // Necessário para CnabFile.read() funcionar corretamente
     // Deve processar: rawLines[0] (header), rawLines[length-1] (trailer), slice(1,-1) (boletos)
-    throw new Error('M├®todo read() ainda n├úo implementado')
+    throw new Error('Método read() ainda não implementado')
   }
 }

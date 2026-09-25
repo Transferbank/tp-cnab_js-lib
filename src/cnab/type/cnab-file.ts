@@ -17,6 +17,7 @@ export class CnabFile {
   public format!: CnabFormat
   public bank!: CnabBank
   public schema!: CnabSchema
+  public boletoCount!: number
 
   private constructor() {}
 
@@ -32,6 +33,7 @@ export class CnabFile {
     cnabFile.format = CnabFile.detectFormat(cnabFile.rawLines[0])
     cnabFile.bank = CnabFile.detectBank(cnabFile.rawLines[0], cnabFile.format)
     cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)
+    cnabFile.boletoCount = cnabFile.schema.countBoletos(cnabFile.rawLines)
     return cnabFile
   }
 

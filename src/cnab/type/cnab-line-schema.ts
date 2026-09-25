@@ -108,16 +108,11 @@ export class CnabLineSchema {
     firstLine: number,
     extraFields?: CnabFieldClass[]
   ): CnabValidationResult {
-    const result: CnabValidationResult = {
-      isValid: true,
-      errors: [],
-    }
-
-    const extraFieldsList = extraFields ?? []
+    const result: CnabValidationResult = { isValid: true, errors: [] }
     const validationTypes = [
       ...this.validators,
       ...this.fields,
-      ...extraFieldsList,
+      ...(extraFields ?? []),
     ] as CnabValidatableConstructor[]
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
