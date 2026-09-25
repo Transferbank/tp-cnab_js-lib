@@ -9,8 +9,6 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 - Erros de validação tipados, com linha, campo e mensagem
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
 
-> ⚠️ **A partir da versão 0.2.0, `read()` não está disponível** (lança exceção). Esta versão foca exclusivamente em validação. Se você depende de `read()`, permaneça na `0.1.1` até uma versão futura reimplementá-lo. Veja o [CHANGELOG](CHANGELOG.md).
-
 ## Bancos suportados
 
 | Banco                   | CNAB 240 | CNAB 400 |
@@ -67,7 +65,6 @@ cnabFile.format // ex: '240'
 cnabFile.boletoCount // ex: 3
 ```
 
-`boletoCount` é calculado uma única vez na abertura do arquivo (não recalcula a cada acesso) e é barato de obter — só identifica onde cada boleto começa, sem instanciar nem validar nenhum campo. Funciona mesmo em arquivos inválidos, já que não depende de validação alguma.
 
 ### Validando o arquivo inteiro
 
@@ -78,7 +75,8 @@ resultado.isValid // true | false
 resultado.errors // lista de erros encontrados (vazia se válido)
 ```
 
-Por padrão a validação para no primeiro erro encontrado. Para coletar todos os erros do arquivo em vez de parar no primeiro, passe `true`:
+Por padrão a validação para no primeiro erro encontrado.
+Passe `true` para feedback completo
 
 ```ts
 const resultado = cnabFile.validate(true)
