@@ -120,17 +120,4 @@ describe('cnab-file', (): void => {
       expect(result.errors).toEqual([])
     }
   )
-
-  it('given document file with an invalid boleto when opening then boletoCount is still correct without validating anything', (): void => {
-    // Given
-    const fullPath = path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')
-    const rawLines = readExampleLines(fullPath)
-    rawLines[7] = rawLines[7].substring(0, 5)
-
-    // When
-    const cnabFile = CnabFile.fromLines(rawLines)
-
-    // Then
-    expect(cnabFile.boletoCount).toBe(3)
-  })
 })

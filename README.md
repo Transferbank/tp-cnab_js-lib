@@ -6,6 +6,7 @@ Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de 
 - Detecção automática de **banco**, **formato** e **quantidade de boletos**, a partir do próprio conteúdo do arquivo
 - Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
 - Leitura estruturada do arquivo (`read()`) para um objeto de domínio com header, boletos e trailer
+- Erros de validação tipados, com linha, campo e mensagem
 - Sem dependências de runtime; tipagem estrita; funciona em Node e no browser
 - Suporte a **7 bancos**, em CNAB 240 e CNAB 400
 
@@ -53,10 +54,10 @@ import { readFileSync } from 'node:fs'
 import { openCnabFileFromLines } from '@transferhub/cnab-lib-ts'
 
 // arquivos CNAB usam codificação latin1 (ISO-8859-1)
-const conteudo = readFileSync('remessa.rem', 'latin1')
-const linhas = conteudo.split(/\r?\n/).filter((l) => l.length > 0)
+const content = readFileSync('remessa.rem', 'latin1')
+const lines = content.split(/\r?\n/).filter((l) => l.length > 0)
 
-const cnabFile = openCnabFileFromLines(linhas)
+const cnabFile = openCnabFileFromLines(lines)
 ```
 
 Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de boletos detectados:
@@ -67,7 +68,6 @@ cnabFile.format // ex: '240'
 cnabFile.boletoCount // ex: 3
 ```
 
-`boletoCount` é calculado uma única vez na abertura do arquivo (não recalcula a cada acesso) e é barato de obter — só identifica onde cada boleto começa, sem instanciar nem validar nenhum campo. Funciona mesmo em arquivos inválidos, já que não depende de validação alguma.
 
 ### Validando o arquivo inteiro
 
@@ -132,9 +132,9 @@ Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field
 ```ts
 import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'
 
-for (const erro of result.errors) {
-  if (erro instanceof CnabFieldValidationError) {
-    console.log(erro.fieldName, erro.message)
+for (const error of result.errors) {
+  if (error instanceof CnabFieldValidationError) {
+    console.log(error.fieldName, error.message)
   }
 }
 ```

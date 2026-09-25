@@ -113,47 +113,28 @@ export class CnabLineSchema {
     extraFields?: CnabFieldClass[]
   ): CnabValidationResult {
     const result: CnabValidationResult = { isValid: true, errors: [] }
-    const validationTypes = this.genValidationTypes(extraFields)
-
-    for (const group of this.genLineGroups(rawLines, firstLine)) {
-      const groupResult = this.validateGroup(group, eagerEnabled, validationTypes)
-
-      result.isValid = result.isValid && groupResult.isValid
-      result.errors.push(...groupResult.errors)
-
-      if (!result.isValid && eagerEnabled) {
-        return result
-      }
-    }
-
-    return result
-  }
-
-  private genValidationTypes(extraFields?: CnabFieldClass[]): CnabValidatableConstructor[] {
-    return [
+    const validationTypes = [
       ...this.validators,
       ...this.fields,
       ...(extraFields ?? []),
     ] as CnabValidatableConstructor[]
-  }
 
-  private validateGroup( group: Array<[number, string]>,eagerEnabled: boolean, validationTypes: CnabValidatableConstructor[]  ): CnabValidationResult {
-    const result: CnabValidationResult = { isValid: true, errors: [] }
+    for (const group of this.genLineGroups(rawLines, firstLine)) {
+      for (const [lineNumber, rawLine] of group) {
+        for (const validationType of validationTypes) {
+          const instance = new validationType(rawLine, lineNumber)
 
-    for (const [lineNumber, rawLine] of group) {
-      for (const validationType of validationTypes) {
-        const instance = new validationType(rawLine, lineNumber)
+          if (!instance.shouldValidate()) {
+            continue
+          }
 
-        if (!instance.shouldValidate()) {
-          continue
-        }
+          const validationResult = instance.validate()
+          result.isValid = result.isValid && validationResult.isValid
+          result.errors.push(...validationResult.errors)
 
-        const validationResult = instance.validate()
-        result.isValid = result.isValid && validationResult.isValid
-        result.errors.push(...validationResult.errors)
-
-        if (!result.isValid && eagerEnabled) {
-          return result
+          if (!result.isValid && eagerEnabled) {
+            return result
+          }
         }
       }
     }
