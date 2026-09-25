@@ -3,7 +3,7 @@
 Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de remessa
 **CNAB 240** e **CNAB 400** (cobrança / boleto) no padrão FEBRABAN.
 
-- Detecção automática de **banco** e **formato** pela primeira linha do arquivo
+- Detecção automática de **banco**, **formato** e **quantidade de boletos**, a partir do próprio conteúdo do arquivo
 - Validação do arquivo inteiro, ou boleto a boleto individualmente (sabendo exatamente quais são válidos e quais não, e por quê)
 - Leitura estruturada do arquivo (`read()`) para um objeto de domínio com header, boletos e trailer
 - Sem dependências de runtime; tipagem estrita; funciona em Node e no browser
@@ -44,9 +44,6 @@ A partir de um `File` (browser ou Node 20+):
 import { openCnabFile } from '@transferhub/cnab-lib-ts'
 
 const cnabFile = await openCnabFile(file) // file: File
-
-console.log(cnabFile.bank)   // 'itau'
-console.log(cnabFile.format) // '240'
 ```
 
 A partir das linhas já lidas (Node):
@@ -62,6 +59,16 @@ const linhas = conteudo.split(/\r?\n/).filter((l) => l.length > 0)
 const cnabFile = openCnabFileFromLines(linhas)
 ```
 
+Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de boletos detectados:
+
+```ts
+cnabFile.bank // ex: 'itau'
+cnabFile.format // ex: '240'
+cnabFile.boletoCount // ex: 3
+```
+
+`boletoCount` é calculado uma única vez na abertura do arquivo (não recalcula a cada acesso) e é barato de obter — só identifica onde cada boleto começa, sem instanciar nem validar nenhum campo. Funciona mesmo em arquivos inválidos, já que não depende de validação alguma.
+
 ### Validando o arquivo inteiro
 
 ```ts
@@ -71,20 +78,18 @@ result.isValid // true | false
 result.errors  // lista de erros encontrados (vazia se válido)
 ```
 
-Por padrão `validate()` para no primeiro erro encontrado. Passe `true` para coletar todos os erros do arquivo em vez de parar no primeiro:
+Por padrão `validate()` para no primeiro erro encontrado e não monta a quebra por boleto (mais rápido — é o modo pra quem só quer um `isValid` rápido). Passe `true` para coletar todos os erros do arquivo **e** receber `boletos`, com o resultado de cada boleto individualmente:
 
 ```ts
 const result = cnabFile.validate(true)
+
+result.isValid // veredito do arquivo inteiro
+result.errors  // todos os erros do arquivo (header, trailer e boletos), numa lista só
+result.boletos // um item por boleto, cada um com seu próprio isValid/errors
 ```
 
-### Validando boleto a boleto
-
-Quando o arquivo tem vários boletos, `validate()` só diz se o arquivo inteiro está ok ou não. Para saber **quais** boletos são válidos e quais não, use `validateBoletos()`:
-
 ```ts
-const resultados = cnabFile.validateBoletos(true)
-
-for (const boleto of resultados) {
+for (const boleto of result.boletos ?? []) {
   console.log(
     `Boleto ${boleto.index} (linhas ${boleto.lineNumbers.join(', ')}): ${
       boleto.isValid ? 'válido' : 'inválido'
@@ -94,7 +99,7 @@ for (const boleto of resultados) {
 }
 ```
 
-Cada boleto do arquivo é avaliado individualmente e de forma independente: um boleto inválido não afeta a avaliação dos demais, e todos os boletos são sempre analisados, mesmo que o arquivo como um todo seja inválido.
+Cada boleto do arquivo é avaliado individualmente e de forma independente: um boleto inválido não afeta a avaliação dos demais, e todos os boletos são sempre analisados, mesmo que o arquivo como um todo seja inválido. `boletos` só vem preenchido quando `validate(true)` é chamado — no modo padrão (`validate()`, sem argumento) ele fica `undefined`, já que montar a quebra por boleto tem um custo que nem todo chamador quer pagar.
 
 ### Lendo o arquivo
 
@@ -121,7 +126,7 @@ Cada boleto (`CnabBoleto`) e cada linha (`CnabLineData`) expõe os campos dinami
 
 ### Validar campos adicionais
 
-É possível injetar classes de campo próprias para validar (ou ler) outras posições da linha, além das que a biblioteca já verifica — funciona tanto em `validate()`/`validateBoletos()` quanto em `read()`:
+É possível injetar classes de campo próprias para validar (ou ler) outras posições da linha, além das que a biblioteca já verifica — funciona tanto em `validate()` quanto em `read()`:
 
 ```ts
 import { openCnabFileFromLines, CnabField, CnabFieldType } from '@transferhub/cnab-lib-ts'
@@ -169,8 +174,8 @@ Mesma detecção, a partir de um array de linhas já lido. Lança
 | `bank: CnabBank`                          | Banco detectado (`'itau'`, `'caixa'`, …)                                 |
 | `format: CnabFormat`                      | `'240'` ou `'400'`                                                       |
 | `rawLines: string[]`                      | Linhas originais do arquivo                                              |
-| `validate(withFeedback?, extraFields?)`   | Valida o arquivo inteiro e retorna `CnabValidationResult`                |
-| `validateBoletos(withFeedback?, extraFields?)` | Valida cada boleto individualmente, retorna `CnabBoletoValidationResult[]` |
+| `boletoCount: number`                     | Quantidade de boletos, calculada uma vez na abertura                     |
+| `validate(withFeedback?, extraFields?)`   | Valida o arquivo; com `withFeedback: true`, inclui `boletos` no retorno  |
 | `read(extraFields?)`                      | Valida e retorna um `Cnab` estruturado; lança `CnabValidationFailedException` se inválido |
 
 ### `CnabValidationResult` / `CnabBoletoValidationResult`
@@ -179,6 +184,7 @@ Mesma detecção, a partir de um array de linhas já lido. Lança
 interface CnabValidationResult {
   isValid: boolean
   errors: CnabValidationError[]
+  boletos?: CnabBoletoValidationResult[] // só preenchido com withFeedback: true
 }
 
 interface CnabBoletoValidationResult extends CnabValidationResult {

@@ -129,9 +129,7 @@ export class CnabLineSchema {
     return result
   }
 
-  // Mesma varredura de validate(), mas preservando o resultado de cada grupo
-  // (cada boleto) separadamente, em vez de agregar tudo num único resultado.
-  validateGroups(
+validateGroups(
     rawLines: string[],
     eagerEnabled: boolean,
     firstLine: number,
@@ -163,11 +161,7 @@ export class CnabLineSchema {
     ] as CnabValidatableConstructor[]
   }
 
-  private validateGroup(
-    group: Array<[number, string]>,
-    eagerEnabled: boolean,
-    validationTypes: CnabValidatableConstructor[]
-  ): CnabValidationResult {
+  private validateGroup( group: Array<[number, string]>,eagerEnabled: boolean, validationTypes: CnabValidatableConstructor[]  ): CnabValidationResult {
     const result: CnabValidationResult = { isValid: true, errors: [] }
 
     for (const [lineNumber, rawLine] of group) {
