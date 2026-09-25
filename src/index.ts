@@ -9,7 +9,7 @@ export function openCnabFileFromLines(lines: string[]): CnabFile {
 }
 
 export { CnabFile }
-export { CnabValidationResult, CnabBoletoValidationResult } from '@cnab/type/cnab-validation-result'
+export { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 export {
   CnabException,
   CnabMinimumLinesNotReachedException,
