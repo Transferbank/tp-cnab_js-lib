@@ -54,7 +54,7 @@ A partir das linhas já lidas (por exemplo, um arquivo lido no backend):
 ```ts
 import { openCnabFileFromLines } from '@transferhub/cnab-lib-ts'
 
-const cnabFile = openCnabFileFromLines(linhas) // string[]
+const cnabFile = openCnabFileFromLines(lines) // string[]
 ```
 
 Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de boletos detectados:
@@ -69,17 +69,17 @@ cnabFile.boletoCount // ex: 3
 ### Validando o arquivo inteiro
 
 ```ts
-const resultado = cnabFile.validate()
+const result = cnabFile.validate()
 
-resultado.isValid // true | false
-resultado.errors // lista de erros encontrados (vazia se válido)
+result.isValid // true | false
+result.errors // lista de erros encontrados (vazia se válido)
 ```
 
 Por padrão a validação para no primeiro erro encontrado.
 Passe `true` para feedback completo
 
 ```ts
-const resultado = cnabFile.validate(true)
+const result = cnabFile.validate(true)
 ```
 
 ### Tratando erros de validação
@@ -89,9 +89,9 @@ Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field
 ```ts
 import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'
 
-for (const erro of resultado.errors) {
-  if (erro instanceof CnabFieldValidationError) {
-    console.log(erro.fieldName, erro.message)
+for (const error of result.errors) {
+  if (error instanceof CnabFieldValidationError) {
+    console.log(error.fieldName, error.message)
   }
 }
 ```
