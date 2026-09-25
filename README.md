@@ -4,7 +4,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 ## Funcionalidades
 
-- Detecção automática de banco e formato (CNAB 240 ou CNAB 400) a partir do próprio conteúdo do arquivo
+- Detecção automática de banco, formato (CNAB 240 ou CNAB 400) e quantidade de boletos, a partir do próprio conteúdo do arquivo
 - Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto), com a opção de já vir com a quebra por boleto individual (quais são válidos e quais não, e por quê)
 - Erros de validação tipados, com linha, campo e mensagem
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
@@ -27,7 +27,17 @@ Campos de boleto validados hoje, para todos os bancos acima: nome do sacado, dat
 
 ## Instalação
 
-_(em breve)_
+```bash
+npm install @transferhub/cnab-lib-ts
+```
+
+ou
+
+```bash
+yarn add @transferhub/cnab-lib-ts
+```
+
+Requer Node.js 18+ (usa a Web File API, disponível globalmente a partir dessa versão).
 
 ## Como usar
 
@@ -49,12 +59,15 @@ import { openCnabFileFromLines } from '@transferhub/cnab-lib-ts'
 const cnabFile = openCnabFileFromLines(linhas) // string[]
 ```
 
-Depois de aberto, o `CnabFile` já expõe o banco e o formato detectados:
+Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de boletos detectados:
 
 ```ts
 cnabFile.bank // ex: 'bradesco'
 cnabFile.format // ex: '240'
+cnabFile.boletoCount // ex: 3
 ```
+
+`boletoCount` é calculado uma única vez na abertura do arquivo (não recalcula a cada acesso) e é barato de obter — só identifica onde cada boleto começa, sem instanciar nem validar nenhum campo. Funciona mesmo em arquivos inválidos, já que não depende de validação alguma.
 
 ### Validando o arquivo inteiro
 

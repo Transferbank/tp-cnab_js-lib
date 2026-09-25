@@ -19,15 +19,16 @@ function createFileFromPath(filePath: string): File {
 
 describe('cnab-file', (): void => {
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 16],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76]
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 16, 3],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76, 37]
   ])(
-    'given document file when opening then detects bank, format and lines',
+    'given document file when opening then detects bank, format, lines and boleto count',
     async (
       examplePath: string,
       expectedBank: string,
       expectedFormat: string,
-      expectedLineCount: number
+      expectedLineCount: number,
+      expectedBoletoCount: number
     ): Promise<void> => {
       // Given
       const fullPath = path.join(resPath(), examplePath)
@@ -40,6 +41,7 @@ describe('cnab-file', (): void => {
       expect(cnabFile.bank).toBe(expectedBank)
       expect(cnabFile.format).toBe(expectedFormat)
       expect(cnabFile.rawLines.length).toBe(expectedLineCount)
+      expect(cnabFile.boletoCount).toBe(expectedBoletoCount)
       expect(cnabFile.schema).not.toBeNull()
     }
   )
