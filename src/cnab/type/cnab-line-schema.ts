@@ -125,9 +125,7 @@ export class CnabLineSchema {
     return result
   }
 
-  // Mesma varredura de validate(), mas preservando o resultado de cada grupo
-  // (cada boleto) separadamente, em vez de agregar tudo num único resultado.
-  validateGroups(
+validateGroups(
     rawLines: string[],
     eagerEnabled: boolean,
     firstLine: number,

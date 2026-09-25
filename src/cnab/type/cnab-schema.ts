@@ -3,7 +3,7 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
-import { CnabBoletoValidationResult, CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
@@ -49,26 +49,18 @@ export class CnabSchema {
     return [this.header, this.trailer, this.boleto]
   }
 
-  validate(
-    rawLines: string[],
-    eagerEnabled: boolean,
-    extraFields?: CnabFieldClass[]
-  ): CnabValidationResult {
+  validate(rawLines: string[],eagerEnabled: boolean,extraFields?: CnabFieldClass[]): CnabValidationResult {
     const result: CnabValidationResult = { isValid: true, errors: [] }
+    const extraFieldsFor = (group: CnabLineSchema): CnabFieldClass[] =>
+      (extraFields ?? []).filter((field: CnabFieldClass) => field.fieldType === group.fieldType)
 
     const items: Array<[CnabLineSchema, string[], number]> = [
       [this.header, [rawLines[0]], 0],
       [this.trailer, [rawLines[rawLines.length - 1]], rawLines.length - 1],
-      [this.boleto, rawLines.slice(1, -1), 1],
     ]
 
-    for (const item of items) {
-      const [group, lines, firstLine] = item
-      const groupExtraFields = (extraFields ?? []).filter(
-        (field: CnabFieldClass) => field.fieldType === group.fieldType
-      )
-
-      const groupResult = group.validate(lines, eagerEnabled, firstLine, groupExtraFields)
+    for (const [group, lines, firstLine] of items) {
+      const groupResult = group.validate(lines, eagerEnabled, firstLine, extraFieldsFor(group))
 
       result.isValid = result.isValid && groupResult.isValid
       result.errors.push(...groupResult.errors)
@@ -78,21 +70,26 @@ export class CnabSchema {
       }
     }
 
+    const boletoRawLines = rawLines.slice(1, -1)
+    const boletoExtraFields = extraFieldsFor(this.boleto)
+
+    if (eagerEnabled) {
+      // Feedback rápido: só o suficiente pra responder isValid/errors e sair no primeiro erro.
+      const boletoResult = this.boleto.validate(boletoRawLines, eagerEnabled, 1, boletoExtraFields)
+      result.isValid = result.isValid && boletoResult.isValid
+      result.errors.push(...boletoResult.errors)
+      return result
+    }
+
+    // Feedback completo: monta a quebra por boleto numa unica passada e deriva
+    // o isValid/errors agregados dela, em vez de validar os boletos duas vezes.
+    result.boletos = this.boleto.validateGroups(boletoRawLines, eagerEnabled, 1, boletoExtraFields)
+    for (const boleto of result.boletos) {
+      result.isValid = result.isValid && boleto.isValid
+      result.errors.push(...boleto.errors)
+    }
+
     return result
-  }
-
-  // Valida cada boleto do arquivo individualmente, permitindo saber quais
-  // boletos são válidos e quais não, em vez de só um veredito do arquivo inteiro.
-  validateBoletos(
-    rawLines: string[],
-    eagerEnabled: boolean,
-    extraFields?: CnabFieldClass[]
-  ): CnabBoletoValidationResult[] {
-    const boletoExtraFields = (extraFields ?? []).filter(
-      (field: CnabFieldClass) => field.fieldType === this.boleto.fieldType
-    )
-
-    return this.boleto.validateGroups(rawLines.slice(1, -1), eagerEnabled, 1, boletoExtraFields)
   }
 
   read(_rawLines: string[], _extraFields?: CnabFieldClass[]): Cnab {

@@ -3,7 +3,7 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
-import { CnabBoletoValidationResult, CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import {
   CnabMinimumLinesNotReachedException,
@@ -65,17 +65,6 @@ export class CnabFile {
 
   validate(withFeedback: boolean = false, extraFields?: CnabFieldClass[]): CnabValidationResult {
     return this.schema.validate(
-      this.rawLines,
-      !withFeedback,
-      extraFields ?? []
-    )
-  }
-
-  validateBoletos(
-    withFeedback: boolean = false,
-    extraFields?: CnabFieldClass[]
-  ): CnabBoletoValidationResult[] {
-    return this.schema.validateBoletos(
       this.rawLines,
       !withFeedback,
       extraFields ?? []

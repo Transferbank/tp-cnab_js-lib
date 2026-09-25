@@ -5,8 +5,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 ## Funcionalidades
 
 - Detecção automática de banco e formato (CNAB 240 ou CNAB 400) a partir do próprio conteúdo do arquivo
-- Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
-- Validação individual de cada boleto dentro do arquivo, permitindo saber exatamente quais boletos são válidos e quais não, e por quê
+- Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto), com a opção de já vir com a quebra por boleto individual (quais são válidos e quais não, e por quê)
 - Erros de validação tipados, com linha, campo e mensagem
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
 
@@ -66,20 +65,18 @@ resultado.isValid // true | false
 resultado.errors // lista de erros encontrados (vazia se válido)
 ```
 
-Por padrão a validação para no primeiro erro encontrado. Para coletar todos os erros do arquivo em vez de parar no primeiro, passe `true`:
+Por padrão a validação para no primeiro erro encontrado e não monta a quebra por boleto (mais rápido — é o modo pra quem só quer um `isValid` rápido). Passe `true` pra coletar todos os erros do arquivo **e** receber `boletos`, com o resultado de cada boleto individualmente:
 
 ```ts
 const resultado = cnabFile.validate(true)
+
+resultado.isValid // veredito do arquivo inteiro
+resultado.errors  // todos os erros do arquivo (header, trailer e boletos), numa lista só
+resultado.boletos // um item por boleto, cada um com seu próprio isValid/errors
 ```
 
-### Validando boleto a boleto
-
-Quando o arquivo tem vários boletos, `validate()` só diz se o arquivo inteiro está ok ou não. Para saber **quais** boletos são válidos e quais não, use `validateBoletos()`:
-
 ```ts
-const resultados = cnabFile.validateBoletos(true)
-
-for (const boleto of resultados) {
+for (const boleto of resultado.boletos ?? []) {
   console.log(
     `Boleto ${boleto.index} (linhas ${boleto.lineNumbers.join(', ')}): ${
       boleto.isValid ? 'válido' : 'inválido'
@@ -89,7 +86,7 @@ for (const boleto of resultados) {
 }
 ```
 
-Cada boleto do arquivo é avaliado individualmente e de forma independente: um boleto inválido não afeta a avaliação dos demais, e todos os boletos são sempre analisados, mesmo que o arquivo como um todo seja inválido.
+Cada boleto do arquivo é avaliado individualmente e de forma independente: um boleto inválido não afeta a avaliação dos demais, e todos os boletos são sempre analisados, mesmo que o arquivo como um todo seja inválido. `boletos` só vem preenchido quando `validate(true)` é chamado — no modo padrão (`validate()`, sem argumento) ele fica `undefined`, já que montar a quebra por boleto tem um custo que nem todo chamador quer pagar.
 
 ### Tratando erros de validação
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## Não lançado
+
+### Alterado
+
+- `CnabFile.validateBoletos()` / `CnabSchema.validateBoletos()` foram removidos. A quebra por boleto individual agora vem embutida em `validate(true)`, no novo campo `boletos` de `CnabValidationResult` — não é mais um método separado. `validate()` (sem `withFeedback: true`) continua rápido e não monta essa quebra.
+
 ## 0.2.0
 
 ### ⚠️ Breaking change
