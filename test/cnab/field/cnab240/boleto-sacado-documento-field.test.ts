@@ -20,9 +20,6 @@ import {
 
 type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoSacadoDocumentoField
 
-// Cada banco tem sua propria classe (Cnab240<Banco>BoletoSacadoDocumentoField), todas
-// herdando de Cnab240BoletoSacadoDocumentoField sem sobrescrever nada - range, fieldName
-// e a validacao por indicador de tipo de inscricao sao identicos nos 7 hoje.
 describe('Cnab240BoletoSacadoDocumentoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'

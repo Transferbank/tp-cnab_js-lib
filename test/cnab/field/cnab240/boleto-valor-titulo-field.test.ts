@@ -20,9 +20,6 @@ import {
 
 type ValorTituloFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoValorTituloField
 
-// Cada banco tem sua propria classe (Cnab240<Banco>BoletoValorTituloField), mas todas
-// herdam de Cnab240BoletoValorTituloField sem sobrescrever nada - hoje range, mensagem e
-// comportamento sao identicos nos 7.
 describe('Cnab240BoletoValorTituloField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'

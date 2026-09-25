@@ -19,9 +19,6 @@ import {
 
 type NomeFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoNomeField
 
-// Cada banco tem sua propria classe (Cnab240<Banco>BoletoNomeField), todas herdando de
-// Cnab240BoletoNomeField. Diferente do valor do titulo, aqui há divergencia real: o Itau
-// sobrescreve o range.
 describe('Cnab240BoletoNomeField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'

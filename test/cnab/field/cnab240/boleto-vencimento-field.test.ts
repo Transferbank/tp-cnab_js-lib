@@ -20,9 +20,6 @@ import {
 
 type VencimentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoVencimentoField
 
-// Cada banco tem sua propria classe (Cnab240<Banco>BoletoVencimentoField), todas herdando
-// de Cnab240BoletoVencimentoField sem sobrescrever nada - range, fieldName e o parse de
-// data (DDMMAAAA) sao identicos nos 7 hoje.
 describe('Cnab240BoletoVencimentoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
