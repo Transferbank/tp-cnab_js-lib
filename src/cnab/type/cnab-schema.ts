@@ -5,7 +5,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineData } from '@cnab/type/cnab-line-data'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabBoletoValidationResult, CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
@@ -81,6 +81,20 @@ export class CnabSchema {
     }
 
     return result
+  }
+
+  // Valida cada boleto do arquivo individualmente, permitindo saber quais
+  // boletos são válidos e quais não, em vez de só um veredito do arquivo inteiro.
+  validateBoletos(
+    rawLines: string[],
+    eagerEnabled: boolean,
+    extraFields?: CnabFieldClass[]
+  ): CnabBoletoValidationResult[] {
+    const boletoExtraFields = (extraFields ?? []).filter(
+      (field: CnabFieldClass) => field.fieldType === this.boleto.fieldType
+    )
+
+    return this.boleto.validateGroups(rawLines.slice(1, -1), eagerEnabled, 1, boletoExtraFields)
   }
 
   read(rawLines: string[], extraFields?: CnabFieldClass[]): Cnab {

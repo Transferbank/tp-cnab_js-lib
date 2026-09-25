@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabBoletoValidationResult, CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator,
@@ -112,34 +112,78 @@ export class CnabLineSchema {
     firstLine: number,
     extraFields?: CnabFieldClass[]
   ): CnabValidationResult {
-    const result: CnabValidationResult = {
-      isValid: true,
-      errors: [],
-    }
-
-    const extraFieldsList = extraFields ?? []
-    const validationTypes = [
-      ...this.validators,
-      ...this.fields,
-      ...extraFieldsList,
-    ] as CnabValidatableConstructor[]
+    const result: CnabValidationResult = { isValid: true, errors: [] }
+    const validationTypes = this.genValidationTypes(extraFields)
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
-      for (const [lineNumber, rawLine] of group) {
-        for (const validationType of validationTypes) {
-          const instance = new validationType(rawLine, lineNumber)
+      const groupResult = this.validateGroup(group, eagerEnabled, validationTypes)
 
-          if (!instance.shouldValidate()) {
-            continue
-          }
+      result.isValid = result.isValid && groupResult.isValid
+      result.errors.push(...groupResult.errors)
 
-          const validationResult = instance.validate()
-          result.isValid = result.isValid && validationResult.isValid
-          result.errors.push(...validationResult.errors)
+      if (!result.isValid && eagerEnabled) {
+        return result
+      }
+    }
 
-          if (!result.isValid && eagerEnabled) {
-            return result
-          }
+    return result
+  }
+
+  // Mesma varredura de validate(), mas preservando o resultado de cada grupo
+  // (cada boleto) separadamente, em vez de agregar tudo num único resultado.
+  validateGroups(
+    rawLines: string[],
+    eagerEnabled: boolean,
+    firstLine: number,
+    extraFields?: CnabFieldClass[]
+  ): CnabBoletoValidationResult[] {
+    const validationTypes = this.genValidationTypes(extraFields)
+    const results: CnabBoletoValidationResult[] = []
+
+    let index = 0
+    for (const group of this.genLineGroups(rawLines, firstLine)) {
+      const groupResult = this.validateGroup(group, eagerEnabled, validationTypes)
+
+      results.push({
+        ...groupResult,
+        index,
+        lineNumbers: group.map(([lineNumber]) => lineNumber),
+      })
+      index++
+    }
+
+    return results
+  }
+
+  private genValidationTypes(extraFields?: CnabFieldClass[]): CnabValidatableConstructor[] {
+    return [
+      ...this.validators,
+      ...this.fields,
+      ...(extraFields ?? []),
+    ] as CnabValidatableConstructor[]
+  }
+
+  private validateGroup(
+    group: Array<[number, string]>,
+    eagerEnabled: boolean,
+    validationTypes: CnabValidatableConstructor[]
+  ): CnabValidationResult {
+    const result: CnabValidationResult = { isValid: true, errors: [] }
+
+    for (const [lineNumber, rawLine] of group) {
+      for (const validationType of validationTypes) {
+        const instance = new validationType(rawLine, lineNumber)
+
+        if (!instance.shouldValidate()) {
+          continue
+        }
+
+        const validationResult = instance.validate()
+        result.isValid = result.isValid && validationResult.isValid
+        result.errors.push(...validationResult.errors)
+
+        if (!result.isValid && eagerEnabled) {
+          return result
         }
       }
     }

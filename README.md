@@ -1,36 +1,34 @@
-# @transferbank/cnab-lib-ts
+# @transferhub/cnab-lib-ts
 
 Biblioteca TypeScript para **leitura, detecção e validação** de arquivos de remessa
 **CNAB 240** e **CNAB 400** (cobrança / boleto) no padrão FEBRABAN.
 
 - Detecção automática de **banco** e **formato** pela primeira linha do arquivo
-- Validação de **tamanho de linha**, **tipo de registro** e dos **campos do sacado**
-  (nome, documento, valor do título e vencimento)
-- Suporte a **7 bancos** 
+- Validação do arquivo inteiro, ou boleto a boleto individualmente (sabendo exatamente quais são válidos e quais não, e por quê)
+- Leitura estruturada do arquivo (`read()`) para um objeto de domínio com header, boletos e trailer
 - Sem dependências de runtime; tipagem estrita; funciona em Node e no browser
-
-> **Status:** validação e detecção estão prontas e cobertas por testes.
-> O parsing completo do arquivo para um objeto de domínio (`CnabFile.read()`)
-> ainda **não está implementado** — ver [Limitações](#limitações).
+- Suporte a **7 bancos**, em CNAB 240 e CNAB 400
 
 ## Bancos suportados
 
-| Banco            | Código | CNAB 240 | CNAB 400 |
-| ---------------- | :----: | :------: | :------: |
-| Banco do Brasil  |  001   |    ✅    |    ✅    |
-| Santander        |  033   |    ✅    |    ✅    |
-| Caixa Econômica  |  104   |    ✅    |    ✅    |
-| Itaú             |  341   |    ✅    |    ✅    |
-| Bradesco         |  237   |    ✅    |    ✅    |
-| Sicredi          |  748   |    ✅    |    ✅    |
-| Sicoob           |  756   |    ✅    |    ✅    |
+| Banco                   | Código | CNAB 240 | CNAB 400 |
+| ----------------------- | :----: | :------: | :------: |
+| Banco do Brasil         |  001   |    ✅    |    ✅    |
+| Santander               |  033   |    ✅    |    ✅    |
+| Caixa Econômica Federal |  104   |    ✅    |    ✅    |
+| Itaú                    |  341   |    ✅    |    ✅    |
+| Bradesco                |  237   |    ✅    |    ✅    |
+| Sicredi                 |  748   |    ✅    |    ✅    |
+| Sicoob                  |  756   |    ✅    |    ✅    |
+
+Campos de boleto lidos/validados hoje, para todos os bancos acima: nome do sacado, data de vencimento, valor do título e documento (CPF/CNPJ) do sacado.
 
 ## Instalação
 
 ```bash
-npm install @transferbank/cnab-lib-ts
+npm install @transferhub/cnab-lib-ts
 # ou
-yarn add @transferbank/cnab-lib-ts
+yarn add @transferhub/cnab-lib-ts
 ```
 
 Requer Node.js 18+ (usa `TextDecoder` e a Web File API, disponíveis globalmente a
@@ -38,55 +36,95 @@ partir dessa versão).
 
 ## Uso
 
-### A partir de um `File` (browser ou Node 20+)
+### Abrindo um arquivo CNAB
+
+A partir de um `File` (browser ou Node 20+):
 
 ```ts
-import { openCnabFile } from '@transferbank/cnab-lib-ts'
+import { openCnabFile } from '@transferhub/cnab-lib-ts'
 
-const cnab = await openCnabFile(file) // file: File
+const cnabFile = await openCnabFile(file) // file: File
 
-console.log(cnab.bank)   // 'itau'
-console.log(cnab.format) // '240'
-
-const result = cnab.validate()
-if (!result.isValid) {
-  for (const error of result.errors) {
-    console.log(`Linha ${error.lineNumber}: ${error.message}`)
-  }
-}
+console.log(cnabFile.bank)   // 'itau'
+console.log(cnabFile.format) // '240'
 ```
 
-### A partir das linhas do arquivo (Node)
+A partir das linhas já lidas (Node):
 
 ```ts
 import { readFileSync } from 'node:fs'
-import { openCnabFileFromLines } from '@transferbank/cnab-lib-ts'
+import { openCnabFileFromLines } from '@transferhub/cnab-lib-ts'
 
 // arquivos CNAB usam codificação latin1 (ISO-8859-1)
 const conteudo = readFileSync('remessa.rem', 'latin1')
 const linhas = conteudo.split(/\r?\n/).filter((l) => l.length > 0)
 
-const cnab = openCnabFileFromLines(linhas)
-const result = cnab.validate()
-
-console.log(result.isValid)
+const cnabFile = openCnabFileFromLines(linhas)
 ```
 
-### Feedback detalhado
-
-Por padrão `validate()` para no primeiro erro. Passe `true` para coletar todos:
+### Validando o arquivo inteiro
 
 ```ts
-const result = cnab.validate(true)
+const result = cnabFile.validate()
+
+result.isValid // true | false
+result.errors  // lista de erros encontrados (vazia se válido)
 ```
+
+Por padrão `validate()` para no primeiro erro encontrado. Passe `true` para coletar todos os erros do arquivo em vez de parar no primeiro:
+
+```ts
+const result = cnabFile.validate(true)
+```
+
+### Validando boleto a boleto
+
+Quando o arquivo tem vários boletos, `validate()` só diz se o arquivo inteiro está ok ou não. Para saber **quais** boletos são válidos e quais não, use `validateBoletos()`:
+
+```ts
+const resultados = cnabFile.validateBoletos(true)
+
+for (const boleto of resultados) {
+  console.log(
+    `Boleto ${boleto.index} (linhas ${boleto.lineNumbers.join(', ')}): ${
+      boleto.isValid ? 'válido' : 'inválido'
+    }`
+  )
+  boleto.errors.forEach(erro => console.log(`  - ${erro.message}`))
+}
+```
+
+Cada boleto do arquivo é avaliado individualmente e de forma independente: um boleto inválido não afeta a avaliação dos demais, e todos os boletos são sempre analisados, mesmo que o arquivo como um todo seja inválido.
+
+### Lendo o arquivo
+
+`read()` valida o arquivo inteiro e, se ele for válido, retorna um objeto `Cnab` com o header, o trailer e os boletos já estruturados. Se o arquivo for inválido, lança `CnabValidationFailedException` em vez de retornar dados parciais:
+
+```ts
+import { CnabValidationFailedException } from '@transferhub/cnab-lib-ts'
+
+try {
+  const cnab = cnabFile.read()
+
+  console.log(cnab.boletos.length)
+  console.log(cnab.boletos[0]['nome do sacado'])      // acesso dinâmico por nome de campo
+  console.log(cnab.boletos[0]['valor do título'])
+  console.log(cnab.boletos[0]['data de vencimento'])
+} catch (error) {
+  if (error instanceof CnabValidationFailedException) {
+    console.log(error.errors) // CnabValidationError[]
+  }
+}
+```
+
+Cada boleto (`CnabBoleto`) e cada linha (`CnabLineData`) expõe os campos dinamicamente via Proxy — `boleto['nome do campo']` busca automaticamente na primeira linha do boleto que o declara. Acessar um campo que não existe lança erro (`Campo desconhecido: '...'`); os objetos são somente leitura. Além do acesso dinâmico, `CnabLineData` também tem `getField()`, `get()`, `fields`, `fieldNames`, `hasField()` e `toJSON()` para uso tipado.
 
 ### Validar campos adicionais
 
-É possível injetar classes de campo próprias para validar outras posições da linha,
-além das que a biblioteca já verifica:
+É possível injetar classes de campo próprias para validar (ou ler) outras posições da linha, além das que a biblioteca já verifica — funciona tanto em `validate()`/`validateBoletos()` quanto em `read()`:
 
 ```ts
-import { openCnabFileFromLines, CnabField, CnabFieldType } from '@transferbank/cnab-lib-ts'
+import { openCnabFileFromLines, CnabField, CnabFieldType } from '@transferhub/cnab-lib-ts'
 
 class MeuNossoNumeroField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -95,7 +133,22 @@ class MeuNossoNumeroField extends CnabField<string> {
   // ...performValidation() / parseValue()
 }
 
-cnab.validate(true, [MeuNossoNumeroField])
+cnabFile.validate(true, [MeuNossoNumeroField])
+cnabFile.read([MeuNossoNumeroField])
+```
+
+### Tratando erros de validação
+
+Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldName` e `range`.
+
+```ts
+import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'
+
+for (const erro of result.errors) {
+  if (erro instanceof CnabFieldValidationError) {
+    console.log(erro.fieldName, erro.message)
+  }
+}
 ```
 
 ## API
@@ -111,38 +164,48 @@ Mesma detecção, a partir de um array de linhas já lido. Lança
 
 ### `CnabFile`
 
-| Membro                                            | Descrição                                                        |
-| ------------------------------------------------- | --------------------------------------------------------------- |
-| `bank: CnabBank`                                  | Banco detectado (`'itau'`, `'caixa'`, …)                       |
-| `format: CnabFormat`                              | `'240'` ou `'400'`                                             |
-| `rawLines: string[]`                              | Linhas originais do arquivo                                     |
-| `validate(withFeedback?, extraFields?)`           | Valida o arquivo e retorna `CnabValidationResult`             |
-| `read(extraFields?)`                              | **Ainda não implementado** — lança erro                        |
+| Membro                                   | Descrição                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
+| `bank: CnabBank`                          | Banco detectado (`'itau'`, `'caixa'`, …)                                 |
+| `format: CnabFormat`                      | `'240'` ou `'400'`                                                       |
+| `rawLines: string[]`                      | Linhas originais do arquivo                                              |
+| `validate(withFeedback?, extraFields?)`   | Valida o arquivo inteiro e retorna `CnabValidationResult`                |
+| `validateBoletos(withFeedback?, extraFields?)` | Valida cada boleto individualmente, retorna `CnabBoletoValidationResult[]` |
+| `read(extraFields?)`                      | Valida e retorna um `Cnab` estruturado; lança `CnabValidationFailedException` se inválido |
 
-### `CnabValidationResult`
+### `CnabValidationResult` / `CnabBoletoValidationResult`
 
 ```ts
 interface CnabValidationResult {
   isValid: boolean
   errors: CnabValidationError[]
 }
+
+interface CnabBoletoValidationResult extends CnabValidationResult {
+  index: number
+  lineNumbers: number[]
+}
 ```
 
 Cada `CnabValidationError` expõe `lineNumber`, `errorType` (`'line'` | `'field'`) e
 `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldName` e
 `range`. Subclasses concretas exportadas: `CnabInvalidLineSizeError`,
-`CnabInvalidLineStartError`, `CnabFieldMinLengthError`, `CnabGenericFieldError`.
+`CnabInvalidLineStartError`, `CnabFieldMinLengthError`, `CnabGenericFieldError`,
+`CnabFieldParseError` (e as subclasses `CnabFieldInvalidNumberError`/`CnabFieldInvalidDateError`).
 
 ### Exceções
 
-Lançadas pela detecção (todas estendem `CnabException`):
+Lançadas antes de qualquer validação de boleto rodar (todas estendem `CnabException`):
 `CnabMinimumLinesNotReachedException`, `CnabFormatNotRecognizedException`,
 `CnabBankCodeNotFoundException`, `CnabBankSchemaNotFoundException`.
+
+Lançada por `read()` quando o arquivo é inválido: `CnabValidationFailedException`
+(expõe `.errors: CnabValidationError[]`).
 
 ### Utilitários
 
 ```ts
-import { validateDocument, parseDateDDMMAAAA, formatDateBR } from '@transferbank/cnab-lib-ts'
+import { validateDocument, parseDateDDMMAAAA, formatDateBR } from '@transferhub/cnab-lib-ts'
 
 validateDocument('00011122233396')       // valida CPF/CNPJ (módulo 11)
 parseDateDDMMAAAA('15122026')            // Date
@@ -162,19 +225,16 @@ No CNAB 240 as linhas de boleto são agrupadas a partir do Segmento P
 
 ## Limitações
 
-- `CnabFile.read()` (montar um objeto de domínio com header, boletos e trailer)
-  ainda não foi implementado.
 - A validação cobre os campos do sacado; não valida somatórios de trailer,
   sequência de registros nem dígitos verificadores de nosso número.
 
-
-
-Estrutura:
+## Estrutura
 
 ```
 src/cnab/
-  type/        modelos e contratos (CnabFile, CnabSchema, erros, …)
-  bank/        um diretório por banco: campos, group rule e docs de layout
+  type/        modelos e contratos (CnabFile, CnabSchema, CnabLineData, erros, …)
+  field/       classes base de campo compartilhadas entre bancos (CNAB 240/400)
+  bank/        um diretório por banco: campos (finos, herdando da base), group rule e docs de layout
   validators/  validadores de linha (tamanho, início de registro)
   utils/       parsing de data e de documento (CPF/CNPJ)
 test/          espelha a árvore de src/
