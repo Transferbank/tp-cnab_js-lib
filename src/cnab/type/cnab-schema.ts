@@ -92,6 +92,11 @@ export class CnabSchema {
     return result
   }
 
+  countBoletos(rawLines: string[]): number {
+    const boletoRawLines = rawLines.slice(1, -1)
+    return [...this.boleto.genLineGroups(boletoRawLines, 1)].length
+  }
+
   read(_rawLines: string[], _extraFields?: CnabFieldClass[]): Cnab {
     // TODO: Implementar método read que retorna objeto Cnab com header, trailer e boletos
     // Necessário para CnabFile.read() funcionar corretamente
