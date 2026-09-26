@@ -2,4 +2,10 @@ export { Cnab240BancoDoBrasilBoletoNomeField } from '@cnab/bank/banco-do-brasil/
 export { Cnab240BancoDoBrasilBoletoValorTituloField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-valor-titulo-field'
 export { Cnab240BancoDoBrasilBoletoVencimentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-vencimento-field'
 export { Cnab240BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-sacado-documento-field'
+export { Cnab240BancoDoBrasilBoletoEnderecoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-endereco-field'
+export { Cnab240BancoDoBrasilBoletoBairroField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-bairro-field'
+export { Cnab240BancoDoBrasilBoletoCepField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-cep-field'
+export { Cnab240BancoDoBrasilBoletoCepSufixoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-cep-sufixo-field'
+export { Cnab240BancoDoBrasilBoletoCidadeField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-cidade-field'
+export { Cnab240BancoDoBrasilBoletoUfField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-uf-field'
 
