@@ -198,7 +198,13 @@ function registerCnabSchemas(): CnabSchema[] {
           SantanderFields400.Cnab400SantanderBoletoNomeField,
           SantanderFields400.Cnab400SantanderBoletoVencimentoField,
           SantanderFields400.Cnab400SantanderBoletoValorTituloField,
-          SantanderFields400.Cnab400SantanderBoletoSacadoDocumentoField
+          SantanderFields400.Cnab400SantanderBoletoSacadoDocumentoField,
+          SantanderFields400.Cnab400SantanderBoletoEnderecoField,
+          SantanderFields400.Cnab400SantanderBoletoBairroField,
+          SantanderFields400.Cnab400SantanderBoletoCepField,
+          SantanderFields400.Cnab400SantanderBoletoCepSufixoField,
+          SantanderFields400.Cnab400SantanderBoletoCidadeField,
+          SantanderFields400.Cnab400SantanderBoletoUfField
         ],
       },
     }),
