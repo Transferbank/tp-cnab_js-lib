@@ -111,7 +111,13 @@ function registerCnabSchemas(): CnabSchema[] {
           ItauFields240.Cnab240ItauBoletoNomeField,
           ItauFields240.Cnab240ItauBoletoVencimentoField,
           ItauFields240.Cnab240ItauBoletoValorTituloField,
-          ItauFields240.Cnab240ItauBoletoSacadoDocumentoField
+          ItauFields240.Cnab240ItauBoletoSacadoDocumentoField,
+          ItauFields240.Cnab240ItauBoletoEnderecoField,
+          ItauFields240.Cnab240ItauBoletoBairroField,
+          ItauFields240.Cnab240ItauBoletoCepField,
+          ItauFields240.Cnab240ItauBoletoCepSufixoField,
+          ItauFields240.Cnab240ItauBoletoCidadeField,
+          ItauFields240.Cnab240ItauBoletoUfField
         ],
       },
     }),
