@@ -339,7 +339,11 @@ function registerCnabSchemas(): CnabSchema[] {
           SicrediFields240.Cnab240SicrediBoletoNomeField,
           SicrediFields240.Cnab240SicrediBoletoVencimentoField,
           SicrediFields240.Cnab240SicrediBoletoValorTituloField,
-          SicrediFields240.Cnab240SicrediBoletoSacadoDocumentoField
+          SicrediFields240.Cnab240SicrediBoletoSacadoDocumentoField,
+          SicrediFields240.Cnab240SicrediBoletoEnderecoField,
+          SicrediFields240.Cnab240SicrediBoletoCepField,
+          SicrediFields240.Cnab240SicrediBoletoCidadeField,
+          SicrediFields240.Cnab240SicrediBoletoUfField
         ],
       },
     }),
