@@ -228,7 +228,12 @@ function registerCnabSchemas(): CnabSchema[] {
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoNomeField,
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoVencimentoField,
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoValorTituloField,
-          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoEnderecoField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoBairroField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoCepField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoCidadeField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoUfField
         ],
       },
     }),
