@@ -2,3 +2,8 @@ export { Cnab400CaixaBoletoNomeField } from '@cnab/bank/caixa/cnab/cnab400/field
 export { Cnab400CaixaBoletoSacadoDocumentoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-sacado-documento-field'
 export { Cnab400CaixaBoletoValorTituloField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-valor-titulo-field'
 export { Cnab400CaixaBoletoVencimentoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-vencimento-field'
+export { Cnab400CaixaBoletoEnderecoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-endereco-field'
+export { Cnab400CaixaBoletoBairroField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-bairro-field'
+export { Cnab400CaixaBoletoCepField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-cep-field'
+export { Cnab400CaixaBoletoCidadeField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-cidade-field'
+export { Cnab400CaixaBoletoUfField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-uf-field'
