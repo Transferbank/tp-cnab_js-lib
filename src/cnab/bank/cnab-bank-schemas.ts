@@ -202,7 +202,6 @@ function registerCnabSchemas(): CnabSchema[] {
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoEnderecoField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoBairroField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoCepField,
-          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoCepSufixoField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoCidadeField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoUfField
         ],
