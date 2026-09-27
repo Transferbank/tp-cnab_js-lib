@@ -25,6 +25,7 @@
       "@cnab/validators/*": ["src/cnab/validators/*"],
       "@cnab/utils/*": ["src/cnab/utils/*"],
       "@cnab/bank/*": ["src/cnab/bank/*"],
+      "@cnab/field/*": ["src/cnab/field/*"],
       "@test/*": ["test/*"]
     }
   },
