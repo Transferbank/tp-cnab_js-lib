@@ -390,7 +390,6 @@ function registerCnabSchemas(): CnabSchema[] {
           SicoobFields240.Cnab240SicoobBoletoEnderecoField,
           SicoobFields240.Cnab240SicoobBoletoBairroField,
           SicoobFields240.Cnab240SicoobBoletoCepField,
-          SicoobFields240.Cnab240SicoobBoletoCepSufixoField,
           SicoobFields240.Cnab240SicoobBoletoCidadeField,
           SicoobFields240.Cnab240SicoobBoletoUfField
         ],
