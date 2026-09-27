@@ -1,22 +1,15 @@
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { validateDocument } from '@cnab/utils/document-parser'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
+import { Cnab400BoletoSacadoDocumentoField } from '@cnab/field/cnab400/boleto-sacado-documento-field'
 
-export class Cnab400SicrediBoletoSacadoDocumentoField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'documento do sacado'
-  readonly range: [number, number] = [221, 234]
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
-  }
-
+// Indicador ocupa só 1 char (pos. 219); 220 é filler fixo "0".
+export class Cnab400SicrediBoletoSacadoDocumentoField extends Cnab400BoletoSacadoDocumentoField {
   protected performValidation(): CnabValidationResult {
     const value = this.value as string | null
-    const isValid = value != null && validateDocument(value)
+    const tipoInscricao = this.extractRangeFromLine(218, 219)
+    const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '1', '2')
+
     const errors = []
 
     if (!isValid) {
@@ -34,9 +27,5 @@ export class Cnab400SicrediBoletoSacadoDocumentoField extends CnabField<string> 
       isValid,
       errors
     }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
   }
 }
