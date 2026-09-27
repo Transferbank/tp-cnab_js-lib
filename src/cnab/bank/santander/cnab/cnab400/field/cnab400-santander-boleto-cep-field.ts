@@ -4,10 +4,11 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 
+// Manual separa CEP (327-331) e sufixo (332-334); unificado aqui num único campo de 8 dígitos.
 export class Cnab400SantanderBoletoCepField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'cep do sacado'
-  readonly range: [number, number] = [327, 331]
+  readonly range: [number, number] = [327, 334]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
@@ -15,13 +16,13 @@ export class Cnab400SantanderBoletoCepField extends CnabField<string> {
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && /^\d{5}$/.test(value)
+    const isValid = value != null && /^\d{8}$/.test(value)
     const errors = []
 
     if (!isValid) {
       errors.push(
         new CnabGenericFieldError({
-          message: 'Campo cep do sacado inválido: deve conter 5 dígitos numéricos',
+          message: 'Campo cep do sacado inválido: deve conter 8 dígitos numéricos',
           lineNumber: this.lineNumber,
           fieldName: this.fieldName,
           range: this.range

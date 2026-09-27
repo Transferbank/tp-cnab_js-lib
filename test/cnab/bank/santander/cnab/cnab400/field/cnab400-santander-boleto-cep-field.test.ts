@@ -51,7 +51,7 @@ describe('Cnab400SantanderBoletoCepField', (): void => {
 
       // Then
       expect(fields.length).toBeGreaterThan(0)
-      expect(fields[0].value).toBe('78520')
+      expect(fields[0].value).toBe('78520000')
 
       results.forEach((result: CnabValidationResult) => {
         expect(result).toEqual(genValidCnabValidationResult())
@@ -99,7 +99,7 @@ describe('Cnab400SantanderBoletoCepField', (): void => {
       }
 
       const lineNumber = realLineNumber(lines, rawLine)
-      const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDE')
+      const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGH')
 
       // When
       const field = new Cnab400SantanderBoletoCepField(invalidLine, lineNumber)
