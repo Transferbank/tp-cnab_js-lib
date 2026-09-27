@@ -5,6 +5,5 @@ export { Cnab240CaixaBoletoSacadoDocumentoField } from '@cnab/bank/caixa/cnab/cn
 export { Cnab240CaixaBoletoEnderecoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-endereco-field'
 export { Cnab240CaixaBoletoBairroField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-bairro-field'
 export { Cnab240CaixaBoletoCepField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-cep-field'
-export { Cnab240CaixaBoletoCepSufixoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-cep-sufixo-field'
 export { Cnab240CaixaBoletoCidadeField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-cidade-field'
 export { Cnab240CaixaBoletoUfField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-uf-field'

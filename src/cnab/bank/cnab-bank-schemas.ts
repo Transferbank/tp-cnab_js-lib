@@ -266,7 +266,6 @@ function registerCnabSchemas(): CnabSchema[] {
           CaixaFields240.Cnab240CaixaBoletoEnderecoField,
           CaixaFields240.Cnab240CaixaBoletoBairroField,
           CaixaFields240.Cnab240CaixaBoletoCepField,
-          CaixaFields240.Cnab240CaixaBoletoCepSufixoField,
           CaixaFields240.Cnab240CaixaBoletoCidadeField,
           CaixaFields240.Cnab240CaixaBoletoUfField
         ],
