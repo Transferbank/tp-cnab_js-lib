@@ -8,10 +8,6 @@ const DEFAULT_START = 235
 const DEFAULT_END = 274
 const DEFAULT_RECORD_TYPE = '1'
 
-// Fabrica uma classe do campo nome com o range e o tipo de registro de detalhe
-// informados. Sem argumentos usa os valores padrao (comuns a 5 dos 7 bancos); o Itau
-// diverge so no range; o Banco do Brasil diverge em ambos (range [235, 271] e registro
-// de detalhe '7' em vez de '1').
 export function Cnab400BoletoNomeField(
   start: number = DEFAULT_START,
   end: number = DEFAULT_END,
