@@ -7,7 +7,7 @@ import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
 
 // Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ. BB e Sicredi
 // sobrescrevem (BB: "00"=Isento; Sicredi: indicador de 1 char).
-export abstract class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
+export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
   readonly range: [number, number] = [221, 234]

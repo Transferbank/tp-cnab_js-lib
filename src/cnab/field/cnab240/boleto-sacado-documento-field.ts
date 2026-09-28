@@ -7,7 +7,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 // Indicador de tipo de inscrição na posição 18: "1"=CPF, "2"=CNPJ. BB sobrescreve por
 // causa do fallback "0"=CNPJ.
-export abstract class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
+export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
   readonly range: [number, number] = [19, 33]
