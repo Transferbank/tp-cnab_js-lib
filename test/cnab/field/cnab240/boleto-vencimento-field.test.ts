@@ -12,9 +12,6 @@ import {
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-// Cnab240BoletoVencimentoField e uma factory: sem argumentos usa o range padrao. Nenhum
-// banco diverge hoje, mas o parametro existe como padrao para caso algum passe a
-// divergir no futuro.
 describe('Cnab240BoletoVencimentoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
