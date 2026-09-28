@@ -2,23 +2,17 @@ import * as path from 'path'
 import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
+import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoEnderecoField } from '@cnab/field/cnab240/boleto-endereco-field'
-import { Cnab240ItauBoletoEnderecoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-endereco-field'
-import { Cnab240CaixaBoletoEnderecoField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-endereco-field'
-import { Cnab240SicoobBoletoEnderecoField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-endereco-field'
-import { Cnab240SicrediBoletoEnderecoField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-endereco-field'
-import { Cnab240BradescoBoletoEnderecoField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-endereco-field'
-import { Cnab240SantanderBoletoEnderecoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-endereco-field'
 import { Cnab240BancoDoBrasilBoletoEnderecoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-endereco-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-type EnderecoFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoEnderecoField
 
 describe('Cnab240BoletoEnderecoField', (): void => {
   describe('shouldValidate', (): void => {
@@ -39,7 +33,8 @@ describe('Cnab240BoletoEnderecoField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BradescoBoletoEnderecoField(rawLine, 1)
+        const FieldClass = Cnab240BoletoEnderecoField()
+        const field = new FieldClass(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -53,16 +48,16 @@ describe('Cnab240BoletoEnderecoField', (): void => {
   describe('value and validate', (): void => {
     it.each([
       { FieldClass: Cnab240BancoDoBrasilBoletoEnderecoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240BradescoBoletoEnderecoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO 123' },
-      { FieldClass: Cnab240CaixaBoletoEnderecoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240ItauBoletoEnderecoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO, 100' },
-      { FieldClass: Cnab240SantanderBoletoEnderecoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240SicoobBoletoEnderecoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240SicrediBoletoEnderecoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' }
+      { FieldClass: Cnab240BoletoEnderecoField(), examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO 123' },
+      { FieldClass: Cnab240BoletoEnderecoField(), examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
+      { FieldClass: Cnab240BoletoEnderecoField(), examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO, 100' },
+      { FieldClass: Cnab240BoletoEnderecoField(), examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
+      { FieldClass: Cnab240BoletoEnderecoField(), examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
+      { FieldClass: Cnab240BoletoEnderecoField(), examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' }
     ])(
-      'given segment Q lines with valid address ($FieldClass.name) when reading value and validating then accepts all lines',
+      'given segment Q lines with valid address ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: EnderecoFieldClass
+        FieldClass: new (rawLine: string, lineNumber: number) => CnabField<string>
         examplePath: string
         expectedFirstValue: string
       }): void => {
@@ -74,7 +69,7 @@ describe('Cnab240BoletoEnderecoField', (): void => {
         )
 
         // When
-        const results = fields.map((field: Cnab240BoletoEnderecoField) => field.validate())
+        const results = fields.map((field: CnabField<string>) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
@@ -92,7 +87,8 @@ describe('Cnab240BoletoEnderecoField', (): void => {
 
     it('given segment Q line with blank address when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoEnderecoField)
+      const FieldClass = Cnab240BoletoEnderecoField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -105,7 +101,7 @@ describe('Cnab240BoletoEnderecoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240BradescoBoletoEnderecoField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

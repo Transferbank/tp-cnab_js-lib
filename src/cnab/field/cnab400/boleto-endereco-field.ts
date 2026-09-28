@@ -1,16 +1,21 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-export abstract class Cnab400BoletoEnderecoField extends CnabField<string> {
+const DEFAULT_START = 275
+const DEFAULT_END = 314
+const DEFAULT_RECORD_TYPE = '1'
+
+abstract class Cnab400BoletoEnderecoFieldBase extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'endereço do sacado'
-  readonly range: [number, number] = [275, 314]
+  abstract readonly range: [number, number]
+  protected readonly recordType: string = DEFAULT_RECORD_TYPE
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
   protected performValidation(): CnabValidationResult {
@@ -38,5 +43,16 @@ export abstract class Cnab400BoletoEnderecoField extends CnabField<string> {
 
   protected parseValue(rawValue: string): string {
     return rawValue
+  }
+}
+
+export function Cnab400BoletoEnderecoField(
+  start: number = DEFAULT_START,
+  end: number = DEFAULT_END,
+  recordType: string = DEFAULT_RECORD_TYPE
+): CnabFieldClass<string> {
+  return class extends Cnab400BoletoEnderecoFieldBase {
+    readonly range: [number, number] = [start, end]
+    protected readonly recordType = recordType
   }
 }

@@ -11,23 +11,15 @@ import {
   createFieldsFromLines,
   getFieldRange
 } from '@test/test-utils'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BoletoEnderecoField } from '@cnab/field/cnab400/boleto-endereco-field'
-import { Cnab400BancoDoBrasilBoletoEnderecoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-endereco-field'
-import { Cnab400BradescoBoletoEnderecoField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-endereco-field'
-import { Cnab400CaixaBoletoEnderecoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-endereco-field'
-import { Cnab400ItauBoletoEnderecoField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-endereco-field'
-import { Cnab400SantanderBoletoEnderecoField } from '@cnab/bank/santander/cnab/cnab400/field/cnab400-santander-boleto-endereco-field'
-import { Cnab400SicoobBoletoEnderecoField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-endereco-field'
-import { Cnab400SicrediBoletoEnderecoField } from '@cnab/bank/sicredi/cnab/cnab400/field/cnab400-sicredi-boleto-endereco-field'
-
-type EnderecoFieldClass = new (rawLine: string, lineNumber: number) => Cnab400BoletoEnderecoField
 
 describe('Cnab400BoletoEnderecoField', (): void => {
   describe('shouldValidate', (): void => {
-    describe('para os 6 bancos com registro de detalhe padrao (comeca com 1)', (): void => {
+    describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
       const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
 
       describe.each([
@@ -44,7 +36,8 @@ describe('Cnab400BoletoEnderecoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400BradescoBoletoEnderecoField(rawLine, 1)
+          const FieldClass = Cnab400BoletoEnderecoField()
+          const field = new FieldClass(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -72,7 +65,8 @@ describe('Cnab400BoletoEnderecoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400BancoDoBrasilBoletoEnderecoField(rawLine, 1)
+          const FieldClass = Cnab400BoletoEnderecoField(275, 314, '7')
+          const field = new FieldClass(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -87,29 +81,24 @@ describe('Cnab400BoletoEnderecoField', (): void => {
   describe('range', (): void => {
     it('given Sicoob then overrides the base range to a smaller 37-char slice', (): void => {
       // Then
-      expect(getFieldRange(Cnab400SicoobBoletoEnderecoField)).toEqual([275, 311])
-      expect(getFieldRange(Cnab400BancoDoBrasilBoletoEnderecoField)).toEqual([275, 314])
-      expect(getFieldRange(Cnab400BradescoBoletoEnderecoField)).toEqual([275, 314])
-      expect(getFieldRange(Cnab400CaixaBoletoEnderecoField)).toEqual([275, 314])
-      expect(getFieldRange(Cnab400ItauBoletoEnderecoField)).toEqual([275, 314])
-      expect(getFieldRange(Cnab400SantanderBoletoEnderecoField)).toEqual([275, 314])
-      expect(getFieldRange(Cnab400SicrediBoletoEnderecoField)).toEqual([275, 314])
+      expect(getFieldRange(Cnab400BoletoEnderecoField(275, 311))).toEqual([275, 311])
+      expect(getFieldRange(Cnab400BoletoEnderecoField())).toEqual([275, 314])
     })
   })
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BancoDoBrasilBoletoEnderecoField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
-      { FieldClass: Cnab400BradescoBoletoEnderecoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: 'AV EXEMPLO 200' },
-      { FieldClass: Cnab400CaixaBoletoEnderecoField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
-      { FieldClass: Cnab400ItauBoletoEnderecoField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
-      { FieldClass: Cnab400SantanderBoletoEnderecoField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
-      { FieldClass: Cnab400SicoobBoletoEnderecoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
-      { FieldClass: Cnab400SicrediBoletoEnderecoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: 'RUA DAS PALMEIRAS 45' }
+      { FieldClass: Cnab400BoletoEnderecoField(275, 314, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
+      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: 'AV EXEMPLO 200' },
+      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
+      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
+      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
+      { FieldClass: Cnab400BoletoEnderecoField(275, 311), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
+      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: 'RUA DAS PALMEIRAS 45' }
     ])(
-      'given detail lines with valid address ($FieldClass.name) when reading value and validating then accepts all lines',
+      'given detail lines with valid address ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: EnderecoFieldClass
+        FieldClass: CnabFieldClass<string>
         examplePath: string
         expectedFirstValue: string
       }): void => {
@@ -121,7 +110,7 @@ describe('Cnab400BoletoEnderecoField', (): void => {
         )
 
         // When
-        const results = fields.map((field: Cnab400BoletoEnderecoField) => field.validate())
+        const results = fields.map((field: CnabField<string>) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
@@ -139,7 +128,8 @@ describe('Cnab400BoletoEnderecoField', (): void => {
 
     it('given detail line with blank address when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BradescoBoletoEnderecoField)
+      const FieldClass = Cnab400BoletoEnderecoField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -152,7 +142,7 @@ describe('Cnab400BoletoEnderecoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BradescoBoletoEnderecoField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
