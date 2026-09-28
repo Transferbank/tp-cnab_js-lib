@@ -1,16 +1,19 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 
-export abstract class Cnab400BoletoValorTituloField extends CnabField<number> {
+const DEFAULT_RECORD_TYPE = '1'
+
+abstract class Cnab400BoletoValorTituloFieldBase extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor do título'
   readonly range: [number, number] = [127, 139]
+  protected readonly recordType: string = DEFAULT_RECORD_TYPE
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
   protected performValidation(): CnabValidationResult {
@@ -41,5 +44,11 @@ export abstract class Cnab400BoletoValorTituloField extends CnabField<number> {
     }
 
     return parseInt(rawValue, 10) / 100
+  }
+}
+
+export function Cnab400BoletoValorTituloField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<number> {
+  return class extends Cnab400BoletoValorTituloFieldBase {
+    protected readonly recordType = recordType
   }
 }

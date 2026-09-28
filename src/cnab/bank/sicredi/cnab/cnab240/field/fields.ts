@@ -1,4 +1,3 @@
-export { Cnab240SicrediBoletoValorTituloField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-valor-titulo-field'
 export { Cnab240SicrediBoletoVencimentoField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-vencimento-field'
 export { Cnab240SicrediBoletoEnderecoField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-endereco-field'
 export { Cnab240SicrediBoletoCepField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-cep-field'
