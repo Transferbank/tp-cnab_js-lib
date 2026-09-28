@@ -4,12 +4,14 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 
+const DEFAULT_START = 127
+const DEFAULT_END = 139
 const DEFAULT_RECORD_TYPE = '1'
 
 abstract class Cnab400BoletoValorTituloFieldBase extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor do título'
-  readonly range: [number, number] = [127, 139]
+  abstract readonly range: [number, number]
   protected readonly recordType: string = DEFAULT_RECORD_TYPE
 
   shouldValidate(): boolean {
@@ -47,8 +49,13 @@ abstract class Cnab400BoletoValorTituloFieldBase extends CnabField<number> {
   }
 }
 
-export function Cnab400BoletoValorTituloField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<number> {
+export function Cnab400BoletoValorTituloField(
+  start: number = DEFAULT_START,
+  end: number = DEFAULT_END,
+  recordType: string = DEFAULT_RECORD_TYPE
+): CnabFieldClass<number> {
   return class extends Cnab400BoletoValorTituloFieldBase {
+    readonly range: [number, number] = [start, end]
     protected readonly recordType = recordType
   }
 }

@@ -1,13 +1,16 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab240BoletoValorTituloField extends CnabField<number> {
+const DEFAULT_START = 86
+const DEFAULT_END = 100
+
+abstract class Cnab240BoletoValorTituloFieldBase extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor do título'
-  readonly range: [number, number] = [86, 100]
+  abstract readonly range: [number, number]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
@@ -41,5 +44,11 @@ export class Cnab240BoletoValorTituloField extends CnabField<number> {
     }
 
     return parseInt(rawValue, 10) / 100
+  }
+}
+
+export function Cnab240BoletoValorTituloField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<number> {
+  return class extends Cnab240BoletoValorTituloFieldBase {
+    readonly range: [number, number] = [start, end]
   }
 }
