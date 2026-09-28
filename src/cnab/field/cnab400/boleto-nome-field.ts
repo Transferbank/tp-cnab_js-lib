@@ -8,45 +8,51 @@ const DEFAULT_START = 235
 const DEFAULT_END = 274
 const DEFAULT_RECORD_TYPE = '1'
 
+abstract class Cnab400BoletoNomeFieldBase extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.BOLETO
+  readonly fieldName = 'nome do sacado'
+  abstract readonly range: [number, number]
+  protected readonly recordType: string = DEFAULT_RECORD_TYPE
+
+  shouldValidate(): boolean {
+    return Cnab400LineTypeChecker.isOptional(this.rawLine, this.recordType)
+  }
+
+  protected performValidation(): CnabValidationResult {
+    const minLength = 3
+    const value = this.value
+    const isValid = value != null && value.length >= minLength
+    const errors = []
+
+    if (!isValid) {
+      errors.push(
+        new CnabFieldMinLengthError({
+          lineNumber: this.lineNumber,
+          fieldName: this.fieldName,
+          range: this.range,
+          minLength
+        })
+      )
+    }
+
+    return {
+      isValid,
+      errors
+    }
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
+}
+
 export function Cnab400BoletoNomeField(
   start: number = DEFAULT_START,
   end: number = DEFAULT_END,
   recordType: string = DEFAULT_RECORD_TYPE
 ): CnabFieldClass<string> {
-  return class extends CnabField<string> {
-    static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'nome do sacado'
+  return class extends Cnab400BoletoNomeFieldBase {
     readonly range: [number, number] = [start, end]
-
-    shouldValidate(): boolean {
-      return Cnab400LineTypeChecker.isOptional(this.rawLine, recordType)
-    }
-
-    protected performValidation(): CnabValidationResult {
-      const minLength = 3
-      const value = this.value
-      const isValid = value != null && value.length >= minLength
-      const errors = []
-
-      if (!isValid) {
-        errors.push(
-          new CnabFieldMinLengthError({
-            lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
-            range: this.range,
-            minLength
-          })
-        )
-      }
-
-      return {
-        isValid,
-        errors
-      }
-    }
-
-    protected parseValue(rawValue: string): string {
-      return rawValue
-    }
+    protected readonly recordType = recordType
   }
 }
