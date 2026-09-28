@@ -8,51 +8,46 @@ const DEFAULT_START = 235
 const DEFAULT_END = 274
 const DEFAULT_RECORD_TYPE = '1'
 
-abstract class Cnab400BoletoNomeFieldBase extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'nome do sacado'
-  readonly range: [number, number] = [DEFAULT_START, DEFAULT_END]
-  protected readonly recordType: string = DEFAULT_RECORD_TYPE
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
-  }
-
-  protected performValidation(): CnabValidationResult {
-    const minLength = 3
-    const value = this.value
-    const isValid = value != null && value.length >= minLength
-    const errors = []
-
-    if (!isValid) {
-      errors.push(
-        new CnabFieldMinLengthError({
-          lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
-          range: this.range,
-          minLength
-        })
-      )
-    }
-
-    return {
-      isValid,
-      errors
-    }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
-  }
-}
-
 export function Cnab400BoletoNomeField(
   start: number = DEFAULT_START,
   end: number = DEFAULT_END,
   recordType: string = DEFAULT_RECORD_TYPE
 ): CnabFieldClass<string> {
-  return class extends Cnab400BoletoNomeFieldBase {
+  return class extends CnabField<string> {
+    static readonly fieldType = CnabFieldType.BOLETO
+    readonly fieldName = 'nome do sacado'
     readonly range: [number, number] = [start, end]
     protected readonly recordType = recordType
+
+    shouldValidate(): boolean {
+      return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
+    }
+
+    protected performValidation(): CnabValidationResult {
+      const minLength = 3
+      const value = this.value
+      const isValid = value != null && value.length >= minLength
+      const errors = []
+
+      if (!isValid) {
+        errors.push(
+          new CnabFieldMinLengthError({
+            lineNumber: this.lineNumber,
+            fieldName: this.fieldName,
+            range: this.range,
+            minLength
+          })
+        )
+      }
+
+      return {
+        isValid,
+        errors
+      }
+    }
+
+    protected parseValue(rawValue: string): string {
+      return rawValue
+    }
   }
 }
