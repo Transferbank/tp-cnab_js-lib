@@ -56,7 +56,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField,
+          Cnab240BoletoNomeField(),
           BradescoFields240.Cnab240BradescoBoletoVencimentoField,
           BradescoFields240.Cnab240BradescoBoletoValorTituloField,
           BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField,
@@ -85,7 +85,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField,
+          Cnab400BoletoNomeField(),
           BradescoFields400.Cnab400BradescoBoletoVencimentoField,
           BradescoFields400.Cnab400BradescoBoletoValorTituloField,
           BradescoFields400.Cnab400BradescoBoletoSacadoDocumentoField,
@@ -110,7 +110,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          ItauFields240.Cnab240ItauBoletoNomeField,
+          Cnab240BoletoNomeField(34, 63),
           ItauFields240.Cnab240ItauBoletoVencimentoField,
           ItauFields240.Cnab240ItauBoletoValorTituloField,
           ItauFields240.Cnab240ItauBoletoSacadoDocumentoField,
@@ -139,7 +139,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          ItauFields400.Cnab400ItauBoletoNomeField,
+          Cnab400BoletoNomeField(235, 264),
           ItauFields400.Cnab400ItauBoletoVencimentoField,
           ItauFields400.Cnab400ItauBoletoValorTituloField,
           ItauFields400.Cnab400ItauBoletoSacadoDocumentoField,
@@ -167,7 +167,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField,
+          Cnab240BoletoNomeField(),
           SantanderFields240.Cnab240SantanderBoletoVencimentoField,
           SantanderFields240.Cnab240SantanderBoletoValorTituloField,
           SantanderFields240.Cnab240SantanderBoletoSacadoDocumentoField,
@@ -196,7 +196,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField,
+          Cnab400BoletoNomeField(),
           SantanderFields400.Cnab400SantanderBoletoVencimentoField,
           SantanderFields400.Cnab400SantanderBoletoValorTituloField,
           SantanderFields400.Cnab400SantanderBoletoSacadoDocumentoField,
@@ -224,7 +224,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField,
+          Cnab240BoletoNomeField(),
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoVencimentoField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoValorTituloField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoSacadoDocumentoField,
@@ -281,7 +281,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField,
+          Cnab240BoletoNomeField(),
           CaixaFields240.Cnab240CaixaBoletoVencimentoField,
           CaixaFields240.Cnab240CaixaBoletoValorTituloField,
           CaixaFields240.Cnab240CaixaBoletoSacadoDocumentoField,
@@ -310,7 +310,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField,
+          Cnab400BoletoNomeField(),
           CaixaFields400.Cnab400CaixaBoletoVencimentoField,
           CaixaFields400.Cnab400CaixaBoletoValorTituloField,
           CaixaFields400.Cnab400CaixaBoletoSacadoDocumentoField,
@@ -338,7 +338,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField,
+          Cnab240BoletoNomeField(),
           SicrediFields240.Cnab240SicrediBoletoVencimentoField,
           SicrediFields240.Cnab240SicrediBoletoValorTituloField,
           SicrediFields240.Cnab240SicrediBoletoSacadoDocumentoField,
@@ -366,7 +366,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField,
+          Cnab400BoletoNomeField(),
           SicrediFields400.Cnab400SicrediBoletoVencimentoField,
           SicrediFields400.Cnab400SicrediBoletoValorTituloField,
           SicrediFields400.Cnab400SicrediBoletoSacadoDocumentoField,
@@ -391,7 +391,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField,
+          Cnab240BoletoNomeField(),
           SicoobFields240.Cnab240SicoobBoletoVencimentoField,
           SicoobFields240.Cnab240SicoobBoletoValorTituloField,
           SicoobFields240.Cnab240SicoobBoletoSacadoDocumentoField,
@@ -420,7 +420,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField,
+          Cnab400BoletoNomeField(),
           SicoobFields400.Cnab400SicoobBoletoVencimentoField,
           SicoobFields400.Cnab400SicoobBoletoValorTituloField,
           SicoobFields400.Cnab400SicoobBoletoSacadoDocumentoField,
