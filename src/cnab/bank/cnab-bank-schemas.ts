@@ -262,7 +262,12 @@ function registerCnabSchemas(): CnabSchema[] {
           CaixaFields240.Cnab240CaixaBoletoNomeField,
           CaixaFields240.Cnab240CaixaBoletoVencimentoField,
           CaixaFields240.Cnab240CaixaBoletoValorTituloField,
-          CaixaFields240.Cnab240CaixaBoletoSacadoDocumentoField
+          CaixaFields240.Cnab240CaixaBoletoSacadoDocumentoField,
+          CaixaFields240.Cnab240CaixaBoletoEnderecoField,
+          CaixaFields240.Cnab240CaixaBoletoBairroField,
+          CaixaFields240.Cnab240CaixaBoletoCepField,
+          CaixaFields240.Cnab240CaixaBoletoCidadeField,
+          CaixaFields240.Cnab240CaixaBoletoUfField
         ],
       },
     }),
@@ -286,7 +291,12 @@ function registerCnabSchemas(): CnabSchema[] {
           CaixaFields400.Cnab400CaixaBoletoNomeField,
           CaixaFields400.Cnab400CaixaBoletoVencimentoField,
           CaixaFields400.Cnab400CaixaBoletoValorTituloField,
-          CaixaFields400.Cnab400CaixaBoletoSacadoDocumentoField
+          CaixaFields400.Cnab400CaixaBoletoSacadoDocumentoField,
+          CaixaFields400.Cnab400CaixaBoletoEnderecoField,
+          CaixaFields400.Cnab400CaixaBoletoBairroField,
+          CaixaFields400.Cnab400CaixaBoletoCepField,
+          CaixaFields400.Cnab400CaixaBoletoCidadeField,
+          CaixaFields400.Cnab400CaixaBoletoUfField
         ],
       },
     }),
