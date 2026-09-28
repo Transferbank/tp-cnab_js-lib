@@ -2,7 +2,7 @@ import * as path from 'path'
 import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
@@ -13,9 +13,9 @@ import {
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-// Bancos sem divergencia usam Cnab240BoletoSacadoDocumentoField diretamente (sem
-// subclasse). A base implementa a validacao por indicador (posicao 18, "1"=CPF/"2"=CNPJ);
-// so o BB diverge, pelo fallback "0"=CNPJ.
+// Cnab240BoletoSacadoDocumentoField e uma factory: sem argumentos usa o range padrao
+// (comum a 6 dos 7 bancos). A base implementa a validacao por indicador (posicao 18,
+// "1"=CPF/"2"=CNPJ); so o BB diverge, pelo fallback "0"=CNPJ.
 describe('Cnab240BoletoSacadoDocumentoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
@@ -35,7 +35,8 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BoletoSacadoDocumentoField(rawLine, 1)
+        const FieldClass = Cnab240BoletoSacadoDocumentoField()
+        const field = new FieldClass(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -49,16 +50,16 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
   describe('value and validate', (): void => {
     it.each([
       { FieldClass: Cnab240BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '000010000791989' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '000011122233396' }
+      { FieldClass: Cnab240BoletoSacadoDocumentoField(), examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '000010000791989' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField(), examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField(), examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField(), examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField(), examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '000011122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField(), examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '000011122233396' }
     ])(
       'given segment Q lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
-        FieldClass: new (rawLine: string, lineNumber: number) => Cnab240BoletoSacadoDocumentoField
+        FieldClass: CnabFieldClass<string>
         examplePath: string
         expectedFirstDocument: string
       }): void => {
@@ -88,7 +89,8 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
 
     it('given segment Q line with blank document when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BoletoSacadoDocumentoField)
+      const FieldClass = Cnab240BoletoSacadoDocumentoField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -101,7 +103,7 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240BoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -115,7 +117,8 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
 
     it('given segment Q line with invalid document when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BoletoSacadoDocumentoField)
+      const FieldClass = Cnab240BoletoSacadoDocumentoField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -128,7 +131,7 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
       // When
-      const field = new Cnab240BoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

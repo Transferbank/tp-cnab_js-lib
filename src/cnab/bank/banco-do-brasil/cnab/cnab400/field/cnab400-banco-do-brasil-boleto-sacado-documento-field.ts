@@ -1,14 +1,12 @@
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { Cnab400BoletoSacadoDocumentoField } from '@cnab/field/cnab400/boleto-sacado-documento-field'
+import { Cnab400BoletoSacadoDocumentoFieldBase } from '@cnab/field/cnab400/boleto-sacado-documento-field'
 
-// "00"=Isento: título é registrado normalmente sem validar CPF/CNPJ.
-export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends Cnab400BoletoSacadoDocumentoField {
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isOptional(this.rawLine, '7')
-  }
+// Registro de detalhe '7' em vez de '1'. "00"=Isento: título é registrado normalmente
+// sem validar CPF/CNPJ.
+export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends Cnab400BoletoSacadoDocumentoFieldBase {
+  protected readonly recordType = '7'
 
   protected performValidation(): CnabValidationResult {
     const tipoInscricao = this.extractRangeFromLine(218, 220)

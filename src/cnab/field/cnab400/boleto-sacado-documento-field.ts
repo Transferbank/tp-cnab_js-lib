@@ -1,19 +1,23 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
 
-// Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ. BB e Sicredi
-// sobrescrevem (BB: "00"=Isento; Sicredi: indicador de 1 char).
-export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
+const DEFAULT_START = 221
+const DEFAULT_END = 234
+const DEFAULT_RECORD_TYPE = '1'
+
+// Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ.
+export abstract class Cnab400BoletoSacadoDocumentoFieldBase extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
-  readonly range: [number, number] = [221, 234]
+  readonly range: [number, number] = [DEFAULT_START, DEFAULT_END]
+  protected readonly recordType: string = DEFAULT_RECORD_TYPE
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
   protected performValidation(): CnabValidationResult {
@@ -42,5 +46,16 @@ export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
 
   protected parseValue(rawValue: string): string {
     return rawValue
+  }
+}
+
+export function Cnab400BoletoSacadoDocumentoField(
+  start: number = DEFAULT_START,
+  end: number = DEFAULT_END,
+  recordType: string = DEFAULT_RECORD_TYPE
+): CnabFieldClass<string> {
+  return class extends Cnab400BoletoSacadoDocumentoFieldBase {
+    readonly range: [number, number] = [start, end]
+    protected readonly recordType = recordType
   }
 }

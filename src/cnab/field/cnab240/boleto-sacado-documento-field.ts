@@ -1,16 +1,18 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-// Indicador de tipo de inscrição na posição 18: "1"=CPF, "2"=CNPJ. BB sobrescreve por
-// causa do fallback "0"=CNPJ.
-export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
+const DEFAULT_START = 19
+const DEFAULT_END = 33
+
+// Indicador de tipo de inscrição na posição 18: "1"=CPF, "2"=CNPJ.
+export abstract class Cnab240BoletoSacadoDocumentoFieldBase extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
-  readonly range: [number, number] = [19, 33]
+  readonly range: [number, number] = [DEFAULT_START, DEFAULT_END]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
@@ -42,5 +44,11 @@ export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
 
   protected parseValue(rawValue: string): string {
     return rawValue
+  }
+}
+
+export function Cnab240BoletoSacadoDocumentoField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<string> {
+  return class extends Cnab240BoletoSacadoDocumentoFieldBase {
+    readonly range: [number, number] = [start, end]
   }
 }
