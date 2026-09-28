@@ -253,7 +253,7 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoNomeField,
+          Cnab400BoletoNomeField(235, 271, '7'),
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoVencimentoField,
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoValorTituloField,
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField,

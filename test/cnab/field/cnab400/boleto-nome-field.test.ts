@@ -16,7 +16,6 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BoletoNomeField } from '@cnab/field/cnab400/boleto-nome-field'
-import { Cnab400BancoDoBrasilBoletoNomeField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-nome-field'
 
 describe('Cnab400BoletoNomeField', (): void => {
   describe('shouldValidate', (): void => {
@@ -66,7 +65,8 @@ describe('Cnab400BoletoNomeField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400BancoDoBrasilBoletoNomeField(rawLine, 1)
+          const FieldClass = Cnab400BoletoNomeField(235, 271, '7')
+          const field = new FieldClass(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -82,14 +82,14 @@ describe('Cnab400BoletoNomeField', (): void => {
     it('given Itau and Banco do Brasil then each overrides the base range differently', (): void => {
       // Then
       expect(getFieldRange(Cnab400BoletoNomeField(235, 264))).toEqual([235, 264])
-      expect(getFieldRange(Cnab400BancoDoBrasilBoletoNomeField)).toEqual([235, 271])
+      expect(getFieldRange(Cnab400BoletoNomeField(235, 271, '7'))).toEqual([235, 271])
       expect(getFieldRange(Cnab400BoletoNomeField())).toEqual([235, 274])
     })
   })
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BancoDoBrasilBoletoNomeField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' },
+      { FieldClass: Cnab400BoletoNomeField(235, 271, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' },
       { FieldClass: Cnab400BoletoNomeField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstName: 'COMERCIAL ALFA LTDA' },
       { FieldClass: Cnab400BoletoNomeField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstName: 'JOAO DA SILVA EXEMPLO' },
       { FieldClass: Cnab400BoletoNomeField(235, 264), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstName: 'JOAO EXEMPLO SILVA - ME' },
