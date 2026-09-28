@@ -1,4 +1,3 @@
-export { Cnab240ItauBoletoVencimentoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-vencimento-field'
 export { Cnab240ItauBoletoEnderecoField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-endereco-field'
 export { Cnab240ItauBoletoBairroField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-bairro-field'
 export { Cnab240ItauBoletoCepField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-cep-field'

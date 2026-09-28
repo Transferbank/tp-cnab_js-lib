@@ -1,14 +1,17 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export abstract class Cnab240BoletoVencimentoField extends CnabField<Date> {
+const DEFAULT_START = 78
+const DEFAULT_END = 85
+
+abstract class Cnab240BoletoVencimentoFieldBase extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'data de vencimento'
-  readonly range: [number, number] = [78, 85]
+  abstract readonly range: [number, number]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
@@ -42,5 +45,11 @@ export abstract class Cnab240BoletoVencimentoField extends CnabField<Date> {
       throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
     }
     return date
+  }
+}
+
+export function Cnab240BoletoVencimentoField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<Date> {
+  return class extends Cnab240BoletoVencimentoFieldBase {
+    readonly range: [number, number] = [start, end]
   }
 }

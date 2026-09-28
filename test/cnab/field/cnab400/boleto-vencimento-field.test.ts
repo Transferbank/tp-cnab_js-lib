@@ -11,23 +11,18 @@ import {
   createFieldsFromLines,
   getFieldRange
 } from '@test/test-utils'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BoletoVencimentoField } from '@cnab/field/cnab400/boleto-vencimento-field'
-import { Cnab400BancoDoBrasilBoletoVencimentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-vencimento-field'
-import { Cnab400BradescoBoletoVencimentoField } from '@cnab/bank/bradesco/cnab/cnab400/field/cnab400-bradesco-boleto-vencimento-field'
-import { Cnab400CaixaBoletoVencimentoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-vencimento-field'
-import { Cnab400ItauBoletoVencimentoField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-vencimento-field'
-import { Cnab400SantanderBoletoVencimentoField } from '@cnab/bank/santander/cnab/cnab400/field/cnab400-santander-boleto-vencimento-field'
-import { Cnab400SicoobBoletoVencimentoField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-vencimento-field'
-import { Cnab400SicrediBoletoVencimentoField } from '@cnab/bank/sicredi/cnab/cnab400/field/cnab400-sicredi-boleto-vencimento-field'
 
-type VencimentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab400BoletoVencimentoField
-
+// Cnab400BoletoVencimentoField e uma factory: sem argumentos usa o tipo de registro de
+// detalhe padrao (comum a 6 dos 7 bancos). O BB e o unico que diverge, com o registro '7'
+// em vez de '1' - por isso passa esse valor pra factory, sem precisar de subclasse.
 describe('Cnab400BoletoVencimentoField', (): void => {
   describe('shouldValidate', (): void => {
-    describe('para os 6 bancos com registro de detalhe padrao (comeca com 1)', (): void => {
+    describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
       const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
 
       describe.each([
@@ -44,7 +39,8 @@ describe('Cnab400BoletoVencimentoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400BradescoBoletoVencimentoField(rawLine, 1)
+          const FieldClass = Cnab400BoletoVencimentoField()
+          const field = new FieldClass(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -72,7 +68,8 @@ describe('Cnab400BoletoVencimentoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400BancoDoBrasilBoletoVencimentoField(rawLine, 1)
+          const FieldClass = Cnab400BoletoVencimentoField(121, 126, '7')
+          const field = new FieldClass(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -86,17 +83,17 @@ describe('Cnab400BoletoVencimentoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BancoDoBrasilBoletoVencimentoField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 20) },
-      { FieldClass: Cnab400BradescoBoletoVencimentoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: new Date(2026, 7, 24) },
-      { FieldClass: Cnab400CaixaBoletoVencimentoField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
-      { FieldClass: Cnab400ItauBoletoVencimentoField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 6) },
-      { FieldClass: Cnab400SantanderBoletoVencimentoField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) },
-      { FieldClass: Cnab400SicoobBoletoVencimentoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
-      { FieldClass: Cnab400SicrediBoletoVencimentoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) }
+      { FieldClass: Cnab400BoletoVencimentoField(121, 126, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 20) },
+      { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: new Date(2026, 7, 24) },
+      { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
+      { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 6) },
+      { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) },
+      { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
+      { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) }
     ])(
-      'given detail lines with valid due date ($FieldClass.name) when reading value and validating then accepts all lines',
+      'given detail lines with valid due date ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: VencimentoFieldClass
+        FieldClass: CnabFieldClass<Date>
         examplePath: string
         expectedFirstValue: Date
       }): void => {
@@ -108,7 +105,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
         )
 
         // When
-        const results = fields.map((field: Cnab400BoletoVencimentoField) => field.validate())
+        const results = fields.map((field: CnabField<Date>) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
@@ -126,7 +123,8 @@ describe('Cnab400BoletoVencimentoField', (): void => {
 
     it('given detail line with blank date when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BradescoBoletoVencimentoField)
+      const FieldClass = Cnab400BoletoVencimentoField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -139,7 +137,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -153,7 +151,8 @@ describe('Cnab400BoletoVencimentoField', (): void => {
 
     it('given detail line with invalid date when reading value then throws error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BradescoBoletoVencimentoField)
+      const FieldClass = Cnab400BoletoVencimentoField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -166,7 +165,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
 
       // When
-      const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
@@ -175,7 +174,8 @@ describe('Cnab400BoletoVencimentoField', (): void => {
 
     it('given detail line with invalid date when validating then returns format error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BradescoBoletoVencimentoField)
+      const FieldClass = Cnab400BoletoVencimentoField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -188,7 +188,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
 
       // When
-      const field = new Cnab400BradescoBoletoVencimentoField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

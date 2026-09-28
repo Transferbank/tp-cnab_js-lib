@@ -1,4 +1,3 @@
-export { Cnab400CaixaBoletoVencimentoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-vencimento-field'
 export { Cnab400CaixaBoletoEnderecoField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-endereco-field'
 export { Cnab400CaixaBoletoBairroField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-bairro-field'
 export { Cnab400CaixaBoletoCepField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-cep-field'
