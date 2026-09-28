@@ -1,44 +1,7 @@
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { Cnab400BoletoEnderecoField } from '@cnab/field/cnab400/boleto-endereco-field'
 
-export class Cnab400SicoobBoletoEnderecoField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'endereço do sacado'
-  // Layout do Sicoob usa 37 posições aqui (não 40 como os demais bancos) - o Bairro
-  // que vem a seguir começa em 312 pra compensar, mas o CEP em diante já bate igual.
+// Layout do Sicoob usa 37 posições aqui (não 40 como os demais bancos) - o Bairro
+// que vem a seguir começa em 312 pra compensar, mas o CEP em diante já bate igual.
+export class Cnab400SicoobBoletoEnderecoField extends Cnab400BoletoEnderecoField {
   readonly range: [number, number] = [275, 311]
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
-  }
-
-  protected performValidation(): CnabValidationResult {
-    const minLength = 1
-    const value = this.value
-    const isValid = value != null && value.length >= minLength
-    const errors = []
-
-    if (!isValid) {
-      errors.push(
-        new CnabFieldMinLengthError({
-          lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
-          range: this.range,
-          minLength
-        })
-      )
-    }
-
-    return {
-      isValid,
-      errors
-    }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
-  }
 }
