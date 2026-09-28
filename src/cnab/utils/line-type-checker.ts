@@ -3,8 +3,8 @@ export class Cnab400LineTypeChecker {
     return rawLine.startsWith('0')
   }
 
-  static isDetalhe(rawLine: string): boolean {
-    return rawLine.startsWith('1')
+  static isDetalhe(rawLine: string, recordType: string = '1'): boolean {
+    return rawLine.startsWith(recordType)
   }
 
   static isTrailer(rawLine: string): boolean {

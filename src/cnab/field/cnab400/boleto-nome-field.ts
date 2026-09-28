@@ -15,7 +15,7 @@ abstract class Cnab400BoletoNomeFieldBase extends CnabField<string> {
   protected readonly recordType: string = DEFAULT_RECORD_TYPE
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isOptional(this.rawLine, this.recordType)
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
   protected performValidation(): CnabValidationResult {
