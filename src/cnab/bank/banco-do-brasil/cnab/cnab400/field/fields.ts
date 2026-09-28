@@ -1,6 +1,5 @@
 export { Cnab400BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-sacado-documento-field'
 export { Cnab400BancoDoBrasilBoletoEnderecoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-endereco-field'
 export { Cnab400BancoDoBrasilBoletoBairroField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-bairro-field'
-export { Cnab400BancoDoBrasilBoletoCepField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-cep-field'
 export { Cnab400BancoDoBrasilBoletoCidadeField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-cidade-field'
 export { Cnab400BancoDoBrasilBoletoUfField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-uf-field'

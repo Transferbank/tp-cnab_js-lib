@@ -2,23 +2,15 @@ import * as path from 'path'
 import assert from 'node:assert'
 import { resPath } from '@test/test-utils'
 import { describe, it, expect } from '@jest/globals'
+import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoCepField } from '@cnab/field/cnab240/boleto-cep-field'
-import { Cnab240ItauBoletoCepField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-cep-field'
-import { Cnab240CaixaBoletoCepField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-cep-field'
-import { Cnab240SicoobBoletoCepField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-cep-field'
-import { Cnab240SicrediBoletoCepField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-cep-field'
-import { Cnab240BradescoBoletoCepField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-cep-field'
-import { Cnab240SantanderBoletoCepField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-cep-field'
-import { Cnab240BancoDoBrasilBoletoCepField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-cep-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
-
-type CepFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoCepField
 
 describe('Cnab240BoletoCepField', (): void => {
   describe('shouldValidate', (): void => {
@@ -39,7 +31,8 @@ describe('Cnab240BoletoCepField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BradescoBoletoCepField(rawLine, 1)
+        const FieldClass = Cnab240BoletoCepField()
+        const field = new FieldClass(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -52,21 +45,21 @@ describe('Cnab240BoletoCepField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab240BancoDoBrasilBoletoCepField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: '01310100' },
-      { FieldClass: Cnab240BradescoBoletoCepField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: '01234567' },
-      { FieldClass: Cnab240CaixaBoletoCepField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: '01310100' },
-      { FieldClass: Cnab240ItauBoletoCepField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: '01234567' },
-      { FieldClass: Cnab240SantanderBoletoCepField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: '01310100' },
-      { FieldClass: Cnab240SicoobBoletoCepField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: '01310100' },
-      { FieldClass: Cnab240SicrediBoletoCepField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: '01310100' }
+      { examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: '01310100' },
+      { examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: '01234567' },
+      { examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: '01310100' },
+      { examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: '01234567' },
+      { examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: '01310100' },
+      { examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: '01310100' },
+      { examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: '01310100' }
     ])(
-      'given segment Q lines with valid cep ($FieldClass.name) when reading value and validating then accepts all lines',
-      ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: CepFieldClass
+      'given segment Q lines with valid cep ($examplePath) when reading value and validating then accepts all lines',
+      ({ examplePath, expectedFirstValue }: {
         examplePath: string
         expectedFirstValue: string
       }): void => {
         // Given
+        const FieldClass = Cnab240BoletoCepField()
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const fields = createFieldsFromLines(
           filterValidatableLines(lines, FieldClass),
@@ -74,7 +67,7 @@ describe('Cnab240BoletoCepField', (): void => {
         )
 
         // When
-        const results = fields.map((field: Cnab240BoletoCepField) => field.validate())
+        const results = fields.map((field: CnabField<string>) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
@@ -92,7 +85,8 @@ describe('Cnab240BoletoCepField', (): void => {
 
     it('given segment Q line with blank cep when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoCepField)
+      const FieldClass = Cnab240BoletoCepField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -105,7 +99,7 @@ describe('Cnab240BoletoCepField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240BradescoBoletoCepField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -119,7 +113,8 @@ describe('Cnab240BoletoCepField', (): void => {
 
     it('given segment Q line with non-numeric cep when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoCepField)
+      const FieldClass = Cnab240BoletoCepField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -132,7 +127,7 @@ describe('Cnab240BoletoCepField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGH')
 
       // When
-      const field = new Cnab240BradescoBoletoCepField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
