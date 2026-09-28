@@ -52,8 +52,6 @@ describe('Cnab240BradescoBoletoBairroField', (): void => {
       // Then
       expect(fields.length).toBeGreaterThan(0)
       expect(fields[0].value).toBe('CENTRO')
-      // "VILA INDUSTRIAL" tem exatamente os 15 caracteres do range - sem nota de
-      // truncagem pro Bradesco (diferente do BB), então o range completo é usado.
       expect(fields[2].value).toBe('VILA INDUSTRIAL')
 
       results.forEach((result: CnabValidationResult) => {
