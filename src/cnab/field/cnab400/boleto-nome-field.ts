@@ -11,7 +11,7 @@ const DEFAULT_RECORD_TYPE = '1'
 abstract class Cnab400BoletoNomeFieldBase extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
-  abstract readonly range: [number, number]
+  readonly range: [number, number] = [DEFAULT_START, DEFAULT_END]
   protected readonly recordType: string = DEFAULT_RECORD_TYPE
 
   shouldValidate(): boolean {

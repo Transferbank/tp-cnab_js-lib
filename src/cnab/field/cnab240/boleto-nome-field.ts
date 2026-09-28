@@ -10,7 +10,7 @@ const DEFAULT_END = 73
 abstract class Cnab240BoletoNomeFieldBase extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'nome do sacado'
-  abstract readonly range: [number, number]
+  readonly range: [number, number] = [DEFAULT_START, DEFAULT_END]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
