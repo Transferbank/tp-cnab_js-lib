@@ -198,7 +198,12 @@ function registerCnabSchemas(): CnabSchema[] {
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoNomeField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoVencimentoField,
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoValorTituloField,
-          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoSacadoDocumentoField
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoSacadoDocumentoField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoEnderecoField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoBairroField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoCepField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoCidadeField,
+          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoUfField
         ],
       },
     }),
@@ -222,7 +227,12 @@ function registerCnabSchemas(): CnabSchema[] {
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoNomeField,
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoVencimentoField,
           BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoValorTituloField,
-          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoEnderecoField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoBairroField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoCepField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoCidadeField,
+          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoUfField
         ],
       },
     }),
