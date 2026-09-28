@@ -57,7 +57,12 @@ function registerCnabSchemas(): CnabSchema[] {
           BradescoFields240.Cnab240BradescoBoletoNomeField,
           BradescoFields240.Cnab240BradescoBoletoVencimentoField,
           BradescoFields240.Cnab240BradescoBoletoValorTituloField,
-          BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField
+          BradescoFields240.Cnab240BradescoBoletoSacadoDocumentoField,
+          BradescoFields240.Cnab240BradescoBoletoEnderecoField,
+          BradescoFields240.Cnab240BradescoBoletoBairroField,
+          BradescoFields240.Cnab240BradescoBoletoCepField,
+          BradescoFields240.Cnab240BradescoBoletoCidadeField,
+          BradescoFields240.Cnab240BradescoBoletoUfField
         ],
       },
     }),
@@ -81,7 +86,9 @@ function registerCnabSchemas(): CnabSchema[] {
           BradescoFields400.Cnab400BradescoBoletoNomeField,
           BradescoFields400.Cnab400BradescoBoletoVencimentoField,
           BradescoFields400.Cnab400BradescoBoletoValorTituloField,
-          BradescoFields400.Cnab400BradescoBoletoSacadoDocumentoField
+          BradescoFields400.Cnab400BradescoBoletoSacadoDocumentoField,
+          BradescoFields400.Cnab400BradescoBoletoEnderecoField,
+          BradescoFields400.Cnab400BradescoBoletoCepField
         ],
       },
     }),
