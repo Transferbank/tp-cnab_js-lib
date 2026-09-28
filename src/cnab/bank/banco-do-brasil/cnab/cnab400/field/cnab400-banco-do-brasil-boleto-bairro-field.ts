@@ -1,42 +1,9 @@
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { Cnab400BoletoBairroField } from '@cnab/field/cnab400/boleto-bairro-field'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
-export class Cnab400BancoDoBrasilBoletoBairroField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'bairro do sacado'
-  readonly range: [number, number] = [315, 326]
-
+// BB usa um registro de detalhe CNAB400 não-padrão começando com '7' em vez de '1'.
+export class Cnab400BancoDoBrasilBoletoBairroField extends Cnab400BoletoBairroField {
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isOptional(this.rawLine, '7')
-  }
-
-  protected performValidation(): CnabValidationResult {
-    const minLength = 1
-    const value = this.value
-    const isValid = value != null && value.length >= minLength
-    const errors = []
-
-    if (!isValid) {
-      errors.push(
-        new CnabFieldMinLengthError({
-          lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
-          range: this.range,
-          minLength
-        })
-      )
-    }
-
-    return {
-      isValid,
-      errors
-    }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
   }
 }

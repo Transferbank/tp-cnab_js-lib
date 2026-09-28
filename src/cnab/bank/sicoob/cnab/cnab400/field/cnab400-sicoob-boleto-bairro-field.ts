@@ -1,42 +1,7 @@
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { Cnab400BoletoBairroField } from '@cnab/field/cnab400/boleto-bairro-field'
 
-export class Cnab400SicoobBoletoBairroField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'bairro do sacado'
+// Layout do Sicoob desloca esse campo pra 312 (em vez de 315) pra compensar o
+// endereço de 37 posições (não 40 como os demais bancos).
+export class Cnab400SicoobBoletoBairroField extends Cnab400BoletoBairroField {
   readonly range: [number, number] = [312, 326]
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
-  }
-
-  protected performValidation(): CnabValidationResult {
-    const minLength = 1
-    const value = this.value
-    const isValid = value != null && value.length >= minLength
-    const errors = []
-
-    if (!isValid) {
-      errors.push(
-        new CnabFieldMinLengthError({
-          lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
-          range: this.range,
-          minLength
-        })
-      )
-    }
-
-    return {
-      isValid,
-      errors
-    }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
-  }
 }
