@@ -386,7 +386,12 @@ function registerCnabSchemas(): CnabSchema[] {
           SicoobFields240.Cnab240SicoobBoletoNomeField,
           SicoobFields240.Cnab240SicoobBoletoVencimentoField,
           SicoobFields240.Cnab240SicoobBoletoValorTituloField,
-          SicoobFields240.Cnab240SicoobBoletoSacadoDocumentoField
+          SicoobFields240.Cnab240SicoobBoletoSacadoDocumentoField,
+          SicoobFields240.Cnab240SicoobBoletoEnderecoField,
+          SicoobFields240.Cnab240SicoobBoletoBairroField,
+          SicoobFields240.Cnab240SicoobBoletoCepField,
+          SicoobFields240.Cnab240SicoobBoletoCidadeField,
+          SicoobFields240.Cnab240SicoobBoletoUfField
         ],
       },
     }),
@@ -410,7 +415,12 @@ function registerCnabSchemas(): CnabSchema[] {
           SicoobFields400.Cnab400SicoobBoletoNomeField,
           SicoobFields400.Cnab400SicoobBoletoVencimentoField,
           SicoobFields400.Cnab400SicoobBoletoValorTituloField,
-          SicoobFields400.Cnab400SicoobBoletoSacadoDocumentoField
+          SicoobFields400.Cnab400SicoobBoletoSacadoDocumentoField,
+          SicoobFields400.Cnab400SicoobBoletoEnderecoField,
+          SicoobFields400.Cnab400SicoobBoletoBairroField,
+          SicoobFields400.Cnab400SicoobBoletoCepField,
+          SicoobFields400.Cnab400SicoobBoletoCidadeField,
+          SicoobFields400.Cnab400SicoobBoletoUfField
         ],
       },
     }),
