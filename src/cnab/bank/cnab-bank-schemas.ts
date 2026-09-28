@@ -339,7 +339,11 @@ function registerCnabSchemas(): CnabSchema[] {
           SicrediFields240.Cnab240SicrediBoletoNomeField,
           SicrediFields240.Cnab240SicrediBoletoVencimentoField,
           SicrediFields240.Cnab240SicrediBoletoValorTituloField,
-          SicrediFields240.Cnab240SicrediBoletoSacadoDocumentoField
+          SicrediFields240.Cnab240SicrediBoletoSacadoDocumentoField,
+          SicrediFields240.Cnab240SicrediBoletoEnderecoField,
+          SicrediFields240.Cnab240SicrediBoletoCepField,
+          SicrediFields240.Cnab240SicrediBoletoCidadeField,
+          SicrediFields240.Cnab240SicrediBoletoUfField
         ],
       },
     }),
@@ -363,7 +367,9 @@ function registerCnabSchemas(): CnabSchema[] {
           SicrediFields400.Cnab400SicrediBoletoNomeField,
           SicrediFields400.Cnab400SicrediBoletoVencimentoField,
           SicrediFields400.Cnab400SicrediBoletoValorTituloField,
-          SicrediFields400.Cnab400SicrediBoletoSacadoDocumentoField
+          SicrediFields400.Cnab400SicrediBoletoSacadoDocumentoField,
+          SicrediFields400.Cnab400SicrediBoletoEnderecoField,
+          SicrediFields400.Cnab400SicrediBoletoCepField
         ],
       },
     }),
