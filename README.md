@@ -6,6 +6,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 - Detecção automática de banco, formato (CNAB 240 ou CNAB 400) e quantidade de boletos, a partir do próprio conteúdo do arquivo
 - Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
+- Leitura dos boletos, com os valores dos campos já convertidos (texto, número e data)
 - Erros de validação tipados, com linha, campo e mensagem
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
 
@@ -21,7 +22,27 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 | Sicoob                  |    ✅    |    ✅    |
 | Sicredi                 |    ✅    |    ✅    |
 
-Campos de boleto validados hoje, para todos os bancos acima: nome do sacado, data de vencimento, valor do título e documento (CPF/CNPJ) do sacado.
+## Campos de boleto
+
+Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
+
+| Chave                 | Descrição                       | Tipo     |
+| --------------------- | ------------------------------- | -------- |
+| `nome_do_sacado`      | Nome do sacado                  | `string` |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado  | `string` |
+| `data_de_vencimento`  | Data de vencimento              | `Date`   |
+| `valor_do_titulo`     | Valor do título, em reais       | `number` |
+| `endereco_do_sacado`  | Endereço do sacado              | `string` |
+| `bairro_do_sacado`    | Bairro do sacado                | `string` |
+| `cep_do_sacado`       | CEP do sacado                   | `string` |
+| `cidade_do_sacado`    | Cidade do sacado                | `string` |
+| `uf_do_sacado`        | UF do sacado                    | `string` |
+
+Todos os campos são validados e lidos em todos os bancos acima, exceto quando o layout do banco não tem o campo:
+
+- Bradesco CNAB 400: sem bairro, cidade e UF
+- Sicredi CNAB 240: sem bairro
+- Sicredi CNAB 400: sem bairro, cidade e UF
 
 ## Instalação
 
@@ -82,16 +103,58 @@ Passe `true` para feedback completo
 const result = cnabFile.validate(true)
 ```
 
+### Lendo os boletos
+
+`read()` valida o arquivo e devolve um `Cnab` com a lista de boletos. Cada `CnabBoleto` traz em `fields` os valores dos campos preenchidos, indexados pela chave do campo:
+
+```ts
+const cnab = cnabFile.read()
+
+for (const boleto of cnab.boletos) {
+  boleto.fields.nome_do_sacado // ex: 'JOAO EXEMPLO SILVA'
+  boleto.fields.valor_do_titulo // ex: 10000
+  boleto.fields.data_de_vencimento // ex: Date(2026-12-15)
+}
+```
+
+Campos vazios no arquivo não aparecem em `fields`.
+
+Se o arquivo for inválido, `read()` lança `CnabInvalidFileException`, com o primeiro erro de validação encontrado em `errors`:
+
+```ts
+import { CnabInvalidFileException } from '@transferhub/cnab-lib-ts'
+
+try {
+  const cnab = cnabFile.read()
+} catch (error) {
+  if (error instanceof CnabInvalidFileException) {
+    console.log(error.message, error.errors)
+  }
+}
+```
+
 ### Tratando erros de validação
 
-Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey` e `range`.
+Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
 
 ```ts
 import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'
 
 for (const error of result.errors) {
   if (error instanceof CnabFieldValidationError) {
-    console.log(error.fieldKey, error.message)
+    console.log(error.fieldKey, error.fieldLabel, error.message)
   }
 }
 ```
+
+### Exceções
+
+Problemas que impedem o processamento do arquivo lançam exceções que estendem `CnabException`:
+
+| Exceção                               | Quando                                            |
+| ------------------------------------- | ------------------------------------------------- |
+| `CnabMinimumLinesNotReachedException` | O arquivo tem menos de 3 linhas                   |
+| `CnabFormatNotRecognizedException`    | A primeira linha não tem 240 nem 400 caracteres   |
+| `CnabBankCodeNotFoundException`       | O código do banco no header não é reconhecido     |
+| `CnabBankSchemaNotFoundException`     | O banco não tem suporte para o formato do arquivo |
+| `CnabInvalidFileException`            | `read()` em um arquivo que não passa na validação |
