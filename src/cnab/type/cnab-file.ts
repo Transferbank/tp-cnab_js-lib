@@ -10,7 +10,6 @@ import {
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException,
-  CnabInvalidFileException
 } from '@cnab/exception/cnab-exception'
 
 export class CnabFile {
@@ -76,12 +75,7 @@ export class CnabFile {
 
   read(extraFields?: CnabFieldClass[]): Cnab {
     extraFields = extraFields ?? []
-
-    const result = this.validate(false, extraFields)
-    if (!result.isValid) {
-      throw new CnabInvalidFileException(result.errors)
-    }
-
+    this.validate(false, extraFields)
     return this.schema.extractCnab(this.rawLines, extraFields)
   }
 }
