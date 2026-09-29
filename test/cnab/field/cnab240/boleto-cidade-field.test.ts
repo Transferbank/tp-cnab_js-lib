@@ -6,19 +6,10 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoCidadeField } from '@cnab/field/cnab240/boleto-cidade-field'
-import { Cnab240ItauBoletoCidadeField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-cidade-field'
-import { Cnab240CaixaBoletoCidadeField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-cidade-field'
-import { Cnab240SicoobBoletoCidadeField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-cidade-field'
-import { Cnab240SicrediBoletoCidadeField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-cidade-field'
-import { Cnab240BradescoBoletoCidadeField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-cidade-field'
-import { Cnab240SantanderBoletoCidadeField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-cidade-field'
-import { Cnab240BancoDoBrasilBoletoCidadeField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-cidade-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
-
-type CidadeFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoCidadeField
 
 describe('Cnab240BoletoCidadeField', (): void => {
   describe('shouldValidate', (): void => {
@@ -39,7 +30,7 @@ describe('Cnab240BoletoCidadeField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BradescoBoletoCidadeField(rawLine, 1)
+        const field = new Cnab240BoletoCidadeField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -52,25 +43,24 @@ describe('Cnab240BoletoCidadeField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab240BancoDoBrasilBoletoCidadeField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
-      { FieldClass: Cnab240BradescoBoletoCidadeField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
-      { FieldClass: Cnab240CaixaBoletoCidadeField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
-      { FieldClass: Cnab240ItauBoletoCidadeField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
-      { FieldClass: Cnab240SantanderBoletoCidadeField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
-      { FieldClass: Cnab240SicoobBoletoCidadeField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
-      { FieldClass: Cnab240SicrediBoletoCidadeField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'SAO PAULO' }
+      { examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
+      { examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
+      { examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
+      { examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
+      { examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
+      { examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'SAO PAULO' },
+      { examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'SAO PAULO' }
     ])(
-      'given segment Q lines with valid city ($FieldClass.name) when reading value and validating then accepts all lines',
-      ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: CidadeFieldClass
+      'given segment Q lines with valid city ($examplePath) when reading value and validating then accepts all lines',
+      ({ examplePath, expectedFirstValue }: {
         examplePath: string
         expectedFirstValue: string
       }): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const fields = createFieldsFromLines(
-          filterValidatableLines(lines, FieldClass),
-          FieldClass
+          filterValidatableLines(lines, Cnab240BoletoCidadeField),
+          Cnab240BoletoCidadeField
         )
 
         // When
@@ -92,7 +82,7 @@ describe('Cnab240BoletoCidadeField', (): void => {
 
     it('given segment Q line with blank city when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoCidadeField)
+      const fieldRange = getFieldRange(Cnab240BoletoCidadeField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -105,7 +95,7 @@ describe('Cnab240BoletoCidadeField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240BradescoBoletoCidadeField(invalidLine, lineNumber)
+      const field = new Cnab240BoletoCidadeField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
