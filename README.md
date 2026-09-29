@@ -119,20 +119,6 @@ for (const boleto of cnab.boletos) {
 
 Campos vazios no arquivo não aparecem em `fields`.
 
-Se o arquivo for inválido, `read()` lança `CnabInvalidFileException`, com o primeiro erro de validação encontrado em `errors`:
-
-```ts
-import { CnabInvalidFileException } from '@transferhub/cnab-lib-ts'
-
-try {
-  const cnab = cnabFile.read()
-} catch (error) {
-  if (error instanceof CnabInvalidFileException) {
-    console.log(error.message, error.errors)
-  }
-}
-```
-
 ### Tratando erros de validação
 
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
