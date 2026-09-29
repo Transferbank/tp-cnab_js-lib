@@ -1,5 +1,4 @@
 export { Cnab400SicoobBoletoEnderecoField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-endereco-field'
 export { Cnab400SicoobBoletoBairroField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-bairro-field'
-export { Cnab400SicoobBoletoCepField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-cep-field'
 export { Cnab400SicoobBoletoCidadeField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-cidade-field'
 export { Cnab400SicoobBoletoUfField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-uf-field'

@@ -4,8 +4,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-// Manual separa CEP (129-133) e sufixo (134-136); unificado aqui num único campo de 8 dígitos.
-export class Cnab240BancoDoBrasilBoletoCepField extends CnabField<string> {
+export class Cnab240BoletoCepField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'cep do sacado'
   readonly range: [number, number] = [129, 136]
