@@ -52,6 +52,7 @@ test/**/*.d.ts.map
 .claude/testing-knowledge/
 
 # Configuração pessoal do Claude Code (permissões locais, não compartilhar)
+.claude/settings.json
 .claude/settings.local.json
 
 # Optional REPL history
