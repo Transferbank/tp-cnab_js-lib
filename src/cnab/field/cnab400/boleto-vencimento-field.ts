@@ -9,54 +9,49 @@ const DEFAULT_START = 121
 const DEFAULT_END = 126
 const DEFAULT_RECORD_TYPE = '1'
 
-abstract class Cnab400BoletoVencimentoFieldBase extends CnabField<Date> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'data de vencimento'
-  abstract readonly range: [number, number]
-  protected readonly recordType: string = DEFAULT_RECORD_TYPE
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
-  }
-
-  protected performValidation(): CnabValidationResult {
-    const value = this.value
-    const isValid = value != null
-    const errors = []
-
-    if (!isValid) {
-      errors.push(
-        new CnabGenericFieldError({
-          message: 'Campo data de vencimento é obrigatório',
-          lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
-          range: this.range
-        })
-      )
-    }
-
-    return {
-      isValid,
-      errors
-    }
-  }
-
-  protected parseValue(rawValue: string): Date {
-    const date = parseDateDDMMAA(rawValue)
-    if (date == null) {
-      throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
-    }
-    return date
-  }
-}
-
 export function Cnab400BoletoVencimentoField(
   start: number = DEFAULT_START,
   end: number = DEFAULT_END,
   recordType: string = DEFAULT_RECORD_TYPE
 ): CnabFieldClass<Date> {
-  return class extends Cnab400BoletoVencimentoFieldBase {
+  return class extends CnabField<Date> {
+    static readonly fieldType = CnabFieldType.BOLETO
+    readonly fieldName = 'data de vencimento'
     readonly range: [number, number] = [start, end]
     protected readonly recordType = recordType
+
+    shouldValidate(): boolean {
+      return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
+    }
+
+    protected performValidation(): CnabValidationResult {
+      const value = this.value
+      const isValid = value != null
+      const errors = []
+
+      if (!isValid) {
+        errors.push(
+          new CnabGenericFieldError({
+            message: 'Campo data de vencimento é obrigatório',
+            lineNumber: this.lineNumber,
+            fieldName: this.fieldName,
+            range: this.range
+          })
+        )
+      }
+
+      return {
+        isValid,
+        errors
+      }
+    }
+
+    protected parseValue(rawValue: string): Date {
+      const date = parseDateDDMMAA(rawValue)
+      if (date == null) {
+        throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
+      }
+      return date
+    }
   }
 }
