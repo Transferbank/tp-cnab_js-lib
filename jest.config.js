@@ -22,6 +22,7 @@ module.exports = {
     '^@cnab/utils/(.*)$': '<rootDir>/src/cnab/utils/$1',
     '^@cnab/bank/(.*)$': '<rootDir>/src/cnab/bank/$1',
     '^@cnab/field/(.*)$': '<rootDir>/src/cnab/field/$1',
+    '^@cnab/group-rule/(.*)$': '<rootDir>/src/cnab/group-rule/$1',
     '^@test/(.*)$': '<rootDir>/test/$1',
   },
 }

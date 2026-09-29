@@ -26,6 +26,7 @@
       "@cnab/utils/*": ["src/cnab/utils/*"],
       "@cnab/bank/*": ["src/cnab/bank/*"],
       "@cnab/field/*": ["src/cnab/field/*"],
+      "@cnab/group-rule/*": ["src/cnab/group-rule/*"],
       "@test/*": ["test/*"]
     }
   },
