@@ -1,41 +1,46 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 
-export abstract class Cnab400BoletoUfField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'uf do sacado'
-  readonly range: [number, number] = [350, 351]
+const DEFAULT_RECORD_TYPE = '1'
 
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
-  }
+export function Cnab400BoletoUfField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<string> {
+  return class extends CnabField<string> {
+    static readonly fieldType = CnabFieldType.BOLETO
+    readonly fieldName = 'uf do sacado'
+    readonly range: [number, number] = [350, 351]
+    protected readonly recordType = recordType
 
-  protected performValidation(): CnabValidationResult {
-    const value = this.value
-    const isValid = value != null && /^[A-Za-z]{2}$/.test(value)
-    const errors = []
-
-    if (!isValid) {
-      errors.push(
-        new CnabGenericFieldError({
-          message: 'Campo uf do sacado inválido: deve conter exatamente 2 letras',
-          lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
-          range: this.range
-        })
-      )
+    shouldValidate(): boolean {
+      return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
     }
 
-    return {
-      isValid,
-      errors
-    }
-  }
+    protected performValidation(): CnabValidationResult {
+      const value = this.value
+      const isValid = value != null && /^[A-Za-z]{2}$/.test(value)
+      const errors = []
 
-  protected parseValue(rawValue: string): string {
-    return rawValue
+      if (!isValid) {
+        errors.push(
+          new CnabGenericFieldError({
+            message: 'Campo uf do sacado inválido: deve conter exatamente 2 letras',
+            lineNumber: this.lineNumber,
+            fieldName: this.fieldName,
+            range: this.range
+          })
+        )
+      }
+
+      return {
+        isValid,
+        errors
+      }
+    }
+
+    protected parseValue(rawValue: string): string {
+      return rawValue
+    }
   }
 }

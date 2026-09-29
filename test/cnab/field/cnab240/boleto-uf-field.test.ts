@@ -6,19 +6,10 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoUfField } from '@cnab/field/cnab240/boleto-uf-field'
-import { Cnab240ItauBoletoUfField } from '@cnab/bank/itau/cnab/cnab240/field/cnab240-itau-boleto-uf-field'
-import { Cnab240CaixaBoletoUfField } from '@cnab/bank/caixa/cnab/cnab240/field/cnab240-caixa-boleto-uf-field'
-import { Cnab240SicoobBoletoUfField } from '@cnab/bank/sicoob/cnab/cnab240/field/cnab240-sicoob-boleto-uf-field'
-import { Cnab240SicrediBoletoUfField } from '@cnab/bank/sicredi/cnab/cnab240/field/cnab240-sicredi-boleto-uf-field'
-import { Cnab240BradescoBoletoUfField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-uf-field'
-import { Cnab240SantanderBoletoUfField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-uf-field'
-import { Cnab240BancoDoBrasilBoletoUfField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-uf-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
-
-type UfFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoUfField
 
 describe('Cnab240BoletoUfField', (): void => {
   describe('shouldValidate', (): void => {
@@ -39,7 +30,7 @@ describe('Cnab240BoletoUfField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BradescoBoletoUfField(rawLine, 1)
+        const field = new Cnab240BoletoUfField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -52,25 +43,24 @@ describe('Cnab240BoletoUfField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab240BancoDoBrasilBoletoUfField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'SP' },
-      { FieldClass: Cnab240BradescoBoletoUfField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'SP' },
-      { FieldClass: Cnab240CaixaBoletoUfField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'SP' },
-      { FieldClass: Cnab240ItauBoletoUfField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'SP' },
-      { FieldClass: Cnab240SantanderBoletoUfField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'SP' },
-      { FieldClass: Cnab240SicoobBoletoUfField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'SP' },
-      { FieldClass: Cnab240SicrediBoletoUfField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'SP' }
+      { examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'SP' },
+      { examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'SP' },
+      { examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'SP' },
+      { examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'SP' },
+      { examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'SP' },
+      { examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'SP' },
+      { examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'SP' }
     ])(
-      'given segment Q lines with valid uf ($FieldClass.name) when reading value and validating then accepts all lines',
-      ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: UfFieldClass
+      'given segment Q lines with valid uf ($examplePath) when reading value and validating then accepts all lines',
+      ({ examplePath, expectedFirstValue }: {
         examplePath: string
         expectedFirstValue: string
       }): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const fields = createFieldsFromLines(
-          filterValidatableLines(lines, FieldClass),
-          FieldClass
+          filterValidatableLines(lines, Cnab240BoletoUfField),
+          Cnab240BoletoUfField
         )
 
         // When
@@ -92,7 +82,7 @@ describe('Cnab240BoletoUfField', (): void => {
 
     it('given segment Q line with blank uf when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoUfField)
+      const fieldRange = getFieldRange(Cnab240BoletoUfField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -105,7 +95,7 @@ describe('Cnab240BoletoUfField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240BradescoBoletoUfField(invalidLine, lineNumber)
+      const field = new Cnab240BoletoUfField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -119,7 +109,7 @@ describe('Cnab240BoletoUfField', (): void => {
 
     it('given segment Q line with only one letter of uf when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BradescoBoletoUfField)
+      const fieldRange = getFieldRange(Cnab240BoletoUfField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -132,7 +122,7 @@ describe('Cnab240BoletoUfField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'S')
 
       // When
-      const field = new Cnab240BradescoBoletoUfField(invalidLine, lineNumber)
+      const field = new Cnab240BoletoUfField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
