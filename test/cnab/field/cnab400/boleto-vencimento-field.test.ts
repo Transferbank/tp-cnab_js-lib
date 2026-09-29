@@ -17,9 +17,6 @@ import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cna
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BoletoVencimentoField } from '@cnab/field/cnab400/boleto-vencimento-field'
 
-// Cnab400BoletoVencimentoField e uma factory: sem argumentos usa o tipo de registro de
-// detalhe padrao (comum a 6 dos 7 bancos). O BB e o unico que diverge, com o registro '7'
-// em vez de '1' - por isso passa esse valor pra factory, sem precisar de subclasse.
 describe('Cnab400BoletoVencimentoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
@@ -68,7 +65,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoVencimentoField(121, 126, '7')
+          const FieldClass = Cnab400BoletoVencimentoField('7')
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -83,7 +80,7 @@ describe('Cnab400BoletoVencimentoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BoletoVencimentoField(121, 126, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 20) },
+      { FieldClass: Cnab400BoletoVencimentoField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 20) },
       { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: new Date(2026, 7, 24) },
       { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
       { FieldClass: Cnab400BoletoVencimentoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 6) },

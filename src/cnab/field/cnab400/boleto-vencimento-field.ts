@@ -5,19 +5,13 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 
-const DEFAULT_START = 121
-const DEFAULT_END = 126
 const DEFAULT_RECORD_TYPE = '1'
 
-export function Cnab400BoletoVencimentoField(
-  start: number = DEFAULT_START,
-  end: number = DEFAULT_END,
-  recordType: string = DEFAULT_RECORD_TYPE
-): CnabFieldClass<Date> {
+export function Cnab400BoletoVencimentoField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<Date> {
   return class extends CnabField<Date> {
     static readonly fieldType = CnabFieldType.BOLETO
     readonly fieldName = 'data de vencimento'
-    readonly range: [number, number] = [start, end]
+    readonly range: [number, number] = [121, 126]
     protected readonly recordType = recordType
 
     shouldValidate(): boolean {

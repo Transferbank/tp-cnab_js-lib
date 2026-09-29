@@ -31,7 +31,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const FieldClass = Cnab240BoletoVencimentoField()
+        const FieldClass = Cnab240BoletoVencimentoField
         const field = new FieldClass(rawLine, 1)
 
         // When
@@ -58,7 +58,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
         examplePath: string
       }): void => {
         // Given
-        const FieldClass = Cnab240BoletoVencimentoField()
+        const FieldClass = Cnab240BoletoVencimentoField
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const fields = createFieldsFromLines(
           filterValidatableLines(lines, FieldClass),
@@ -84,7 +84,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
 
     it('given segment P line with blank date when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoVencimentoField()
+      const FieldClass = Cnab240BoletoVencimentoField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -112,7 +112,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
 
     it('given segment P line with invalid date when reading value then throws error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoVencimentoField()
+      const FieldClass = Cnab240BoletoVencimentoField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -135,7 +135,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
 
     it('given segment P line with invalid date when validating then returns format error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoVencimentoField()
+      const FieldClass = Cnab240BoletoVencimentoField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
