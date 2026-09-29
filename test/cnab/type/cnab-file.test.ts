@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
+import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { readExampleLines, resPath } from '@test/test-utils'
 
@@ -207,5 +208,32 @@ describe('cnab-file', (): void => {
     // Then
     expect(cnab.boletos.length).toBe(cnabFile.boletoCount)
     expect(cnab.boletos[0]).toEqual(expectedFirstBoleto)
+  })
+
+  it('given document file with invalid lines when reading then throws with the first validation error', (): void => {
+    // Given
+    const truncatedSize = 5
+    const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
+    rawLines[2] = rawLines[2].substring(0, truncatedSize)
+    rawLines[4] = rawLines[4].substring(0, truncatedSize)
+    const cnabFile = CnabFile.fromLines(rawLines)
+    const expectedErrors = [
+      new CnabInvalidLineSizeError({ lineNumber: 2, expectedSize: 400, actualSize: truncatedSize })
+    ]
+
+    // When
+    const read = (): unknown => cnabFile.read()
+
+    // Then
+    expect(read).toThrow(CnabInvalidFileException)
+    expect(read).toThrow(
+      'Arquivo CNAB inválido: 1 erro(s) encontrado(s). ' +
+      'Primeiro erro na linha 3: Tamanho de linha inválido: esperado 400, recebido 5'
+    )
+    try {
+      cnabFile.read()
+    } catch (error) {
+      expect((error as CnabInvalidFileException).errors).toEqual(expectedErrors)
+    }
   })
 })

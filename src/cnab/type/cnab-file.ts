@@ -9,7 +9,8 @@ import {
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,
-  CnabBankSchemaNotFoundException
+  CnabBankSchemaNotFoundException,
+  CnabInvalidFileException
 } from '@cnab/exception/cnab-exception'
 
 export class CnabFile {
@@ -74,10 +75,13 @@ export class CnabFile {
   }
 
   read(extraFields?: CnabFieldClass[]): Cnab {
-    // TODO: Verificar resultado da validação e lançar erro se inválido
-    // Atualmente, erros de validação de campo não impedem o read()
     extraFields = extraFields ?? []
-    this.validate(false, extraFields)
+
+    const result = this.validate(false, extraFields)
+    if (!result.isValid) {
+      throw new CnabInvalidFileException(result.errors)
+    }
+
     return this.schema.extractCnab(this.rawLines, extraFields)
   }
 }
