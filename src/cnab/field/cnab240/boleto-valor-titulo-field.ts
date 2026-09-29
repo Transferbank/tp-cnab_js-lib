@@ -1,50 +1,45 @@
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-const DEFAULT_START = 86
-const DEFAULT_END = 100
+export class Cnab240BoletoValorTituloField extends CnabField<number> {
+  static readonly fieldType = CnabFieldType.BOLETO
+  readonly fieldName = 'valor do título'
+  readonly range: [number, number] = [86, 100]
 
-export function Cnab240BoletoValorTituloField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<number> {
-  return class extends CnabField<number> {
-    static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'valor do título'
-    readonly range: [number, number] = [start, end]
+  shouldValidate(): boolean {
+    return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
+  }
 
-    shouldValidate(): boolean {
-      return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
+  protected performValidation(): CnabValidationResult {
+    const value = this.value
+    const isValid = value != null && value > 0
+    const errors = []
+
+    if (!isValid) {
+      errors.push(
+        new CnabGenericFieldError({
+          message: 'Campo valor do título inválido: deve ser maior que zero',
+          lineNumber: this.lineNumber,
+          fieldName: this.fieldName,
+          range: this.range
+        })
+      )
     }
 
-    protected performValidation(): CnabValidationResult {
-      const value = this.value
-      const isValid = value != null && value > 0
-      const errors = []
+    return {
+      isValid,
+      errors
+    }
+  }
 
-      if (!isValid) {
-        errors.push(
-          new CnabGenericFieldError({
-            message: 'Campo valor do título inválido: deve ser maior que zero',
-            lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
-            range: this.range
-          })
-        )
-      }
-
-      return {
-        isValid,
-        errors
-      }
+  protected parseValue(rawValue: string): number {
+    if (!/^\d+$/.test(rawValue)) {
+      throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
     }
 
-    protected parseValue(rawValue: string): number {
-      if (!/^\d+$/.test(rawValue)) {
-        throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
-      }
-
-      return parseInt(rawValue, 10) / 100
-    }
+    return parseInt(rawValue, 10) / 100
   }
 }
