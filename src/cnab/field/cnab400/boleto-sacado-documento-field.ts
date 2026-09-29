@@ -1,19 +1,15 @@
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
 
-const DEFAULT_START = 221
-const DEFAULT_END = 234
-const DEFAULT_RECORD_TYPE = '1'
-
-export abstract class Cnab400BoletoSacadoDocumentoFieldBase extends CnabField<string> {
+export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
-  readonly range: [number, number] = [DEFAULT_START, DEFAULT_END]
-  protected readonly recordType: string = DEFAULT_RECORD_TYPE
+  readonly range: [number, number] = [221, 234]
+  protected readonly recordType: string = '1'
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
@@ -46,16 +42,5 @@ export abstract class Cnab400BoletoSacadoDocumentoFieldBase extends CnabField<st
 
   protected parseValue(rawValue: string): string {
     return rawValue
-  }
-}
-
-export function Cnab400BoletoSacadoDocumentoField(
-  start: number = DEFAULT_START,
-  end: number = DEFAULT_END,
-  recordType: string = DEFAULT_RECORD_TYPE
-): CnabFieldClass<string> {
-  return class extends Cnab400BoletoSacadoDocumentoFieldBase {
-    readonly range: [number, number] = [start, end]
-    protected readonly recordType = recordType
   }
 }

@@ -1,10 +1,10 @@
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
-import { Cnab400BoletoSacadoDocumentoFieldBase } from '@cnab/field/cnab400/boleto-sacado-documento-field'
+import { Cnab400BoletoSacadoDocumentoField } from '@cnab/field/cnab400/boleto-sacado-documento-field'
 
 // Indicador ocupa só 1 char (pos. 219); 220 é filler fixo "0".
-export class Cnab400SicrediBoletoSacadoDocumentoField extends Cnab400BoletoSacadoDocumentoFieldBase {
+export class Cnab400SicrediBoletoSacadoDocumentoField extends Cnab400BoletoSacadoDocumentoField {
   protected performValidation(): CnabValidationResult {
     const value = this.value as string | null
     const tipoInscricao = this.extractRangeFromLine(218, 219)

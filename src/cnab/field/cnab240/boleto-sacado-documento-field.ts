@@ -1,17 +1,14 @@
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-const DEFAULT_START = 19
-const DEFAULT_END = 33
-
-export abstract class Cnab240BoletoSacadoDocumentoFieldBase extends CnabField<string> {
+export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
-  readonly range: [number, number] = [DEFAULT_START, DEFAULT_END]
+  readonly range: [number, number] = [19, 33]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
@@ -44,11 +41,5 @@ export abstract class Cnab240BoletoSacadoDocumentoFieldBase extends CnabField<st
 
   protected parseValue(rawValue: string): string {
     return rawValue
-  }
-}
-
-export function Cnab240BoletoSacadoDocumentoField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<string> {
-  return class extends Cnab240BoletoSacadoDocumentoFieldBase {
-    readonly range: [number, number] = [start, end]
   }
 }
