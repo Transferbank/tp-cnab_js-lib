@@ -31,7 +31,7 @@ describe('Cnab240BoletoCepField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const FieldClass = Cnab240BoletoCepField()
+        const FieldClass = Cnab240BoletoCepField
         const field = new FieldClass(rawLine, 1)
 
         // When
@@ -59,7 +59,7 @@ describe('Cnab240BoletoCepField', (): void => {
         expectedFirstValue: string
       }): void => {
         // Given
-        const FieldClass = Cnab240BoletoCepField()
+        const FieldClass = Cnab240BoletoCepField
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const fields = createFieldsFromLines(
           filterValidatableLines(lines, FieldClass),
@@ -85,7 +85,7 @@ describe('Cnab240BoletoCepField', (): void => {
 
     it('given segment Q line with blank cep when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoCepField()
+      const FieldClass = Cnab240BoletoCepField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -113,7 +113,7 @@ describe('Cnab240BoletoCepField', (): void => {
 
     it('given segment Q line with non-numeric cep when validating then returns field error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoCepField()
+      const FieldClass = Cnab240BoletoCepField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))

@@ -1,16 +1,13 @@
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-const DEFAULT_START = 129
-const DEFAULT_END = 136
-
-abstract class Cnab240BoletoCepFieldBase extends CnabField<string> {
+export class Cnab240BoletoCepField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'cep do sacado'
-  abstract readonly range: [number, number]
+  readonly range: [number, number] = [129, 136]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
@@ -40,11 +37,5 @@ abstract class Cnab240BoletoCepFieldBase extends CnabField<string> {
 
   protected parseValue(rawValue: string): string {
     return rawValue
-  }
-}
-
-export function Cnab240BoletoCepField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<string> {
-  return class extends Cnab240BoletoCepFieldBase {
-    readonly range: [number, number] = [start, end]
   }
 }

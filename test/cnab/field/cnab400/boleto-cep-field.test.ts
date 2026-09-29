@@ -65,7 +65,7 @@ describe('Cnab400BoletoCepField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoCepField(327, 334, '7')
+          const FieldClass = Cnab400BoletoCepField('7')
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -80,7 +80,7 @@ describe('Cnab400BoletoCepField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BoletoCepField(327, 334, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: '78285000' },
+      { FieldClass: Cnab400BoletoCepField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: '78285000' },
       { FieldClass: Cnab400BoletoCepField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: '29045402' },
       { FieldClass: Cnab400BoletoCepField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: '01310100' },
       { FieldClass: Cnab400BoletoCepField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: '63540000' },
