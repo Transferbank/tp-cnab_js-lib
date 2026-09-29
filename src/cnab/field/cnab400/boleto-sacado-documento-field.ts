@@ -9,7 +9,6 @@ const DEFAULT_START = 221
 const DEFAULT_END = 234
 const DEFAULT_RECORD_TYPE = '1'
 
-// Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ.
 export abstract class Cnab400BoletoSacadoDocumentoFieldBase extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
@@ -22,6 +21,7 @@ export abstract class Cnab400BoletoSacadoDocumentoFieldBase extends CnabField<st
 
   protected performValidation(): CnabValidationResult {
     const value = this.value as string | null
+    // Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ.
     const tipoInscricao = this.extractRangeFromLine(218, 220)
     const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '01', '02')
 

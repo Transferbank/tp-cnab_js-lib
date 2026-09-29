@@ -8,7 +8,6 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 const DEFAULT_START = 19
 const DEFAULT_END = 33
 
-// Indicador de tipo de inscrição na posição 18: "1"=CPF, "2"=CNPJ.
 export abstract class Cnab240BoletoSacadoDocumentoFieldBase extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'documento do sacado'
@@ -20,6 +19,7 @@ export abstract class Cnab240BoletoSacadoDocumentoFieldBase extends CnabField<st
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
+    // Indicador de tipo de inscrição na posição 18: "1"=CPF, "2"=CNPJ.
     const tipoInscricao = this.extractRangeFromLine(17, 18)
     const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '1', '2')
 
