@@ -1,4 +1,0 @@
-export { Cnab400ItauBoletoEnderecoField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-endereco-field'
-export { Cnab400ItauBoletoBairroField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-bairro-field'
-export { Cnab400ItauBoletoCidadeField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-cidade-field'
-export { Cnab400ItauBoletoUfField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-uf-field'
