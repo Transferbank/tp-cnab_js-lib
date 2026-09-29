@@ -2,7 +2,7 @@
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
-import { Cnab400BradescoGroupRule } from '@cnab/bank/bradesco/cnab/cnab400/cnab-400-bradesco-group-rule'
+import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
 
 export function genCnabSchemaStub(
   bank: CnabBank = CnabBank.BRADESCO,
@@ -11,7 +11,7 @@ export function genCnabSchemaStub(
   return new CnabSchema({
     bank,
     fmt,
-    boletoGroupRule: new Cnab400BradescoGroupRule(),
+    boletoGroupRule: new Cnab400BoletoGroupRule(),
     header: {
       fieldType: CnabFieldType.HEADER,
       fields: []
