@@ -6,7 +6,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BoletoCepField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'cep do sacado'
+  readonly fieldKey = 'cep_do_sacado'
   readonly range: [number, number] = [129, 136]
 
   shouldValidate(): boolean {
@@ -23,7 +23,7 @@ export class Cnab240BoletoCepField extends CnabField<string> {
         new CnabGenericFieldError({
           message: 'Campo cep do sacado inválido: deve conter 8 dígitos numéricos',
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range
         })
       )

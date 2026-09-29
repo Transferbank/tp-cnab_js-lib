@@ -9,7 +9,7 @@ const DEFAULT_RECORD_TYPE = '1'
 export function Cnab400BoletoValorTituloField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<number> {
   return class extends CnabField<number> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'valor do título'
+    readonly fieldKey = 'valor_do_titulo'
     readonly range: [number, number] = [127, 139]
     protected readonly recordType = recordType
 
@@ -27,7 +27,7 @@ export function Cnab400BoletoValorTituloField(recordType: string = DEFAULT_RECOR
           new CnabGenericFieldError({
             message: 'Campo valor do título inválido: deve ser maior que zero',
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range
           })
         )
@@ -41,7 +41,7 @@ export function Cnab400BoletoValorTituloField(recordType: string = DEFAULT_RECOR
 
     protected parseValue(rawValue: string): number {
       if (!/^\d+$/.test(rawValue)) {
-        throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
+        throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
       }
 
       return parseInt(rawValue, 10) / 100

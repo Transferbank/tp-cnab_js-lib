@@ -1,5 +1,6 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabValidationError } from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabException extends Error {
   constructor(message: string) {
@@ -35,6 +36,19 @@ export class CnabBankSchemaNotFoundException extends CnabException {
 export class CnabGroupRuleNotFoundException extends CnabException {
   constructor(bank: CnabBank, cnabFormat: CnabFormat) {
     super(`Regra de agrupamento não encontrada para banco ${bank} no formato CNAB${cnabFormat}`)
+  }
+}
+
+export class CnabInvalidFileException extends CnabException {
+  readonly errors: CnabValidationError[]
+
+  constructor(errors: CnabValidationError[]) {
+    const [firstError] = errors
+    super(
+      `Arquivo CNAB inválido: ${errors.length} erro(s) encontrado(s). ` +
+      `Primeiro erro na linha ${firstError.lineNumber + 1}: ${firstError.message}`
+    )
+    this.errors = errors
   }
 }
 

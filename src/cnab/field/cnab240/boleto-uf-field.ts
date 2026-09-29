@@ -6,7 +6,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BoletoUfField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'uf do sacado'
+  readonly fieldKey = 'uf_do_sacado'
   readonly range: [number, number] = [152, 153]
 
   shouldValidate(): boolean {
@@ -23,7 +23,7 @@ export class Cnab240BoletoUfField extends CnabField<string> {
         new CnabGenericFieldError({
           message: 'Campo uf do sacado inválido: deve conter exatamente 2 letras',
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range
         })
       )

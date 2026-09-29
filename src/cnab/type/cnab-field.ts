@@ -8,7 +8,7 @@ import {
 export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
-  abstract readonly fieldName: string
+  abstract readonly fieldKey: string
   // O range começa a partir de start + 1, seguindo as documentações dos arquivos cnab
   abstract readonly range: [number, number]
 
@@ -72,9 +72,9 @@ export abstract class CnabField<T> {
           isValid: false,
           errors: [
             new CnabGenericFieldError({
-              message: `Campo ${this.fieldName} com formato inválido: ${error.rawValue}`,
+              message: `Campo ${this.fieldKey} com formato inválido: ${error.rawValue}`,
               lineNumber: this.lineNumber,
-              fieldName: this.fieldName,
+              fieldKey: this.fieldKey,
               range: this.range
             })
           ]

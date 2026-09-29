@@ -9,13 +9,15 @@ export function openCnabFileFromLines(lines: string[]): CnabFile {
 }
 
 export { CnabFile }
+export { Cnab, CnabBoleto } from '@cnab/type/cnab'
 export { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 export {
   CnabException,
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
   CnabBankCodeNotFoundException,
-  CnabBankSchemaNotFoundException
+  CnabBankSchemaNotFoundException,
+  CnabInvalidFileException
 } from '@cnab/exception/cnab-exception'
 export {
   CnabValidationError,

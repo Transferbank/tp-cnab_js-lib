@@ -7,7 +7,7 @@ import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
 
 export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'documento do sacado'
+  readonly fieldKey = 'documento_do_sacado'
   readonly range: [number, number] = [221, 234]
   protected readonly recordType: string = '1'
 
@@ -28,7 +28,7 @@ export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
         new CnabGenericFieldError({
           message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range
         })
       )

@@ -6,7 +6,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BoletoEnderecoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'endereço do sacado'
+  readonly fieldKey = 'endereco_do_sacado'
   readonly range: [number, number] = [74, 113]
 
   shouldValidate(): boolean {
@@ -23,7 +23,7 @@ export class Cnab240BoletoEnderecoField extends CnabField<string> {
       errors.push(
         new CnabFieldMinLengthError({
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range,
           minLength
         })

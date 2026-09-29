@@ -9,7 +9,7 @@ const DEFAULT_RECORD_TYPE = '1'
 export function Cnab400BoletoUfField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'uf do sacado'
+    readonly fieldKey = 'uf_do_sacado'
     readonly range: [number, number] = [350, 351]
     protected readonly recordType = recordType
 
@@ -27,7 +27,7 @@ export function Cnab400BoletoUfField(recordType: string = DEFAULT_RECORD_TYPE): 
           new CnabGenericFieldError({
             message: 'Campo uf do sacado inválido: deve conter exatamente 2 letras',
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range
           })
         )

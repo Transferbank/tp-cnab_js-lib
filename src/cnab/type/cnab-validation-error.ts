@@ -22,17 +22,23 @@ export abstract class CnabLineValidationError extends CnabValidationError {
 }
 
 export abstract class CnabFieldValidationError extends CnabValidationError {
-  readonly fieldName: string
+  readonly fieldKey: string
   readonly range: [number, number]
 
   constructor(params: {
     lineNumber: number
-    fieldName: string
+    fieldKey: string
     range: [number, number]
   }) {
     super({ lineNumber: params.lineNumber })
-    this.fieldName = params.fieldName
+    this.fieldKey = params.fieldKey
     this.range = params.range
+  }
+
+  // 'nome_do_sacado' -> 'Nome do sacado'
+  get fieldLabel(): string {
+    const label = this.fieldKey.replace(/_/g, ' ').toLowerCase()
+    return label.charAt(0).toUpperCase() + label.slice(1)
   }
 
   get errorType(): CnabValidationErrorType {
@@ -77,22 +83,20 @@ export class CnabFieldMinLengthError extends CnabFieldValidationError {
 
   constructor(params: {
     lineNumber: number
-    fieldName: string
+    fieldKey: string
     range: [number, number]
     minLength: number
   }) {
     super({
       lineNumber: params.lineNumber,
-      fieldName: params.fieldName,
+      fieldKey: params.fieldKey,
       range: params.range
     })
     this.minLength = params.minLength
   }
 
   get message(): string {
-    const capitalizedFieldName =
-      this.fieldName.charAt(0).toUpperCase() + this.fieldName.slice(1)
-    return `${capitalizedFieldName} espera ao menos ${this.minLength} caracteres`
+    return `${this.fieldLabel} espera ao menos ${this.minLength} caracteres`
   }
 }
 
@@ -102,12 +106,12 @@ export class CnabGenericFieldError extends CnabFieldValidationError {
   constructor(params: {
     message: string
     lineNumber: number
-    fieldName: string
+    fieldKey: string
     range: [number, number]
   }) {
     super({
       lineNumber: params.lineNumber,
-      fieldName: params.fieldName,
+      fieldKey: params.fieldKey,
       range: params.range
     })
     this.customMessage = params.message
@@ -119,25 +123,25 @@ export class CnabGenericFieldError extends CnabFieldValidationError {
 }
 
 export abstract class CnabFieldParseError extends Error {
-  readonly fieldName: string
+  readonly fieldKey: string
   readonly rawValue: string
 
-  constructor(message: string, fieldName: string, rawValue: string) {
+  constructor(message: string, fieldKey: string, rawValue: string) {
     super(message)
     this.name = this.constructor.name
-    this.fieldName = fieldName
+    this.fieldKey = fieldKey
     this.rawValue = rawValue
   }
 }
 
 export class CnabFieldInvalidNumberError extends CnabFieldParseError {
-  constructor(fieldName: string, rawValue: string) {
-    super(`Valor numérico inválido no campo ${fieldName}: ${rawValue}`, fieldName, rawValue)
+  constructor(fieldKey: string, rawValue: string) {
+    super(`Valor numérico inválido no campo ${fieldKey}: ${rawValue}`, fieldKey, rawValue)
   }
 }
 
 export class CnabFieldInvalidDateError extends CnabFieldParseError {
-  constructor(fieldName: string, rawValue: string) {
-    super(`Data inválida no campo ${fieldName}: ${rawValue}`, fieldName, rawValue)
+  constructor(fieldKey: string, rawValue: string) {
+    super(`Data inválida no campo ${fieldKey}: ${rawValue}`, fieldKey, rawValue)
   }
 }

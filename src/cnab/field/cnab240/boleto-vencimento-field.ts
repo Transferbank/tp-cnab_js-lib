@@ -7,7 +7,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BoletoVencimentoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'data de vencimento'
+  readonly fieldKey = 'data_de_vencimento'
   readonly range: [number, number] = [78, 85]
 
   shouldValidate(): boolean {
@@ -24,7 +24,7 @@ export class Cnab240BoletoVencimentoField extends CnabField<Date> {
         new CnabGenericFieldError({
           message: 'Campo data de vencimento é obrigatório',
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range
         })
       )
@@ -39,7 +39,7 @@ export class Cnab240BoletoVencimentoField extends CnabField<Date> {
   protected parseValue(rawValue: string): Date {
     const date = parseDateDDMMAAAA(rawValue)
     if (date == null) {
-      throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
+      throw new CnabFieldInvalidDateError(this.fieldKey, rawValue)
     }
     return date
   }

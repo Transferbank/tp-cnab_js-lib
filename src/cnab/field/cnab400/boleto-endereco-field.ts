@@ -15,7 +15,7 @@ export function Cnab400BoletoEnderecoField(
 ): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'endereço do sacado'
+    readonly fieldKey = 'endereco_do_sacado'
     readonly range: [number, number] = [start, end]
     protected readonly recordType = recordType
 
@@ -33,7 +33,7 @@ export function Cnab400BoletoEnderecoField(
         errors.push(
           new CnabFieldMinLengthError({
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range,
             minLength
           })
