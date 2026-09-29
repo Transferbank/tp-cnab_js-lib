@@ -25,7 +25,7 @@ export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends Cnab400Bolet
         new CnabGenericFieldError({
           message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range
         })
       )

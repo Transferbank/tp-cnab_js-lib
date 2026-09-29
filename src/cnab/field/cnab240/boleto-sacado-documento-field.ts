@@ -7,7 +7,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'documento do sacado'
+  readonly fieldKey = 'documento_do_sacado'
   readonly range: [number, number] = [19, 33]
 
   shouldValidate(): boolean {
@@ -27,7 +27,7 @@ export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
         new CnabGenericFieldError({
           message: 'Campo documento do sacado inválido: deve ser CPF ou CNPJ válido',
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range
         })
       )

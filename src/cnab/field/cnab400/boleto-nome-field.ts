@@ -15,7 +15,7 @@ export function Cnab400BoletoNomeField(
 ): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'nome do sacado'
+    readonly fieldKey = 'nome_do_sacado'
     readonly range: [number, number] = [start, end]
     protected readonly recordType = recordType
 
@@ -33,7 +33,7 @@ export function Cnab400BoletoNomeField(
         errors.push(
           new CnabFieldMinLengthError({
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range,
             minLength
           })

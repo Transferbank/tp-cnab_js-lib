@@ -9,7 +9,7 @@ const DEFAULT_RECORD_TYPE = '1'
 export function Cnab400BoletoCepField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'cep do sacado'
+    readonly fieldKey = 'cep_do_sacado'
     readonly range: [number, number] = [327, 334]
     protected readonly recordType = recordType
 
@@ -27,7 +27,7 @@ export function Cnab400BoletoCepField(recordType: string = DEFAULT_RECORD_TYPE):
           new CnabGenericFieldError({
             message: 'Campo cep do sacado inválido: deve conter 8 dígitos numéricos',
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range
           })
         )

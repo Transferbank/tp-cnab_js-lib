@@ -10,7 +10,7 @@ const DEFAULT_RECORD_TYPE = '1'
 export function Cnab400BoletoVencimentoField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<Date> {
   return class extends CnabField<Date> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'data de vencimento'
+    readonly fieldKey = 'data_de_vencimento'
     readonly range: [number, number] = [121, 126]
     protected readonly recordType = recordType
 
@@ -28,7 +28,7 @@ export function Cnab400BoletoVencimentoField(recordType: string = DEFAULT_RECORD
           new CnabGenericFieldError({
             message: 'Campo data de vencimento é obrigatório',
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range
           })
         )
@@ -43,7 +43,7 @@ export function Cnab400BoletoVencimentoField(recordType: string = DEFAULT_RECORD
     protected parseValue(rawValue: string): Date {
       const date = parseDateDDMMAA(rawValue)
       if (date == null) {
-        throw new CnabFieldInvalidDateError(this.fieldName, rawValue)
+        throw new CnabFieldInvalidDateError(this.fieldKey, rawValue)
       }
       return date
     }

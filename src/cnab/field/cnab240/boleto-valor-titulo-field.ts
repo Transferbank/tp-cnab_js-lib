@@ -6,7 +6,7 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class Cnab240BoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'valor do título'
+  readonly fieldKey = 'valor_do_titulo'
   readonly range: [number, number] = [86, 100]
 
   shouldValidate(): boolean {
@@ -23,7 +23,7 @@ export class Cnab240BoletoValorTituloField extends CnabField<number> {
         new CnabGenericFieldError({
           message: 'Campo valor do título inválido: deve ser maior que zero',
           lineNumber: this.lineNumber,
-          fieldName: this.fieldName,
+          fieldKey: this.fieldKey,
           range: this.range
         })
       )
@@ -37,7 +37,7 @@ export class Cnab240BoletoValorTituloField extends CnabField<number> {
 
   protected parseValue(rawValue: string): number {
     if (!/^\d+$/.test(rawValue)) {
-      throw new CnabFieldInvalidNumberError(this.fieldName, rawValue)
+      throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
 
     return parseInt(rawValue, 10) / 100

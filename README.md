@@ -84,14 +84,14 @@ const result = cnabFile.validate(true)
 
 ### Tratando erros de validação
 
-Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldName` e `range`.
+Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey` e `range`.
 
 ```ts
 import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'
 
 for (const error of result.errors) {
   if (error instanceof CnabFieldValidationError) {
-    console.log(error.fieldName, error.message)
+    console.log(error.fieldKey, error.message)
   }
 }
 ```

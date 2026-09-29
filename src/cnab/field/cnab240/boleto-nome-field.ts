@@ -10,7 +10,7 @@ const DEFAULT_END = 73
 export function Cnab240BoletoNomeField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'nome do sacado'
+    readonly fieldKey = 'nome_do_sacado'
     readonly range: [number, number] = [start, end]
 
     shouldValidate(): boolean {
@@ -27,7 +27,7 @@ export function Cnab240BoletoNomeField(start: number = DEFAULT_START, end: numbe
         errors.push(
           new CnabFieldMinLengthError({
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range,
             minLength
           })

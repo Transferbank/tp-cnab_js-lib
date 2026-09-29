@@ -9,7 +9,7 @@ const DEFAULT_RECORD_TYPE = '1'
 export function Cnab400BoletoCidadeField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldName = 'cidade do sacado'
+    readonly fieldKey = 'cidade_do_sacado'
     readonly range: [number, number] = [335, 349]
     protected readonly recordType = recordType
 
@@ -27,7 +27,7 @@ export function Cnab400BoletoCidadeField(recordType: string = DEFAULT_RECORD_TYP
         errors.push(
           new CnabFieldMinLengthError({
             lineNumber: this.lineNumber,
-            fieldName: this.fieldName,
+            fieldKey: this.fieldKey,
             range: this.range,
             minLength
           })
