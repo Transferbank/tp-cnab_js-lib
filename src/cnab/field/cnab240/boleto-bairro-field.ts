@@ -4,7 +4,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export abstract class Cnab240BoletoBairroField extends CnabField<string> {
+export class Cnab240BoletoBairroField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'bairro do sacado'
   readonly range: [number, number] = [114, 128]

@@ -11,23 +11,12 @@ import {
   createFieldsFromLines,
   getFieldRange
 } from '@test/test-utils'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { Cnab400BoletoBairroField } from '@cnab/field/cnab400/boleto-bairro-field'
-import { Cnab400BancoDoBrasilBoletoBairroField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-bairro-field'
-import { Cnab400CaixaBoletoBairroField } from '@cnab/bank/caixa/cnab/cnab400/field/cnab400-caixa-boleto-bairro-field'
-import { Cnab400ItauBoletoBairroField } from '@cnab/bank/itau/cnab/cnab400/field/cnab400-itau-boleto-bairro-field'
-import { Cnab400SantanderBoletoBairroField } from '@cnab/bank/santander/cnab/cnab400/field/cnab400-santander-boleto-bairro-field'
-import { Cnab400SicoobBoletoBairroField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-bairro-field'
 
-type BairroFieldClass = new (rawLine: string, lineNumber: number) => Cnab400BoletoBairroField
-
-// Cada banco tem sua propria classe (Cnab400<Banco>BoletoBairroField), todas herdando de
-// Cnab400BoletoBairroField. Duas divergencias reais: o Banco do Brasil sobrescreve
-// shouldValidate (registro de detalhe nao-padrao comecando com '7'); e o Sicoob
-// sobrescreve range (desloca pra 312 pra compensar o endereco de 37 posicoes). Bradesco
-// e Sicredi nao tem esse campo no CNAB400.
 describe('Cnab400BoletoBairroField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para os bancos com registro de detalhe padrao (comeca com 1)', (): void => {
@@ -47,7 +36,8 @@ describe('Cnab400BoletoBairroField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400CaixaBoletoBairroField(rawLine, 1)
+          const FieldClass = Cnab400BoletoBairroField()
+          const field = new FieldClass(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -75,7 +65,8 @@ describe('Cnab400BoletoBairroField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400BancoDoBrasilBoletoBairroField(rawLine, 1)
+          const FieldClass = Cnab400BoletoBairroField(315, 326, '7')
+          const field = new FieldClass(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -90,25 +81,22 @@ describe('Cnab400BoletoBairroField', (): void => {
   describe('range', (): void => {
     it('given Sicoob then overrides the base range to compensate for the shorter endereco field', (): void => {
       // Then
-      expect(getFieldRange(Cnab400SicoobBoletoBairroField)).toEqual([312, 326])
-      expect(getFieldRange(Cnab400BancoDoBrasilBoletoBairroField)).toEqual([315, 326])
-      expect(getFieldRange(Cnab400CaixaBoletoBairroField)).toEqual([315, 326])
-      expect(getFieldRange(Cnab400ItauBoletoBairroField)).toEqual([315, 326])
-      expect(getFieldRange(Cnab400SantanderBoletoBairroField)).toEqual([315, 326])
+      expect(getFieldRange(Cnab400BoletoBairroField(312, 326))).toEqual([312, 326])
+      expect(getFieldRange(Cnab400BoletoBairroField())).toEqual([315, 326])
     })
   })
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BancoDoBrasilBoletoBairroField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'JARDIM UNIVE' },
-      { FieldClass: Cnab400CaixaBoletoBairroField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: Cnab400ItauBoletoBairroField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: Cnab400SantanderBoletoBairroField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: Cnab400SicoobBoletoBairroField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'CENTRO' }
+      { FieldClass: Cnab400BoletoBairroField(315, 326, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'JARDIM UNIVE' },
+      { FieldClass: Cnab400BoletoBairroField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: Cnab400BoletoBairroField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: Cnab400BoletoBairroField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: Cnab400BoletoBairroField(312, 326), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'CENTRO' }
     ])(
-      'given detail lines with valid bairro ($FieldClass.name) when reading value and validating then accepts all lines',
+      'given detail lines with valid bairro ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: BairroFieldClass
+        FieldClass: CnabFieldClass<string>
         examplePath: string
         expectedFirstValue: string
       }): void => {
@@ -120,7 +108,7 @@ describe('Cnab400BoletoBairroField', (): void => {
         )
 
         // When
-        const results = fields.map((field: Cnab400BoletoBairroField) => field.validate())
+        const results = fields.map((field: CnabField<string>) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
@@ -138,7 +126,8 @@ describe('Cnab400BoletoBairroField', (): void => {
 
     it('given detail line with blank bairro when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400CaixaBoletoBairroField)
+      const FieldClass = Cnab400BoletoBairroField()
+      const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -151,7 +140,7 @@ describe('Cnab400BoletoBairroField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400CaixaBoletoBairroField(invalidLine, lineNumber)
+      const field = new FieldClass(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

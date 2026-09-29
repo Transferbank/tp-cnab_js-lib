@@ -1,3 +1,2 @@
-export { Cnab400SicoobBoletoBairroField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-bairro-field'
 export { Cnab400SicoobBoletoCidadeField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-cidade-field'
 export { Cnab400SicoobBoletoUfField } from '@cnab/bank/sicoob/cnab/cnab400/field/cnab400-sicoob-boleto-uf-field'

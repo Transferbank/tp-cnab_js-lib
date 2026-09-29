@@ -1,3 +1,2 @@
-export { Cnab240SantanderBoletoBairroField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-bairro-field'
 export { Cnab240SantanderBoletoCidadeField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-cidade-field'
 export { Cnab240SantanderBoletoUfField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-uf-field'
