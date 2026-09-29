@@ -22,7 +22,7 @@ export class CnabFile {
   private constructor() {}
 
   static async open(file: File): Promise<CnabFile> {
-    const lines = await CnabFile.read(file)
+    const lines = await CnabFile.readFile(file)
     return CnabFile.fromLines(lines)
   }
 
@@ -37,7 +37,7 @@ export class CnabFile {
     return cnabFile
   }
 
-  private static async read(file: File): Promise<string[]> {
+  private static async readFile(file: File): Promise<string[]> {
     const arrayBuffer = await file.arrayBuffer()
     const decoder = new TextDecoder('iso-8859-1') // nome oficial de latin1
     const text = decoder.decode(arrayBuffer)
@@ -76,7 +76,8 @@ export class CnabFile {
   read(extraFields?: CnabFieldClass[]): Cnab {
     // TODO: Verificar resultado da validação e lançar erro se inválido
     // Atualmente, erros de validação de campo não impedem o read()
+    extraFields = extraFields ?? []
     this.validate(false, extraFields)
-    return this.schema.read(this.rawLines, extraFields ?? [])
+    return this.schema.extractCnab(this.rawLines, extraFields)
   }
 }

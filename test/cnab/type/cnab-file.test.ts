@@ -1,6 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import * as fs from 'fs'
 import * as path from 'path'
+import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { readExampleLines, resPath } from '@test/test-utils'
@@ -120,4 +121,91 @@ describe('cnab-file', (): void => {
       expect(result.errors).toEqual([])
     }
   )
+
+  it('given valid cnab240 document file when reading then extracts every boleto field', (): void => {
+    // Given
+    const cnabFile = openExample('itau/cnab240/itau_cnab_240.txt')
+    const expectedBoletos = [
+      new CnabBoleto({
+        fields: {
+          nome_do_sacado: 'JOAO EXEMPLO SILVA',
+          data_de_vencimento: new Date(2026, 11, 15),
+          valor_do_titulo: 10000,
+          documento_do_sacado: '000011122233396',
+          endereco_do_sacado: 'RUA EXEMPLO, 100',
+          bairro_do_sacado: 'CENTRO',
+          cep_do_sacado: '01234567',
+          cidade_do_sacado: 'SAO PAULO',
+          uf_do_sacado: 'SP'
+        }
+      }),
+      new CnabBoleto({
+        fields: {
+          nome_do_sacado: 'COMERCIAL EXEMPLO LTDA',
+          data_de_vencimento: new Date(2026, 11, 20),
+          valor_do_titulo: 25000,
+          documento_do_sacado: '011122233300063',
+          endereco_do_sacado: 'RUA EXEMPLO, 100',
+          bairro_do_sacado: 'CENTRO',
+          cep_do_sacado: '01234567',
+          cidade_do_sacado: 'SAO PAULO',
+          uf_do_sacado: 'SP'
+        }
+      }),
+      new CnabBoleto({
+        fields: {
+          nome_do_sacado: 'INDUSTRIA EXEMPLO SA',
+          data_de_vencimento: new Date(2026, 11, 22),
+          valor_do_titulo: 50000,
+          documento_do_sacado: '044455566600024',
+          endereco_do_sacado: 'RUA EXEMPLO, 100',
+          bairro_do_sacado: 'CENTRO',
+          cep_do_sacado: '01234567',
+          cidade_do_sacado: 'CAMPINAS',
+          uf_do_sacado: 'SP'
+        }
+      }),
+      new CnabBoleto({
+        fields: {
+          nome_do_sacado: 'MARIA EXEMPLO SILVA',
+          data_de_vencimento: new Date(2026, 11, 31),
+          valor_do_titulo: 7500,
+          documento_do_sacado: '000044455566619',
+          endereco_do_sacado: 'RUA EXEMPLO, 100',
+          bairro_do_sacado: 'CENTRO',
+          cep_do_sacado: '01234567',
+          cidade_do_sacado: 'CAMPINAS',
+          uf_do_sacado: 'SP'
+        }
+      })
+    ]
+
+    // When
+    const cnab = cnabFile.read()
+
+    // Then
+    expect(cnab.boletos).toEqual(expectedBoletos)
+  })
+
+  it('given valid cnab400 document file when reading then extracts every boleto field', (): void => {
+    // Given
+    const cnabFile = openExample('bradesco/cnab400/bradesco_cnab_400.txt')
+    const expectedFirstBoleto = new CnabBoleto({
+      fields: {
+        nome_do_sacado: 'COMERCIAL ALFA LTDA',
+        data_de_vencimento: new Date(2026, 7, 24),
+        valor_do_titulo: 22560.93,
+        documento_do_sacado: '20000000997330',
+        endereco_do_sacado: 'AV EXEMPLO 200',
+        cep_do_sacado: '29045402'
+      }
+    })
+
+    // When
+    const cnab = cnabFile.read()
+
+    // Then
+    expect(cnab.boletos.length).toBe(cnabFile.boletoCount)
+    expect(cnab.boletos[0]).toEqual(expectedFirstBoleto)
+  })
 })

@@ -1,17 +1,16 @@
-import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+export class CnabBoleto {
+  // Valores dos campos do boleto, indexados pelo fieldKey (ex: nome_do_sacado)
+  readonly fields: Record<string, unknown>
+
+  constructor(config: { fields?: Record<string, unknown> } = {}) {
+    this.fields = config.fields ?? {}
+  }
+}
 
 export class Cnab {
-  readonly header: CnabLineSchema
-  readonly trailer: CnabLineSchema
-  readonly boletos: CnabLineSchema[]
+  readonly boletos: CnabBoleto[]
 
-  constructor(config: {
-    header: CnabLineSchema
-    trailer: CnabLineSchema
-    boletos?: CnabLineSchema[]
-  }) {
-    this.header = config.header
-    this.trailer = config.trailer
+  constructor(config: { boletos?: CnabBoleto[] } = {}) {
     this.boletos = config.boletos ?? []
   }
 }

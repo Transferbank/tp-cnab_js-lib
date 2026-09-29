@@ -35,6 +35,12 @@ export abstract class CnabFieldValidationError extends CnabValidationError {
     this.range = params.range
   }
 
+  // 'nome_do_sacado' -> 'Nome do sacado'
+  get fieldLabel(): string {
+    const label = this.fieldKey.replace(/_/g, ' ').toLowerCase()
+    return label.charAt(0).toUpperCase() + label.slice(1)
+  }
+
   get errorType(): CnabValidationErrorType {
     return CnabValidationErrorType.FIELD
   }
@@ -90,7 +96,7 @@ export class CnabFieldMinLengthError extends CnabFieldValidationError {
   }
 
   get message(): string {
-    return `Campo ${this.fieldKey} espera ao menos ${this.minLength} caracteres`
+    return `${this.fieldLabel} espera ao menos ${this.minLength} caracteres`
   }
 }
 
