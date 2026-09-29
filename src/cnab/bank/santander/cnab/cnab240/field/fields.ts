@@ -1,4 +1,3 @@
-export { Cnab240SantanderBoletoVencimentoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-vencimento-field'
 export { Cnab240SantanderBoletoEnderecoField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-endereco-field'
 export { Cnab240SantanderBoletoBairroField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-bairro-field'
 export { Cnab240SantanderBoletoCepField } from '@cnab/bank/santander/cnab/cnab240/field/cnab240-santander-boleto-cep-field'
