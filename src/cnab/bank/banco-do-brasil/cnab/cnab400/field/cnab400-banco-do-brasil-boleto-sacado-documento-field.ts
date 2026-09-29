@@ -1,22 +1,23 @@
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { validateDocument } from '@cnab/utils/document-parser'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
+import { Cnab400BoletoSacadoDocumentoField } from '@cnab/field/cnab400/boleto-sacado-documento-field'
 
-export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'documento do sacado'
-  readonly range: [number, number] = [221, 234]
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isOptional(this.rawLine, '7')
-  }
+// Registro de detalhe '7' em vez de '1'. "00"=Isento: título é registrado normalmente
+// sem validar CPF/CNPJ.
+export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends Cnab400BoletoSacadoDocumentoField {
+  protected readonly recordType = '7'
 
   protected performValidation(): CnabValidationResult {
+    const tipoInscricao = this.extractRangeFromLine(218, 220)
+
+    if (tipoInscricao == '00') {
+      return { isValid: true, errors: [] }
+    }
+
     const value = this.value as string | null
-    const isValid = value != null && validateDocument(value)
+    const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '01', '02')
+
     const errors = []
 
     if (!isValid) {
@@ -34,9 +35,5 @@ export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends CnabField<st
       isValid,
       errors
     }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
   }
 }

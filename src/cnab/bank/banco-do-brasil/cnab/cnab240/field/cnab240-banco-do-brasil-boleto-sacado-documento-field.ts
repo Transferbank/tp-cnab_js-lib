@@ -1,22 +1,16 @@
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { validateDocument } from '@cnab/utils/document-parser'
-import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
+import { Cnab240BoletoSacadoDocumentoField } from '@cnab/field/cnab240/boleto-sacado-documento-field'
 
-export class Cnab240BancoDoBrasilBoletoSacadoDocumentoField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldName = 'documento do sacado'
-  readonly range: [number, number] = [19, 33]
-
-  shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
-  }
-
+// BB aceita "0" como indicador, tratado como CNPJ.
+export class Cnab240BancoDoBrasilBoletoSacadoDocumentoField extends Cnab240BoletoSacadoDocumentoField {
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && validateDocument(value)
+    const tipoInscricaoBruto = this.extractRangeFromLine(17, 18)
+    const tipoInscricao = tipoInscricaoBruto == '0' ? '2' : tipoInscricaoBruto
+    const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '1', '2')
+
     const errors = []
 
     if (!isValid) {
@@ -34,9 +28,5 @@ export class Cnab240BancoDoBrasilBoletoSacadoDocumentoField extends CnabField<st
       isValid,
       errors
     }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
   }
 }

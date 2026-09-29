@@ -4,7 +4,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab240ItauBoletoValorTituloField extends CnabField<number> {
+export class Cnab240BoletoValorTituloField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldName = 'valor do título'
   readonly range: [number, number] = [86, 100]
