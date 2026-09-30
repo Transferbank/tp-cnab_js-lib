@@ -58,20 +58,6 @@ function isAlphanumeric(value: string): boolean {
   return /^[A-Za-z0-9]+$/.test(value)
 }
 
-export function validateDocument(rawDocument: string): boolean {
-  const digits = rawDocument.trim()
-  if (digits.length == 0 || !isAlphanumeric(digits)) return false
-
-  const asCPF = digits.slice(-11)
-  const asCNPJ = digits.slice(-14).padStart(14, '0')
-
-  const cpfMatches = isDigitsOnly(digits) && isValidCPF(asCPF)
-  const cnpjMatches = isValidCNPJ(asCNPJ)
-
-  return cpfMatches || cnpjMatches
-}
-
-
 export function documentTypeByIndicator(
   tipoInscricao: string,
   cpfIndicator: string,
@@ -101,13 +87,4 @@ export function validateDocumentByType(document: string, documentType: DocumentT
   if (documentType == DocumentType.CPF) return isDigitsOnly(document) && isValidCPF(document.slice(-11))
   if (documentType == DocumentType.CNPJ) return isAlphanumeric(document) && isValidCNPJ(document.slice(-14).padStart(14, '0'))
   return false
-}
-
-export function validateDocumentByIndicator(
-  document: string,
-  tipoInscricao: string,
-  cpfIndicator: string,
-  cnpjIndicator: string
-): boolean {
-  return validateDocumentByType(document, documentTypeByIndicator(tipoInscricao, cpfIndicator, cnpjIndicator))
 }
