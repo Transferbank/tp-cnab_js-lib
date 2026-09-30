@@ -49,8 +49,8 @@ describe('Cnab240BoletoGroupRule', (): void => {
       lines.map((line: string, index: number): [number, string] => [firstLineNumber + index, line])
 
     it.each([
-      ['P e Q', [segmentoP, segmentoQ]],
-      ['P, Q e R', [segmentoP, segmentoQ, segmentoR]]
+      ['P and Q', [segmentoP, segmentoQ]],
+      ['P, Q and R', [segmentoP, segmentoQ, segmentoR]]
     ])('given boleto group with segments %s when validating then accepts it', (_: string, lines: string[]): void => {
       // Given
       const group = toGroup(lines)
@@ -86,9 +86,9 @@ describe('Cnab240BoletoGroupRule', (): void => {
     })
 
     it.each([
-      ['segmento Q', [segmentoP, segmentoQ, segmentoQ]],
-      ['segmento R', [segmentoP, segmentoQ, segmentoR, segmentoR]]
-    ])('given boleto group with duplicated %s when validating then reports duplicate segment', (segmentName: string, lines: string[]): void => {
+      ['Q', [segmentoP, segmentoQ, segmentoQ]],
+      ['R', [segmentoP, segmentoQ, segmentoR, segmentoR]]
+    ])('given boleto group with duplicated segment %s when validating then reports duplicate segment', (segment: string, lines: string[]): void => {
       // Given
       const group = toGroup(lines)
 
@@ -98,7 +98,7 @@ describe('Cnab240BoletoGroupRule', (): void => {
       // Then
       expect(result).toEqual({
         isValid: false,
-        errors: [new CnabGroupDuplicateSegmentError({ lineNumber: firstLineNumber, segmentName, count: 2 })]
+        errors: [new CnabGroupDuplicateSegmentError({ lineNumber: firstLineNumber, segmentName: `segmento ${segment}`, count: 2 })]
       })
     })
   })
