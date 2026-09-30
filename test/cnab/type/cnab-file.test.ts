@@ -7,6 +7,7 @@ import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
 import {
   CnabGroupMissingSegmentError,
+  CnabGroupMissingStartSegmentError,
   CnabGroupOrphanSegmentError,
   CnabInvalidLineSizeError
 } from '@cnab/type/cnab-validation-error'
@@ -319,5 +320,28 @@ describe('cnab-file', (): void => {
     expect(result.isValid).toBe(false)
     expect(result.errors).toEqual(expectedErrors)
     expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
+  })
+
+  it('given cnab240 document file with a boleto missing its segment P when validating then reports it at the orphaned segment Q', (): void => {
+    // Given
+    const isSegmentoP = (line: string): boolean => line[7] == '3' && line[13] == 'P'
+    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+    const secondSegmentoPLineNumber = rawLines.findIndex((line: string, lineNumber: number) =>
+      isSegmentoP(line) && lineNumber > rawLines.findIndex(isSegmentoP))
+    rawLines.splice(secondSegmentoPLineNumber, 1)
+    const orphanedSegmentoQLineNumber = secondSegmentoPLineNumber
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result.errors).toEqual([
+      new CnabGroupMissingStartSegmentError({
+        lineNumber: orphanedSegmentoQLineNumber,
+        segmentName: 'segmento Q',
+        startSegmentName: 'segmento P'
+      })
+    ])
   })
 })

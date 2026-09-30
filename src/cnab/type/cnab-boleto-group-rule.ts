@@ -2,7 +2,8 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabValidationError,
   CnabGroupMissingSegmentError,
-  CnabGroupDuplicateSegmentError
+  CnabGroupDuplicateSegmentError,
+  CnabGroupMissingStartSegmentError
 } from '@cnab/type/cnab-validation-error'
 
 export interface CnabBoletoGroupSegmentRule {
@@ -28,13 +29,24 @@ export abstract class CnabBoletoGroupRule {
     }
 
     const errors: CnabValidationError[] = []
-    const [firstLineNumber] = group[0]
+    const [firstLineNumber, firstRawLine] = group[0]
 
     for (const rule of this.segmentRules) {
-      const matchCount = group.filter(([, rawLine]: [number, string]) => rule.matches(rawLine)).length
+      const matches = group.filter(([, rawLine]: [number, string]) => rule.matches(rawLine))
+      const matchCount = matches.length
 
       if (rule.required && matchCount == 0) {
         errors.push(new CnabGroupMissingSegmentError({ lineNumber: firstLineNumber, segmentName: rule.name }))
+      } else if (rule.required && matchCount > 1) {
+        // Um segmento obrigatório a mais indica, na prática, um boleto cujo início sumiu
+        // e cujas linhas caíram no boleto anterior (ver genLineGroups)
+        for (const [lineNumber] of matches.slice(1)) {
+          errors.push(new CnabGroupMissingStartSegmentError({
+            lineNumber,
+            segmentName: rule.name,
+            startSegmentName: this.describeLine(firstRawLine)
+          }))
+        }
       } else if (matchCount > 1) {
         errors.push(new CnabGroupDuplicateSegmentError({
           lineNumber: firstLineNumber,
