@@ -238,7 +238,7 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
+    ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] != '3'],
     ['bradesco/cnab400/bradesco_cnab_400.txt', (line: string): boolean => !line.startsWith('1')]
   ])(
     'given document file %s without boleto lines when reading then returns no boletos',
@@ -258,8 +258,8 @@ describe('cnab-file', (): void => {
 
   it('given cnab240 document file without segment Q when validating then reports one missing segment per boleto', (): void => {
     // Given
-    const isSegmentoQ = (line: string): boolean => line[7] === '3' && line[13] === 'Q'
-    const isSegmentoP = (line: string): boolean => line[7] === '3' && line[13] === 'P'
+    const isSegmentoQ = (line: string): boolean => line[7] == '3' && line[13] == 'Q'
+    const isSegmentoP = (line: string): boolean => line[7] == '3' && line[13] == 'P'
     const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
       .filter((line: string) => !isSegmentoQ(line))
     const cnabFile = CnabFile.fromLines(rawLines)

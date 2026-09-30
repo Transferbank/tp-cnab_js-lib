@@ -52,6 +52,14 @@ describe('Cnab240BoletoGroupRule', (): void => {
       expect(result).toEqual({ isValid: true, errors: [] })
     })
 
+    it('given empty group when validating then accepts it', (): void => {
+      // When
+      const result = new Cnab240BoletoGroupRule().validate([])
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+    })
+
     it('given boleto group without segment Q when validating then reports missing segment at the group first line', (): void => {
       // Given
       const group: Array<[number, string]> = [[10, segmentoP], [11, segmentoR]]

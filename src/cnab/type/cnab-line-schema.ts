@@ -78,7 +78,7 @@ export class CnabLineSchema {
       (line: string, index: number): [number, string] => [firstLine + index, line]
     )
 
-    if (this.fieldType !== CnabFieldType.BOLETO) {
+    if (this.fieldType != CnabFieldType.BOLETO) {
       yield numberedLines
       return
     }
@@ -88,7 +88,7 @@ export class CnabLineSchema {
     for (const numberedLine of numberedLines) {
       const [, rawLine] = numberedLine
       if (this.isBoletoGroupStart(rawLine)) {
-        if (group.length !== 0) {
+        if (group.length != 0) {
           yield group
         }
         group = [numberedLine]
@@ -97,7 +97,7 @@ export class CnabLineSchema {
       }
     }
 
-    if (group.length !== 0) {
+    if (group.length != 0) {
       yield group
     }
   }
