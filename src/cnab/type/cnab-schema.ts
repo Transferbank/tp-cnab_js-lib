@@ -7,6 +7,8 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
+import { CnabFileValidator } from '@cnab/type/cnab-file-validator'
+import { Cnab240RecordSequenceValidator } from '@cnab/validators/cnab240/cnab240-record-sequence-validator'
 
 type CnabLineSchemaConfig = {
   fieldType: CnabFieldType
@@ -21,6 +23,7 @@ export class CnabSchema {
   readonly header: CnabLineSchema
   readonly trailer: CnabLineSchema
   readonly boleto: CnabLineSchema
+  readonly fileValidators: CnabFileValidator[]
 
   constructor(config: {
     bank: CnabBank
@@ -29,10 +32,17 @@ export class CnabSchema {
     header: CnabLineSchemaConfig
     trailer: CnabLineSchemaConfig
     boleto: CnabLineSchemaConfig
+    fileValidators?: CnabFileValidator[]
   }) {
     this.bank = config.bank
     this.fmt = config.fmt
     this.boletoGroupRule = config.boletoGroupRule
+
+    const defaultFileValidators: Record<CnabFormat, CnabFileValidator[]> = {
+      [CnabFormat.CNAB240]: [new Cnab240RecordSequenceValidator()],
+      [CnabFormat.CNAB400]: [],
+    }
+    this.fileValidators = [...defaultFileValidators[this.fmt], ...(config.fileValidators ?? [])]
 
     const sharedConfig = {
       bank: this.bank,
@@ -71,6 +81,17 @@ export class CnabSchema {
 
       result.isValid = result.isValid && groupResult.isValid
       result.errors.push(...groupResult.errors)
+
+      if (!result.isValid && eagerEnabled) {
+        return result
+      }
+    }
+
+    for (const fileValidator of this.fileValidators) {
+      const fileResult = fileValidator.validate(rawLines)
+
+      result.isValid = result.isValid && fileResult.isValid
+      result.errors.push(...fileResult.errors)
 
       if (!result.isValid && eagerEnabled) {
         return result

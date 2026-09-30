@@ -123,6 +123,8 @@ Campos vazios no arquivo não aparecem em `fields`.
 
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'`, `'field'` ou `'group'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
 
+No CNAB 240, o número sequencial de cada registro de detalhe no lote (posições 9 a 13) precisa ser o do registro anterior mais 1; a numeração reinicia a cada lote. Um registro fora de sequência gera `CnabInvalidRecordSequenceError` na linha dele, o que denuncia linhas apagadas, duplicadas ou fora de ordem.
+
 Erros de grupo (`CnabGroupValidationError`) indicam um boleto com a composição de linhas errada e trazem `segmentName`:
 
 | Erro | Quando | `lineNumber` |

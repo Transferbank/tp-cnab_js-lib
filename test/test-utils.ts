@@ -34,6 +34,20 @@ export function findFirstCnab400RecordLine(lines: string[], recordType: string):
   return lines.find(line => line.length >= 1 && line[0] === recordType)
 }
 
+// Renumera os detalhes de cada lote (posições 9-13) a partir de 1. Usado depois de
+// inserir ou apagar linhas num exemplo, para o cenário não ganhar erros de sequência
+export function renumberCnab240Records(lines: string[]): string[] {
+  let sequence = 0
+  return lines.map((line: string) => {
+    if (line[7] !== '3') {
+      sequence = 0
+      return line
+    }
+    sequence++
+    return replaceLineRange(line, [9, 13], String(sequence).padStart(5, '0'))
+  })
+}
+
 export function realLineNumber(lines: string[], rawLine: string): number {
   return lines.indexOf(rawLine) + 1
 }

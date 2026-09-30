@@ -32,6 +32,7 @@ export {
   CnabGroupOrphanSegmentError,
   CnabInvalidLineSizeError,
   CnabInvalidLineStartError,
+  CnabInvalidRecordSequenceError,
   CnabFieldMinLengthError,
   CnabGenericFieldError,
   CnabFieldParseError,

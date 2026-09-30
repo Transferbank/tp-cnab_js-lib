@@ -104,6 +104,26 @@ export class CnabGroupOrphanSegmentError extends CnabGroupValidationError {
   }
 }
 
+export class CnabInvalidRecordSequenceError extends CnabLineValidationError {
+  // null quando não dá para saber o esperado (sem registro válido antes no lote)
+  readonly expectedSequence: number | null
+  readonly actualSequence: string
+
+  constructor(params: { lineNumber: number; expectedSequence: number | null; actualSequence: string }) {
+    super({ lineNumber: params.lineNumber })
+    this.expectedSequence = params.expectedSequence
+    this.actualSequence = params.actualSequence
+  }
+
+  get message(): string {
+    if (this.expectedSequence == null) {
+      return `Número sequencial do registro no lote inválido: "${this.actualSequence}"`
+    }
+    const expected = String(this.expectedSequence).padStart(this.actualSequence.length, '0')
+    return `Número sequencial do registro no lote fora de ordem: esperado ${expected}, recebido ${this.actualSequence}`
+  }
+}
+
 export class CnabInvalidLineSizeError extends CnabLineValidationError {
   readonly expectedSize: number
   readonly actualSize: number

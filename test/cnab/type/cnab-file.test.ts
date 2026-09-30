@@ -12,7 +12,7 @@ import {
   CnabGroupUnknownSegmentError,
   CnabInvalidLineSizeError
 } from '@cnab/type/cnab-validation-error'
-import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
+import { readExampleLines, renumberCnab240Records, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
   const fullPath = path.join(resPath(), examplePath)
@@ -271,7 +271,7 @@ describe('cnab-file', (): void => {
       assert(orphanLine != null, `Linha com segmento ${segment} não encontrada`)
       const orphanLineNumber = rawLines.findIndex((line: string) => line[7] == '3' && line[13] == 'P')
       rawLines.splice(orphanLineNumber, 0, orphanLine)
-      const cnabFile = CnabFile.fromLines(rawLines)
+      const cnabFile = CnabFile.fromLines(renumberCnab240Records(rawLines))
 
       // When
       const result = cnabFile.validate(true)
@@ -307,7 +307,7 @@ describe('cnab-file', (): void => {
     const isSegmentoP = (line: string): boolean => line[7] == '3' && line[13] == 'P'
     const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
       .filter((line: string) => !isSegmentoQ(line))
-    const cnabFile = CnabFile.fromLines(rawLines)
+    const cnabFile = CnabFile.fromLines(renumberCnab240Records(rawLines))
     const expectedErrors = rawLines
       .map((line: string, lineNumber: number) => (isSegmentoP(line) ? lineNumber : -1))
       .filter((lineNumber: number) => lineNumber >= 0)
@@ -331,7 +331,7 @@ describe('cnab-file', (): void => {
       isSegmentoP(line) && lineNumber > rawLines.findIndex(isSegmentoP))
     rawLines.splice(secondSegmentoPLineNumber, 1)
     const orphanedSegmentoQLineNumber = secondSegmentoPLineNumber
-    const cnabFile = CnabFile.fromLines(rawLines)
+    const cnabFile = CnabFile.fromLines(renumberCnab240Records(rawLines))
 
     // When
     const result = cnabFile.validate(true)
@@ -352,7 +352,7 @@ describe('cnab-file', (): void => {
     const firstSegmentoQLineNumber = rawLines.findIndex((line: string) => line[7] == '3' && line[13] == 'Q')
     const unknownSegmentLineNumber = firstSegmentoQLineNumber + 1
     rawLines.splice(unknownSegmentLineNumber, 0, replaceLineRange(rawLines[firstSegmentoQLineNumber], [14, 14], 'X'))
-    const cnabFile = CnabFile.fromLines(rawLines)
+    const cnabFile = CnabFile.fromLines(renumberCnab240Records(rawLines))
 
     // When
     const result = cnabFile.validate(true)
