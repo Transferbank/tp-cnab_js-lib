@@ -43,13 +43,17 @@ describe('Cnab240BoletoGroupRule', (): void => {
     const segmentoP = findSegment('P')
     const segmentoQ = findSegment('Q')
     const segmentoR = findSegment('R')
+    // Número de linha qualquer, usado só para conferir o lineNumber dos erros
+    const firstLineNumber = 10
+    const toGroup = (lines: string[]): Array<[number, string]> =>
+      lines.map((line: string, index: number): [number, string] => [firstLineNumber + index, line])
 
     it.each([
       ['P e Q', [segmentoP, segmentoQ]],
       ['P, Q e R', [segmentoP, segmentoQ, segmentoR]]
     ])('given boleto group with segments %s when validating then accepts it', (_: string, lines: string[]): void => {
       // Given
-      const group = lines.map((line: string, index: number): [number, string] => [10 + index, line])
+      const group = toGroup(lines)
 
       // When
       const result = new Cnab240BoletoGroupRule().validate(group)
@@ -68,7 +72,7 @@ describe('Cnab240BoletoGroupRule', (): void => {
 
     it('given boleto group without segment Q when validating then reports missing segment at the group first line', (): void => {
       // Given
-      const group: Array<[number, string]> = [[10, segmentoP], [11, segmentoR]]
+      const group = toGroup([segmentoP, segmentoR])
 
       // When
       const result = new Cnab240BoletoGroupRule().validate(group)
@@ -76,7 +80,7 @@ describe('Cnab240BoletoGroupRule', (): void => {
       // Then
       expect(result).toEqual({
         isValid: false,
-        errors: [new CnabGroupMissingSegmentError({ lineNumber: 10, segmentName: 'segmento Q' })]
+        errors: [new CnabGroupMissingSegmentError({ lineNumber: firstLineNumber, segmentName: 'segmento Q' })]
       })
       expect(result.errors[0].message).toBe('Grupo de boleto incompleto: segmento Q obrigatório não encontrado')
     })
@@ -86,7 +90,7 @@ describe('Cnab240BoletoGroupRule', (): void => {
       ['segmento R', [segmentoP, segmentoQ, segmentoR, segmentoR]]
     ])('given boleto group with duplicated %s when validating then reports duplicate segment', (segmentName: string, lines: string[]): void => {
       // Given
-      const group = lines.map((line: string, index: number): [number, string] => [10 + index, line])
+      const group = toGroup(lines)
 
       // When
       const result = new Cnab240BoletoGroupRule().validate(group)
@@ -94,7 +98,7 @@ describe('Cnab240BoletoGroupRule', (): void => {
       // Then
       expect(result).toEqual({
         isValid: false,
-        errors: [new CnabGroupDuplicateSegmentError({ lineNumber: 10, segmentName, count: 2 })]
+        errors: [new CnabGroupDuplicateSegmentError({ lineNumber: firstLineNumber, segmentName, count: 2 })]
       })
     })
   })
