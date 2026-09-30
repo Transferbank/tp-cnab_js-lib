@@ -47,13 +47,13 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab240BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '000010000791989' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '000011122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '000011122233396' }
+      { FieldClass: Cnab240BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '10000791989' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '11122233396' }
     ])(
       'given segment Q lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {

@@ -86,10 +86,10 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
     it.each([
       { FieldClass: Cnab400BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstDocument: '01000000997396' },
       { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstDocument: '20000000997330' },
-      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstDocument: '00011122233396' },
+      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstDocument: '11122233396' },
       { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstDocument: '30000997300020' },
       { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstDocument: '40000997300084' },
-      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDocument: '00011122233396' },
+      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDocument: '11122233396' },
       { FieldClass: Cnab400SicrediBoletoSacadoDocumentoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstDocument: '40000997300084' }
     ])(
       'given detail lines with valid document ($examplePath) when reading value and validating then accepts all lines',
