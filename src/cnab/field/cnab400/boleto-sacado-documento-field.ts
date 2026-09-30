@@ -3,7 +3,12 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { validateDocumentByIndicator } from '@cnab/utils/document-parser'
+import {
+  DocumentType,
+  documentTypeByIndicator,
+  normalizeDocument,
+  validateDocumentByType
+} from '@cnab/utils/document-parser'
 
 export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -16,10 +21,8 @@ export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const value = this.value as string | null
-    // Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ.
-    const tipoInscricao = this.extractRangeFromLine(218, 220)
-    const isValid = value != null && validateDocumentByIndicator(value, tipoInscricao, '01', '02')
+    const value = this.value
+    const isValid = value != null && validateDocumentByType(value, this.documentType())
 
     const errors = []
 
@@ -40,7 +43,12 @@ export class Cnab400BoletoSacadoDocumentoField extends CnabField<string> {
     }
   }
 
+  // Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ.
+  protected documentType(): DocumentType | null {
+    return documentTypeByIndicator(this.extractRangeFromLine(218, 220), '01', '02')
+  }
+
   protected parseValue(rawValue: string): string {
-    return rawValue
+    return normalizeDocument(rawValue, this.documentType())
   }
 }

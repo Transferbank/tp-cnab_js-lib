@@ -1,5 +1,8 @@
 import { describe, it, expect } from '@jest/globals'
 import {
+  DocumentType,
+  documentTypeByIndicator,
+  normalizeDocument,
   validateDocument,
   validateDocumentByIndicator,
   isValidCPF,
@@ -149,6 +152,35 @@ describe('document-parser', (): void => {
     ])('given a $description', ({ document, tipoInscricao, cpfIndicator, cnpjIndicator }): void => {
       it('when validating then rejects it', (): void => {
         expect(validateDocumentByIndicator(document, tipoInscricao, cpfIndicator, cnpjIndicator)).toBe(false)
+      })
+    })
+  })
+
+  describe('documentTypeByIndicator', (): void => {
+    describe.each([
+      { description: 'CPF indicator', tipoInscricao: '01', expected: DocumentType.CPF },
+      { description: 'CNPJ indicator', tipoInscricao: '02', expected: DocumentType.CNPJ },
+      { description: 'tipo de inscricao that matches neither indicator', tipoInscricao: '00', expected: null },
+      { description: 'blank tipo de inscricao', tipoInscricao: '', expected: null }
+    ])('given a $description', ({ tipoInscricao, expected }): void => {
+      it('when resolving the document type then returns it', (): void => {
+        expect(documentTypeByIndicator(tipoInscricao, '01', '02')).toBe(expected)
+      })
+    })
+  })
+
+  describe('normalizeDocument', (): void => {
+    describe.each([
+      { description: 'CPF padded with zeros to 14 positions', document: '00012345678909', documentType: DocumentType.CPF, expected: '12345678909' },
+      { description: 'CPF padded with zeros to 15 positions', document: '000012345678909', documentType: DocumentType.CPF, expected: '12345678909' },
+      { description: 'CNPJ padded with zeros to 15 positions', document: '000123400010076', documentType: DocumentType.CNPJ, expected: '00123400010076' },
+      { description: 'CNPJ without padding', document: '12ABC34501DE35', documentType: DocumentType.CNPJ, expected: '12ABC34501DE35' },
+      { description: 'CPF without padding', document: '12345678909', documentType: DocumentType.CPF, expected: '12345678909' },
+      { description: 'CPF with non zero characters before the digits', document: 'ABCD12345678909', documentType: DocumentType.CPF, expected: 'ABCD12345678909' },
+      { description: 'document of unknown type', document: '00012345678909', documentType: null, expected: '00012345678909' }
+    ])('given a $description', ({ document, documentType, expected }): void => {
+      it('when normalizing then returns only the document digits', (): void => {
+        expect(normalizeDocument(document, documentType)).toBe(expected)
       })
     })
   })

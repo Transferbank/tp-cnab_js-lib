@@ -1,3 +1,8 @@
+export enum DocumentType {
+  CPF = 'cpf',
+  CNPJ = 'cnpj'
+}
+
 const CPF_PATTERN = /^\d{11}$/
 const CNPJ_PATTERN = /^[A-Z0-9]{12}\d{2}$/
 
@@ -66,18 +71,43 @@ export function validateDocument(rawDocument: string): boolean {
   return cpfMatches || cnpjMatches
 }
 
-// Alguns layouts (Segmento Q do CNAB240, campo de pagador do CNAB400 do
-// Itau) trazem um indicador explicito de tipo de inscricao ao lado do
-// documento, evitando a ambiguidade de validateDocument(). O tamanho do
-// codigo varia por banco/formato (ex.: "1"/"2" no CNAB240, "01"/"02" no
-// CNAB400 do Itau), por isso os codigos sao parametros.
+
+export function documentTypeByIndicator(
+  tipoInscricao: string,
+  cpfIndicator: string,
+  cnpjIndicator: string
+): DocumentType | null {
+  if (tipoInscricao == cpfIndicator) return DocumentType.CPF
+  if (tipoInscricao == cnpjIndicator) return DocumentType.CNPJ
+  return null
+}
+
+const DOCUMENT_LENGTH: Record<DocumentType, number> = {
+  [DocumentType.CPF]: 11,
+  [DocumentType.CNPJ]: 14
+}
+
+export function normalizeDocument(rawDocument: string, documentType: DocumentType | null): string {
+  if (documentType == null) return rawDocument
+
+  const length = DOCUMENT_LENGTH[documentType]
+  const padding = rawDocument.slice(0, -length)
+  if (rawDocument.length <= length || !/^0+$/.test(padding)) return rawDocument
+
+  return rawDocument.slice(-length)
+}
+
+export function validateDocumentByType(document: string, documentType: DocumentType | null): boolean {
+  if (documentType == DocumentType.CPF) return isDigitsOnly(document) && isValidCPF(document.slice(-11))
+  if (documentType == DocumentType.CNPJ) return isAlphanumeric(document) && isValidCNPJ(document.slice(-14).padStart(14, '0'))
+  return false
+}
+
 export function validateDocumentByIndicator(
   document: string,
   tipoInscricao: string,
   cpfIndicator: string,
   cnpjIndicator: string
 ): boolean {
-  if (tipoInscricao == cpfIndicator) return isDigitsOnly(document) && isValidCPF(document.slice(-11))
-  if (tipoInscricao == cnpjIndicator) return isAlphanumeric(document) && isValidCNPJ(document.slice(-14).padStart(14, '0'))
-  return false
+  return validateDocumentByType(document, documentTypeByIndicator(tipoInscricao, cpfIndicator, cnpjIndicator))
 }
