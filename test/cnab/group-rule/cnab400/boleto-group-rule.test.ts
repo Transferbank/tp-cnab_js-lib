@@ -43,4 +43,16 @@ describe('Cnab400BoletoGroupRule', (): void => {
     expect(expectedGroupStarts.some(Boolean)).toBe(true)
     expect(groupStarts).toEqual(expectedGroupStarts)
   })
+
+  it('given single line boleto group when validating then accepts it', (): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
+    const group: Array<[number, string]> = [[1, rawLines[1]]]
+
+    // When
+    const result = new Cnab400BoletoGroupRule().validate(group)
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+  })
 })

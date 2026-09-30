@@ -1,6 +1,7 @@
 export enum CnabValidationErrorType {
   LINE = 'line',
-  FIELD = 'field'
+  FIELD = 'field',
+  GROUP = 'group'
 }
 
 export abstract class CnabValidationError {
@@ -43,6 +44,38 @@ export abstract class CnabFieldValidationError extends CnabValidationError {
 
   get errorType(): CnabValidationErrorType {
     return CnabValidationErrorType.FIELD
+  }
+}
+
+export abstract class CnabGroupValidationError extends CnabValidationError {
+  readonly segmentName: string
+
+  constructor(params: { lineNumber: number; segmentName: string }) {
+    super({ lineNumber: params.lineNumber })
+    this.segmentName = params.segmentName
+  }
+
+  get errorType(): CnabValidationErrorType {
+    return CnabValidationErrorType.GROUP
+  }
+}
+
+export class CnabGroupMissingSegmentError extends CnabGroupValidationError {
+  get message(): string {
+    return `Grupo de boleto incompleto: ${this.segmentName} obrigatório não encontrado`
+  }
+}
+
+export class CnabGroupDuplicateSegmentError extends CnabGroupValidationError {
+  readonly count: number
+
+  constructor(params: { lineNumber: number; segmentName: string; count: number }) {
+    super({ lineNumber: params.lineNumber, segmentName: params.segmentName })
+    this.count = params.count
+  }
+
+  get message(): string {
+    return `Grupo de boleto inválido: ${this.segmentName} encontrado ${this.count} vezes, esperado no máximo 1`
   }
 }
 

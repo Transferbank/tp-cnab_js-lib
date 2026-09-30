@@ -4,7 +4,7 @@ import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabGroupMissingSegmentError, CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { readExampleLines, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -255,4 +255,26 @@ describe('cnab-file', (): void => {
       expect(cnab.boletos).toEqual([])
     }
   )
+
+  it('given cnab240 document file without segment Q when validating then reports one missing segment per boleto', (): void => {
+    // Given
+    const isSegmentoQ = (line: string): boolean => line[7] === '3' && line[13] === 'Q'
+    const isSegmentoP = (line: string): boolean => line[7] === '3' && line[13] === 'P'
+    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+      .filter((line: string) => !isSegmentoQ(line))
+    const cnabFile = CnabFile.fromLines(rawLines)
+    const expectedErrors = rawLines
+      .map((line: string, lineNumber: number) => (isSegmentoP(line) ? lineNumber : -1))
+      .filter((lineNumber: number) => lineNumber >= 0)
+      .map((lineNumber: number) => new CnabGroupMissingSegmentError({ lineNumber, segmentName: 'segmento Q' }))
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(expectedErrors.length).toBe(cnabFile.boletoCount)
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toEqual(expectedErrors)
+    expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
+  })
 })
