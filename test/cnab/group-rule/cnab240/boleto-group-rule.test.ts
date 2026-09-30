@@ -1,6 +1,7 @@
 import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
-import { readExampleLines, resPath } from '@test/test-utils'
+import assert from 'node:assert'
+import { findFirstCnab240SegmentLine, readExampleLines, resPath } from '@test/test-utils'
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import { CnabGroupDuplicateSegmentError, CnabGroupMissingSegmentError } from '@cnab/type/cnab-validation-error'
 
@@ -34,9 +35,14 @@ describe('Cnab240BoletoGroupRule', (): void => {
 
   describe('validate', (): void => {
     const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
-    const segmentoP = rawLines[4]
-    const segmentoQ = rawLines[5]
-    const segmentoR = rawLines[6]
+    const findSegment = (segment: string): string => {
+      const line = findFirstCnab240SegmentLine(rawLines, segment)
+      assert(line != null, `Linha com segmento ${segment} não encontrada`)
+      return line
+    }
+    const segmentoP = findSegment('P')
+    const segmentoQ = findSegment('Q')
+    const segmentoR = findSegment('R')
 
     it.each([
       ['P e Q', [segmentoP, segmentoQ]],

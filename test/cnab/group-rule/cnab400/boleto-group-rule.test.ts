@@ -1,6 +1,7 @@
 import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
-import { readExampleLines, resPath } from '@test/test-utils'
+import assert from 'node:assert'
+import { findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
 
 describe('Cnab400BoletoGroupRule', (): void => {
@@ -47,7 +48,9 @@ describe('Cnab400BoletoGroupRule', (): void => {
   it('given single line boleto group when validating then accepts it', (): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
-    const group: Array<[number, string]> = [[1, rawLines[1]]]
+    const detalhe = findFirstCnab400RecordLine(rawLines, '1')
+    assert(detalhe != null, 'Linha de detalhe não encontrada')
+    const group: Array<[number, string]> = [[1, detalhe]]
 
     // When
     const result = new Cnab400BoletoGroupRule().validate(group)
