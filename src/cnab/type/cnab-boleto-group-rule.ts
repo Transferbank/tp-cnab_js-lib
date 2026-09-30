@@ -31,10 +31,6 @@ export abstract class CnabBoletoGroupRule {
   abstract describeLine(rawLine: string): string
 
   validate(group: Array<[number, string]>): CnabValidationResult {
-    if (group.length == 0) {
-      return { isValid: true, errors: [] }
-    }
-
     const errors: CnabValidationError[] = []
     const [firstLineNumber, firstRawLine] = group[0]
 
