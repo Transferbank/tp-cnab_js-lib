@@ -100,7 +100,7 @@ export class CnabSchema {
 
     let currentBoleto = new CnabBoleto()
     rawLines.forEach((rawLine: string, lineNumber: number) => {
-      if (this.boletoGroupRule.check(rawLine) && Object.keys(currentBoleto.fields).length > 0) {
+      if (this.boleto.isBoletoGroupStart(rawLine) && Object.keys(currentBoleto.fields).length > 0) {
         cnab.boletos.push(currentBoleto)
         currentBoleto = new CnabBoleto()
       }
@@ -116,7 +116,9 @@ export class CnabSchema {
       }
     })
 
-    cnab.boletos.push(currentBoleto)
+    if (Object.keys(currentBoleto.fields).length > 0) {
+      cnab.boletos.push(currentBoleto)
+    }
 
     return cnab
   }

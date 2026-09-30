@@ -236,4 +236,23 @@ describe('cnab-file', (): void => {
       expect((error as CnabInvalidFileException).errors).toEqual(expectedErrors)
     }
   })
+
+  it.each([
+    ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', (line: string): boolean => !line.startsWith('1')]
+  ])(
+    'given document file %s without boleto lines when reading then returns no boletos',
+    (examplePath: string, isNotBoletoLine: (line: string) => boolean): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), examplePath)).filter(isNotBoletoLine)
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const cnab = cnabFile.read()
+
+      // Then
+      expect(cnabFile.boletoCount).toBe(0)
+      expect(cnab.boletos).toEqual([])
+    }
+  )
 })
