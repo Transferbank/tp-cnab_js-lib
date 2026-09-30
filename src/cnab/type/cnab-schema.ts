@@ -116,7 +116,9 @@ export class CnabSchema {
       }
     })
 
-    cnab.boletos.push(currentBoleto)
+    if (Object.keys(currentBoleto.fields).length > 0) {
+      cnab.boletos.push(currentBoleto)
+    }
 
     return cnab
   }
