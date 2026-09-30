@@ -1,10 +1,15 @@
 import { describe, it, expect } from '@jest/globals'
 import * as fs from 'fs'
 import * as path from 'path'
+import assert from 'node:assert'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
-import { CnabGroupMissingSegmentError, CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import {
+  CnabGroupMissingSegmentError,
+  CnabGroupOrphanSegmentError,
+  CnabInvalidLineSizeError
+} from '@cnab/type/cnab-validation-error'
 import { readExampleLines, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -237,24 +242,62 @@ describe('cnab-file', (): void => {
     }
   })
 
+  it('given cnab240 document file with only batch header and trailer lines when reading then returns no boletos', (): void => {
+    // Given
+    const isDetalhe = (line: string): boolean => line[7] == '3'
+    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+      .filter((line: string) => !isDetalhe(line))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const cnab = cnabFile.read()
+
+    // Then
+    expect(cnabFile.boletoCount).toBe(0)
+    expect(cnab.boletos).toEqual([])
+  })
+
   it.each([
-    ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] != '3'],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', (line: string): boolean => !line.startsWith('1')]
+    ['Q', 'segmento Q'],
+    ['R', 'segmento R']
   ])(
-    'given document file %s without boleto lines when reading then returns no boletos',
-    (examplePath: string, isNotBoletoLine: (line: string) => boolean): void => {
+    'given cnab240 document file with segment %s before the first boleto when validating then reports orphan segment',
+    (segment: string, segmentName: string): void => {
       // Given
-      const rawLines = readExampleLines(path.join(resPath(), examplePath)).filter(isNotBoletoLine)
+      const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+      const orphanLine = rawLines.find((line: string) => line[7] == '3' && line[13] == segment)
+      assert(orphanLine != null, `Linha com segmento ${segment} não encontrada`)
+      const orphanLineNumber = rawLines.findIndex((line: string) => line[7] == '3' && line[13] == 'P')
+      rawLines.splice(orphanLineNumber, 0, orphanLine)
       const cnabFile = CnabFile.fromLines(rawLines)
 
       // When
-      const cnab = cnabFile.read()
+      const result = cnabFile.validate(true)
 
       // Then
-      expect(cnabFile.boletoCount).toBe(0)
-      expect(cnab.boletos).toEqual([])
+      expect(result.errors).toEqual([
+        new CnabGroupOrphanSegmentError({ lineNumber: orphanLineNumber, segmentName })
+      ])
+      expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
     }
   )
+
+  it('given cnab400 document file with records but no boleto start when validating then reports every record as orphan', (): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
+      .filter((line: string) => !line.startsWith('1'))
+    const cnabFile = CnabFile.fromLines(rawLines)
+    const expectedErrors = rawLines
+      .slice(1, -1)
+      .map((_: string, index: number) => new CnabGroupOrphanSegmentError({ lineNumber: index + 1, segmentName: 'registro 2' }))
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(cnabFile.boletoCount).toBe(0)
+    expect(result.errors).toEqual(expectedErrors)
+  })
 
   it('given cnab240 document file without segment Q when validating then reports one missing segment per boleto', (): void => {
     // Given

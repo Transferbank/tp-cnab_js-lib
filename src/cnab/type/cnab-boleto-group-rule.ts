@@ -16,6 +16,12 @@ export abstract class CnabBoletoGroupRule {
 
   abstract check(rawLine: string): boolean
 
+  // Linha que só pode aparecer dentro de um boleto
+  abstract isBoletoLine(rawLine: string): boolean
+
+  // Nome da linha nas mensagens de erro, ex: 'segmento Q', 'registro 2'
+  abstract describeLine(rawLine: string): string
+
   validate(group: Array<[number, string]>): CnabValidationResult {
     if (group.length == 0) {
       return { isValid: true, errors: [] }

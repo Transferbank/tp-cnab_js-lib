@@ -123,7 +123,7 @@ Campos vazios no arquivo não aparecem em `fields`.
 
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'`, `'field'` ou `'group'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
 
-Erros de grupo (`CnabGroupValidationError`) indicam um boleto com a composição de linhas errada, com `segmentName` e o `lineNumber` da primeira linha do boleto. No CNAB 240, todo boleto precisa de um segmento Q, e os segmentos Q e R não podem aparecer mais de uma vez no mesmo boleto.
+Erros de grupo (`CnabGroupValidationError`) indicam um boleto com a composição de linhas errada, com `segmentName` e o `lineNumber` da primeira linha do boleto. No CNAB 240, todo boleto precisa de um segmento Q, e os segmentos Q e R não podem aparecer mais de uma vez no mesmo boleto. Linhas de boleto que aparecem antes do início do primeiro boleto (um segmento Q antes do primeiro P, por exemplo) também são erro de grupo; nesse caso o `lineNumber` aponta para a própria linha solta.
 
 ```ts
 import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'

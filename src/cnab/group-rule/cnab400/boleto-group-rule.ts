@@ -12,4 +12,13 @@ export class Cnab400BoletoGroupRule extends CnabBoletoGroupRule {
   check(rawLine: string): boolean {
     return Cnab400LineTypeChecker.isDetalhe(rawLine, this.recordType)
   }
+
+  // Entre header e trailer, toda linha do CNAB400 pertence a um boleto
+  isBoletoLine(): boolean {
+    return true
+  }
+
+  describeLine(rawLine: string): string {
+    return `registro ${rawLine[0]}`
+  }
 }

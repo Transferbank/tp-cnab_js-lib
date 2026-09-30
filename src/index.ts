@@ -27,6 +27,7 @@ export {
   CnabGroupValidationError,
   CnabGroupMissingSegmentError,
   CnabGroupDuplicateSegmentError,
+  CnabGroupOrphanSegmentError,
   CnabInvalidLineSizeError,
   CnabInvalidLineStartError,
   CnabFieldMinLengthError,

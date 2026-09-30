@@ -5,6 +5,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabGroupOrphanSegmentError } from '@cnab/type/cnab-validation-error'
 import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator,
@@ -102,6 +103,26 @@ export class CnabLineSchema {
     }
   }
 
+  // Linhas de boleto antes do primeiro início de boleto ficam fora de qualquer grupo
+  // (ver genLineGroups) e não seriam validadas
+  private findOrphanBoletoLines(rawLines: string[], firstLine: number): CnabGroupOrphanSegmentError[] {
+    const errors: CnabGroupOrphanSegmentError[] = []
+
+    for (const [index, rawLine] of rawLines.entries()) {
+      if (this.isBoletoGroupStart(rawLine)) {
+        break
+      }
+      if (this.boletoGroupRule.isBoletoLine(rawLine)) {
+        errors.push(new CnabGroupOrphanSegmentError({
+          lineNumber: firstLine + index,
+          segmentName: this.boletoGroupRule.describeLine(rawLine)
+        }))
+      }
+    }
+
+    return errors
+  }
+
   validate(
     rawLines: string[],
     eagerEnabled: boolean,
@@ -114,6 +135,16 @@ export class CnabLineSchema {
       ...this.fields,
       ...extraFields,
     ] as CnabValidatableConstructor[]
+
+    if (this.fieldType == CnabFieldType.BOLETO) {
+      const orphanErrors = this.findOrphanBoletoLines(rawLines, firstLine)
+      result.isValid = orphanErrors.length == 0
+      result.errors.push(...orphanErrors)
+
+      if (!result.isValid && eagerEnabled) {
+        return result
+      }
+    }
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const [lineNumber, rawLine] of group) {
