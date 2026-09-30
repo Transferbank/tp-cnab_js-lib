@@ -56,4 +56,8 @@ export class Cnab240LineTypeChecker {
   static isSegmentoS(rawLine: string): boolean {
     return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'S'
   }
+
+  static isSegmentoY(rawLine: string): boolean {
+    return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'Y'
+  }
 }

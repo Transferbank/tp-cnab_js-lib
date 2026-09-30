@@ -92,6 +92,12 @@ export class CnabGroupMissingStartSegmentError extends CnabGroupValidationError 
   }
 }
 
+export class CnabGroupUnknownSegmentError extends CnabGroupValidationError {
+  get message(): string {
+    return `Grupo de boleto inválido: ${this.segmentName} não é esperado em um boleto`
+  }
+}
+
 export class CnabGroupOrphanSegmentError extends CnabGroupValidationError {
   get message(): string {
     return `Grupo de boleto inválido: ${this.segmentName} encontrado antes do início de um boleto`

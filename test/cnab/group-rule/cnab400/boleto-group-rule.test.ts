@@ -58,4 +58,19 @@ describe('Cnab400BoletoGroupRule', (): void => {
     // Then
     expect(result).toEqual({ isValid: true, errors: [] })
   })
+
+  it('given boleto group with records not covered by any rule when validating then accepts it', (): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
+    const detalhe = findFirstCnab400RecordLine(rawLines, '1')
+    const mensagem = findFirstCnab400RecordLine(rawLines, '2')
+    assert(detalhe != null && mensagem != null, 'Linhas de exemplo não encontradas')
+    const group: Array<[number, string]> = [[1, detalhe], [2, mensagem], [3, mensagem]]
+
+    // When
+    const result = new Cnab400BoletoGroupRule().validate(group)
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+  })
 })

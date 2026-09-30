@@ -130,6 +130,7 @@ Erros de grupo (`CnabGroupValidationError`) indicam um boleto com a composição
 | `CnabGroupMissingSegmentError` | CNAB 240: boleto sem segmento Q | primeira linha do boleto (segmento P) |
 | `CnabGroupDuplicateSegmentError` | CNAB 240: segmento R repetido no mesmo boleto | segunda ocorrência do segmento |
 | `CnabGroupMissingStartSegmentError` | CNAB 240: segmento Q a mais no boleto, indicando um boleto sem segmento P | linha desse segmento Q |
+| `CnabGroupUnknownSegmentError` | CNAB 240: segmento que não faz parte de um boleto (qualquer um além de P, Q, R, S e Y) | linha desse segmento |
 | `CnabGroupOrphanSegmentError` | CNAB 240 e 400: linha de boleto antes do início do primeiro boleto | a própria linha solta |
 
 ```ts

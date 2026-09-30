@@ -1,12 +1,13 @@
 import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
 import assert from 'node:assert'
-import { findFirstCnab240SegmentLine, readExampleLines, resPath } from '@test/test-utils'
+import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import {
   CnabGroupDuplicateSegmentError,
   CnabGroupMissingSegmentError,
-  CnabGroupMissingStartSegmentError
+  CnabGroupMissingStartSegmentError,
+  CnabGroupUnknownSegmentError
 } from '@cnab/type/cnab-validation-error'
 
 describe('Cnab240BoletoGroupRule', (): void => {
@@ -120,6 +121,48 @@ describe('Cnab240BoletoGroupRule', (): void => {
         ]
       })
       expect(result.errors[0].message).toBe('Grupo de boleto inválido: segmento Q encontrado sem segmento P antes dele')
+    })
+
+    it('given boleto group with repeated segments S and Y when validating then accepts it', (): void => {
+      // Given
+      const segmentoS = replaceLineRange(segmentoR, [14, 14], 'S')
+      const segmentoY = replaceLineRange(segmentoR, [14, 14], 'Y')
+      const group = toGroup([segmentoP, segmentoQ, segmentoS, segmentoS, segmentoY, segmentoY])
+
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(group)
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+    })
+
+    it('given boleto group with batch trailer line when validating then does not treat it as unknown segment', (): void => {
+      // Given
+      const trailerLote = rawLines.find((line: string) => line[7] == '5')
+      assert(trailerLote != null, 'Linha de trailer de lote não encontrada')
+      const group = toGroup([segmentoP, segmentoQ, trailerLote])
+
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(group)
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+    })
+
+    it('given boleto group with unknown segment when validating then reports it at its own line', (): void => {
+      // Given
+      const segmentoX = replaceLineRange(segmentoR, [14, 14], 'X')
+      const group = toGroup([segmentoP, segmentoQ, segmentoX])
+
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(group)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [new CnabGroupUnknownSegmentError({ lineNumber: firstLineNumber + 2, segmentName: 'segmento X' })]
+      })
+      expect(result.errors[0].message).toBe('Grupo de boleto inválido: segmento X não é esperado em um boleto')
     })
   })
 })

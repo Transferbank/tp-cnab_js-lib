@@ -3,17 +3,24 @@ import {
   CnabValidationError,
   CnabGroupMissingSegmentError,
   CnabGroupDuplicateSegmentError,
-  CnabGroupMissingStartSegmentError
+  CnabGroupMissingStartSegmentError,
+  CnabGroupUnknownSegmentError
 } from '@cnab/type/cnab-validation-error'
 
 export interface CnabBoletoGroupSegmentRule {
   readonly name: string
   readonly required: boolean
+  // Padrão 1. Use Infinity para segmentos que podem se repetir livremente
+  readonly maxOccurrences?: number
   matches(rawLine: string): boolean
 }
 
 export abstract class CnabBoletoGroupRule {
   protected readonly segmentRules: CnabBoletoGroupSegmentRule[] = []
+
+  // Recusa linhas de boleto que não batem com nenhuma regra. Só é seguro quando
+  // segmentRules declara todos os segmentos que o layout permite
+  protected readonly rejectUnknownSegments: boolean = false
 
   abstract check(rawLine: string): boolean
 
@@ -47,13 +54,22 @@ export abstract class CnabBoletoGroupRule {
             startSegmentName: this.describeLine(firstRawLine)
           }))
         }
-      } else if (matchCount > 1) {
+      } else if (matchCount > (rule.maxOccurrences ?? 1)) {
         const [firstDuplicateLineNumber] = matches[1]
         errors.push(new CnabGroupDuplicateSegmentError({
           lineNumber: firstDuplicateLineNumber,
           segmentName: rule.name,
           count: matchCount
         }))
+      }
+    }
+
+    if (this.rejectUnknownSegments) {
+      for (const [lineNumber, rawLine] of group.slice(1)) {
+        const isKnown = this.segmentRules.some((rule: CnabBoletoGroupSegmentRule) => rule.matches(rawLine))
+        if (this.isBoletoLine(rawLine) && !isKnown) {
+          errors.push(new CnabGroupUnknownSegmentError({ lineNumber, segmentName: this.describeLine(rawLine) }))
+        }
       }
     }
 

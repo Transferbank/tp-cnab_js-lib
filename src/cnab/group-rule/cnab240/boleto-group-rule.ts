@@ -12,8 +12,22 @@ export class Cnab240BoletoGroupRule extends CnabBoletoGroupRule {
       name: 'segmento R',
       required: false,
       matches: (rawLine: string): boolean => Cnab240LineTypeChecker.isSegmentoR(rawLine)
+    },
+    {
+      name: 'segmento S',// S (impressão/mensagens)
+      required: false,
+      maxOccurrences: Infinity,
+      matches: (rawLine: string): boolean => Cnab240LineTypeChecker.isSegmentoS(rawLine)
+    },
+    {
+      name: 'segmento Y',//Y (sacador avalista, e-mail, pix...)
+      required: false,
+      maxOccurrences: Infinity,
+      matches: (rawLine: string): boolean => Cnab240LineTypeChecker.isSegmentoY(rawLine)
     }
   ]
+
+  protected readonly rejectUnknownSegments = true
 
   check(rawLine: string): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(rawLine)

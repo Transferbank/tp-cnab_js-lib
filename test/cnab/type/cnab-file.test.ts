@@ -9,9 +9,10 @@ import {
   CnabGroupMissingSegmentError,
   CnabGroupMissingStartSegmentError,
   CnabGroupOrphanSegmentError,
+  CnabGroupUnknownSegmentError,
   CnabInvalidLineSizeError
 } from '@cnab/type/cnab-validation-error'
-import { readExampleLines, resPath } from '@test/test-utils'
+import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
   const fullPath = path.join(resPath(), examplePath)
@@ -343,5 +344,23 @@ describe('cnab-file', (): void => {
         startSegmentName: 'segmento P'
       })
     ])
+  })
+
+  it('given cnab240 document file with an unknown segment inside a boleto when validating then reports it at its own line', (): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+    const firstSegmentoQLineNumber = rawLines.findIndex((line: string) => line[7] == '3' && line[13] == 'Q')
+    const unknownSegmentLineNumber = firstSegmentoQLineNumber + 1
+    rawLines.splice(unknownSegmentLineNumber, 0, replaceLineRange(rawLines[firstSegmentoQLineNumber], [14, 14], 'X'))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result.errors).toEqual([
+      new CnabGroupUnknownSegmentError({ lineNumber: unknownSegmentLineNumber, segmentName: 'segmento X' })
+    ])
+    expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
   })
 })
