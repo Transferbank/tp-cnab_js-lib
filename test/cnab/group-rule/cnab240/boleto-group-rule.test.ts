@@ -89,9 +89,10 @@ describe('Cnab240BoletoGroupRule', (): void => {
       expect(result.errors[0].message).toBe('Grupo de boleto incompleto: segmento Q obrigatório não encontrado')
     })
 
-    it('given boleto group with duplicated optional segment R when validating then reports duplicate segment', (): void => {
+    it('given boleto group with duplicated optional segment R when validating then reports duplicate segment at the second occurrence', (): void => {
       // Given
-      const group = toGroup([segmentoP, segmentoQ, segmentoR, segmentoR])
+      const group = toGroup([segmentoP, segmentoQ, segmentoR, segmentoR, segmentoR])
+      const secondSegmentoRLineNumber = firstLineNumber + 3
 
       // When
       const result = new Cnab240BoletoGroupRule().validate(group)
@@ -99,7 +100,7 @@ describe('Cnab240BoletoGroupRule', (): void => {
       // Then
       expect(result).toEqual({
         isValid: false,
-        errors: [new CnabGroupDuplicateSegmentError({ lineNumber: firstLineNumber, segmentName: 'segmento R', count: 2 })]
+        errors: [new CnabGroupDuplicateSegmentError({ lineNumber: secondSegmentoRLineNumber, segmentName: 'segmento R', count: 3 })]
       })
     })
 

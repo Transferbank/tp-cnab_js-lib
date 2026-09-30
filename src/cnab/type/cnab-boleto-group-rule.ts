@@ -48,8 +48,9 @@ export abstract class CnabBoletoGroupRule {
           }))
         }
       } else if (matchCount > 1) {
+        const [firstDuplicateLineNumber] = matches[1]
         errors.push(new CnabGroupDuplicateSegmentError({
-          lineNumber: firstLineNumber,
+          lineNumber: firstDuplicateLineNumber,
           segmentName: rule.name,
           count: matchCount
         }))
