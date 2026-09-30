@@ -1,4 +1,5 @@
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 import {
   CnabValidationError,
   CnabGroupMissingSegmentError,
@@ -30,12 +31,12 @@ export abstract class CnabBoletoGroupRule {
   // Nome da linha nas mensagens de erro, ex: 'segmento Q', 'registro 2'
   abstract describeLine(rawLine: string): string
 
-  validate(group: Array<[number, string]>): CnabValidationResult {
+  validate(group: CnabNumberedLine[]): CnabValidationResult {
     const errors: CnabValidationError[] = []
     const [firstLineNumber, firstRawLine] = group[0]
 
     for (const rule of this.segmentRules) {
-      const matches = group.filter(([, rawLine]: [number, string]) => rule.matches(rawLine))
+      const matches = group.filter(([, rawLine]: CnabNumberedLine) => rule.matches(rawLine))
       const matchCount = matches.length
 
       if (rule.required && matchCount == 0) {

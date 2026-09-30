@@ -3,6 +3,7 @@ import { describe, it, expect } from '@jest/globals'
 import assert from 'node:assert'
 import { findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
+import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 
 describe('Cnab400BoletoGroupRule', (): void => {
   it.each([
@@ -50,7 +51,7 @@ describe('Cnab400BoletoGroupRule', (): void => {
     const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
     const detalhe = findFirstCnab400RecordLine(rawLines, '1')
     assert(detalhe != null, 'Linha de detalhe não encontrada')
-    const group: Array<[number, string]> = [[1, detalhe]]
+    const group: CnabNumberedLine[] = [[1, detalhe]]
 
     // When
     const result = new Cnab400BoletoGroupRule().validate(group)
@@ -65,7 +66,7 @@ describe('Cnab400BoletoGroupRule', (): void => {
     const detalhe = findFirstCnab400RecordLine(rawLines, '1')
     const mensagem = findFirstCnab400RecordLine(rawLines, '2')
     assert(detalhe != null && mensagem != null, 'Linhas de exemplo não encontradas')
-    const group: Array<[number, string]> = [[1, detalhe], [2, mensagem], [3, mensagem]]
+    const group: CnabNumberedLine[] = [[1, detalhe], [2, mensagem], [3, mensagem]]
 
     // When
     const result = new Cnab400BoletoGroupRule().validate(group)

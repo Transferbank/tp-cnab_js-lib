@@ -5,6 +5,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 import { CnabGroupOrphanSegmentError } from '@cnab/type/cnab-validation-error'
 import {
   Cnab240LineSizeValidator,
@@ -73,10 +74,10 @@ export class CnabLineSchema {
     return this.boletoGroupRule.check(rawLine)
   }
 
-  *genLineGroups(rawLines: string[], firstLine: number): Generator<Array<[number, string]>> {
-    const numberedLines: Array<[number, string]> = Array.from(
+  *genLineGroups(rawLines: string[], firstLine: number): Generator<CnabNumberedLine[]> {
+    const numberedLines: CnabNumberedLine[] = Array.from(
       rawLines,
-      (line: string, index: number): [number, string] => [firstLine + index, line]
+      (line: string, index: number): CnabNumberedLine => [firstLine + index, line]
     )
 
     if (this.fieldType != CnabFieldType.BOLETO) {
@@ -84,7 +85,7 @@ export class CnabLineSchema {
       return
     }
 
-    let group: Array<[number, string]> = []
+    let group: CnabNumberedLine[] = []
 
     for (const numberedLine of numberedLines) {
       const [, rawLine] = numberedLine

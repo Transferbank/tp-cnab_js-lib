@@ -3,6 +3,7 @@ import { describe, it, expect } from '@jest/globals'
 import assert from 'node:assert'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
+import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 import {
   CnabGroupDuplicateSegmentError,
   CnabGroupMissingSegmentError,
@@ -50,8 +51,8 @@ describe('Cnab240BoletoGroupRule', (): void => {
     const segmentoR = findSegment('R')
     // Número de linha qualquer, usado só para conferir o lineNumber dos erros
     const firstLineNumber = 10
-    const toGroup = (lines: string[]): Array<[number, string]> =>
-      lines.map((line: string, index: number): [number, string] => [firstLineNumber + index, line])
+    const toGroup = (lines: string[]): CnabNumberedLine[] =>
+      lines.map((line: string, index: number): CnabNumberedLine => [firstLineNumber + index, line])
 
     it.each([
       ['P and Q', [segmentoP, segmentoQ]],
