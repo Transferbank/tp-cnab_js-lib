@@ -134,6 +134,16 @@ export class CnabLineSchema {
           }
         }
       }
+
+      if (this.fieldType == CnabFieldType.BOLETO) {
+        const groupResult = this.boletoGroupRule.validate(group)
+        result.isValid = result.isValid && groupResult.isValid
+        result.errors.push(...groupResult.errors)
+
+        if (!result.isValid && eagerEnabled) {
+          return result
+        }
+      }
     }
 
     return result

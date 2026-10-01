@@ -4,8 +4,8 @@ import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
-import { readExampleLines, resPath } from '@test/test-utils'
+import { CnabGroupMissingSegmentError, CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
   const fullPath = path.join(resPath(), examplePath)
@@ -255,4 +255,43 @@ describe('cnab-file', (): void => {
       expect(cnab.boletos).toEqual([])
     }
   )
+
+  describe('boleto composition (CNAB240)', (): void => {
+    const isSegmento = (line: string, segment: string): boolean => line[7] == '3' && line[13] == segment
+    const readItauWithoutSegmentQ = (): string[] =>
+      readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+        .filter((line: string) => !isSegmento(line, 'Q'))
+
+    it('given entrada boletos without segment Q when validating then reports one missing segment per boleto', (): void => {
+      // Given
+      const rawLines = readItauWithoutSegmentQ()
+      const cnabFile = CnabFile.fromLines(rawLines)
+      const expectedErrors = rawLines
+        .map((line: string, lineNumber: number) => (isSegmento(line, 'P') ? lineNumber : -1))
+        .filter((lineNumber: number) => lineNumber >= 0)
+        .map((lineNumber: number) => new CnabGroupMissingSegmentError({ lineNumber, segmentName: 'segmento Q' }))
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(expectedErrors.length).toBe(cnabFile.boletoCount)
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toEqual(expectedErrors)
+      expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
+    })
+
+    it('given baixa boletos without segment Q when validating then accepts them', (): void => {
+      // Given
+      const rawLines = readItauWithoutSegmentQ()
+        .map((line: string) => (isSegmento(line, 'P') ? replaceLineRange(line, [16, 17], '02') : line))
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+    })
+  })
 })
