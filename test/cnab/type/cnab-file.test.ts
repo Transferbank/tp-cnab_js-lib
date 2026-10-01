@@ -4,7 +4,11 @@ import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
-import { CnabGroupMissingSegmentError, CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import {
+  CnabGroupMissingSegmentError,
+  CnabGroupMissingStartSegmentError,
+  CnabInvalidLineSizeError
+} from '@cnab/type/cnab-validation-error'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -279,6 +283,30 @@ describe('cnab-file', (): void => {
       expect(result.isValid).toBe(false)
       expect(result.errors).toEqual(expectedErrors)
       expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
+    })
+
+    it('given a boleto that lost its segment P when validating then reports its segment Q as missing segment P', (): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+      const segmentoPLineNumbers = rawLines
+        .map((line: string, lineNumber: number) => (isSegmento(line, 'P') ? lineNumber : -1))
+        .filter((lineNumber: number) => lineNumber >= 0)
+      const deletedSegmentoPLineNumber = segmentoPLineNumbers[1]
+      rawLines.splice(deletedSegmentoPLineNumber, 1)
+      const orphanedSegmentoQLineNumber = deletedSegmentoPLineNumber
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(result.errors).toEqual([
+        new CnabGroupMissingStartSegmentError({
+          lineNumber: orphanedSegmentoQLineNumber,
+          segmentName: 'segmento Q',
+          startSegmentName: 'segmento P'
+        })
+      ])
     })
 
     it('given baixa boletos without segment Q when validating then accepts them', (): void => {

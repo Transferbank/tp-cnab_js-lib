@@ -79,6 +79,19 @@ export class CnabGroupDuplicateSegmentError extends CnabGroupValidationError {
   }
 }
 
+export class CnabGroupMissingStartSegmentError extends CnabGroupValidationError {
+  readonly startSegmentName: string
+
+  constructor(params: { lineNumber: number; segmentName: string; startSegmentName: string }) {
+    super({ lineNumber: params.lineNumber, segmentName: params.segmentName })
+    this.startSegmentName = params.startSegmentName
+  }
+
+  get message(): string {
+    return `Grupo de boleto inválido: ${this.segmentName} encontrado sem ${this.startSegmentName} antes dele`
+  }
+}
+
 export class CnabInvalidLineSizeError extends CnabLineValidationError {
   readonly expectedSize: number
   readonly actualSize: number

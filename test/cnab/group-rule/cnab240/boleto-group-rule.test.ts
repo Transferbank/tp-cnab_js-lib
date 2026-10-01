@@ -4,7 +4,11 @@ import assert from 'node:assert'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
-import { CnabGroupDuplicateSegmentError, CnabGroupMissingSegmentError } from '@cnab/type/cnab-validation-error'
+import {
+  CnabGroupDuplicateSegmentError,
+  CnabGroupMissingSegmentError,
+  CnabGroupMissingStartSegmentError
+} from '@cnab/type/cnab-validation-error'
 
 describe('Cnab240BoletoGroupRule', (): void => {
   it.each([
@@ -92,6 +96,26 @@ describe('Cnab240BoletoGroupRule', (): void => {
           segmentName: 'segmento R',
           count: 2
         })]
+      })
+    })
+
+    it.each([
+      ['entrada', segmentoPEntrada],
+      ['baixa', segmentoPBaixa]
+    ])('given %s boleto group with extra segments Q when validating then reports each extra Q as missing segment P', (_: string, segmentoP: string): void => {
+      // Given
+      const group = toGroup([segmentoP, segmentoQ, segmentoQ, segmentoR, segmentoQ])
+
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(group)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [
+          new CnabGroupMissingStartSegmentError({ lineNumber: firstLineNumber + 2, segmentName: 'segmento Q', startSegmentName: 'segmento P' }),
+          new CnabGroupMissingStartSegmentError({ lineNumber: firstLineNumber + 4, segmentName: 'segmento Q', startSegmentName: 'segmento P' })
+        ]
       })
     })
 

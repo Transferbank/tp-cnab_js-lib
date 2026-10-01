@@ -1,7 +1,11 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 import { CnabBoletoGroupRule, CnabBoletoGroupSegmentRule } from '@cnab/type/cnab-boleto-group-rule'
-import { CnabGroupDuplicateSegmentError, CnabGroupMissingSegmentError } from '@cnab/type/cnab-validation-error'
+import {
+  CnabGroupDuplicateSegmentError,
+  CnabGroupMissingSegmentError,
+  CnabGroupMissingStartSegmentError
+} from '@cnab/type/cnab-validation-error'
 
 class FakeBoletoGroupRule extends CnabBoletoGroupRule {
   protected readonly segmentRules: CnabBoletoGroupSegmentRule[]
@@ -91,6 +95,27 @@ describe('CnabBoletoGroupRule', (): void => {
         })]
       })
       expect(result.errors[0].message).toBe('Grupo de boleto inválido: segmento B encontrado 2 vezes, esperado no máximo 1')
+    })
+
+    it('given group with a segment paired with the start repeated when validating then reports each extra one as missing start', (): void => {
+      // Given
+      const pairedSegmentB: CnabBoletoGroupSegmentRule = { ...segmentB(false), pairedWithStart: 'segmento A' }
+      const group: CnabNumberedLine[] = [
+        [firstLineNumber, 'A'], [firstLineNumber + 1, 'B'], [firstLineNumber + 2, 'B'], [firstLineNumber + 3, 'B']
+      ]
+
+      // When
+      const result = new FakeBoletoGroupRule([pairedSegmentB]).validate(group)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [
+          new CnabGroupMissingStartSegmentError({ lineNumber: firstLineNumber + 2, segmentName: 'segmento B', startSegmentName: 'segmento A' }),
+          new CnabGroupMissingStartSegmentError({ lineNumber: firstLineNumber + 3, segmentName: 'segmento B', startSegmentName: 'segmento A' })
+        ]
+      })
+      expect(result.errors[0].message).toBe('Grupo de boleto inválido: segmento B encontrado sem segmento A antes dele')
     })
   })
 })
