@@ -121,7 +121,7 @@ Campos vazios no arquivo não aparecem em `fields`.
 
 ### Tratando erros de validação
 
-Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
+Todo erro implementa `CnabValidationError`, com `errorType` (`'line'`, `'field'` ou `'group'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
 
 ```ts
 import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'
@@ -132,6 +132,19 @@ for (const error of result.errors) {
   }
 }
 ```
+
+#### Composição dos boletos (CNAB 240)
+
+Além de validar cada linha, a lib confere se cada boleto tem os segmentos certos. Esses erros têm `errorType: 'group'`, estendem `CnabGroupValidationError` e trazem `segmentName` (ex: `'segmento Q'`). O `lineNumber` de cada erro é a linha do arquivo onde o problema é apontado:
+
+| Erro | Quando | Linha apontada pelo erro (`lineNumber`) |
+| ---- | ------ | --------------------------------------- |
+| `CnabGroupMissingSegmentError` | boleto de entrada de títulos (movimento `01` no segmento P) sem segmento Q | segmento P do boleto |
+| `CnabGroupDuplicateSegmentError` | segmento R mais de uma vez no mesmo boleto | segunda ocorrência |
+| `CnabGroupMissingStartSegmentError` | segmento Q a mais no boleto, indicando um boleto que perdeu o segmento P | o segmento Q a mais |
+| `CnabGroupSegmentOutOfOrderError` | segmento Q que não vem logo depois do segmento P | o segmento Q |
+
+Em instruções e alterações (outros códigos de movimento), o segmento Q é opcional. Os segmentos opcionais (R, S, Y) podem vir em qualquer ordem depois do Q.
 
 ### Exceções
 
