@@ -92,6 +92,19 @@ export class CnabGroupMissingStartSegmentError extends CnabGroupValidationError 
   }
 }
 
+export class CnabGroupSegmentOutOfOrderError extends CnabGroupValidationError {
+  readonly startSegmentName: string
+
+  constructor(params: { lineNumber: number; segmentName: string; startSegmentName: string }) {
+    super({ lineNumber: params.lineNumber, segmentName: params.segmentName })
+    this.startSegmentName = params.startSegmentName
+  }
+
+  get message(): string {
+    return `Grupo de boleto inválido: ${this.segmentName} deve vir logo depois do ${this.startSegmentName}`
+  }
+}
+
 export class CnabInvalidLineSizeError extends CnabLineValidationError {
   readonly expectedSize: number
   readonly actualSize: number

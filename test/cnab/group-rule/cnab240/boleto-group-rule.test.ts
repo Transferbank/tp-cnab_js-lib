@@ -7,7 +7,8 @@ import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 import {
   CnabGroupDuplicateSegmentError,
   CnabGroupMissingSegmentError,
-  CnabGroupMissingStartSegmentError
+  CnabGroupMissingStartSegmentError,
+  CnabGroupSegmentOutOfOrderError
 } from '@cnab/type/cnab-validation-error'
 
 describe('Cnab240BoletoGroupRule', (): void => {
@@ -117,6 +118,36 @@ describe('Cnab240BoletoGroupRule', (): void => {
           new CnabGroupMissingStartSegmentError({ lineNumber: firstLineNumber + 4, segmentName: 'segmento Q', startSegmentName: 'segmento P' })
         ]
       })
+    })
+
+    it.each([
+      ['entrada with segment R before segment Q', [segmentoPEntrada, segmentoR, segmentoQ]],
+      ['baixa with segment R before segment Q', [segmentoPBaixa, segmentoR, segmentoQ]]
+    ])('given boleto group of %s when validating then reports segment Q out of order', (_: string, lines: string[]): void => {
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(toGroup(lines))
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [new CnabGroupSegmentOutOfOrderError({
+          lineNumber: firstLineNumber + 2,
+          segmentName: 'segmento Q',
+          startSegmentName: 'segmento P'
+        })]
+      })
+    })
+
+    it('given boleto group with optional segments in any order after segment Q when validating then accepts it', (): void => {
+      // Given
+      const segmentoS = replaceLineRange(segmentoR, [14, 14], 'S')
+      const group = toGroup([segmentoPEntrada, segmentoQ, segmentoS, segmentoR, segmentoS])
+
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(group)
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
     })
 
     it('given boleto group with segment S repeated when validating then accepts it', (): void => {

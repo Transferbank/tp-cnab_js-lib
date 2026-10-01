@@ -7,6 +7,7 @@ import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
 import {
   CnabGroupMissingSegmentError,
   CnabGroupMissingStartSegmentError,
+  CnabGroupSegmentOutOfOrderError,
   CnabInvalidLineSizeError
 } from '@cnab/type/cnab-validation-error'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
@@ -303,6 +304,29 @@ describe('cnab-file', (): void => {
       expect(result.errors).toEqual([
         new CnabGroupMissingStartSegmentError({
           lineNumber: orphanedSegmentoQLineNumber,
+          segmentName: 'segmento Q',
+          startSegmentName: 'segmento P'
+        })
+      ])
+    })
+
+    it('given a boleto with segments Q and R swapped when validating then reports segment Q out of order', (): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab240/itau_cnab_240.txt'))
+      const segmentoRLineNumber = rawLines.findIndex((line: string) => isSegmento(line, 'R'))
+      const segmentoQLineNumber = segmentoRLineNumber - 1
+      const segmentoQ = rawLines[segmentoQLineNumber]
+      rawLines[segmentoQLineNumber] = rawLines[segmentoRLineNumber]
+      rawLines[segmentoRLineNumber] = segmentoQ
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(result.errors).toEqual([
+        new CnabGroupSegmentOutOfOrderError({
+          lineNumber: segmentoRLineNumber,
           segmentName: 'segmento Q',
           startSegmentName: 'segmento P'
         })

@@ -4,7 +4,8 @@ import { CnabBoletoGroupRule, CnabBoletoGroupSegmentRule } from '@cnab/type/cnab
 import {
   CnabGroupDuplicateSegmentError,
   CnabGroupMissingSegmentError,
-  CnabGroupMissingStartSegmentError
+  CnabGroupMissingStartSegmentError,
+  CnabGroupSegmentOutOfOrderError
 } from '@cnab/type/cnab-validation-error'
 
 class FakeBoletoGroupRule extends CnabBoletoGroupRule {
@@ -116,6 +117,38 @@ describe('CnabBoletoGroupRule', (): void => {
         ]
       })
       expect(result.errors[0].message).toBe('Grupo de boleto inválido: segmento B encontrado sem segmento A antes dele')
+    })
+
+    it('given group with a segment paired with the start right after it when validating then accepts it', (): void => {
+      // Given
+      const pairedSegmentB: CnabBoletoGroupSegmentRule = { ...segmentB(false), pairedWithStart: 'segmento A' }
+      const group: CnabNumberedLine[] = [[firstLineNumber, 'A'], [firstLineNumber + 1, 'B'], [firstLineNumber + 2, 'C']]
+
+      // When
+      const result = new FakeBoletoGroupRule([pairedSegmentB]).validate(group)
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+    })
+
+    it('given group with a segment paired with the start after other lines when validating then reports it out of order', (): void => {
+      // Given
+      const pairedSegmentB: CnabBoletoGroupSegmentRule = { ...segmentB(false), pairedWithStart: 'segmento A' }
+      const group: CnabNumberedLine[] = [[firstLineNumber, 'A'], [firstLineNumber + 1, 'C'], [firstLineNumber + 2, 'B']]
+
+      // When
+      const result = new FakeBoletoGroupRule([pairedSegmentB]).validate(group)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [new CnabGroupSegmentOutOfOrderError({
+          lineNumber: firstLineNumber + 2,
+          segmentName: 'segmento B',
+          startSegmentName: 'segmento A'
+        })]
+      })
+      expect(result.errors[0].message).toBe('Grupo de boleto inválido: segmento B deve vir logo depois do segmento A')
     })
   })
 })
