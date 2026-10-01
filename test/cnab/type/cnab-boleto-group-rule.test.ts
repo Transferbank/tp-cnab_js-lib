@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 import { CnabBoletoGroupRule, CnabBoletoGroupSegmentRule } from '@cnab/type/cnab-boleto-group-rule'
-import { CnabGroupMissingSegmentError } from '@cnab/type/cnab-validation-error'
+import { CnabGroupDuplicateSegmentError, CnabGroupMissingSegmentError } from '@cnab/type/cnab-validation-error'
 
 class FakeBoletoGroupRule extends CnabBoletoGroupRule {
   protected readonly segmentRules: CnabBoletoGroupSegmentRule[]
@@ -72,6 +72,25 @@ describe('CnabBoletoGroupRule', (): void => {
 
       // Then
       expect(result).toEqual({ isValid: true, errors: [] })
+    })
+
+    it('given group with a repeated segment when validating then reports it at the second occurrence', (): void => {
+      // Given
+      const group: CnabNumberedLine[] = [[firstLineNumber, 'A'], [firstLineNumber + 1, 'B'], [firstLineNumber + 2, 'B']]
+
+      // When
+      const result = new FakeBoletoGroupRule([segmentB(false)]).validate(group)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [new CnabGroupDuplicateSegmentError({
+          lineNumber: firstLineNumber + 2,
+          segmentName: 'segmento B',
+          count: 2
+        })]
+      })
+      expect(result.errors[0].message).toBe('Grupo de boleto inválido: segmento B encontrado 2 vezes, esperado no máximo 1')
     })
   })
 })

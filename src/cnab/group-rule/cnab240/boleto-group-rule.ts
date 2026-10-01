@@ -19,6 +19,11 @@ export class Cnab240BoletoGroupRule extends CnabBoletoGroupRule {
       name: 'segmento Q',
       matches: (rawLine: string): boolean => Cnab240LineTypeChecker.isSegmentoQ(rawLine),
       isRequired: isSegmentoPDeEntradaDeTitulos
+    },
+    {
+      name: 'segmento R',
+      matches: (rawLine: string): boolean => Cnab240LineTypeChecker.isSegmentoR(rawLine),
+      isRequired: (): boolean => false
     }
   ]
 

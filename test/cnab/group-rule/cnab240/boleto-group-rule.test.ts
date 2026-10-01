@@ -4,7 +4,7 @@ import assert from 'node:assert'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
-import { CnabGroupMissingSegmentError } from '@cnab/type/cnab-validation-error'
+import { CnabGroupDuplicateSegmentError, CnabGroupMissingSegmentError } from '@cnab/type/cnab-validation-error'
 
 describe('Cnab240BoletoGroupRule', (): void => {
   it.each([
@@ -74,6 +74,37 @@ describe('Cnab240BoletoGroupRule', (): void => {
         isValid: false,
         errors: [new CnabGroupMissingSegmentError({ lineNumber: firstLineNumber, segmentName: 'segmento Q' })]
       })
+    })
+
+    it('given boleto group with segment R repeated when validating then reports it at the second segment R', (): void => {
+      // Given
+      const group = toGroup([segmentoPEntrada, segmentoQ, segmentoR, segmentoR])
+      const secondSegmentoRLineNumber = firstLineNumber + 3
+
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(group)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [new CnabGroupDuplicateSegmentError({
+          lineNumber: secondSegmentoRLineNumber,
+          segmentName: 'segmento R',
+          count: 2
+        })]
+      })
+    })
+
+    it('given boleto group with segment S repeated when validating then accepts it', (): void => {
+      // Given
+      const segmentoS = replaceLineRange(segmentoR, [14, 14], 'S')
+      const group = toGroup([segmentoPEntrada, segmentoQ, segmentoS, segmentoS, segmentoS])
+
+      // When
+      const result = new Cnab240BoletoGroupRule().validate(group)
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
     })
   })
 })

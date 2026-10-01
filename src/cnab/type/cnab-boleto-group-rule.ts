@@ -1,6 +1,10 @@
 import { CnabNumberedLine } from '@cnab/type/cnab-numbered-line'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabGroupMissingSegmentError, CnabValidationError } from '@cnab/type/cnab-validation-error'
+import {
+  CnabGroupDuplicateSegmentError,
+  CnabGroupMissingSegmentError,
+  CnabValidationError
+} from '@cnab/type/cnab-validation-error'
 
 export interface CnabBoletoGroupSegmentRule {
   readonly name: string
@@ -15,7 +19,8 @@ export abstract class CnabBoletoGroupRule {
 
   validate(group: CnabNumberedLine[]): CnabValidationResult {
     const errors: CnabValidationError[] = [
-      ...this.missingSegmentErrors(group)
+      ...this.missingSegmentErrors(group),
+      ...this.duplicateSegmentErrors(group)
     ]
 
     return { isValid: errors.length == 0, errors }
@@ -28,6 +33,25 @@ export abstract class CnabBoletoGroupRule {
     for (const rule of this.segmentRules) {
       if (!this.hasSegment(group, rule) && rule.isRequired(group)) {
         errors.push(new CnabGroupMissingSegmentError({ lineNumber: firstLineNumber, segmentName: rule.name }))
+      }
+    }
+
+    return errors
+  }
+
+  private duplicateSegmentErrors(group: CnabNumberedLine[]): CnabValidationError[] {
+    const errors: CnabValidationError[] = []
+
+    for (const rule of this.segmentRules) {
+      const segmentLines = group.filter(([, rawLine]: CnabNumberedLine) => rule.matches(rawLine))
+
+      if (segmentLines.length > 1) {
+        const [secondOccurrenceLineNumber] = segmentLines[1]
+        errors.push(new CnabGroupDuplicateSegmentError({
+          lineNumber: secondOccurrenceLineNumber,
+          segmentName: rule.name,
+          count: segmentLines.length
+        }))
       }
     }
 
