@@ -1,4 +1,4 @@
-# @transferhub/cnab-lib-ts
+# @fx55/cnab-lib-ts
 
 Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240 e CNAB 400 (boletos bancários).
 
@@ -47,13 +47,13 @@ Todos os campos são validados e lidos em todos os bancos acima, exceto quando o
 ## Instalação
 
 ```bash
-npm install @transferhub/cnab-lib-ts
+npm install @fx55/cnab-lib-ts
 ```
 
 ou
 
 ```bash
-yarn add @transferhub/cnab-lib-ts
+yarn add @fx55/cnab-lib-ts
 ```
 
 Requer Node.js 18+ (usa a Web File API, disponível globalmente a partir dessa versão).
@@ -65,7 +65,7 @@ Requer Node.js 18+ (usa a Web File API, disponível globalmente a partir dessa v
 A partir de um `File` (por exemplo, um input de upload no navegador):
 
 ```ts
-import { openCnabFile } from '@transferhub/cnab-lib-ts'
+import { openCnabFile } from '@fx55/cnab-lib-ts'
 
 const cnabFile = await openCnabFile(file)
 ```
@@ -73,7 +73,7 @@ const cnabFile = await openCnabFile(file)
 A partir das linhas já lidas (por exemplo, um arquivo lido no backend):
 
 ```ts
-import { openCnabFileFromLines } from '@transferhub/cnab-lib-ts'
+import { openCnabFileFromLines } from '@fx55/cnab-lib-ts'
 
 const cnabFile = openCnabFileFromLines(lines) // string[]
 ```
@@ -124,7 +124,7 @@ Campos vazios no arquivo não aparecem em `fields`.
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
 
 ```ts
-import { CnabFieldValidationError } from '@transferhub/cnab-lib-ts'
+import { CnabFieldValidationError } from '@fx55/cnab-lib-ts'
 
 for (const error of result.errors) {
   if (error instanceof CnabFieldValidationError) {

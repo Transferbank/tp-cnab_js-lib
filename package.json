@@ -1,5 +1,5 @@
 {
-  "name": "@transferhub/cnab-lib-ts",
+  "name": "@fx55/cnab-lib-ts",
   "version": "1.0.1",
   "description": "Biblioteca TypeScript para processamento e validação de arquivos CNAB 240 e 400",
   "main": "dist/index.js",
