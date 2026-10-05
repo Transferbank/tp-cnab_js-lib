@@ -15,12 +15,16 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 | Banco                   | CNAB 240 | CNAB 400 |
 | ----------------------- | :------: | :------: |
 | Banco do Brasil         |    ✅    |    ✅    |
-| Bradesco                |    ✅    |    ✅    |
+| Bradesco                |    ✅    |    ⚠️    |
 | Caixa Econômica Federal |    ✅    |    ✅    |
 | Itaú                    |    ✅    |    ✅    |
 | Santander               |    ✅    |    ✅    |
 | Sicoob                  |    ✅    |    ✅    |
-| Sicredi                 |    ✅    |    ✅    |
+| Sicredi                 |    ⚠️    |    ⚠️    |
+
+- ✅ Suportado: o arquivo é validado e lido.
+- ⚠️ Reconhecido, mas recusado: o layout do banco não tem todos os [campos essenciais](#campos-essenciais-e-opcionais), então a validação dá erro de layout e a leitura falha.
+- ❌ Não reconhecido: bancos e formatos fora desta tabela. `openCnabFile` lança exceções para cada caso (veja [Exceções](#exceções)).
 
 ## Campos de boleto
 
@@ -38,11 +42,21 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `cidade_do_sacado`    | Cidade do sacado                | `string` |
 | `uf_do_sacado`        | UF do sacado                    | `string` |
 
-Todos os campos são validados e lidos em todos os bancos acima, exceto quando o layout do banco não tem o campo:
+### Campos essenciais e opcionais
 
-- Bradesco CNAB 400: sem bairro, cidade e UF
-- Sicredi CNAB 240: sem bairro
-- Sicredi CNAB 400: sem bairro, cidade e UF
+Todos os campos acima são **essenciais**: o layout do banco precisa ter cada um deles. Quando falta algum, o arquivo é recusado com um erro de layout (veja [Tratando erros de validação](#tratando-erros-de-validação)):
+
+| Banco e formato   | Campos que o layout não tem |
+| ----------------- | --------------------------- |
+| Bradesco CNAB 400 | bairro, cidade e UF         |
+| Sicredi CNAB 240  | bairro                      |
+| Sicredi CNAB 400  | bairro, cidade e UF         |
+
+Nos demais bancos, todos os campos são **obrigatórios**: um campo vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se o campo é obrigatório.
+
+A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
+
+- Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
 
 ## Instalação
 
@@ -84,6 +98,7 @@ Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de b
 cnabFile.bank // ex: 'bradesco'
 cnabFile.format // ex: '240'
 cnabFile.boletoCount // ex: 3
+cnabFile.missingEssentialFields // ex: [] ou ['bairro_do_sacado'] no Sicredi CNAB 240
 ```
 
 
@@ -117,11 +132,17 @@ for (const boleto of cnab.boletos) {
 }
 ```
 
-Campos vazios no arquivo não aparecem em `fields`.
+Campos opcionais vazios no arquivo (como o endereço na Caixa CNAB 240) não aparecem em `fields`.
 
 ### Tratando erros de validação
 
-Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
+Todo erro implementa `CnabValidationError`, com `errorType` (`'line'`, `'field'` ou `'layout'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
+
+Erros de layout (`CnabLayoutValidationError`) indicam que o layout do banco não serve para a lib, não importa o conteúdo do arquivo. Eles trazem `bank` e `format` e apontam para o header (`lineNumber` 0). Hoje o único é o `CnabMissingEssentialFieldError`, com o `fieldKey` do campo essencial que falta (ex: *"Layout CNAB240 do banco sicredi não possui o campo essencial bairro_do_sacado"*):
+
+- `validate(true)`: um erro para cada campo que falta, seguido dos erros das linhas, que continuam sendo validadas
+- `validate()`: só o primeiro campo que falta
+- `read()`: lança `CnabInvalidFileException`
 
 ```ts
 import { CnabFieldValidationError } from '@fx55/cnab-lib-ts'
