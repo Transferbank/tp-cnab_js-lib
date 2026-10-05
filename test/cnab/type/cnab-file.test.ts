@@ -283,6 +283,8 @@ describe('cnab-file', (): void => {
   )
 
   it('given caixa cnab240 document file with blank address fields when reading then accepts it and omits those fields', (): void => {
+    // No manual da Caixa CNAB240, as notas G032 a G036 descrevem endereço, bairro, CEP, cidade e UF do pagador
+    //  como opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário.
     // Given
     const addressFieldKeys = ['endereco_do_sacado', 'bairro_do_sacado', 'cep_do_sacado', 'cidade_do_sacado', 'uf_do_sacado']
     const rawLines = readExampleLines(path.join(resPath(), 'caixa/cnab240/caixa_cnab_240.txt'))
