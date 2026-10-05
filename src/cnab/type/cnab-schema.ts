@@ -7,6 +7,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
+import { CNAB_ESSENTIAL_FIELD_KEYS } from '@cnab/type/cnab-essential-field-keys'
 
 type CnabLineSchemaConfig = {
   fieldType: CnabFieldType
@@ -47,6 +48,11 @@ export class CnabSchema {
 
   get lineSchemas(): CnabLineSchema[] {
     return [this.header, this.trailer, this.boleto]
+  }
+
+  get missingEssentialFields(): string[] {
+    const boletoFieldKeys = this.boleto.fieldKeys
+    return CNAB_ESSENTIAL_FIELD_KEYS.filter((fieldKey: string) => !boletoFieldKeys.includes(fieldKey))
   }
 
   validate(

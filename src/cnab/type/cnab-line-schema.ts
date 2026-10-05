@@ -68,6 +68,10 @@ export class CnabLineSchema {
     return this.cachedValidators
   }
 
+  get fieldKeys(): string[] {
+    return this.fields.map((field: CnabFieldClass) => new field('', 0).fieldKey)
+  }
+
   isBoletoGroupStart(rawLine: string): boolean {
     return this.boletoGroupRule.check(rawLine)
   }

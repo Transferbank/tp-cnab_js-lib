@@ -49,6 +49,32 @@ describe('cnab-file', (): void => {
   )
 
   it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', []],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', []],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', []],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', ['bairro_do_sacado', 'cidade_do_sacado', 'uf_do_sacado']],
+    ['caixa/cnab240/caixa_cnab_240.txt', []],
+    ['caixa/cnab400/caixa_cnab_400.REM', []],
+    ['itau/cnab240/itau_cnab_240.txt', []],
+    ['itau/cnab400/ITAU_cnab_400.REM', []],
+    ['santander/cnab240/santander_cnab_240.txt', []],
+    ['santander/cnab400/santander_cnab_400.REM', []],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', []],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', []],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', ['bairro_do_sacado']],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', ['bairro_do_sacado', 'cidade_do_sacado', 'uf_do_sacado']]
+  ])(
+    'given document file %s when opening then reports the essential fields its layout does not have',
+    (examplePath: string, expectedMissingEssentialFields: string[]): void => {
+      // When
+      const cnabFile = openExample(examplePath)
+
+      // Then
+      expect(cnabFile.missingEssentialFields).toEqual(expectedMissingEssentialFields)
+    }
+  )
+
+  it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt'],
     ['bradesco/cnab400/bradesco_cnab_400.txt']
   ])(
