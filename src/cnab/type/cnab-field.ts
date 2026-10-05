@@ -92,8 +92,8 @@ export interface CnabFieldClass<T = unknown> {
 }
 
 export function optional<T>(fieldClass: CnabFieldClass<T>): CnabFieldClass<T> {
-  const fieldConstructor = fieldClass as unknown as new (rawLine: string, lineNumber: number) => object
+  const fieldConstructor: new (rawLine: string, lineNumber: number) => object = fieldClass
   return class extends fieldConstructor {
     static readonly isOptional = true
-  } as unknown as CnabFieldClass<T>
+  } as CnabFieldClass<T>
 }
