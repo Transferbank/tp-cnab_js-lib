@@ -8,6 +8,7 @@ import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 import { CNAB_ESSENTIAL_FIELD_KEYS } from '@cnab/type/cnab-essential-field-keys'
+import { CnabMissingEssentialFieldError } from '@cnab/type/cnab-validation-error'
 
 type CnabLineSchemaConfig = {
   fieldType: CnabFieldType
@@ -61,6 +62,15 @@ export class CnabSchema {
     extraFields?: CnabFieldClass[]
   ): CnabValidationResult {
     const result: CnabValidationResult = { isValid: true, errors: [] }
+
+    for (const fieldKey of this.missingEssentialFields) {
+      result.isValid = false
+      result.errors.push(new CnabMissingEssentialFieldError({ bank: this.bank, format: this.fmt, fieldKey }))
+
+      if (eagerEnabled) {
+        return result
+      }
+    }
 
     const items: Array<[CnabLineSchema, string[], number]> = [
       [this.header, [rawLines[0]], 0],

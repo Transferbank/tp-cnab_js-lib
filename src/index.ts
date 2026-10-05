@@ -24,6 +24,8 @@ export {
   CnabValidationErrorType,
   CnabLineValidationError,
   CnabFieldValidationError,
+  CnabLayoutValidationError,
+  CnabMissingEssentialFieldError,
   CnabInvalidLineSizeError,
   CnabInvalidLineStartError,
   CnabFieldMinLengthError,

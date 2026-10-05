@@ -4,7 +4,9 @@ import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabInvalidLineSizeError, CnabMissingEssentialFieldError } from '@cnab/type/cnab-validation-error'
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -74,9 +76,56 @@ describe('cnab-file', (): void => {
     }
   )
 
+  describe('layout without essential fields', (): void => {
+    const truncatedSize = 5
+    const truncatedLineNumber = 3
+    const readSicrediWithTruncatedLine = (): string[] => {
+      const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab240/sicredi_cnab_240.txt'))
+      rawLines[truncatedLineNumber] = rawLines[truncatedLineNumber].substring(0, truncatedSize)
+      return rawLines
+    }
+    const missingBairroError = new CnabMissingEssentialFieldError({
+      bank: CnabBank.SICREDI,
+      format: CnabFormat.CNAB240,
+      fieldKey: 'bairro_do_sacado'
+    })
+
+    it('given sicredi cnab240 document file when validating with feedback then reports the missing essential field at the header and keeps validating the lines', (): void => {
+      // Given
+      const cnabFile = CnabFile.fromLines(readSicrediWithTruncatedLine())
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [
+          missingBairroError,
+          new CnabInvalidLineSizeError({ lineNumber: truncatedLineNumber, expectedSize: 240, actualSize: truncatedSize })
+        ]
+      })
+      expect(result.errors[0].lineNumber).toBe(0)
+      expect(result.errors[0].message).toBe('Layout CNAB240 do banco sicredi não possui o campo essencial bairro_do_sacado')
+      expect(result.errors[1].lineNumber).toBe(truncatedLineNumber)
+      expect(result.errors[1].message).toBe('Tamanho de linha inválido: esperado 240, recebido 5')
+    })
+
+    it('given sicredi cnab240 document file when validating without feedback then reports only the missing essential field', (): void => {
+      // Given
+      const cnabFile = CnabFile.fromLines(readSicrediWithTruncatedLine())
+
+      // When
+      const result = cnabFile.validate()
+
+      // Then
+      expect(result).toEqual({ isValid: false, errors: [missingBairroError] })
+    })
+  })
+
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt'],
-    ['bradesco/cnab400/bradesco_cnab_400.txt']
+    ['itau/cnab400/ITAU_cnab_400.REM']
   ])(
     'given valid document file when validating with feedback then reports no errors',
     async (examplePath: string): Promise<void> => {
@@ -96,7 +145,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt', 5, 240],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 2, 400]
+    ['itau/cnab400/ITAU_cnab_400.REM', 2, 400]
   ])(
     'given document file with truncated line when validating then reports line size error',
     (examplePath: string, truncatedLineNumber: number, expectedSize: number): void => {
@@ -127,12 +176,11 @@ describe('cnab-file', (): void => {
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 3],
     ['bradesco/cnab240/bradesco_cnab_240.txt', 3],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 37],
     ['caixa/cnab240/caixa_cnab_240.txt', 3],
     ['itau/cnab240/itau_cnab_240.txt', 4],
+    ['itau/cnab400/ITAU_cnab_400.REM', 319],
     ['santander/cnab240/santander_cnab_240.txt', 3],
-    ['sicoob/cnab240/sicoob_cnab_240.txt', 3],
-    ['sicredi/cnab240/sicredi_cnab_240.txt', 3]
+    ['sicoob/cnab240/sicoob_cnab_240.txt', 3]
   ])(
     'given valid document file from any bank when opening and validating then reports the right boleto count and no errors',
     (examplePath: string, expectedBoletoCount: number): void => {
@@ -216,15 +264,18 @@ describe('cnab-file', (): void => {
 
   it('given valid cnab400 document file when reading then extracts every boleto field', (): void => {
     // Given
-    const cnabFile = openExample('bradesco/cnab400/bradesco_cnab_400.txt')
+    const cnabFile = openExample('itau/cnab400/ITAU_cnab_400.REM')
     const expectedFirstBoleto = new CnabBoleto({
       fields: {
-        nome_do_sacado: 'COMERCIAL ALFA LTDA',
-        data_de_vencimento: new Date(2026, 7, 24),
-        valor_do_titulo: 22560.93,
-        documento_do_sacado: '20000000997330',
-        endereco_do_sacado: 'AV EXEMPLO 200',
-        cep_do_sacado: '29045402'
+        nome_do_sacado: 'JOAO EXEMPLO SILVA - ME',
+        data_de_vencimento: new Date(2026, 6, 6),
+        valor_do_titulo: 6762.31,
+        documento_do_sacado: '30000997300020',
+        endereco_do_sacado: 'AV EXEMPLO 100',
+        bairro_do_sacado: 'CENTRO',
+        cep_do_sacado: '63540000',
+        cidade_do_sacado: 'VARZEA ALEGRE',
+        uf_do_sacado: 'CE'
       }
     })
 
@@ -239,7 +290,7 @@ describe('cnab-file', (): void => {
   it('given document file with invalid lines when reading then throws with the first validation error', (): void => {
     // Given
     const truncatedSize = 5
-    const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
+    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
     rawLines[2] = rawLines[2].substring(0, truncatedSize)
     rawLines[4] = rawLines[4].substring(0, truncatedSize)
     const cnabFile = CnabFile.fromLines(rawLines)
@@ -265,7 +316,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', (line: string): boolean => !line.startsWith('1')]
+    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1')]
   ])(
     'given document file %s without boleto lines when reading then returns no boletos',
     (examplePath: string, isNotBoletoLine: (line: string) => boolean): void => {
