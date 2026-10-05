@@ -5,7 +5,7 @@ import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
-import { readExampleLines, resPath } from '@test/test-utils'
+import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
   const fullPath = path.join(resPath(), examplePath)
@@ -255,4 +255,25 @@ describe('cnab-file', (): void => {
       expect(cnab.boletos).toEqual([])
     }
   )
+
+  it('given caixa cnab240 document file with blank address fields when reading then accepts it and omits those fields', (): void => {
+    // Given
+    const addressFieldKeys = ['endereco_do_sacado', 'bairro_do_sacado', 'cep_do_sacado', 'cidade_do_sacado', 'uf_do_sacado']
+    const rawLines = readExampleLines(path.join(resPath(), 'caixa/cnab240/caixa_cnab_240.txt'))
+      .map((line: string) => (line[7] == '3' && line[13] == 'Q' ? replaceLineRange(line, [74, 153], '') : line))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+    const cnab = cnabFile.read()
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(cnab.boletos.length).toBe(cnabFile.boletoCount)
+    for (const boleto of cnab.boletos) {
+      for (const fieldKey of addressFieldKeys) {
+        expect(boleto.fields).not.toHaveProperty(fieldKey)
+      }
+    }
+  })
 })
