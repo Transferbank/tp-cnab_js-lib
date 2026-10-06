@@ -64,9 +64,11 @@ describe.each([
 })
 
 describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts e-mails separated by semicolon)', (): void => {
-  it('given e-mails separated by semicolon when reading then returns each e-mail', (): void => {
+  it('given segment S from the example file when reading then returns each e-mail', (): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailField(toLine('S', '8', [21, 160], 'joao@exemplo.com; maria@exemplo.com;'), 5)
+    const segmentoS = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt')), 'S')
+    assert(segmentoS != null, 'Linha com segmento S não encontrada')
+    const field = new Cnab240BancoDoBrasilBoletoEmailField(segmentoS, 11)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -75,12 +77,27 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com'])
+  })
+
+  it('given e-mails with a trailing semicolon when reading then ignores it', (): void => {
+    // Given
+    const field = new Cnab240BancoDoBrasilBoletoEmailField(toLine('S', '8', [21, 160], 'joao@exemplo.com;maria@exemplo.com;'), 5)
+
+    // When
+    const result = field.validate()
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toEqual(['joao@exemplo.com', 'maria@exemplo.com'])
   })
 
-  it('given an invalid e-mail in the list when validating then reports it', (): void => {
+  it.each([
+    ['without @', 'joao@exemplo.com;joao.exemplo.com', 'joao.exemplo.com'],
+    ['after a space, which the manual does not allow between e-mails', 'joao@exemplo.com; joao@exemplo.com', ' joao@exemplo.com']
+  ])('given an e-mail %s in the list when validating then reports it', (_: string, emails: string, invalidEmail: string): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailField(toLine('S', '8', [21, 160], 'joao@exemplo.com;joao.exemplo.com'), 5)
+    const field = new Cnab240BancoDoBrasilBoletoEmailField(toLine('S', '8', [21, 160], emails), 5)
 
     // When
     const result = field.validate()
@@ -89,7 +106,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
     expect(result).toEqual({
       isValid: false,
       errors: [new CnabGenericFieldError({
-        message: 'Campo email do sacado inválido: joao.exemplo.com não é um e-mail',
+        message: `Campo email do sacado inválido: ${invalidEmail} não é um e-mail`,
         lineNumber: 5,
         fieldKey: 'email_do_sacado',
         range: [21, 160]

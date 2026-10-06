@@ -11,7 +11,6 @@ export class Cnab240BancoDoBrasilBoletoEmailField extends Cnab240BoletoEmailFiel
   protected parseValue(rawValue: string): string[] {
     return rawValue
       .split(';')
-      .map((email: string) => email.trim())
       .filter((email: string) => email.length > 0)
   }
 }

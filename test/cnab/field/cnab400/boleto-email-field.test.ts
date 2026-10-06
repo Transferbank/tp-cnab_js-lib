@@ -61,7 +61,7 @@ describe('Cnab400BancoDoBrasilBoletoEmailField (record 5, service type 01, accep
 
   it('given e-mails separated by semicolon when reading then returns each e-mail', (): void => {
     // Given
-    const registro5Email = replaceLineRange(replaceLineRange(registro5Multa, [2, 3], '01'), [4, 139], 'joao@exemplo.com; maria@exemplo.com;')
+    const registro5Email = replaceLineRange(replaceLineRange(registro5Multa, [2, 3], '01'), [4, 139], 'joao@exemplo.com;maria@exemplo.com;')
     const field = new Cnab400BancoDoBrasilBoletoEmailField(registro5Email, 5)
 
     // When
