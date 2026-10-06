@@ -7,34 +7,38 @@ import { Cnab240BoletoEmailField } from '@cnab/field/cnab240/boleto-email-field'
 import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import { Cnab240BancoDoBrasilBoletoEmailField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 
-//Uma linha Q será transformada em segmento opcional para testes,
-// adicionar os segmentos nos arquivos teste quebraria outros testes
-// será deixado para outra PR
-const segmentoQ = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'Q')
-assert(segmentoQ != null, 'Linha com segmento Q não encontrada')
-const toLine = (segment: string, code: string, emailRange: [number, number], email: string): string =>
-  replaceLineRange(replaceLineRange(replaceLineRange(segmentoQ, [14, 14], segment), [18, 19], code), emailRange, email)
+// Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
+//  campo testado, porque os arquivos de exemplo só têm dados válidos.
+const findFirstSegment = (examplePath: string, segment: string): string => {
+  const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), examplePath)), segment)
+  assert(line != null, `Linha com segmento ${segment} não encontrada em ${examplePath}`)
+  return line
+}
 
 // Pelo padrão FEBRABAN, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
-  ['Cnab240BoletoEmailField (segment Y-04, code 03)', Cnab240BoletoEmailField, '03', '04'],
-  ['Cnab240CaixaBoletoEmailField (segment Y-04, code 04)', Cnab240CaixaBoletoEmailField, '04', '03']
-])('%s', (_: string, EmailField: typeof Cnab240BoletoEmailField, code: string, otherBankCode: string): void => {
-  it('given an e-mail when reading then returns it as a single item list', (): void => {
+  ['Cnab240BoletoEmailField (segment Y-04, code 03)', Cnab240BoletoEmailField, 'bradesco/cnab240/bradesco_cnab_240.txt', 'financeiro@comercialexemplo.com.br', '04'],
+  ['Cnab240CaixaBoletoEmailField (segment Y-04, code 04)', Cnab240CaixaBoletoEmailField, 'caixa/cnab240/caixa_cnab_240.txt', 'maria.souza@exemplo.com', '03']
+])('%s', (_: string, EmailField: typeof Cnab240BoletoEmailField, examplePath: string, expectedEmail: string, otherBankCode: string): void => {
+  const segmentoY = findFirstSegment(examplePath, 'Y')
+
+  it('given segment Y-04 from the example file when reading then returns its e-mail as a single item list', (): void => {
     // Given
-    const field = new EmailField(toLine('Y', code, [20, 69], 'joao@exemplo.com'), 5)
+    const field = new EmailField(segmentoY, 5)
 
     // When
+    const shouldValidate = field.shouldValidate()
     const result = field.validate()
 
     // Then
+    expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toEqual(['joao@exemplo.com'])
+    expect(field.value).toEqual([expectedEmail])
   })
 
   it('given e-mails separated by semicolon when validating then reports it as an invalid e-mail', (): void => {
     // Given
-    const field = new EmailField(toLine('Y', code, [20, 69], 'joao@exemplo.com;maria@exemplo.com'), 5)
+    const field = new EmailField(replaceLineRange(segmentoY, [20, 69], 'joao@exemplo.com;maria@exemplo.com'), 5)
 
     // When
     const result = field.validate()
@@ -52,8 +56,8 @@ describe.each([
   })
 
   it.each([
-    ['segment Y-04 of another bank code', toLine('Y', otherBankCode, [20, 69], 'joao@exemplo.com')],
-    ['segment Q', segmentoQ]
+    ['segment Y-04 of another bank code', replaceLineRange(segmentoY, [18, 19], otherBankCode)],
+    ['segment Q', findFirstSegment(examplePath, 'Q')]
   ])('given %s when checking shouldValidate then returns false', (_: string, line: string): void => {
     // When
     const shouldValidate = new EmailField(line, 5).shouldValidate()
@@ -64,10 +68,10 @@ describe.each([
 })
 
 describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts e-mails separated by semicolon)', (): void => {
+  const segmentoS = findFirstSegment('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'S')
+
   it('given segment S from the example file when reading then returns each e-mail', (): void => {
     // Given
-    const segmentoS = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt')), 'S')
-    assert(segmentoS != null, 'Linha com segmento S não encontrada')
     const field = new Cnab240BancoDoBrasilBoletoEmailField(segmentoS, 11)
 
     // When
@@ -82,7 +86,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
 
   it('given e-mails with a trailing semicolon when reading then ignores it', (): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailField(toLine('S', '8', [21, 160], 'joao@exemplo.com;maria@exemplo.com;'), 5)
+    const field = new Cnab240BancoDoBrasilBoletoEmailField(replaceLineRange(segmentoS, [21, 160], 'joao@exemplo.com;maria@exemplo.com;'), 5)
 
     // When
     const result = field.validate()
@@ -97,7 +101,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
     ['after a space, which the manual does not allow between e-mails', 'joao@exemplo.com; joao@exemplo.com', ' joao@exemplo.com']
   ])('given an e-mail %s in the list when validating then reports it', (_: string, emails: string, invalidEmail: string): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailField(toLine('S', '8', [21, 160], emails), 5)
+    const field = new Cnab240BancoDoBrasilBoletoEmailField(replaceLineRange(segmentoS, [21, 160], emails), 5)
 
     // When
     const result = field.validate()
