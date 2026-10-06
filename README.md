@@ -64,7 +64,7 @@ Além dos campos essenciais, a lib lê o contato do pagador nos layouts que o tr
 
 | Banco           | Formato  | E-mail | DDD e celular |
 | --------------- | :------: | :----: | :-----------: |
-| Banco do Brasil | CNAB 240 |   ✅   |               |
+| Banco do Brasil | CNAB 240 |   ✅   |      ✅       |
 | Banco do Brasil | CNAB 400 |   ✅   |               |
 | Bradesco        | CNAB 240 |   ✅   |      ✅       |
 | Caixa           | CNAB 240 |   ✅   |      ✅       |

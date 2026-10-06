@@ -355,4 +355,35 @@ describe('cnab-file', (): void => {
       }
     }
   })
+
+  describe('banco do brasil cnab240 e-mails from segments S and Y-04', (): void => {
+    const readLastBoletoEmails = (rawLines: string[]): unknown => {
+      const boletos = CnabFile.fromLines(rawLines).read().boletos
+      return boletos[boletos.length - 1].fields.email_do_sacado
+    }
+
+    it('given e-mails in both segments when reading then joins them in a single list', (): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+
+      // When
+      const emails = readLastBoletoEmails(rawLines)
+
+      // Then
+      expect(emails).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com', 'cobranca@exemplo.com'])
+    })
+
+    it('given the same e-mail in both segments when reading then keeps it only once', (): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+      const segmentoYIndex = rawLines.findIndex((line: string) => line[13] == 'Y')
+      rawLines[segmentoYIndex] = replaceLineRange(rawLines[segmentoYIndex], [20, 69], 'financeiro@exemplo.com')
+
+      // When
+      const emails = readLastBoletoEmails(rawLines)
+
+      // Then
+      expect(emails).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com'])
+    })
+  })
 })
