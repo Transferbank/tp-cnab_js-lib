@@ -2,9 +2,10 @@ import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
-import { optional } from '@cnab/type/cnab-field'
+import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240CaixaBoletoCelularField, Cnab240CaixaBoletoDddField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
+import { Cnab240BancoDoBrasilBoletoCelularField, Cnab240BancoDoBrasilBoletoDddField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 
 const segmentoY04 = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'caixa/cnab240/caixa_cnab_240.txt')), 'Y')
 assert(segmentoY04 != null, 'Linha com segmento Y não encontrada')
@@ -49,6 +50,30 @@ describe.each([
     const result = field.validate()
 
     // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toBe(expectedValue)
+  })
+})
+
+// No Banco do Brasil, o segmento Y-04 usa o tipo de registro '4' na posição 8, e o celular tem 8 dígitos (72 a 79).
+describe('Banco do Brasil DDD and celular fields (segment Y-04 with record type 4)', (): void => {
+  const segmentoY04BancoDoBrasil = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+    .find((line: string) => line[13] == 'Y')
+  assert(segmentoY04BancoDoBrasil != null, 'Linha com segmento Y não encontrada')
+
+  it.each([
+    ['Cnab240BancoDoBrasilBoletoDddField', Cnab240BancoDoBrasilBoletoDddField, '11'],
+    ['Cnab240BancoDoBrasilBoletoCelularField', Cnab240BancoDoBrasilBoletoCelularField, '98765432']
+  ])('given segment Y-04 from the example file when reading %s then returns it', (_: string, FieldClass: CnabFieldClass<string>, expectedValue: string): void => {
+    // Given
+    const field = new FieldClass(segmentoY04BancoDoBrasil, 12)
+
+    // When
+    const shouldValidate = field.shouldValidate()
+    const result = field.validate()
+
+    // Then
+    expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(expectedValue)
   })

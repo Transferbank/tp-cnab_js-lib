@@ -239,7 +239,10 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240BoletoCepField,
           Cnab240BoletoCidadeField,
           Cnab240BoletoUfField,
-          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoEmailField)
+          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoEmailField),
+          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoEmailSegmentoYField),
+          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoDddField),
+          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoCelularField)
         ],
       },
     }),

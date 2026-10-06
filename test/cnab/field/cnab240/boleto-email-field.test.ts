@@ -5,7 +5,7 @@ import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPat
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoEmailField } from '@cnab/field/cnab240/boleto-email-field'
 import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import { Cnab240BancoDoBrasilBoletoEmailField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import { Cnab240BancoDoBrasilBoletoEmailField, Cnab240BancoDoBrasilBoletoEmailSegmentoYField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
 //  campo testado, porque os arquivos de exemplo só têm dados válidos.
@@ -116,5 +116,37 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
         range: [21, 160]
       })]
     })
+  })
+})
+
+// No Banco do Brasil, o segmento Y-04 usa o tipo de registro '4' na posição 8, e não o '3' do padrão FEBRABAN.
+describe('Cnab240BancoDoBrasilBoletoEmailSegmentoYField (segment Y-04 with record type 4)', (): void => {
+  const segmentoY = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+    .find((line: string) => line[13] == 'Y')
+  assert(segmentoY != null, 'Linha com segmento Y não encontrada')
+
+  it('given segment Y-04 from the example file when reading then returns its e-mail as a single item list', (): void => {
+    // Given
+    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoYField(segmentoY, 12)
+
+    // When
+    const shouldValidate = field.shouldValidate()
+    const result = field.validate()
+
+    // Then
+    expect(shouldValidate).toBe(true)
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toEqual(['cobranca@exemplo.com'])
+  })
+
+  it('given segment Y-04 with the FEBRABAN record type 3 when checking shouldValidate then returns false', (): void => {
+    // Given
+    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoYField(replaceLineRange(segmentoY, [8, 8], '3'), 12)
+
+    // When
+    const shouldValidate = field.shouldValidate()
+
+    // Then
+    expect(shouldValidate).toBe(false)
   })
 })
