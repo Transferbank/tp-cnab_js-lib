@@ -11,8 +11,8 @@ export class Cnab400LineTypeChecker {
     return rawLine.startsWith('9')
   }
 
-  static isOptional(rawLine: string, optionalChar: string): boolean {
-    return rawLine.startsWith(optionalChar)
+  static isRegistro(rawLine: string, recordType: string, serviceType?: string): boolean {
+    return rawLine.startsWith(recordType) && (serviceType == null || rawLine.substring(1, 3) === serviceType)
   }
 }
 
@@ -53,7 +53,13 @@ export class Cnab240LineTypeChecker {
     return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'R'
   }
 
-  static isSegmentoS(rawLine: string): boolean {
-    return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'S'
+  static isSegmentoS(rawLine: string, printType?: string): boolean {
+    const isSegmento = this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'S'
+    return isSegmento && (printType == null || rawLine[17] === printType)
+  }
+
+  static isSegmentoY(rawLine: string, optionalRecordCode?: string): boolean {
+    const isSegmento = this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'Y'
+    return isSegmento && (optionalRecordCode == null || rawLine.substring(17, 19) === optionalRecordCode)
   }
 }
