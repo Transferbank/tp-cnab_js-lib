@@ -7,24 +7,24 @@ import { Cnab400BoletoEmailField } from '@cnab/field/cnab400/boleto-email-field'
 import { Cnab400ItauBoletoEmailField } from '@cnab/bank/itau/cnab/cnab400/field/fields'
 import { Cnab400BancoDoBrasilBoletoEmailField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
 
+// Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
+//  campo testado, porque os arquivos de exemplo só têm dados válidos.
 const findRecord = (examplePath: string, recordType: string): string => {
   const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), examplePath)), recordType)
   assert(line != null, `Registro ${recordType} não encontrado em ${examplePath}`)
   return line
 }
-const toRegistro = (baseLine: string, recordType: string, emailRange: [number, number], email: string): string =>
-  replaceLineRange(replaceLineRange(baseLine, [1, 1], recordType), emailRange, email)
 
 // No CNAB400, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
-  ['Cnab400BoletoEmailField (Caixa, record 3)', Cnab400BoletoEmailField, findRecord('caixa/cnab400/caixa_cnab_400.REM', '1'), '3', [54, 103]],
-  ['Cnab400ItauBoletoEmailField (record 5)', Cnab400ItauBoletoEmailField, findRecord('itau/cnab400/ITAU_cnab_400.REM', '1'), '5', [2, 121]]
-])('%s', (_: string, EmailField: typeof Cnab400BoletoEmailField, baseLine: string, recordType: string, range: number[]): void => {
+  ['Cnab400BoletoEmailField (Caixa, record 3)', Cnab400BoletoEmailField, findRecord('caixa/cnab400/caixa_cnab_400.REM', '3'), [54, 103], 'leticia.modelo@exemplo.com'],
+  ['Cnab400ItauBoletoEmailField (record 5)', Cnab400ItauBoletoEmailField, findRecord('itau/cnab400/ITAU_cnab_400.REM', '5'), [2, 121], 'compras@materiaisomega.com.br']
+])('%s', (_: string, EmailField: typeof Cnab400BoletoEmailField, registro: string, range: number[], expectedEmail: string): void => {
   const emailRange = range as [number, number]
 
-  it('given an e-mail when reading then returns it as a single item list', (): void => {
+  it('given the record from the example file when reading then returns its e-mail as a single item list', (): void => {
     // Given
-    const field = new EmailField(toRegistro(baseLine, recordType, emailRange, 'joao@exemplo.com'), 5)
+    const field = new EmailField(registro, 5)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -33,12 +33,12 @@ describe.each([
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toEqual(['joao@exemplo.com'])
+    expect(field.value).toEqual([expectedEmail])
   })
 
   it('given e-mails separated by semicolon when validating then reports it as an invalid e-mail', (): void => {
     // Given
-    const field = new EmailField(toRegistro(baseLine, recordType, emailRange, 'joao@exemplo.com;maria@exemplo.com'), 5)
+    const field = new EmailField(replaceLineRange(registro, emailRange, 'joao@exemplo.com;maria@exemplo.com'), 5)
 
     // When
     const result = field.validate()
