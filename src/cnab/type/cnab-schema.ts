@@ -114,26 +114,22 @@ export class CnabSchema {
       ...(extraFields ?? []),
     ]
 
-    let currentBoleto = new CnabBoleto()
-    rawLines.forEach((rawLine: string, lineNumber: number) => {
-      if (this.boleto.isBoletoGroupStart(rawLine) && Object.keys(currentBoleto.fields).length > 0) {
-        cnab.boletos.push(currentBoleto)
-        currentBoleto = new CnabBoleto()
-      }
+    for (const group of this.boleto.genLineGroups(rawLines.slice(1, -1), 1)) {
+      const boleto = new CnabBoleto()
 
-      for (const fieldType of fields) {
-        const field = new fieldType(rawLine, lineNumber)
-        if (!field.shouldValidate()) {
-          continue
-        }
-        if (field.value != null) {
-          currentBoleto.fields[field.fieldKey] = field.value
+      for (const [lineNumber, rawLine] of group) {
+        for (const fieldType of fields) {
+          const field = new fieldType(rawLine, lineNumber)
+          if (!field.shouldValidate()) {
+            continue
+          }
+          if (field.value != null) {
+            boleto.fields[field.fieldKey] = field.value
+          }
         }
       }
-    })
 
-    if (Object.keys(currentBoleto.fields).length > 0) {
-      cnab.boletos.push(currentBoleto)
+      cnab.boletos.push(boleto)
     }
 
     return cnab
