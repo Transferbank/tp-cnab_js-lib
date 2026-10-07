@@ -63,7 +63,7 @@ export class CnabSchema {
     ]
 
     for (const [group, lines, firstLine] of items) {
-      const groupExtraFields = this.extraFieldsForThisLayout(extraFields).filter(
+      const groupExtraFields = this.scopedExtraFields(extraFields).filter(
         (field: CnabFieldClass) => field.fieldType === group.fieldType
       )
 
@@ -80,7 +80,7 @@ export class CnabSchema {
     return result
   }
 
-  private extraFieldsForThisLayout(extraFields?: CnabFieldClass[]): CnabFieldClass[] {
+  private scopedExtraFields(extraFields?: CnabFieldClass[]): CnabFieldClass[] {
     return (extraFields ?? []).filter((field: CnabFieldClass) =>
       (field.bank == null || field.bank == this.bank) && (field.format == null || field.format == this.fmt)
     )
@@ -101,7 +101,7 @@ export class CnabSchema {
 
     const fields = [
       ...this.boleto.fields,
-      ...this.extraFieldsForThisLayout(extraFields),
+      ...this.scopedExtraFields(extraFields),
     ]
 
     let currentBoleto = new CnabBoleto()
