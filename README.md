@@ -65,20 +65,20 @@ A exceção são os campos que o manual do banco declara **opcionais**, que pode
 
 Além dos campos acima, a lib lê o e-mail do pagador nos layouts que o trazem. Esse campo é **opcional**: nos layouts sem ele, e quando vem vazio, ele não aparece em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
-| Banco           | Formato  | E-mail |
-| --------------- | :------: | :----: |
-| Banco do Brasil | CNAB 240 |   ✅   |
-| Banco do Brasil | CNAB 400 |   ✅   |
-| Bradesco        | CNAB 240 |   ✅   |
-| Caixa           | CNAB 240 |   ✅   |
-| Caixa           | CNAB 400 |   ✅   |
-| Itaú            | CNAB 400 |   ✅   |
+| Banco           | Formato  |
+| --------------- | :------: |
+| Banco do Brasil | CNAB 240 |
+| Banco do Brasil | CNAB 400 |
+| Bradesco        | CNAB 240 |
+| Caixa           | CNAB 240 |
+| Caixa           | CNAB 400 |
+| Itaú            | CNAB 400 |
 
-| Chave             | Descrição         | Tipo       |
-| ----------------- | ----------------- | ---------- |
-| `email_do_sacado` | E-mails do sacado | `string[]` |
+| Chave             | Descrição        | Tipo                                     |
+| ----------------- | ---------------- | ---------------------------------------- |
+| `email_do_sacado` | E-mail do sacado | `string` (`string[]` no Banco do Brasil) |
 
-`email_do_sacado` é sempre uma lista. Só o Banco do Brasil aceita mais de um e-mail, separados por `;` e sem espaços, como pede o manual do banco. Nos demais, a lista tem um único e-mail, e um `;` no campo é erro de validação.
+No Banco do Brasil, o arquivo pode trazer mais de um e-mail por boleto, por isso o valor é uma lista.
 
 ## Instalação
 
