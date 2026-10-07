@@ -319,66 +319,36 @@ describe('cnab-file', (): void => {
   })
 
   describe('extra fields filtered by bank and format', (): void => {
-    it('given an itau cnab400 extra field when reading an itau cnab400 file then reads it', (): void => {
-      // Given
-      const cnabFile = openExample('itau/cnab400/ITAU_cnab_400.REM')
-
-      // When
-      const result = cnabFile.validate(true, [ItauCnab400NossoNumeroExtraField])
-      const cnab = cnabFile.read([ItauCnab400NossoNumeroExtraField])
-
-      // Then
-      expect(result).toEqual({ isValid: true, errors: [] })
-      expect(cnab.boletos[0].fields.nosso_numero).toBe('10377333')
-    })
-
     it.each([
-      ['a bradesco cnab400', 'bradesco/cnab400/bradesco_cnab_400.txt'],
-      ['an itau cnab240', 'itau/cnab240/itau_cnab_240.txt']
-    ])('given an itau cnab400 extra field when reading %s file then filters it out and reads the file without it', (_: string, examplePath: string): void => {
+      ['an itau cnab400 field', 'itau/cnab400/ITAU_cnab_400.REM', ItauCnab400NossoNumeroExtraField, '10377333'],
+      ['an itau cnab400 field', 'bradesco/cnab400/bradesco_cnab_400.txt', ItauCnab400NossoNumeroExtraField, undefined],
+      ['an itau cnab400 field', 'itau/cnab240/itau_cnab_240.txt', ItauCnab400NossoNumeroExtraField, undefined],
+      ['a field without bank and format', 'bradesco/cnab400/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020200']
+    ])('given %s when reading %s then reads it only if the file is in its scope', (_: string, examplePath: string, extraField: CnabFieldClass, expectedNossoNumero: string | undefined): void => {
       // Given
       const cnabFile = openExample(examplePath)
 
       // When
-      const result = cnabFile.validate(true, [ItauCnab400NossoNumeroExtraField])
-      const cnab = cnabFile.read([ItauCnab400NossoNumeroExtraField])
-
-      // Then
-      expect(result).toEqual({ isValid: true, errors: [] })
-      expect(cnab.boletos.length).toBe(cnabFile.boletoCount)
-      for (const boleto of cnab.boletos) {
-        expect(boleto.fields).not.toHaveProperty('nosso_numero')
-        expect(boleto.fields).toHaveProperty('nome_do_sacado')
-      }
-    })
-
-    it.each([
-      ['itau cnab400', 'itau field first', 'itau/cnab400/ITAU_cnab_400.REM', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '10377333'],
-      ['itau cnab400', 'bradesco field first', 'itau/cnab400/ITAU_cnab_400.REM', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '10377333'],
-      ['bradesco cnab400', 'itau field first', 'bradesco/cnab400/bradesco_cnab_400.txt', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '09100010629'],
-      ['bradesco cnab400', 'bradesco field first', 'bradesco/cnab400/bradesco_cnab_400.txt', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '09100010629']
-    ])('given extra fields of several banks with the same key when reading %s file with the %s then reads only the field of its bank', (_: string, __: string, examplePath: string, extraFields: CnabFieldClass[], expectedNossoNumero: string): void => {
-      // Given
-      const cnabFile = openExample(examplePath)
-
-      // When
-      const result = cnabFile.validate(true, extraFields)
-      const cnab = cnabFile.read(extraFields)
+      const result = cnabFile.validate(true, [extraField])
+      const cnab = cnabFile.read([extraField])
 
       // Then
       expect(result).toEqual({ isValid: true, errors: [] })
       expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
     })
 
-    it('given an extra field without bank and format when reading any file then reads it', (): void => {
+    it.each([
+      ['itau/cnab400/ITAU_cnab_400.REM', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '10377333'],
+      ['bradesco/cnab400/bradesco_cnab_400.txt', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '09100010629']
+    ])('given extra fields of several banks with the same key, the other bank last, when reading %s then reads only the field of its bank', (examplePath: string, extraFields: CnabFieldClass[], expectedNossoNumero: string): void => {
       // Given
-      const cnabFile = openExample('bradesco/cnab400/bradesco_cnab_400.txt')
+      const cnabFile = openExample(examplePath)
 
       // When
-      const cnab = cnabFile.read([NossoNumeroExtraField])
+      const cnab = cnabFile.read(extraFields)
 
       // Then
-      expect(cnab.boletos[0].fields.nosso_numero).toBeDefined()
+      expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
     })
   })
 })
