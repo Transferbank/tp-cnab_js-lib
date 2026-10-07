@@ -11,6 +11,11 @@ export function openCnabFileFromLines(lines: string[]): CnabFile {
 export { CnabFile }
 export { Cnab, CnabBoleto } from '@cnab/type/cnab'
 export { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+export { CnabField, CnabFieldClass, optional } from '@cnab/type/cnab-field'
+export { CnabFieldType } from '@cnab/type/cnab-field-type'
+export { CnabBank } from '@cnab/type/cnab-bank'
+export { CnabFormat } from '@cnab/type/cnab-format'
+export { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 export {
   CnabException,
   CnabMinimumLinesNotReachedException,
