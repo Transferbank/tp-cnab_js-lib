@@ -22,7 +22,7 @@ describe.each([
 ])('%s', (_: string, EmailField: typeof Cnab400BoletoEmailField, registro: string, range: number[], expectedEmail: string): void => {
   const emailRange = range as [number, number]
 
-  it('given the record from the example file when reading then returns its e-mail as a single item list', (): void => {
+  it('given the record from the example file when reading then returns its e-mail', (): void => {
     // Given
     const field = new EmailField(registro, 5)
 
@@ -33,7 +33,7 @@ describe.each([
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toEqual([expectedEmail])
+    expect(field.value).toBe(expectedEmail)
   })
 
   it('given e-mails separated by semicolon when validating then reports it as an invalid e-mail', (): void => {

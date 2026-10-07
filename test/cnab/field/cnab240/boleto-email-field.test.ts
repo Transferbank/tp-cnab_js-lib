@@ -22,7 +22,7 @@ describe.each([
 ])('%s', (_: string, EmailField: typeof Cnab240BoletoEmailField, examplePath: string, expectedEmail: string, otherBankCode: string): void => {
   const segmentoY = findFirstSegment(examplePath, 'Y')
 
-  it('given segment Y-04 from the example file when reading then returns its e-mail as a single item list', (): void => {
+  it('given segment Y-04 from the example file when reading then returns its e-mail', (): void => {
     // Given
     const field = new EmailField(segmentoY, 5)
 
@@ -33,7 +33,7 @@ describe.each([
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toEqual([expectedEmail])
+    expect(field.value).toBe(expectedEmail)
   })
 
   it('given e-mails separated by semicolon when validating then reports it as an invalid e-mail', (): void => {
@@ -125,7 +125,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoYField (segment Y-04 with recor
     .find((line: string) => line[13] == 'Y')
   assert(segmentoY != null, 'Linha com segmento Y não encontrada')
 
-  it('given segment Y-04 from the example file when reading then returns its e-mail as a single item list', (): void => {
+  it('given segment Y-04 from the example file when reading then returns its e-mail', (): void => {
     // Given
     const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoYField(segmentoY, 12)
 

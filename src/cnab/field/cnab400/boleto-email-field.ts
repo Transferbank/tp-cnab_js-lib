@@ -6,7 +6,7 @@ import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 const EMAIL_PATTERN = /^[^\s@;]+@[^\s@;]+$/
 
-export class Cnab400BoletoEmailField extends CnabField<string[]> {
+export class Cnab400BoletoEmailField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'email_do_sacado'
   protected readonly recordType: string = '3'
@@ -18,9 +18,8 @@ export class Cnab400BoletoEmailField extends CnabField<string[]> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const emails = this.value ?? []
-    const invalidEmail = emails.find((email: string) => !EMAIL_PATTERN.test(email))
-    const isValid = emails.length > 0 && invalidEmail == null
+    const value = this.value
+    const isValid = value != null && EMAIL_PATTERN.test(value)
 
     if (isValid) {
       return { isValid, errors: [] }
@@ -30,9 +29,7 @@ export class Cnab400BoletoEmailField extends CnabField<string[]> {
       isValid,
       errors: [
         new CnabGenericFieldError({
-          message: invalidEmail == null
-            ? 'Campo email do sacado inválido: nenhum e-mail informado'
-            : `Campo email do sacado inválido: ${invalidEmail} não é um e-mail`,
+          message: `Campo email do sacado inválido: ${value} não é um e-mail`,
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
           range: this.range
@@ -41,7 +38,7 @@ export class Cnab400BoletoEmailField extends CnabField<string[]> {
     }
   }
 
-  protected parseValue(rawValue: string): string[] {
-    return [rawValue]
+  protected parseValue(rawValue: string): string {
+    return rawValue
   }
 }
