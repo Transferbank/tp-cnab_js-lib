@@ -108,7 +108,7 @@ export class CnabSchema {
             continue
           }
           if (field.value != null) {
-            boleto.fields[field.fieldKey] = field.value
+            boleto.fields[field.fieldKey] = this.mergeFieldValues(boleto.fields[field.fieldKey], field.value)
           }
         }
       }
@@ -117,5 +117,12 @@ export class CnabSchema {
     }
 
     return cnab
+  }
+
+  private mergeFieldValues(currentValue: unknown, newValue: unknown): unknown {
+    if (Array.isArray(currentValue) && Array.isArray(newValue)) {
+      return [...new Set([...currentValue, ...newValue])]
+    }
+    return newValue
   }
 }
