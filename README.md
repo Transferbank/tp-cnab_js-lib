@@ -63,20 +63,22 @@ A exceção são os campos que o manual do banco declara **opcionais**, que pode
 
 ### Campos de contato
 
-Além dos campos acima, a lib lê o e-mail do pagador nos layouts que o trazem. Esse campo é **opcional**: nos layouts sem ele, e quando vem vazio, ele não aparece em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+Além dos campos acima, a lib lê o contato do pagador nos layouts que o trazem. Esses campos são **opcionais**: nos layouts sem eles, e quando vêm vazios (ou preenchidos só com zeros, no DDD e no celular), eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
-| Banco           | Formato  | E-mail |
-| --------------- | :------: | :----: |
-| Banco do Brasil | CNAB 240 |   ✅   |
-| Banco do Brasil | CNAB 400 |   ✅   |
-| Bradesco        | CNAB 240 |   ✅   |
-| Caixa           | CNAB 240 |   ✅   |
-| Caixa           | CNAB 400 |   ✅   |
-| Itaú            | CNAB 400 |   ✅   |
+| Banco           | Formato  | E-mail | DDD e celular |
+| --------------- | :------: | :----: | :-----------: |
+| Banco do Brasil | CNAB 240 |   ✅   |      ✅       |
+| Banco do Brasil | CNAB 400 |   ✅   |               |
+| Bradesco        | CNAB 240 |   ✅   |      ✅       |
+| Caixa           | CNAB 240 |   ✅   |      ✅       |
+| Caixa           | CNAB 400 |   ✅   |      ✅       |
+| Itaú            | CNAB 400 |   ✅   |               |
 
-| Chave             | Descrição         | Tipo       |
-| ----------------- | ----------------- | ---------- |
-| `email_do_sacado` | E-mails do sacado | `string[]` |
+| Chave               | Descrição                                    | Tipo       |
+| ------------------- | -------------------------------------------- | ---------- |
+| `email_do_sacado`   | E-mails do sacado                            | `string[]` |
+| `ddd_do_sacado`     | DDD do celular do sacado                     | `string`   |
+| `celular_do_sacado` | Número do celular do sacado (8 ou 9 dígitos) | `string`   |
 
 `email_do_sacado` é sempre uma lista. Só o Banco do Brasil aceita mais de um e-mail, separados por `;` e sem espaços, como pede o manual do banco. Nos demais, a lista tem um único e-mail, e um `;` no campo é erro de validação.
 
