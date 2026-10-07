@@ -22,6 +22,9 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 | Sicoob                  |    ✅    |    ✅    |
 | Sicredi                 |    ✅    |    ✅    |
 
+- ✅ Suportado: o arquivo é validado e lido.
+- ❌ Não reconhecido: bancos e formatos fora desta tabela. `openCnabFile` lança exceções para cada caso (veja [Exceções](#exceções)).
+
 ## Campos de boleto
 
 Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
@@ -38,11 +41,25 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `cidade_do_sacado`    | Cidade do sacado                | `string` |
 | `uf_do_sacado`        | UF do sacado                    | `string` |
 
-Todos os campos são validados e lidos em todos os bancos acima, exceto quando o layout do banco não tem o campo:
+### Campos que o layout não tem
 
-- Bradesco CNAB 400: sem bairro, cidade e UF
-- Sicredi CNAB 240: sem bairro
-- Sicredi CNAB 400: sem bairro, cidade e UF
+Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é lido e não aparece em `fields`:
+
+| Banco e formato   | Campos que o layout não tem |
+| ----------------- | --------------------------- |
+| Bradesco CNAB 400 | bairro, cidade e UF         |
+| Sicredi CNAB 240  | bairro                      |
+| Sicredi CNAB 400  | bairro, cidade e UF         |
+
+Os campos lidos em cada banco e formato estão declarados em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+
+### Campos obrigatórios e opcionais
+
+Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se o campo é obrigatório.
+
+A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
+
+- Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
 
 ## Instalação
 
@@ -117,7 +134,7 @@ for (const boleto of cnab.boletos) {
 }
 ```
 
-Campos vazios no arquivo não aparecem em `fields`.
+Campos opcionais vazios no arquivo (como o endereço na Caixa CNAB 240) não aparecem em `fields`.
 
 ### Tratando erros de validação
 

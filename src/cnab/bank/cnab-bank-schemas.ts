@@ -2,6 +2,7 @@
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { optional } from '@cnab/type/cnab-field'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator} from '@cnab/validators/cnab400/cnab400-line-start-validator'
 import { Cnab240BoletoNomeField } from '@cnab/field/cnab240/boleto-nome-field'
@@ -278,11 +279,11 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240BoletoVencimentoField,
           Cnab240BoletoValorTituloField,
           Cnab240BoletoSacadoDocumentoField,
-          Cnab240BoletoEnderecoField,
-          Cnab240BoletoBairroField,
-          Cnab240BoletoCepField,
-          Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField
+          optional(Cnab240BoletoEnderecoField),// No manual da Caixa CNAB240, as notas G032 a G036
+          optional(Cnab240BoletoBairroField),  //  descrevem endereço, bairro, CEP, cidade e UF do pagador
+          optional(Cnab240BoletoCepField),    //  como opcionais quando a emissão e a entrega do boleto
+          optional(Cnab240BoletoCidadeField), //  são feitas pelo beneficiário.
+          optional(Cnab240BoletoUfField)
         ],
       },
     }),

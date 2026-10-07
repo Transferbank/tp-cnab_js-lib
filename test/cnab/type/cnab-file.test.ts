@@ -5,7 +5,7 @@ import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
-import { readExampleLines, resPath } from '@test/test-utils'
+import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
   const fullPath = path.join(resPath(), examplePath)
@@ -50,7 +50,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt'],
-    ['bradesco/cnab400/bradesco_cnab_400.txt']
+    ['itau/cnab400/ITAU_cnab_400.REM']
   ])(
     'given valid document file when validating with feedback then reports no errors',
     async (examplePath: string): Promise<void> => {
@@ -70,7 +70,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt', 5, 240],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 2, 400]
+    ['itau/cnab400/ITAU_cnab_400.REM', 2, 400]
   ])(
     'given document file with truncated line when validating then reports line size error',
     (examplePath: string, truncatedLineNumber: number, expectedSize: number): void => {
@@ -104,6 +104,7 @@ describe('cnab-file', (): void => {
     ['bradesco/cnab400/bradesco_cnab_400.txt', 37],
     ['caixa/cnab240/caixa_cnab_240.txt', 3],
     ['itau/cnab240/itau_cnab_240.txt', 4],
+    ['itau/cnab400/ITAU_cnab_400.REM', 319],
     ['santander/cnab240/santander_cnab_240.txt', 3],
     ['sicoob/cnab240/sicoob_cnab_240.txt', 3],
     ['sicredi/cnab240/sicredi_cnab_240.txt', 3]
@@ -190,15 +191,18 @@ describe('cnab-file', (): void => {
 
   it('given valid cnab400 document file when reading then extracts every boleto field', (): void => {
     // Given
-    const cnabFile = openExample('bradesco/cnab400/bradesco_cnab_400.txt')
+    const cnabFile = openExample('itau/cnab400/ITAU_cnab_400.REM')
     const expectedFirstBoleto = new CnabBoleto({
       fields: {
-        nome_do_sacado: 'COMERCIAL ALFA LTDA',
-        data_de_vencimento: new Date(2026, 7, 24),
-        valor_do_titulo: 22560.93,
-        documento_do_sacado: '20000000997330',
-        endereco_do_sacado: 'AV EXEMPLO 200',
-        cep_do_sacado: '29045402'
+        nome_do_sacado: 'JOAO EXEMPLO SILVA - ME',
+        data_de_vencimento: new Date(2026, 6, 6),
+        valor_do_titulo: 6762.31,
+        documento_do_sacado: '30000997300020',
+        endereco_do_sacado: 'AV EXEMPLO 100',
+        bairro_do_sacado: 'CENTRO',
+        cep_do_sacado: '63540000',
+        cidade_do_sacado: 'VARZEA ALEGRE',
+        uf_do_sacado: 'CE'
       }
     })
 
@@ -213,7 +217,7 @@ describe('cnab-file', (): void => {
   it('given document file with invalid lines when reading then throws with the first validation error', (): void => {
     // Given
     const truncatedSize = 5
-    const rawLines = readExampleLines(path.join(resPath(), 'bradesco/cnab400/bradesco_cnab_400.txt'))
+    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
     rawLines[2] = rawLines[2].substring(0, truncatedSize)
     rawLines[4] = rawLines[4].substring(0, truncatedSize)
     const cnabFile = CnabFile.fromLines(rawLines)
@@ -239,7 +243,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', (line: string): boolean => !line.startsWith('1')]
+    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1')]
   ])(
     'given document file %s without boleto lines when reading then returns no boletos',
     (examplePath: string, isNotBoletoLine: (line: string) => boolean): void => {
@@ -255,4 +259,27 @@ describe('cnab-file', (): void => {
       expect(cnab.boletos).toEqual([])
     }
   )
+
+  it('given caixa cnab240 document file with blank address fields when reading then accepts it and omits those fields', (): void => {
+    // No manual da Caixa CNAB240, as notas G032 a G036 descrevem endereço, bairro, CEP, cidade e UF do pagador
+    //  como opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário.
+    // Given
+    const addressFieldKeys = ['endereco_do_sacado', 'bairro_do_sacado', 'cep_do_sacado', 'cidade_do_sacado', 'uf_do_sacado']
+    const rawLines = readExampleLines(path.join(resPath(), 'caixa/cnab240/caixa_cnab_240.txt'))
+      .map((line: string) => (line[7] == '3' && line[13] == 'Q' ? replaceLineRange(line, [74, 153], '') : line))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+    const cnab = cnabFile.read()
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(cnab.boletos.length).toBe(cnabFile.boletoCount)
+    for (const boleto of cnab.boletos) {
+      for (const fieldKey of addressFieldKeys) {
+        expect(boleto.fields).not.toHaveProperty(fieldKey)
+      }
+    }
+  })
 })

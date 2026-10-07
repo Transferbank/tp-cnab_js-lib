@@ -26,24 +26,15 @@ export abstract class CnabField<T> {
       return this.cachedValue
     }
 
-    try {
-      // 1. Extrai o valor bruto da linha (sempre string)
-      const rawValue = this.extractRawValue()
+    // 1. Extrai o valor bruto da linha (sempre string)
+    const rawValue = this.extractRawValue()
 
-      // 2. Se vazio (não preenchido no arquivo) -> null
-      if (rawValue === '') {
-        this.cachedValue = null
-      } else {
-        // 3. Tem conteúdo -> parseia para o tipo correto
-        this.cachedValue = this.parseValue(rawValue)
-      }
-    } catch (error) {
-      const isOptional = (this.constructor as typeof CnabField<T>).isOptional
-      if (isOptional) {
-        this.cachedValue = null
-      } else {
-        throw error
-      }
+    // 2. Se vazio (não preenchido no arquivo) -> null
+    if (rawValue === '') {
+      this.cachedValue = null
+    } else {
+      // 3. Tem conteúdo -> parseia para o tipo correto
+      this.cachedValue = this.parseValue(rawValue)
     }
 
     return this.cachedValue
@@ -98,4 +89,11 @@ export interface CnabFieldClass<T = unknown> {
   readonly fieldType: CnabFieldType
   readonly isOptional: boolean
   new (rawLine: string, lineNumber: number): CnabField<T>
+}
+
+export function optional<T>(fieldClass: CnabFieldClass<T>): CnabFieldClass<T> {
+  const fieldConstructor: new (rawLine: string, lineNumber: number) => object = fieldClass
+  return class extends fieldConstructor {
+    static readonly isOptional = true
+  } as CnabFieldClass<T>
 }
