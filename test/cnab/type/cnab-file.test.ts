@@ -5,7 +5,7 @@ import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabBank } from '@cnab/type/cnab-bank'
@@ -40,6 +40,12 @@ class NossoNumeroExtraField extends CnabField<string> {
 class ItauCnab400NossoNumeroExtraField extends NossoNumeroExtraField {
   static readonly bank = CnabBank.ITAU
   static readonly format = CnabFormat.CNAB400
+}
+
+class BradescoCnab400NossoNumeroExtraField extends NossoNumeroExtraField {
+  static readonly bank = CnabBank.BRADESCO
+  static readonly format = CnabFormat.CNAB400
+  readonly range: [number, number] = [71, 81]
 }
 
 function createFileFromPath(filePath: string): File {
@@ -313,17 +319,51 @@ describe('cnab-file', (): void => {
   })
 
   describe('extra fields filtered by bank and format', (): void => {
+    it('given an itau cnab400 extra field when reading an itau cnab400 file then reads it', (): void => {
+      // Given
+      const cnabFile = openExample('itau/cnab400/ITAU_cnab_400.REM')
+
+      // When
+      const result = cnabFile.validate(true, [ItauCnab400NossoNumeroExtraField])
+      const cnab = cnabFile.read([ItauCnab400NossoNumeroExtraField])
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+      expect(cnab.boletos[0].fields.nosso_numero).toBe('10377333')
+    })
+
     it.each([
-      ['itau/cnab400/ITAU_cnab_400.REM', '10377333'],
-      ['bradesco/cnab400/bradesco_cnab_400.txt', undefined],
-      ['itau/cnab240/itau_cnab_240.txt', undefined]
-    ])('given an itau cnab400 extra field when reading %s then reads it only in itau cnab400 files', (examplePath: string, expectedNossoNumero: string | undefined): void => {
+      ['a bradesco cnab400', 'bradesco/cnab400/bradesco_cnab_400.txt'],
+      ['an itau cnab240', 'itau/cnab240/itau_cnab_240.txt']
+    ])('given an itau cnab400 extra field when reading %s file then filters it out and reads the file without it', (_: string, examplePath: string): void => {
       // Given
       const cnabFile = openExample(examplePath)
 
       // When
       const result = cnabFile.validate(true, [ItauCnab400NossoNumeroExtraField])
       const cnab = cnabFile.read([ItauCnab400NossoNumeroExtraField])
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+      expect(cnab.boletos.length).toBe(cnabFile.boletoCount)
+      for (const boleto of cnab.boletos) {
+        expect(boleto.fields).not.toHaveProperty('nosso_numero')
+        expect(boleto.fields).toHaveProperty('nome_do_sacado')
+      }
+    })
+
+    it.each([
+      ['itau cnab400', 'itau field first', 'itau/cnab400/ITAU_cnab_400.REM', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '10377333'],
+      ['itau cnab400', 'bradesco field first', 'itau/cnab400/ITAU_cnab_400.REM', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '10377333'],
+      ['bradesco cnab400', 'itau field first', 'bradesco/cnab400/bradesco_cnab_400.txt', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '09100010629'],
+      ['bradesco cnab400', 'bradesco field first', 'bradesco/cnab400/bradesco_cnab_400.txt', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '09100010629']
+    ])('given extra fields of several banks with the same key when reading %s file with the %s then reads only the field of its bank', (_: string, __: string, examplePath: string, extraFields: CnabFieldClass[], expectedNossoNumero: string): void => {
+      // Given
+      const cnabFile = openExample(examplePath)
+
+      // When
+      const result = cnabFile.validate(true, extraFields)
+      const cnab = cnabFile.read(extraFields)
 
       // Then
       expect(result).toEqual({ isValid: true, errors: [] })
