@@ -15,15 +15,14 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 | Banco                   | CNAB 240 | CNAB 400 |
 | ----------------------- | :------: | :------: |
 | Banco do Brasil         |    ✅    |    ✅    |
-| Bradesco                |    ✅    |    ⚠️    |
+| Bradesco                |    ✅    |    ✅    |
 | Caixa Econômica Federal |    ✅    |    ✅    |
 | Itaú                    |    ✅    |    ✅    |
 | Santander               |    ✅    |    ✅    |
 | Sicoob                  |    ✅    |    ✅    |
-| Sicredi                 |    ⚠️    |    ⚠️    |
+| Sicredi                 |    ✅    |    ✅    |
 
 - ✅ Suportado: o arquivo é validado e lido.
-- ⚠️ Reconhecido, mas recusado: o layout do banco não tem todos os [campos essenciais](#campos-essenciais-e-opcionais), então a validação dá erro de layout e a leitura falha.
 - ❌ Não reconhecido: bancos e formatos fora desta tabela. `openCnabFile` lança exceções para cada caso (veja [Exceções](#exceções)).
 
 ## Campos de boleto
@@ -42,9 +41,9 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `cidade_do_sacado`    | Cidade do sacado                | `string` |
 | `uf_do_sacado`        | UF do sacado                    | `string` |
 
-### Campos essenciais e opcionais
+### Campos que o layout não tem
 
-Todos os campos acima são **essenciais**: o layout do banco precisa ter cada um deles. Quando falta algum, o arquivo é recusado com um erro de layout (veja [Tratando erros de validação](#tratando-erros-de-validação)):
+Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é lido e não aparece em `fields`:
 
 | Banco e formato   | Campos que o layout não tem |
 | ----------------- | --------------------------- |
@@ -52,7 +51,11 @@ Todos os campos acima são **essenciais**: o layout do banco precisa ter cada um
 | Sicredi CNAB 240  | bairro                      |
 | Sicredi CNAB 400  | bairro, cidade e UF         |
 
-Nos demais bancos, todos os campos são **obrigatórios**: um campo vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se o campo é obrigatório.
+Os campos lidos em cada banco e formato estão declarados em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+
+### Campos obrigatórios e opcionais
+
+Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se o campo é obrigatório.
 
 A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
 
@@ -98,7 +101,6 @@ Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de b
 cnabFile.bank // ex: 'bradesco'
 cnabFile.format // ex: '240'
 cnabFile.boletoCount // ex: 3
-cnabFile.missingEssentialFields // ex: [] ou ['bairro_do_sacado'] no Sicredi CNAB 240
 ```
 
 
@@ -136,13 +138,7 @@ Campos opcionais vazios no arquivo (como o endereço na Caixa CNAB 240) não apa
 
 ### Tratando erros de validação
 
-Todo erro implementa `CnabValidationError`, com `errorType` (`'line'`, `'field'` ou `'layout'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
-
-Erros de layout (`CnabLayoutValidationError`) indicam que o layout do banco não serve para a lib, não importa o conteúdo do arquivo. Eles trazem `bank` e `format` e apontam para o header (`lineNumber` 0). Hoje o único é o `CnabMissingEssentialFieldError`, com o `fieldKey` do campo essencial que falta (ex: *"Layout CNAB240 do banco sicredi não possui o campo essencial bairro_do_sacado"*):
-
-- `validate(true)`: um erro para cada campo que falta, seguido dos erros das linhas, que continuam sendo validadas
-- `validate()`: só o primeiro campo que falta
-- `read()`: lança `CnabInvalidFileException`
+Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
 
 ```ts
 import { CnabFieldValidationError } from '@fx55/cnab-lib-ts'

@@ -66,10 +66,6 @@ export class CnabFile {
     return schema
   }
 
-  get missingEssentialFields(): string[] {
-    return this.schema.missingEssentialFields
-  }
-
   validate(withFeedback: boolean = false, extraFields?: CnabFieldClass[]): CnabValidationResult {
     return this.schema.validate(
       this.rawLines,

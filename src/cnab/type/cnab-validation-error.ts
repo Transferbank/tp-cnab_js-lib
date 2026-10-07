@@ -1,10 +1,6 @@
-import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabFormat } from '@cnab/type/cnab-format'
-
 export enum CnabValidationErrorType {
   LINE = 'line',
-  FIELD = 'field',
-  LAYOUT = 'layout'
+  FIELD = 'field'
 }
 
 export abstract class CnabValidationError {
@@ -47,34 +43,6 @@ export abstract class CnabFieldValidationError extends CnabValidationError {
 
   get errorType(): CnabValidationErrorType {
     return CnabValidationErrorType.FIELD
-  }
-}
-
-export abstract class CnabLayoutValidationError extends CnabValidationError {
-  readonly bank: CnabBank
-  readonly format: CnabFormat
-
-  constructor(params: { bank: CnabBank; format: CnabFormat }) {
-    super({ lineNumber: 0 })
-    this.bank = params.bank
-    this.format = params.format
-  }
-
-  get errorType(): CnabValidationErrorType {
-    return CnabValidationErrorType.LAYOUT
-  }
-}
-
-export class CnabMissingEssentialFieldError extends CnabLayoutValidationError {
-  readonly fieldKey: string
-
-  constructor(params: { bank: CnabBank; format: CnabFormat; fieldKey: string }) {
-    super({ bank: params.bank, format: params.format })
-    this.fieldKey = params.fieldKey
-  }
-
-  get message(): string {
-    return `Layout CNAB${this.format} do banco ${this.bank} não possui o campo essencial ${this.fieldKey}`
   }
 }
 
