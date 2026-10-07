@@ -21,7 +21,7 @@ function createFileFromPath(filePath: string): File {
 
 describe('cnab-file', (): void => {
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 16, 3],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 17, 3],
     ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76, 37]
   ])(
     'given document file when opening then detects bank, format, lines and boleto count',
