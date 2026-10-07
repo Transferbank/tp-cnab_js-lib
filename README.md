@@ -61,6 +61,25 @@ A exceção são os campos que o manual do banco declara **opcionais**, que pode
 
 - Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
 
+### Campos de contato
+
+Além dos campos acima, a lib lê o e-mail do pagador nos layouts que o trazem. Esse campo é **opcional**: nos layouts sem ele, e quando vem vazio, ele não aparece em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+
+| Banco           | Formato  | E-mail |
+| --------------- | :------: | :----: |
+| Banco do Brasil | CNAB 240 |   ✅   |
+| Banco do Brasil | CNAB 400 |   ✅   |
+| Bradesco        | CNAB 240 |   ✅   |
+| Caixa           | CNAB 240 |   ✅   |
+| Caixa           | CNAB 400 |   ✅   |
+| Itaú            | CNAB 400 |   ✅   |
+
+| Chave             | Descrição         | Tipo       |
+| ----------------- | ----------------- | ---------- |
+| `email_do_sacado` | E-mails do sacado | `string[]` |
+
+`email_do_sacado` é sempre uma lista. Só o Banco do Brasil aceita mais de um e-mail, separados por `;` e sem espaços, como pede o manual do banco. Nos demais, a lista tem um único e-mail, e um `;` no campo é erro de validação.
+
 ## Instalação
 
 ```bash
