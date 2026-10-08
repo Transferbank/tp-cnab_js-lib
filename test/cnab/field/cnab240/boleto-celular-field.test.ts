@@ -15,10 +15,10 @@ const findSegmentoY = (examplePath: string): string => {
 }
 
 describe.each([
-  ['Cnab240BradescoBoletoCelularField (segment Y-04 code 03)', Cnab240BradescoBoletoCelularField, 'bradesco/cnab240/bradesco_cnab_240.txt', [72, 80], '987654321'],
-  ['Cnab240CaixaBoletoCelularField (segment Y-04 code 04)', Cnab240CaixaBoletoCelularField, 'caixa/cnab240/caixa_cnab_240.txt', [72, 80], '912345678'],
-  ['Cnab240BancoDoBrasilBoletoCelularField (segment Y-04 with record type 4)', Cnab240BancoDoBrasilBoletoCelularField, 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', [72, 79], '98765432']
-])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, range: number[], expectedValue: string): void => {
+  ['Cnab240BradescoBoletoCelularField (segment Y-04 code 03)', Cnab240BradescoBoletoCelularField, 'bradesco/cnab240/bradesco_cnab_240.txt', [72, 80], '987654321', '8 ou 9'],
+  ['Cnab240CaixaBoletoCelularField (segment Y-04 code 04)', Cnab240CaixaBoletoCelularField, 'caixa/cnab240/caixa_cnab_240.txt', [72, 80], '912345678', '8 ou 9'],
+  ['Cnab240BancoDoBrasilBoletoCelularField (segment Y-04 with record type 4)', Cnab240BancoDoBrasilBoletoCelularField, 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', [72, 79], '98765432', '8']
+])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, range: number[], expectedValue: string, expectedDigits: string): void => {
   const segmentoY = findSegmentoY(examplePath)
   const fieldRange = range as [number, number]
 
@@ -58,7 +58,7 @@ describe.each([
     // Then
     expect(result).toEqual({
       isValid: false,
-      errors: [new CnabGenericFieldError({ message: 'Campo celular do sacado inválido: deve conter 8 ou 9 dígitos numéricos', lineNumber: 5, fieldKey: 'celular_do_sacado', range: fieldRange })]
+      errors: [new CnabGenericFieldError({ message: `Campo celular do sacado inválido: deve conter ${expectedDigits} dígitos numéricos`, lineNumber: 5, fieldKey: 'celular_do_sacado', range: fieldRange })]
     })
   })
 })

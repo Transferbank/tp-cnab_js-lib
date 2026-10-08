@@ -7,6 +7,7 @@ export class Cnab240BancoDoBrasilBoletoCelularField extends Cnab240BoletoCelular
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB240
   readonly range: [number, number] = [72, 79]
+  protected readonly celularLengths: number[] = [8]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoY(this.rawLine, this.optionalRecordCode, '4')

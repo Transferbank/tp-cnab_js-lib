@@ -10,6 +10,7 @@ export class Cnab400BoletoCelularField extends CnabField<string> {
   readonly fieldKey = 'celular_do_sacado'
   protected readonly recordType: string = '3'
   readonly range: [number, number] = [106, 114]
+  protected readonly celularLengths: number[] = [8, 9]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isRegistro(this.rawLine, this.recordType)
@@ -21,7 +22,7 @@ export class Cnab400BoletoCelularField extends CnabField<string> {
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && isValidCelular(value)
+    const isValid = value != null && isValidCelular(value, this.celularLengths)
 
     if (isValid) {
       return { isValid, errors: [] }
@@ -31,7 +32,7 @@ export class Cnab400BoletoCelularField extends CnabField<string> {
       isValid,
       errors: [
         new CnabGenericFieldError({
-          message: 'Campo celular do sacado inválido: deve conter 8 ou 9 dígitos numéricos',
+          message: `Campo celular do sacado inválido: deve conter ${this.celularLengths.join(' ou ')} dígitos numéricos`,
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
           range: this.range
