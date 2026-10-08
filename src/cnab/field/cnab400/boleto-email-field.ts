@@ -3,8 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-
-const EMAIL_PATTERN = /^[^\s@;]+@[^\s@;]+$/
+import { isValidEmail } from '@cnab/utils/email-parser'
 
 export class Cnab400BoletoEmailField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -19,7 +18,7 @@ export class Cnab400BoletoEmailField extends CnabField<string> {
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && EMAIL_PATTERN.test(value)
+    const isValid = value != null && isValidEmail(value)
 
     if (isValid) {
       return { isValid, errors: [] }

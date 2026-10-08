@@ -5,8 +5,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-
-const EMAIL_PATTERN = /^[^\s@;]+@[^\s@;]+$/
+import { emailListErrorMessage, parseEmailList } from '@cnab/utils/email-parser'
 
 // No Banco do Brasil CNAB400, o e-mail do pagador fica no registro 5 com 
 // tipo de serviço '01' (envio de boleto por e-mail), e não no registro 3 
@@ -23,21 +22,17 @@ export class Cnab400BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const emails = this.value ?? []
-    const invalidEmail = emails.find((email: string) => !EMAIL_PATTERN.test(email))
-    const isValid = emails.length > 0 && invalidEmail == null
+    const message = emailListErrorMessage(this.value ?? [])
 
-    if (isValid) {
-      return { isValid, errors: [] }
+    if (message == null) {
+      return { isValid: true, errors: [] }
     }
 
     return {
-      isValid,
+      isValid: false,
       errors: [
         new CnabGenericFieldError({
-          message: invalidEmail == null
-            ? 'Campo email do sacado inválido: nenhum e-mail informado'
-            : `Campo email do sacado inválido: ${invalidEmail} não é um e-mail`,
+          message,
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
           range: this.range
@@ -47,8 +42,6 @@ export class Cnab400BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
   }
 
   protected parseValue(rawValue: string): string[] {
-    return rawValue
-      .split(';')
-      .filter((email: string) => email.length > 0)
+    return parseEmailList(rawValue)
   }
 }

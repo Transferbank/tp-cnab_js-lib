@@ -5,8 +5,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
-
-const EMAIL_PATTERN = /^[^\s@;]+@[^\s@;]+$/
+import { emailListErrorMessage, parseEmailList } from '@cnab/utils/email-parser'
 
 // No Banco do Brasil, o campo de e-mail aceita mais de um e-mail, separados por ';' e sem espaços,
 //  por isso o valor é uma lista.
@@ -22,21 +21,17 @@ export class Cnab240BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
   }
 
   protected performValidation(): CnabValidationResult {
-    const emails = this.value ?? []
-    const invalidEmail = emails.find((email: string) => !EMAIL_PATTERN.test(email))
-    const isValid = emails.length > 0 && invalidEmail == null
+    const message = emailListErrorMessage(this.value ?? [])
 
-    if (isValid) {
-      return { isValid, errors: [] }
+    if (message == null) {
+      return { isValid: true, errors: [] }
     }
 
     return {
-      isValid,
+      isValid: false,
       errors: [
         new CnabGenericFieldError({
-          message: invalidEmail == null
-            ? 'Campo email do sacado inválido: nenhum e-mail informado'
-            : `Campo email do sacado inválido: ${invalidEmail} não é um e-mail`,
+          message,
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
           range: this.range
@@ -46,8 +41,6 @@ export class Cnab240BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
   }
 
   protected parseValue(rawValue: string): string[] {
-    return rawValue
-      .split(';')
-      .filter((email: string) => email.length > 0)
+    return parseEmailList(rawValue)
   }
 }
