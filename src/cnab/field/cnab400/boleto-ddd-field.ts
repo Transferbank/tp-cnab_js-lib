@@ -3,6 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { blankIfZeros, isValidDdd } from '@cnab/utils/phone-parser'
 
 export class Cnab400BoletoDddField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -15,13 +16,12 @@ export class Cnab400BoletoDddField extends CnabField<string> {
   }
 
   protected extractRawValue(): string {
-    const rawValue = super.extractRawValue()
-    return /^0+$/.test(rawValue) ? '' : rawValue
+    return blankIfZeros(super.extractRawValue())
   }
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && /^\d{2}$/.test(value)
+    const isValid = value != null && isValidDdd(value)
 
     if (isValid) {
       return { isValid, errors: [] }
