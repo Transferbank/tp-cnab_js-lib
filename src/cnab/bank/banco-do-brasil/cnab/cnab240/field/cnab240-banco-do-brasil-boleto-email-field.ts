@@ -1,3 +1,5 @@
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -9,6 +11,8 @@ const EMAIL_PATTERN = /^[^\s@;]+@[^\s@;]+$/
 // No Banco do Brasil, o campo de e-mail aceita mais de um e-mail, separados por ';' e sem espaços,
 //  por isso o valor é uma lista.
 export class Cnab240BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
+  static readonly bank = CnabBank.BANCODOBRASIL
+  static readonly format = CnabFormat.CNAB240
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'email_do_sacado'
   readonly range: [number, number] = [21, 160]

@@ -23,14 +23,10 @@ import { Cnab240BoletoCidadeField } from '@cnab/field/cnab240/boleto-cidade-fiel
 import { Cnab400BoletoCidadeField } from '@cnab/field/cnab400/boleto-cidade-field'
 import { Cnab240BoletoUfField } from '@cnab/field/cnab240/boleto-uf-field'
 import { Cnab400BoletoUfField } from '@cnab/field/cnab400/boleto-uf-field'
-import { Cnab240BoletoEmailField } from '@cnab/field/cnab240/boleto-email-field'
-import { Cnab400BoletoEmailField } from '@cnab/field/cnab400/boleto-email-field'
 
 import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as BancoDoBrasilFields240 from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 import * as BancoDoBrasilFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
-import * as CaixaFields240 from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import * as ItauFields400 from '@cnab/bank/itau/cnab/cnab400/field/fields'
 
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
@@ -62,8 +58,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240BoletoBairroField,
           Cnab240BoletoCepField,
           Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(Cnab240BoletoEmailField)
+          Cnab240BoletoUfField
         ],
       },
     }),
@@ -146,8 +141,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400BoletoBairroField(),
           Cnab400BoletoCepField(),
           Cnab400BoletoCidadeField(),
-          Cnab400BoletoUfField(),
-          optional(ItauFields400.Cnab400ItauBoletoEmailField)
+          Cnab400BoletoUfField()
         ],
       },
     }),
@@ -232,9 +226,7 @@ function registerCnabSchemas(): CnabSchema[] {
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoBairroField,
           Cnab240BoletoCepField,
           Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoEmailField),
-          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoEmailSegmentoYField)
+          Cnab240BoletoUfField
         ],
       },
     }),
@@ -263,8 +255,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400BoletoBairroField(315, 326, '7'),
           Cnab400BoletoCepField('7'),
           Cnab400BoletoCidadeField('7'),
-          Cnab400BoletoUfField('7'),
-          optional(BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoEmailField)
+          Cnab400BoletoUfField('7')
         ],
       },
     }),
@@ -292,8 +283,7 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240BoletoBairroField),  //  descrevem endereço, bairro, CEP, cidade e UF do pagador
           optional(Cnab240BoletoCepField),    //  como opcionais quando a emissão e a entrega do boleto
           optional(Cnab240BoletoCidadeField), //  são feitas pelo beneficiário.
-          optional(Cnab240BoletoUfField),
-          optional(CaixaFields240.Cnab240CaixaBoletoEmailField)
+          optional(Cnab240BoletoUfField)
         ],
       },
     }),
@@ -322,8 +312,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400BoletoBairroField(),
           Cnab400BoletoCepField(),
           Cnab400BoletoCidadeField(),
-          Cnab400BoletoUfField(),
-          optional(Cnab400BoletoEmailField)
+          Cnab400BoletoUfField()
         ],
       },
     }),

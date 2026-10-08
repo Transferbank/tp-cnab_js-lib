@@ -5,6 +5,7 @@ import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPat
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoEmailField } from '@cnab/field/cnab240/boleto-email-field'
 import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
+import { Cnab240BradescoBoletoEmailField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import { Cnab240BancoDoBrasilBoletoEmailField, Cnab240BancoDoBrasilBoletoEmailSegmentoYField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
@@ -17,7 +18,7 @@ const findFirstSegment = (examplePath: string, segment: string): string => {
 
 // Pelo padrão FEBRABAN, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
-  ['Cnab240BoletoEmailField (segment Y-04, code 03)', Cnab240BoletoEmailField, 'bradesco/cnab240/bradesco_cnab_240.txt', 'financeiro@comercialexemplo.com.br', '04'],
+  ['Cnab240BradescoBoletoEmailField (segment Y-04, code 03)', Cnab240BradescoBoletoEmailField, 'bradesco/cnab240/bradesco_cnab_240.txt', 'financeiro@comercialexemplo.com.br', '04'],
   ['Cnab240CaixaBoletoEmailField (segment Y-04, code 04)', Cnab240CaixaBoletoEmailField, 'caixa/cnab240/caixa_cnab_240.txt', 'maria.souza@exemplo.com', '03']
 ])('%s', (_: string, EmailField: typeof Cnab240BoletoEmailField, examplePath: string, expectedEmail: string, otherBankCode: string): void => {
   const segmentoY = findFirstSegment(examplePath, 'Y')

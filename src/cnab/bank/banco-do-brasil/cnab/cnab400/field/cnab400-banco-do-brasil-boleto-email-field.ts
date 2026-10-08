@@ -1,3 +1,5 @@
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -10,6 +12,8 @@ const EMAIL_PATTERN = /^[^\s@;]+@[^\s@;]+$/
 // tipo de serviço '01' (envio de boleto por e-mail), e não no registro 3 
 // como na Caixa.
 export class Cnab400BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
+  static readonly bank = CnabBank.BANCODOBRASIL
+  static readonly format = CnabFormat.CNAB400
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'email_do_sacado'
   readonly range: [number, number] = [4, 139]

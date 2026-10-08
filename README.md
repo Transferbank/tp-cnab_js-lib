@@ -63,7 +63,15 @@ A exceção são os campos que o manual do banco declara **opcionais**, que pode
 
 ### Campos de contato
 
-Além dos campos acima, a lib lê o e-mail do pagador nos layouts que o trazem. Esse campo é **opcional**: nos layouts sem ele, e quando vem vazio, ele não aparece em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+O e-mail do pagador não faz parte dos campos lidos por padrão. Para lê-lo, passe a constante `CNAB_EMAIL_FIELDS` como campos extras:
+
+```ts
+import { CNAB_EMAIL_FIELDS } from '@fx55/cnab-lib-ts'
+
+const cnab = cnabFile.read(CNAB_EMAIL_FIELDS)
+```
+
+A constante traz o campo de e-mail de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. O campo é **opcional**: nos layouts sem ele, e quando vem vazio, ele não aparece em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
 | Banco           | Formato  |
 | --------------- | :------: |
