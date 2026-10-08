@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { Cnab240BoletoDddField } from '@cnab/field/cnab240/boleto-ddd-field'
+import { Cnab240BradescoBoletoDddField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import { Cnab240CaixaBoletoDddField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import { Cnab240BancoDoBrasilBoletoDddField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 
@@ -15,7 +15,7 @@ const findSegmentoY = (examplePath: string): string => {
 }
 
 describe.each([
-  ['Cnab240BoletoDddField (Bradesco, segment Y-04 code 03)', Cnab240BoletoDddField, 'bradesco/cnab240/bradesco_cnab_240.txt', [70, 71], '11'],
+  ['Cnab240BradescoBoletoDddField (segment Y-04 code 03)', Cnab240BradescoBoletoDddField, 'bradesco/cnab240/bradesco_cnab_240.txt', [70, 71], '11'],
   ['Cnab240CaixaBoletoDddField (segment Y-04 code 04)', Cnab240CaixaBoletoDddField, 'caixa/cnab240/caixa_cnab_240.txt', [70, 71], '21'],
   ['Cnab240BancoDoBrasilBoletoDddField (segment Y-04 with record type 4)', Cnab240BancoDoBrasilBoletoDddField, 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', [70, 71], '11']
 ])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, range: number[], expectedValue: string): void => {
