@@ -7,9 +7,6 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { emailListErrorMessage, parseEmailList } from '@cnab/utils/email-parser'
 
-// No Banco do Brasil CNAB400, o e-mail do pagador fica no registro 5 com 
-// tipo de serviço '01' (envio de boleto por e-mail), e não no registro 3 
-// como na Caixa.
 export class Cnab400BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB400

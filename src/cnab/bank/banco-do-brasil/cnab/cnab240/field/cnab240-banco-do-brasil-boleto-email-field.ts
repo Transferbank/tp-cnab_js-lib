@@ -7,8 +7,6 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { emailListErrorMessage, parseEmailList } from '@cnab/utils/email-parser'
 
-// No Banco do Brasil, o campo de e-mail aceita mais de um e-mail, separados por ';' e sem espaços,
-//  por isso o valor é uma lista.
 export class Cnab240BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB240
