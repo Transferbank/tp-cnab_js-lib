@@ -63,15 +63,18 @@ A exceção são os campos que o manual do banco declara **opcionais**, que pode
 
 ### Campos de contato
 
-A lib lê o DDD e o celular do pagador nos layouts que os trazem. O e-mail do pagador não faz parte dos campos lidos por padrão. Para lê-lo, passe a constante `CNAB_EMAIL_FIELDS` como campos extras:
+Os campos de contato do pagador não fazem parte dos campos lidos por padrão. Para lê-los, passe as constantes como campos extras:
 
 ```ts
-import { CNAB_EMAIL_FIELDS } from '@fx55/cnab-lib-ts'
+import { CNAB_EMAIL_FIELDS, CNAB_TELEFONE_FIELDS } from '@fx55/cnab-lib-ts'
 
-const cnab = cnabFile.read(CNAB_EMAIL_FIELDS)
+const cnab = cnabFile.read([...CNAB_EMAIL_FIELDS, ...CNAB_TELEFONE_FIELDS])
 ```
 
-A constante traz o campo de e-mail de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos de contato são **opcionais**: nos layouts sem eles, e quando vêm vazios (ou preenchidos só com zeros, no DDD e no celular), eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+- `CNAB_EMAIL_FIELDS`: e-mail do pagador;
+- `CNAB_TELEFONE_FIELDS`: DDD e celular do pagador.
+
+Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos de contato são **opcionais**: nos layouts sem eles, e quando vêm vazios (ou preenchidos só com zeros, no DDD e no celular), eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
 | Banco           | Formato  | E-mail | DDD e celular |
 | --------------- | :------: | :----: | :-----------: |
