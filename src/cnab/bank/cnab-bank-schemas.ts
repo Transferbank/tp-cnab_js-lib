@@ -23,11 +23,6 @@ import { Cnab240BoletoCidadeField } from '@cnab/field/cnab240/boleto-cidade-fiel
 import { Cnab400BoletoCidadeField } from '@cnab/field/cnab400/boleto-cidade-field'
 import { Cnab240BoletoUfField } from '@cnab/field/cnab240/boleto-uf-field'
 import { Cnab400BoletoUfField } from '@cnab/field/cnab400/boleto-uf-field'
-import { Cnab240BoletoDddField } from '@cnab/field/cnab240/boleto-ddd-field'
-import { Cnab240BoletoCelularField } from '@cnab/field/cnab240/boleto-celular-field'
-import { Cnab400BoletoDddField } from '@cnab/field/cnab400/boleto-ddd-field'
-import { Cnab400BoletoCelularField } from '@cnab/field/cnab400/boleto-celular-field'
-import * as CaixaFields240 from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 
 import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as BancoDoBrasilFields240 from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
@@ -63,9 +58,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240BoletoBairroField,
           Cnab240BoletoCepField,
           Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(Cnab240BoletoDddField),
-          optional(Cnab240BoletoCelularField)
+          Cnab240BoletoUfField
         ],
       },
     }),
@@ -233,9 +226,7 @@ function registerCnabSchemas(): CnabSchema[] {
           BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoBairroField,
           Cnab240BoletoCepField,
           Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoDddField),
-          optional(BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoCelularField)
+          Cnab240BoletoUfField
         ],
       },
     }),
@@ -292,9 +283,7 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240BoletoBairroField),  //  descrevem endereço, bairro, CEP, cidade e UF do pagador
           optional(Cnab240BoletoCepField),    //  como opcionais quando a emissão e a entrega do boleto
           optional(Cnab240BoletoCidadeField), //  são feitas pelo beneficiário.
-          optional(Cnab240BoletoUfField),
-          optional(CaixaFields240.Cnab240CaixaBoletoDddField),
-          optional(CaixaFields240.Cnab240CaixaBoletoCelularField)
+          optional(Cnab240BoletoUfField)
         ],
       },
     }),
@@ -323,9 +312,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400BoletoBairroField(),
           Cnab400BoletoCepField(),
           Cnab400BoletoCidadeField(),
-          Cnab400BoletoUfField(),
-          optional(Cnab400BoletoDddField),
-          optional(Cnab400BoletoCelularField)
+          Cnab400BoletoUfField()
         ],
       },
     }),

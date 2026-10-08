@@ -12,6 +12,7 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CNAB_EMAIL_FIELDS } from '@cnab/bank/cnab-email-fields'
+import { CNAB_TELEFONE_FIELDS } from '@cnab/bank/cnab-telefone-fields'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -373,6 +374,29 @@ describe('cnab-file', (): void => {
       expect(result).toEqual({ isValid: true, errors: [] })
       expect(boletos[boletos.length - 1].fields.email_do_sacado).toEqual(expectedEmail)
       expect(boletosWithoutExtraFields[boletosWithoutExtraFields.length - 1].fields).not.toHaveProperty('email_do_sacado')
+    })
+  })
+
+  describe('CNAB_TELEFONE_FIELDS', (): void => {
+    it.each([
+      ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '11', '98765432'],
+      ['bradesco/cnab240/bradesco_cnab_240.txt', '11', '987654321'],
+      ['caixa/cnab240/caixa_cnab_240.txt', '21', '912345678'],
+      ['caixa/cnab400/caixa_cnab_400.REM', '31', '998877665']
+    ])('given document file %s when reading with the phone fields then reads only the phone of its layout', (examplePath: string, expectedDdd: string, expectedCelular: string): void => {
+      // Given
+      const cnabFile = openExample(examplePath)
+
+      // When
+      const result = cnabFile.validate(true, CNAB_TELEFONE_FIELDS)
+      const boletos = cnabFile.read(CNAB_TELEFONE_FIELDS).boletos
+      const boletosWithoutExtraFields = cnabFile.read().boletos
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+      expect(boletos[boletos.length - 1].fields).toMatchObject({ ddd_do_sacado: expectedDdd, celular_do_sacado: expectedCelular })
+      expect(boletosWithoutExtraFields[boletosWithoutExtraFields.length - 1].fields).not.toHaveProperty('ddd_do_sacado')
+      expect(boletosWithoutExtraFields[boletosWithoutExtraFields.length - 1].fields).not.toHaveProperty('celular_do_sacado')
     })
   })
 
