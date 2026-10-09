@@ -1,3 +1,5 @@
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
@@ -8,6 +10,8 @@ import {
 export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
+  static readonly bank?: CnabBank
+  static readonly format?: CnabFormat
   abstract readonly fieldKey: string
   // O range começa a partir de start + 1, seguindo as documentações dos arquivos cnab
   abstract readonly range: [number, number]
@@ -88,6 +92,8 @@ export abstract class CnabField<T> {
 export interface CnabFieldClass<T = unknown> {
   readonly fieldType: CnabFieldType
   readonly isOptional: boolean
+  readonly bank?: CnabBank
+  readonly format?: CnabFormat
   new (rawLine: string, lineNumber: number): CnabField<T>
 }
 

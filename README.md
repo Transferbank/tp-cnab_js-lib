@@ -136,6 +136,40 @@ for (const boleto of cnab.boletos) {
 
 Campos opcionais vazios no arquivo (como o endereço na Caixa CNAB 240) não aparecem em `fields`.
 
+### Campos extras
+
+Para ler um campo que a lib não oferece, escreva uma classe de campo e passe-a em `validate` e `read`, no parâmetro `extraFields`. O campo é validado e lido como os demais, e o valor aparece em `fields` pela chave do campo.
+
+Por padrão, um campo extra é aplicado a qualquer banco e formato. Como a posição de um dado costuma mudar de um banco para outro, e principalmente entre CNAB 240 e CNAB 400, o campo pode declarar `bank` e `format` para limitar onde é aplicado. Antes de validar e de ler, a lib descarta os campos extras que não são do banco e do formato do arquivo:
+
+```ts
+import { CnabBank, CnabField, CnabFieldType, CnabFormat, Cnab400LineTypeChecker, CnabValidationResult } from '@fx55/cnab-lib-ts'
+
+class ItauNossoNumeroField extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.BOLETO
+  static readonly bank = CnabBank.ITAU
+  static readonly format = CnabFormat.CNAB400
+  readonly fieldKey = 'nosso_numero'
+  readonly range: [number, number] = [63, 70]
+
+  shouldValidate(): boolean {
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
+  }
+
+  protected performValidation(): CnabValidationResult {
+    return { isValid: true, errors: [] }
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
+}
+
+const cnab = cnabFile.read([ItauNossoNumeroField])
+```
+
+Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+
 ### Tratando erros de validação
 
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.

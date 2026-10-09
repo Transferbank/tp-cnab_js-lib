@@ -63,7 +63,7 @@ export class CnabSchema {
     ]
 
     for (const [group, lines, firstLine] of items) {
-      const groupExtraFields = (extraFields ?? []).filter(
+      const groupExtraFields = this.scopedExtraFields(extraFields).filter(
         (field: CnabFieldClass) => field.fieldType === group.fieldType
       )
 
@@ -78,6 +78,12 @@ export class CnabSchema {
     }
 
     return result
+  }
+
+  private scopedExtraFields(extraFields?: CnabFieldClass[]): CnabFieldClass[] {
+    return (extraFields ?? []).filter((field: CnabFieldClass) =>
+      (field.bank == null || field.bank == this.bank) && (field.format == null || field.format == this.fmt)
+    )
   }
 
   countBoletos(rawLines: string[]): number {
@@ -95,7 +101,7 @@ export class CnabSchema {
 
     const fields = [
       ...this.boleto.fields,
-      ...(extraFields ?? []),
+      ...this.scopedExtraFields(extraFields),
     ]
 
     let currentBoleto = new CnabBoleto()

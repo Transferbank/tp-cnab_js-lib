@@ -5,12 +5,47 @@ import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
+import { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
   const fullPath = path.join(resPath(), examplePath)
   const rawLines = readExampleLines(fullPath)
   return CnabFile.fromLines(rawLines)
+}
+
+class NossoNumeroExtraField extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.BOLETO
+  readonly fieldKey = 'nosso_numero'
+  readonly range: [number, number] = [63, 70]
+
+  shouldValidate(): boolean {
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine) || Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
+  }
+
+  protected performValidation(): CnabValidationResult {
+    return { isValid: true, errors: [] }
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
+}
+
+class ItauCnab400NossoNumeroExtraField extends NossoNumeroExtraField {
+  static readonly bank = CnabBank.ITAU
+  static readonly format = CnabFormat.CNAB400
+}
+
+class BradescoCnab400NossoNumeroExtraField extends NossoNumeroExtraField {
+  static readonly bank = CnabBank.BRADESCO
+  static readonly format = CnabFormat.CNAB400
+  readonly range: [number, number] = [71, 81]
 }
 
 function createFileFromPath(filePath: string): File {
@@ -281,5 +316,39 @@ describe('cnab-file', (): void => {
         expect(boleto.fields).not.toHaveProperty(fieldKey)
       }
     }
+  })
+
+  describe('extra fields filtered by bank and format', (): void => {
+    it.each([
+      ['an itau cnab400 field', 'itau/cnab400/ITAU_cnab_400.REM', ItauCnab400NossoNumeroExtraField, '10377333'],
+      ['an itau cnab400 field', 'bradesco/cnab400/bradesco_cnab_400.txt', ItauCnab400NossoNumeroExtraField, undefined],
+      ['an itau cnab400 field', 'itau/cnab240/itau_cnab_240.txt', ItauCnab400NossoNumeroExtraField, undefined],
+      ['a field without bank and format', 'bradesco/cnab400/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020200']
+    ])('given %s when reading %s then reads it only if the file is in its scope', (_: string, examplePath: string, extraField: CnabFieldClass, expectedNossoNumero: string | undefined): void => {
+      // Given
+      const cnabFile = openExample(examplePath)
+
+      // When
+      const result = cnabFile.validate(true, [extraField])
+      const cnab = cnabFile.read([extraField])
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+      expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
+    })
+
+    it.each([
+      ['itau/cnab400/ITAU_cnab_400.REM', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '10377333'],
+      ['bradesco/cnab400/bradesco_cnab_400.txt', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '09100010629']
+    ])('given extra fields of several banks with the same key, the other bank last, when reading %s then reads only the field of its bank', (examplePath: string, extraFields: CnabFieldClass[], expectedNossoNumero: string): void => {
+      // Given
+      const cnabFile = openExample(examplePath)
+
+      // When
+      const cnab = cnabFile.read(extraFields)
+
+      // Then
+      expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
+    })
   })
 })
