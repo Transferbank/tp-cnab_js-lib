@@ -12,11 +12,6 @@ export class Cnab240BoletoNossoNumeroField extends CnabField<string> {
     return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
   }
 
-  protected extractRawValue(): string {
-    const rawValue = super.extractRawValue()
-    return /^0*$/.test(rawValue) ? '' : rawValue
-  }
-
   protected performValidation(): CnabValidationResult {
     return { isValid: true, errors: [] }
   }

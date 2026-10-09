@@ -13,11 +13,6 @@ export class Cnab400BoletoNossoNumeroField extends CnabField<string> {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
-  protected extractRawValue(): string {
-    const rawValue = super.extractRawValue()
-    return /^0*$/.test(rawValue) ? '' : rawValue
-  }
-
   protected performValidation(): CnabValidationResult {
     return { isValid: true, errors: [] }
   }
