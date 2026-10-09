@@ -74,7 +74,7 @@ const cnab = cnabFile.read([...CNAB_EMAIL_FIELDS, ...CNAB_TELEFONE_FIELDS])
 - `CNAB_EMAIL_FIELDS`: e-mail do pagador;
 - `CNAB_TELEFONE_FIELDS`: DDD e celular do pagador.
 
-Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos de contato são **opcionais**: nos layouts sem eles, e quando vêm vazios (ou preenchidos só com zeros, no DDD e no celular), eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos de contato são **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
 | Banco           | Formato  | E-mail | DDD e celular |
 | --------------- | :------: | :----: | :-----------: |
@@ -85,11 +85,11 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 | Caixa           | CNAB 400 |   ✅   |      ✅       |
 | Itaú            | CNAB 400 |   ✅   |               |
 
-| Chave               | Descrição                                                          | Tipo       |
-| ------------------- | ------------------------------------------------------------------ | ---------- |
-| `email_do_sacado`   | E-mails do sacado                                                  | `string[]` |
-| `ddd_do_sacado`     | DDD do celular do sacado                                           | `string`   |
-| `celular_do_sacado` | Número do celular do sacado (8 ou 9 dígitos, 8 no Banco do Brasil) | `string`   |
+| Chave               | Descrição                   | Tipo       |
+| ------------------- | --------------------------- | ---------- |
+| `email_do_sacado`   | E-mails do sacado           | `string[]` |
+| `ddd_do_sacado`     | DDD do celular do sacado    | `string`   |
+| `celular_do_sacado` | Número do celular do sacado | `string`   |
 
 ## Instalação
 
