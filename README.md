@@ -86,8 +86,6 @@ A constante traz o campo de e-mail de cada layout que o tem, e cada arquivo lê 
 | ----------------- | ----------------- | ---------- |
 | `email_do_sacado` | E-mails do sacado | `string[]` |
 
-O valor é sempre uma lista. Só o Banco do Brasil permite mais de um e-mail por boleto; nos demais bancos, a lista tem um único e-mail.
-
 ## Instalação
 
 ```bash

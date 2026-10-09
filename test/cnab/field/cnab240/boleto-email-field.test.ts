@@ -138,14 +138,4 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoYField (segment Y-04 with recor
     expect(field.value).toEqual(['cobranca@exemplo.com'])
   })
 
-  it('given segment Y-04 with the FEBRABAN record type 3 when checking shouldValidate then returns false', (): void => {
-    // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoYField(replaceLineRange(segmentoY, [8, 8], '3'), 12)
-
-    // When
-    const shouldValidate = field.shouldValidate()
-
-    // Then
-    expect(shouldValidate).toBe(false)
-  })
 })

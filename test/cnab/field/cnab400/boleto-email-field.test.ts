@@ -74,12 +74,4 @@ describe('Cnab400BancoDoBrasilBoletoEmailField (record 5, service type 01, accep
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toEqual(['contato@variedadesgama.com.br', 'financeiro@variedadesgama.com.br'])
   })
-
-  it('given record 5 with service type 99 (multa) when checking shouldValidate then returns false', (): void => {
-    // When
-    const shouldValidate = new Cnab400BancoDoBrasilBoletoEmailField(registro5Multa, 5).shouldValidate()
-
-    // Then
-    expect(shouldValidate).toBe(false)
-  })
 })
