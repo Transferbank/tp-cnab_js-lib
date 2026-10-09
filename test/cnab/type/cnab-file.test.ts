@@ -11,6 +11,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { CNAB_EMAIL_FIELDS } from '@cnab/bank/cnab-email-fields'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -349,6 +350,60 @@ describe('cnab-file', (): void => {
 
       // Then
       expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
+    })
+  })
+
+  describe('CNAB_EMAIL_FIELDS', (): void => {
+    it.each([
+      ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', ['contato@variedadesgama.com.br', 'financeiro@variedadesgama.com.br']],
+      ['bradesco/cnab240/bradesco_cnab_240.txt', ['financeiro@comercialexemplo.com.br']],
+      ['caixa/cnab240/caixa_cnab_240.txt', ['maria.souza@exemplo.com']],
+      ['caixa/cnab400/caixa_cnab_400.REM', ['leticia.modelo@exemplo.com']],
+      ['itau/cnab400/ITAU_cnab_400.REM', ['compras@materiaisomega.com.br']]
+    ])('given document file %s when reading with the e-mail fields then reads only the e-mails of its layout', (examplePath: string, expectedEmail: string[]): void => {
+      // Given
+      const cnabFile = openExample(examplePath)
+
+      // When
+      const result = cnabFile.validate(true, CNAB_EMAIL_FIELDS)
+      const boletos = cnabFile.read(CNAB_EMAIL_FIELDS).boletos
+      const boletosWithoutExtraFields = cnabFile.read().boletos
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+      expect(boletos[boletos.length - 1].fields.email_do_sacado).toEqual(expectedEmail)
+      expect(boletosWithoutExtraFields[boletosWithoutExtraFields.length - 1].fields).not.toHaveProperty('email_do_sacado')
+    })
+  })
+
+  describe('banco do brasil cnab240 e-mails from segments S and Y-04', (): void => {
+    const readLastBoletoEmails = (rawLines: string[]): unknown => {
+      const boletos = CnabFile.fromLines(rawLines).read(CNAB_EMAIL_FIELDS).boletos
+      return boletos[boletos.length - 1].fields.email_do_sacado
+    }
+
+    it('given e-mails in both segments when reading then joins them in a single list', (): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+
+      // When
+      const emails = readLastBoletoEmails(rawLines)
+
+      // Then
+      expect(emails).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com', 'cobranca@exemplo.com'])
+    })
+
+    it('given the same e-mail in both segments when reading then keeps it only once', (): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+      const segmentoYIndex = rawLines.findIndex((line: string) => line[13] == 'Y')
+      rawLines[segmentoYIndex] = replaceLineRange(rawLines[segmentoYIndex], [20, 69], 'financeiro@exemplo.com')
+
+      // When
+      const emails = readLastBoletoEmails(rawLines)
+
+      // Then
+      expect(emails).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com'])
     })
   })
 })

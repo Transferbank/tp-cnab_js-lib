@@ -26,12 +26,12 @@ export function replaceLineRange(
   return rawLine.substring(0, start) + paddedValue + rawLine.substring(stop)
 }
 
-export function findFirstCnab240SegmentLine(lines: string[], segment: string): string | undefined {
-  return lines.find(line => line.length >= 14 && line[7] === '3' && line[13] === segment)
+export function findFirstCnab240SegmentLine(lines: string[], segment: string, optionalRecordCode = '', recordType = '3'): string | undefined {
+  return lines.find(line => line[7] == recordType && line[13] == segment && line.startsWith(optionalRecordCode, 17))
 }
 
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
-  return lines.find(line => line.length >= 1 && line[0] === recordType)
+  return lines.find(line => line.startsWith(recordType))
 }
 
 export function realLineNumber(lines: string[], rawLine: string): number {
