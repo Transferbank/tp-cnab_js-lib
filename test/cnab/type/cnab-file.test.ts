@@ -11,6 +11,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { CNAB_SEU_NUMERO_FIELDS } from '@cnab/bank/cnab-identification-fields'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -350,5 +351,17 @@ describe('cnab-file', (): void => {
       // Then
       expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
     })
+  })
+
+  it('given banco do brasil cnab400 with record 5 service type 03 when reading the seu número then it replaces the one in record 7', (): void => {
+    // Given
+    const cnabFile = openExample('banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM')
+
+    // When
+    const boletos = cnabFile.read(CNAB_SEU_NUMERO_FIELDS).boletos
+
+    // Then
+    expect(boletos[0].fields.seu_numero).toBe('NF82697-02')
+    expect(boletos[boletos.length - 1].fields.seu_numero).toBe('PEDIDO1234-1/3')
   })
 })
