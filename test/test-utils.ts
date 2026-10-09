@@ -1,6 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import assert from 'node:assert'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
 
 export type FieldTestCase = [
   string,
@@ -62,4 +65,15 @@ export function createFieldsFromLines<T extends CnabField<unknown>>(
 
 export function getFieldRange(FieldClass: CnabFieldConstructor): [number, number] {
   return new FieldClass(''.padEnd(400, ' '), 1).range
+}
+
+export function findFieldClass(
+  fields: CnabFieldClass[],
+  bank: CnabBank,
+  format: CnabFormat,
+  index = 0
+): CnabFieldClass<string> {
+  const fieldClass = fields.filter((field: CnabFieldClass) => field.bank == bank && field.format == format)[index]
+  assert(fieldClass != null, `Campo ${index} de ${bank} ${format} não encontrado na lista`)
+  return fieldClass as CnabFieldClass<string>
 }
