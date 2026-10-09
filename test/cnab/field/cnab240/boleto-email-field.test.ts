@@ -10,8 +10,8 @@ import { Cnab240BancoDoBrasilBoletoEmailField, Cnab240BancoDoBrasilBoletoEmailSe
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
 //  campo testado, porque os arquivos de exemplo só têm dados válidos.
-const findFirstSegment = (examplePath: string, segment: string): string => {
-  const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), examplePath)), segment)
+const findFirstSegment = (examplePath: string, segment: string, optionalRecordCode?: string, recordType?: string): string => {
+  const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), examplePath)), segment, optionalRecordCode, recordType)
   assert(line != null, `Linha com segmento ${segment} não encontrada em ${examplePath}`)
   return line
 }
@@ -122,9 +122,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
 
 // No Banco do Brasil, o segmento Y-04 usa o tipo de registro '4' na posição 8, e não o '3' do padrão FEBRABAN.
 describe('Cnab240BancoDoBrasilBoletoEmailSegmentoYField (segment Y-04 with record type 4)', (): void => {
-  const segmentoY = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
-    .find((line: string) => line[13] == 'Y')
-  assert(segmentoY != null, 'Linha com segmento Y não encontrada')
+  const segmentoY = findFirstSegment('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'Y', '03', '4')
 
   it('given segment Y-04 from the example file when reading then returns its e-mail', (): void => {
     // Given
