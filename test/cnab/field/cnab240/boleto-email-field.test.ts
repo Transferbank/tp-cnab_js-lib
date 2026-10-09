@@ -6,7 +6,7 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoEmailField } from '@cnab/field/cnab240/boleto-email-field'
 import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import { Cnab240BradescoBoletoEmailField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
-import { Cnab240BancoDoBrasilBoletoEmailField, Cnab240BancoDoBrasilBoletoEmailSegmentoYField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import { Cnab240BancoDoBrasilBoletoEmailSegmentoSField, Cnab240BancoDoBrasilBoletoEmailSegmentoYField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
 //  campo testado, porque os arquivos de exemplo só têm dados válidos.
@@ -68,12 +68,12 @@ describe.each([
   })
 })
 
-describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts e-mails separated by semicolon)', (): void => {
+describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8, accepts e-mails separated by semicolon)', (): void => {
   const segmentoS = findFirstSegment('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'S')
 
   it('given segment S from the example file when reading then returns each e-mail', (): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailField(segmentoS, 11)
+    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(segmentoS, 11)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -87,7 +87,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
 
   it('given e-mails with a trailing semicolon when reading then ignores it', (): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailField(replaceLineRange(segmentoS, [21, 160], 'joao@exemplo.com;maria@exemplo.com;'), 5)
+    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(replaceLineRange(segmentoS, [21, 160], 'joao@exemplo.com;maria@exemplo.com;'), 5)
 
     // When
     const result = field.validate()
@@ -102,7 +102,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailField (segment S, print type 8, accepts
     ['after a space, which the manual does not allow between e-mails', 'joao@exemplo.com; joao@exemplo.com', ' joao@exemplo.com']
   ])('given an e-mail %s in the list when validating then reports it', (_: string, emails: string, invalidEmail: string): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailField(replaceLineRange(segmentoS, [21, 160], emails), 5)
+    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(replaceLineRange(segmentoS, [21, 160], emails), 5)
 
     // When
     const result = field.validate()

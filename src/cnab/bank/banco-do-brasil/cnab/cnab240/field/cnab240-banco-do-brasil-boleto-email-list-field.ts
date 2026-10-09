@@ -4,19 +4,16 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { emailListErrorMessage, parseEmailList } from '@cnab/utils/email-parser'
 
-export class Cnab240BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
+export abstract class Cnab240BancoDoBrasilBoletoEmailListField extends CnabField<string[]> {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB240
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'email_do_sacado'
-  readonly range: [number, number] = [21, 160]
+  abstract readonly range: [number, number]
 
-  shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoS(this.rawLine, '8')
-  }
+  abstract shouldValidate(): boolean
 
   protected performValidation(): CnabValidationResult {
     const message = emailListErrorMessage(this.value ?? [])
