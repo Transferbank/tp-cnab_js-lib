@@ -6,21 +6,48 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BoletoEmailField } from '@cnab/field/cnab240/boleto-email-field'
 import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import { Cnab240BradescoBoletoEmailField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
-import { Cnab240BancoDoBrasilBoletoEmailSegmentoSField, Cnab240BancoDoBrasilBoletoEmailSegmentoYField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import {
+  Cnab240BancoDoBrasilBoletoEmailSegmentoSField,
+  Cnab240BancoDoBrasilBoletoEmailSegmentoYField
+} from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
 //  campo testado, porque os arquivos de exemplo só têm dados válidos.
-const findFirstSegment = (examplePath: string, segment: string, optionalRecordCode?: string, recordType?: string): string => {
-  const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), examplePath)), segment, optionalRecordCode, recordType)
+const findFirstSegment = (
+  examplePath: string,
+  segment: string,
+  optionalRecordCode?: string,
+  recordType?: string
+): string => {
+  const lines = readExampleLines(path.join(resPath(), examplePath))
+  const line = findFirstCnab240SegmentLine(lines, segment, optionalRecordCode, recordType)
   assert(line != null, `Linha com segmento ${segment} não encontrada em ${examplePath}`)
   return line
 }
 
 // Pelo padrão FEBRABAN, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
-  ['Cnab240BradescoBoletoEmailField (segment Y-04, code 03)', Cnab240BradescoBoletoEmailField, 'bradesco/cnab240/bradesco_cnab_240.txt', 'financeiro@comercialexemplo.com.br', '04'],
-  ['Cnab240CaixaBoletoEmailField (segment Y-04, code 04)', Cnab240CaixaBoletoEmailField, 'caixa/cnab240/caixa_cnab_240.txt', 'maria.souza@exemplo.com', '03']
-])('%s', (_: string, EmailField: typeof Cnab240BoletoEmailField, examplePath: string, expectedEmail: string, otherBankCode: string): void => {
+  [
+    'Cnab240BradescoBoletoEmailField (segment Y-04, code 03)',
+    Cnab240BradescoBoletoEmailField,
+    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'financeiro@comercialexemplo.com.br',
+    '04'
+  ],
+  [
+    'Cnab240CaixaBoletoEmailField (segment Y-04, code 04)',
+    Cnab240CaixaBoletoEmailField,
+    'caixa/cnab240/caixa_cnab_240.txt',
+    'maria.souza@exemplo.com',
+    '03'
+  ]
+])('%s', (
+  _: string,
+  EmailField: typeof Cnab240BoletoEmailField,
+  examplePath: string,
+  expectedEmail: string,
+  otherBankCode: string
+): void => {
   const segmentoY = findFirstSegment(examplePath, 'Y')
 
   it('given segment Y-04 from the example file when reading then returns its e-mail', (): void => {
@@ -87,7 +114,8 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
 
   it('given e-mails with a trailing semicolon when reading then ignores it', (): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(replaceLineRange(segmentoS, [21, 160], 'joao@exemplo.com;maria@exemplo.com;'), 5)
+    const lineWithTrailingSemicolon = replaceLineRange(segmentoS, [21, 160], 'joao@exemplo.com;maria@exemplo.com;')
+    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(lineWithTrailingSemicolon, 5)
 
     // When
     const result = field.validate()
@@ -99,8 +127,16 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
 
   it.each([
     ['without @', 'joao@exemplo.com;joao.exemplo.com', 'joao.exemplo.com'],
-    ['after a space, which the manual does not allow between e-mails', 'joao@exemplo.com; joao@exemplo.com', ' joao@exemplo.com']
-  ])('given an e-mail %s in the list when validating then reports it', (_: string, emails: string, invalidEmail: string): void => {
+    [
+      'after a space, which the manual does not allow between e-mails',
+      'joao@exemplo.com; joao@exemplo.com',
+      ' joao@exemplo.com'
+    ]
+  ])('given an e-mail %s in the list when validating then reports it', (
+    _: string,
+    emails: string,
+    invalidEmail: string
+  ): void => {
     // Given
     const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(replaceLineRange(segmentoS, [21, 160], emails), 5)
 

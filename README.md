@@ -63,28 +63,33 @@ A exceção são os campos que o manual do banco declara **opcionais**, que pode
 
 ### Campos de contato
 
-O e-mail do pagador não faz parte dos campos lidos por padrão. Para lê-lo, passe a constante `CNAB_EMAIL_FIELDS` como campos extras:
+Os campos de contato do pagador não fazem parte dos campos lidos por padrão. Para lê-los, passe as constantes como campos extras:
 
 ```ts
-import { CNAB_EMAIL_FIELDS } from '@fx55/cnab-lib-ts'
+import { CNAB_EMAIL_FIELDS, CNAB_TELEFONE_FIELDS } from '@fx55/cnab-lib-ts'
 
-const cnab = cnabFile.read(CNAB_EMAIL_FIELDS)
+const cnab = cnabFile.read([...CNAB_EMAIL_FIELDS, ...CNAB_TELEFONE_FIELDS])
 ```
 
-A constante traz o campo de e-mail de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. O campo é **opcional**: nos layouts sem ele, e quando vem vazio, ele não aparece em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+- `CNAB_EMAIL_FIELDS`: e-mail do pagador;
+- `CNAB_TELEFONE_FIELDS`: DDD e celular do pagador.
 
-| Banco           | Formato  |
-| --------------- | :------: |
-| Banco do Brasil | CNAB 240 |
-| Banco do Brasil | CNAB 400 |
-| Bradesco        | CNAB 240 |
-| Caixa           | CNAB 240 |
-| Caixa           | CNAB 400 |
-| Itaú            | CNAB 400 |
+Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos de contato são **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
-| Chave             | Descrição         | Tipo       |
-| ----------------- | ----------------- | ---------- |
-| `email_do_sacado` | E-mails do sacado | `string[]` |
+| Banco           | Formato  | E-mail | DDD e celular |
+| --------------- | :------: | :----: | :-----------: |
+| Banco do Brasil | CNAB 240 |   ✅   |      ✅       |
+| Banco do Brasil | CNAB 400 |   ✅   |               |
+| Bradesco        | CNAB 240 |   ✅   |      ✅       |
+| Caixa           | CNAB 240 |   ✅   |      ✅       |
+| Caixa           | CNAB 400 |   ✅   |      ✅       |
+| Itaú            | CNAB 400 |   ✅   |               |
+
+| Chave               | Descrição                   | Tipo       |
+| ------------------- | --------------------------- | ---------- |
+| `email_do_sacado`   | E-mails do sacado           | `string[]` |
+| `ddd_do_sacado`     | DDD do celular do sacado    | `string`   |
+| `celular_do_sacado` | Número do celular do sacado | `string`   |
 
 ## Instalação
 

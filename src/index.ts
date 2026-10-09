@@ -17,6 +17,7 @@ export { CnabBank } from '@cnab/type/cnab-bank'
 export { CnabFormat } from '@cnab/type/cnab-format'
 export { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 export { CNAB_EMAIL_FIELDS } from '@cnab/bank/cnab-email-fields'
+export { CNAB_TELEFONE_FIELDS } from '@cnab/bank/cnab-telefone-fields'
 export {
   CnabException,
   CnabMinimumLinesNotReachedException,
