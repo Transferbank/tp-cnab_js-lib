@@ -3,12 +3,13 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, FindLine, cnab400RecordLineFinder, readExampleLines, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabBank } from '@cnab/type/cnab-bank'
 import { Cnab400BoletoNossoNumeroField } from '@cnab/field/cnab400/boleto-nosso-numero-field'
 
 const baseCases: FieldTestCase[] = [
   [
-    'Cnab400BoletoNossoNumeroField (posições gerais, exemplo Itaú)',
-    Cnab400BoletoNossoNumeroField,
+    'Cnab400BoletoNossoNumeroField (exemplo Itaú)',
+    Cnab400BoletoNossoNumeroField({ bank: CnabBank.ITAU, range: [63, 70] }),
     'itau/cnab400/ITAU_cnab_400.REM',
     cnab400RecordLineFinder('1'),
     '10377333'
