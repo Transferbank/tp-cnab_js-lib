@@ -82,11 +82,11 @@ A constante traz o campo de e-mail de cada layout que o tem, e cada arquivo lê 
 | Caixa           | CNAB 400 |
 | Itaú            | CNAB 400 |
 
-| Chave             | Descrição        | Tipo     |
-| ----------------- | ---------------- | -------- |
-| `email_do_sacado` | E-mail do sacado | `string` |
+| Chave             | Descrição         | Tipo       |
+| ----------------- | ----------------- | ---------- |
+| `email_do_sacado` | E-mails do sacado | `string[]` |
 
-No Banco do Brasil, quando o boleto tem mais de um e-mail, eles vêm separados por `;`.
+O valor é sempre uma lista. Só o Banco do Brasil permite mais de um e-mail por boleto; nos demais bancos, a lista tem um único e-mail.
 
 ## Instalação
 

@@ -34,7 +34,7 @@ describe.each([
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe(expectedEmail)
+    expect(field.value).toEqual([expectedEmail])
   })
 
   it('given e-mails separated by semicolon when validating then reports it as an invalid e-mail', (): void => {
@@ -82,7 +82,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe('maria.souza@exemplo.com;financeiro@exemplo.com')
+    expect(field.value).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com'])
   })
 
   it('given e-mails with a trailing semicolon when reading then ignores it', (): void => {
@@ -94,7 +94,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
 
     // Then
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe('joao@exemplo.com;maria@exemplo.com')
+    expect(field.value).toEqual(['joao@exemplo.com', 'maria@exemplo.com'])
   })
 
   it.each([
@@ -135,7 +135,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoYField (segment Y-04 with recor
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe('cobranca@exemplo.com')
+    expect(field.value).toEqual(['cobranca@exemplo.com'])
   })
 
   it('given segment Y-04 with the FEBRABAN record type 3 when checking shouldValidate then returns false', (): void => {

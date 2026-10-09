@@ -355,12 +355,12 @@ describe('cnab-file', (): void => {
 
   describe('CNAB_EMAIL_FIELDS', (): void => {
     it.each([
-      ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'contato@variedadesgama.com.br;financeiro@variedadesgama.com.br'],
-      ['bradesco/cnab240/bradesco_cnab_240.txt', 'financeiro@comercialexemplo.com.br'],
-      ['caixa/cnab240/caixa_cnab_240.txt', 'maria.souza@exemplo.com'],
-      ['caixa/cnab400/caixa_cnab_400.REM', 'leticia.modelo@exemplo.com'],
-      ['itau/cnab400/ITAU_cnab_400.REM', 'compras@materiaisomega.com.br']
-    ])('given document file %s when reading with the e-mail fields then reads only the e-mails of its layout', (examplePath: string, expectedEmail: string): void => {
+      ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', ['contato@variedadesgama.com.br', 'financeiro@variedadesgama.com.br']],
+      ['bradesco/cnab240/bradesco_cnab_240.txt', ['financeiro@comercialexemplo.com.br']],
+      ['caixa/cnab240/caixa_cnab_240.txt', ['maria.souza@exemplo.com']],
+      ['caixa/cnab400/caixa_cnab_400.REM', ['leticia.modelo@exemplo.com']],
+      ['itau/cnab400/ITAU_cnab_400.REM', ['compras@materiaisomega.com.br']]
+    ])('given document file %s when reading with the e-mail fields then reads only the e-mails of its layout', (examplePath: string, expectedEmail: string[]): void => {
       // Given
       const cnabFile = openExample(examplePath)
 
@@ -390,7 +390,7 @@ describe('cnab-file', (): void => {
       const emails = readLastBoletoEmails(rawLines)
 
       // Then
-      expect(emails).toBe('maria.souza@exemplo.com;financeiro@exemplo.com;cobranca@exemplo.com')
+      expect(emails).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com', 'cobranca@exemplo.com'])
     })
 
     it('given the same e-mail in both segments when reading then keeps it only once', (): void => {
@@ -403,7 +403,7 @@ describe('cnab-file', (): void => {
       const emails = readLastBoletoEmails(rawLines)
 
       // Then
-      expect(emails).toBe('maria.souza@exemplo.com;financeiro@exemplo.com')
+      expect(emails).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com'])
     })
   })
 })
