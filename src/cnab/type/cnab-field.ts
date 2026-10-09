@@ -84,6 +84,10 @@ export abstract class CnabField<T> {
     return this.performValidation()
   }
 
+  handleDuplicatedValue(_previousValue: unknown): T | null {
+    return this.value
+  }
+
   abstract shouldValidate(): boolean
   protected abstract parseValue(rawValue: string): T
   protected abstract performValidation(): CnabValidationResult

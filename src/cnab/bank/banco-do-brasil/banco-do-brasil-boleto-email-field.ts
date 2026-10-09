@@ -5,7 +5,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { emailListErrorMessage, parseEmailList } from '@cnab/utils/email-parser'
 
-export abstract class BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
+export abstract class BancoDoBrasilBoletoEmailField extends CnabField<string> {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'email_do_sacado'
@@ -14,7 +14,7 @@ export abstract class BancoDoBrasilBoletoEmailField extends CnabField<string[]> 
   abstract shouldValidate(): boolean
 
   protected performValidation(): CnabValidationResult {
-    const message = emailListErrorMessage(this.value ?? [])
+    const message = emailListErrorMessage(parseEmailList(this.value ?? ''))
 
     if (message == null) {
       return { isValid: true, errors: [] }
@@ -33,7 +33,13 @@ export abstract class BancoDoBrasilBoletoEmailField extends CnabField<string[]> 
     }
   }
 
-  protected parseValue(rawValue: string): string[] {
-    return parseEmailList(rawValue)
+  handleDuplicatedValue(previousValue: unknown): string {
+    const allEmails = parseEmailList(`${previousValue};${this.value}`)
+    const uniqueEmails = new Set(allEmails)
+    return [...uniqueEmails].join(';')
+  }
+
+  protected parseValue(rawValue: string): string {
+    return parseEmailList(rawValue).join(';')
   }
 }

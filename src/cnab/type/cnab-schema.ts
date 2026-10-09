@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 
@@ -117,7 +117,7 @@ export class CnabSchema {
           continue
         }
         if (field.value != null) {
-          currentBoleto.fields[field.fieldKey] = this.handleDuplicatedFields(currentBoleto.fields[field.fieldKey], field.value)
+          currentBoleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, currentBoleto.fields[field.fieldKey])
         }
       }
     })
@@ -129,10 +129,7 @@ export class CnabSchema {
     return cnab
   }
 
-  private handleDuplicatedFields(currentValue: unknown, newValue: unknown): unknown {
-    if (Array.isArray(currentValue) && Array.isArray(newValue)) {
-      return [...new Set([...currentValue, ...newValue])]
-    }
-    return newValue
+  private handleDuplicatedFields(field: CnabField<unknown>, previousValue: unknown): unknown {
+    return previousValue == null ? field.value : field.handleDuplicatedValue(previousValue)
   }
 }
