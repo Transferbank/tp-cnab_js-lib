@@ -58,8 +58,6 @@ describe.each([
 })
 
 describe('Cnab400BancoDoBrasilBoletoEmailField (record 5, service type 01, accepts e-mails separated by semicolon)', (): void => {
-  const registro5Multa = findRecord('banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '599')
-
   it('given record 5 with service type 01 from the example file when reading then returns each e-mail', (): void => {
     // Given
     const registro5Email = findRecord('banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '501')
