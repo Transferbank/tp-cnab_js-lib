@@ -18,9 +18,27 @@ const findRecord = (examplePath: string, recordType: string): string => {
 
 // No CNAB400, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
-  ['Cnab400CaixaBoletoEmailField (record 3)', Cnab400CaixaBoletoEmailField, findRecord('caixa/cnab400/caixa_cnab_400.REM', '3'), [54, 103], 'leticia.modelo@exemplo.com'],
-  ['Cnab400ItauBoletoEmailField (record 5)', Cnab400ItauBoletoEmailField, findRecord('itau/cnab400/ITAU_cnab_400.REM', '5'), [2, 121], 'compras@materiaisomega.com.br']
-])('%s', (_: string, EmailField: typeof Cnab400BoletoEmailField, registro: string, range: number[], expectedEmail: string): void => {
+  [
+    'Cnab400CaixaBoletoEmailField (record 3)',
+    Cnab400CaixaBoletoEmailField,
+    findRecord('caixa/cnab400/caixa_cnab_400.REM', '3'),
+    [54, 103],
+    'leticia.modelo@exemplo.com'
+  ],
+  [
+    'Cnab400ItauBoletoEmailField (record 5)',
+    Cnab400ItauBoletoEmailField,
+    findRecord('itau/cnab400/ITAU_cnab_400.REM', '5'),
+    [2, 121],
+    'compras@materiaisomega.com.br'
+  ]
+])('%s', (
+  _: string,
+  EmailField: typeof Cnab400BoletoEmailField,
+  registro: string,
+  range: number[],
+  expectedEmail: string
+): void => {
   const emailRange = range as [number, number]
 
   it('given the record from the example file when reading then returns its e-mail', (): void => {
