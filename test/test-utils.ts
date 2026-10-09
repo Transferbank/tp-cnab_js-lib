@@ -1,6 +1,17 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { CnabField } from '@cnab/type/cnab-field'
+import assert from 'node:assert'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
+
+export type FieldTestCase = [
+  string,
+  CnabFieldClass<string>,
+  string,
+  string,
+  string
+]
 
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
@@ -31,7 +42,7 @@ export function findFirstCnab240SegmentLine(lines: string[], segment: string): s
 }
 
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
-  return lines.find(line => line.length >= 1 && line[0] === recordType)
+  return lines.find(line => line.startsWith(recordType))
 }
 
 export function realLineNumber(lines: string[], rawLine: string): number {
@@ -54,4 +65,15 @@ export function createFieldsFromLines<T extends CnabField<unknown>>(
 
 export function getFieldRange(FieldClass: CnabFieldConstructor): [number, number] {
   return new FieldClass(''.padEnd(400, ' '), 1).range
+}
+
+export function findFieldClass(
+  fields: CnabFieldClass[],
+  bank: CnabBank,
+  format: CnabFormat,
+  index = 0
+): CnabFieldClass<string> {
+  const fieldClass = fields.filter((field: CnabFieldClass) => field.bank == bank && field.format == format)[index]
+  assert(fieldClass != null, `Campo ${index} de ${bank} ${format} não encontrado na lista`)
+  return fieldClass as CnabFieldClass<string>
 }
