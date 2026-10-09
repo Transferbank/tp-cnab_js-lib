@@ -1,7 +1,7 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { FieldTestCase, FindLine, cnab400RecordLineFinder, readExampleLines, resPath } from '@test/test-utils'
+import { FieldTestCase, findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { Cnab400BoletoSeuNumeroField } from '@cnab/field/cnab400/boleto-seu-numero-field'
@@ -11,7 +11,7 @@ const baseCases: FieldTestCase[] = [
     'Cnab400BoletoSeuNumeroField (exemplo Itaú)',
     Cnab400BoletoSeuNumeroField({ bank: CnabBank.ITAU, range: [111, 120] }),
     'itau/cnab400/ITAU_cnab_400.REM',
-    cnab400RecordLineFinder('1'),
+    '1',
     'NF76872-04'
   ]
 ]
@@ -39,8 +39,8 @@ describe.each<FieldTestCase>([
   ...santanderCases,
   ...sicoobCases,
   ...sicrediCases
-])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, findLine: FindLine, expectedValue: string): void => {
-  const line = findLine(readExampleLines(path.join(resPath(), examplePath)))
+])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, recordType: string, expectedValue: string): void => {
+  const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), examplePath)), recordType)
   assert(line != null, `Linha não encontrada em ${examplePath}`)
 
   it('given the detail record from the example file when reading then returns the field as written', (): void => {
