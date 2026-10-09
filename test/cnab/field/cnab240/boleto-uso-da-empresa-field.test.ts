@@ -39,7 +39,13 @@ describe.each<FieldTestCase>([
   ...santanderCases,
   ...sicoobCases,
   ...sicrediCases
-])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, segment: string, expectedValue: string): void => {
+])('%s', (
+  _: string,
+  FieldClass: CnabFieldClass<string>,
+  examplePath: string,
+  segment: string,
+  expectedValue: string
+): void => {
   const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), examplePath)), segment)
   assert(line != null, `Linha não encontrada em ${examplePath}`)
 

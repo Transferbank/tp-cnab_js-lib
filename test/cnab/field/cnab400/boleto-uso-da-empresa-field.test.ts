@@ -39,7 +39,13 @@ describe.each<FieldTestCase>([
   ...santanderCases,
   ...sicoobCases,
   ...sicrediCases
-])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, recordType: string, expectedValue: string): void => {
+])('%s', (
+  _: string,
+  FieldClass: CnabFieldClass<string>,
+  examplePath: string,
+  recordType: string,
+  expectedValue: string
+): void => {
   const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), examplePath)), recordType)
   assert(line != null, `Linha não encontrada em ${examplePath}`)
 
