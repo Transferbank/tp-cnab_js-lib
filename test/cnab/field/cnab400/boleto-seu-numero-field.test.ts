@@ -1,9 +1,11 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { FieldTestCase, findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
+import { FieldTestCase, findFieldClass, findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
+import { CNAB_SEU_NUMERO_FIELDS } from '@cnab/bank/cnab-identification-fields'
 import { Cnab400BoletoSeuNumeroField } from '@cnab/field/cnab400/boleto-seu-numero-field'
 
 const baseCases: FieldTestCase[] = [
@@ -16,7 +18,22 @@ const baseCases: FieldTestCase[] = [
   ]
 ]
 
-const bancoDoBrasilCases: FieldTestCase[] = []
+const bancoDoBrasilCases: FieldTestCase[] = [
+  [
+    'Banco do Brasil CNAB400 (record 7)',
+    findFieldClass(CNAB_SEU_NUMERO_FIELDS, CnabBank.BANCODOBRASIL, CnabFormat.CNAB400),
+    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    '7',
+    'NF82697-02'
+  ],
+  [
+    'Banco do Brasil CNAB400 (record 5, service type 03, 15 positions)',
+    findFieldClass(CNAB_SEU_NUMERO_FIELDS, CnabBank.BANCODOBRASIL, CnabFormat.CNAB400, 1),
+    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    '503',
+    'PEDIDO1234-1/3'
+  ]
+]
 
 const bradescoCases: FieldTestCase[] = []
 
