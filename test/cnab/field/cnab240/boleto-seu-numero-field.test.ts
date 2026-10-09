@@ -28,7 +28,15 @@ const bancoDoBrasilCases: FieldTestCase[] = [
   ]
 ]
 
-const bradescoCases: FieldTestCase[] = []
+const bradescoCases: FieldTestCase[] = [
+  [
+    'Bradesco CNAB240',
+    findFieldClass(CNAB_SEU_NUMERO_FIELDS, CnabBank.BRADESCO, CnabFormat.CNAB240),
+    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'P',
+    'NF0000123'
+  ]
+]
 
 const caixaCases: FieldTestCase[] = []
 

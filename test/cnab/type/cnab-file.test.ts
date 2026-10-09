@@ -24,7 +24,7 @@ function openExample(examplePath: string): CnabFile {
 
 class NossoNumeroExtraField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'nosso_numero'
+  readonly fieldKey = 'campo_extra'
   readonly range: [number, number] = [63, 70]
 
   shouldValidate(): boolean {
@@ -337,7 +337,7 @@ describe('cnab-file', (): void => {
 
       // Then
       expect(result).toEqual({ isValid: true, errors: [] })
-      expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
+      expect(cnab.boletos[0].fields.campo_extra).toBe(expectedNossoNumero)
     })
 
     it.each([
@@ -351,7 +351,7 @@ describe('cnab-file', (): void => {
       const cnab = cnabFile.read(extraFields)
 
       // Then
-      expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
+      expect(cnab.boletos[0].fields.campo_extra).toBe(expectedNossoNumero)
     })
   })
 

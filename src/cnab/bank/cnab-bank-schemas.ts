@@ -28,6 +28,7 @@ import { Cnab240BoletoNossoNumeroField } from '@cnab/field/cnab240/boleto-nosso-
 import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as BancoDoBrasilFields240 from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 import * as BancoDoBrasilFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
+import * as BradescoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
@@ -59,7 +60,8 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240BoletoBairroField,
           Cnab240BoletoCepField,
           Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField
+          Cnab240BoletoUfField,
+          optional(Cnab240BoletoNossoNumeroField)
         ],
       },
     }),
@@ -85,7 +87,8 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400BoletoValorTituloField(),
           Cnab400BoletoSacadoDocumentoField,
           Cnab400BoletoEnderecoField(),
-          Cnab400BoletoCepField()
+          Cnab400BoletoCepField(),
+          optional(BradescoFields400.Cnab400BradescoBoletoNossoNumeroField)
         ],
       },
     }),

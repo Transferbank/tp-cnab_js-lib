@@ -8,16 +8,28 @@ import {
   Cnab400BancoDoBrasilBoletoSeuNumeroRegistro5Field,
   Cnab400BancoDoBrasilBoletoUsoDaEmpresaField
 } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
+import {
+  Cnab240BradescoBoletoSeuNumeroField,
+  Cnab240BradescoBoletoUsoDaEmpresaField
+} from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
+import {
+  Cnab400BradescoBoletoSeuNumeroField,
+  Cnab400BradescoBoletoUsoDaEmpresaField
+} from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 
 export const CNAB_SEU_NUMERO_FIELDS: CnabFieldClass[] = [
   optional(Cnab240BancoDoBrasilBoletoSeuNumeroField),
   optional(Cnab400BancoDoBrasilBoletoSeuNumeroField),
-  optional(Cnab400BancoDoBrasilBoletoSeuNumeroRegistro5Field)
+  optional(Cnab400BancoDoBrasilBoletoSeuNumeroRegistro5Field),
+  optional(Cnab240BradescoBoletoSeuNumeroField),
+  optional(Cnab400BradescoBoletoSeuNumeroField)
 ]
 
 export const CNAB_USO_DA_EMPRESA_FIELDS: CnabFieldClass[] = [
   optional(Cnab240BancoDoBrasilBoletoUsoDaEmpresaField),
-  optional(Cnab400BancoDoBrasilBoletoUsoDaEmpresaField)
+  optional(Cnab400BancoDoBrasilBoletoUsoDaEmpresaField),
+  optional(Cnab240BradescoBoletoUsoDaEmpresaField),
+  optional(Cnab400BradescoBoletoUsoDaEmpresaField)
 ]
 
 export const CNAB_IDENTIFICATION_FIELDS: CnabFieldClass[] = [

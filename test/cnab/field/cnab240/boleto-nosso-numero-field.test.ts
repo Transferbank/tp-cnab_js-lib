@@ -25,7 +25,15 @@ const bancoDoBrasilCases: FieldTestCase[] = [
   ]
 ]
 
-const bradescoCases: FieldTestCase[] = []
+const bradescoCases: FieldTestCase[] = [
+  [
+    'Bradesco CNAB240',
+    Cnab240BoletoNossoNumeroField,
+    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'P',
+    '00100000000123450010'
+  ]
+]
 
 const caixaCases: FieldTestCase[] = []
 

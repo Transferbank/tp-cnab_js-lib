@@ -5,6 +5,7 @@ import { FieldTestCase, findFirstCnab400RecordLine, readExampleLines, resPath } 
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { Cnab400BoletoNossoNumeroField } from '@cnab/field/cnab400/boleto-nosso-numero-field'
 import { Cnab400BancoDoBrasilBoletoNossoNumeroField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
+import { Cnab400BradescoBoletoNossoNumeroField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 
 const baseCases: FieldTestCase[] = [
   [
@@ -26,7 +27,15 @@ const bancoDoBrasilCases: FieldTestCase[] = [
   ]
 ]
 
-const bradescoCases: FieldTestCase[] = []
+const bradescoCases: FieldTestCase[] = [
+  [
+    'Bradesco CNAB400',
+    Cnab400BradescoBoletoNossoNumeroField,
+    'bradesco/cnab400/bradesco_cnab_400.txt',
+    '1',
+    '09100010629P'
+  ]
+]
 
 const caixaCases: FieldTestCase[] = []
 
