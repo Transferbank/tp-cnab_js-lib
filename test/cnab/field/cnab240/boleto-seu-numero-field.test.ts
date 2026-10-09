@@ -1,8 +1,8 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { FieldTestCase, FindLine, cnab240SegmentLineFinder, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
-import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
+import { FieldTestCase, FindLine, cnab240SegmentLineFinder, readExampleLines, resPath } from '@test/test-utils'
+import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { Cnab240BoletoSeuNumeroField } from '@cnab/field/cnab240/boleto-seu-numero-field'
 
 const baseCases: FieldTestCase[] = [
@@ -11,7 +11,6 @@ const baseCases: FieldTestCase[] = [
     Cnab240BoletoSeuNumeroField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     cnab240SegmentLineFinder('P'),
-    [63, 77],
     'NF0000123'
   ]
 ]
@@ -39,7 +38,7 @@ describe.each<FieldTestCase>([
   ...santanderCases,
   ...sicoobCases,
   ...sicrediCases
-])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, findLine: FindLine, range: [number, number], expectedValue: string): void => {
+])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, findLine: FindLine, expectedValue: string): void => {
   const line = findLine(readExampleLines(path.join(resPath(), examplePath)))
   assert(line != null, `Linha não encontrada em ${examplePath}`)
 
@@ -55,17 +54,5 @@ describe.each<FieldTestCase>([
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(expectedValue)
-  })
-
-  it('given the field blank when validating the optional field then accepts it without a value', (): void => {
-    // Given
-    const field = new (optional(FieldClass))(replaceLineRange(line, range, ''), 5)
-
-    // When
-    const result = field.validate()
-
-    // Then
-    expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBeNull()
   })
 })

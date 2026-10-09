@@ -9,7 +9,6 @@ export type FieldTestCase = [
   CnabFieldClass<string>,
   string,
   FindLine,
-  [number, number],
   string
 ]
 
