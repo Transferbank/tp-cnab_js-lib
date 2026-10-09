@@ -1,7 +1,7 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { FieldTestCase, FindLine, cnab240SegmentLineFinder, readExampleLines, resPath } from '@test/test-utils'
+import { FieldTestCase, findFirstCnab240SegmentLine, readExampleLines, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { Cnab240BoletoNossoNumeroField } from '@cnab/field/cnab240/boleto-nosso-numero-field'
@@ -11,7 +11,7 @@ const baseCases: FieldTestCase[] = [
     'Cnab240BoletoNossoNumeroField (padrão FEBRABAN, exemplo Bradesco)',
     Cnab240BoletoNossoNumeroField({ bank: CnabBank.BRADESCO }),
     'bradesco/cnab240/bradesco_cnab_240.txt',
-    cnab240SegmentLineFinder('P'),
+    'P',
     '00100000000123450010'
   ]
 ]
@@ -39,8 +39,8 @@ describe.each<FieldTestCase>([
   ...santanderCases,
   ...sicoobCases,
   ...sicrediCases
-])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, findLine: FindLine, expectedValue: string): void => {
-  const line = findLine(readExampleLines(path.join(resPath(), examplePath)))
+])('%s', (_: string, FieldClass: CnabFieldClass<string>, examplePath: string, segment: string, expectedValue: string): void => {
+  const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), examplePath)), segment)
   assert(line != null, `Linha não encontrada em ${examplePath}`)
 
   it('given the segment P from the example file when reading then returns the field as written', (): void => {

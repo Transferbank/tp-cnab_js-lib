@@ -2,13 +2,11 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 
-export type FindLine = (lines: string[]) => string | undefined
-
 export type FieldTestCase = [
   string,
   CnabFieldClass<string>,
   string,
-  FindLine,
+  string,
   string
 ]
 
@@ -41,15 +39,7 @@ export function findFirstCnab240SegmentLine(lines: string[], segment: string): s
 }
 
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
-  return lines.find(line => line.length >= 1 && line[0] === recordType)
-}
-
-export function cnab240SegmentLineFinder(segment: string): FindLine {
-  return (lines: string[]) => findFirstCnab240SegmentLine(lines, segment)
-}
-
-export function cnab400RecordLineFinder(recordType: string): FindLine {
-  return (lines: string[]) => findFirstCnab400RecordLine(lines, recordType)
+  return lines.find(line => line.startsWith(recordType))
 }
 
 export function realLineNumber(lines: string[], rawLine: string): number {
