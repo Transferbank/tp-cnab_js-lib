@@ -44,7 +44,7 @@ export function findFirstCnab240SegmentLine(
 }
 
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
-  return lines.find(line => line.length >= 1 && line[0] === recordType)
+  return lines.find(line => line.startsWith(recordType))
 }
 
 export function realLineNumber(lines: string[], rawLine: string): number {
