@@ -40,6 +40,7 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `cep_do_sacado`       | CEP do sacado                   | `string` |
 | `cidade_do_sacado`    | Cidade do sacado                | `string` |
 | `uf_do_sacado`        | UF do sacado                    | `string` |
+| `nosso_numero`        | Número do boleto no banco       | `string` |
 
 ### Campos que o layout não tem
 
@@ -60,6 +61,7 @@ Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é 
 A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
 
 - Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
+- Todos os layouts: Nosso Número (veja [Campos de identificação](#campos-de-identificação))
 
 ### Campos de contato
 
@@ -93,7 +95,9 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 
 ### Campos de identificação
 
-Três campos ligam o boleto ao sistema de quem o emitiu e ao banco. Eles não fazem parte da leitura padrão: para lê-los, passe uma das constantes como campos extras.
+Três campos identificam o boleto: o Seu Número e o Uso da Empresa ligam o boleto ao sistema de quem o emitiu, e o Nosso Número o identifica no banco.
+
+O Nosso Número faz parte da leitura padrão e aparece em `fields` sem nada a mais. O Seu Número e o Uso da Empresa não: para lê-los, passe uma das constantes como campos extras.
 
 ```ts
 import { CNAB_IDENTIFICATION_FIELDS } from '@fx55/cnab-lib-ts'
@@ -101,12 +105,11 @@ import { CNAB_IDENTIFICATION_FIELDS } from '@fx55/cnab-lib-ts'
 const cnab = cnabFile.read(CNAB_IDENTIFICATION_FIELDS)
 ```
 
-- `CNAB_IDENTIFICATION_FIELDS`: os três campos;
+- `CNAB_IDENTIFICATION_FIELDS`: Seu Número e Uso da Empresa;
 - `CNAB_SEU_NUMERO_FIELDS`: só o Seu Número;
-- `CNAB_USO_DA_EMPRESA_FIELDS`: só o Uso da Empresa;
-- `CNAB_NOSSO_NUMERO_FIELDS`: só o Nosso Número.
+- `CNAB_USO_DA_EMPRESA_FIELDS`: só o Uso da Empresa.
 
-Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos são **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Os valores vêm como estão no arquivo, sem validação de formato.
+Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os três campos são **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Os valores vêm como estão no arquivo, sem validação de formato.
 
 | Chave            | Descrição                                                                                  | Tipo     |
 | ---------------- | ------------------------------------------------------------------------------------------ | -------- |
