@@ -87,7 +87,7 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 
 | Chave               | Descrição                   | Tipo       |
 | ------------------- | --------------------------- | ---------- |
-| `email_do_sacado`   | E-mails do sacado           | `string[]` |
+| `emails_do_sacado`  | E-mails do sacado           | `string[]` |
 | `ddd_do_sacado`     | DDD do celular do sacado    | `string`   |
 | `celular_do_sacado` | Número do celular do sacado | `string`   |
 

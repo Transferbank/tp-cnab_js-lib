@@ -77,7 +77,7 @@ describe.each([
       errors: [new CnabGenericFieldError({
         message: 'Campo email do sacado inválido: joao@exemplo.com;maria@exemplo.com não é um e-mail',
         lineNumber: 5,
-        fieldKey: 'email_do_sacado',
+        fieldKey: 'emails_do_sacado',
         range: [20, 69]
       })]
     })
@@ -149,7 +149,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
       errors: [new CnabGenericFieldError({
         message: `Campo email do sacado inválido: ${invalidEmail} não é um e-mail`,
         lineNumber: 5,
-        fieldKey: 'email_do_sacado',
+        fieldKey: 'emails_do_sacado',
         range: [21, 160]
       })]
     })

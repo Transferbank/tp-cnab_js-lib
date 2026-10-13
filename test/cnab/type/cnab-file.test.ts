@@ -372,8 +372,8 @@ describe('cnab-file', (): void => {
 
       // Then
       expect(result).toEqual({ isValid: true, errors: [] })
-      expect(boletos[boletos.length - 1].fields.email_do_sacado).toEqual(expectedEmail)
-      expect(boletosWithoutExtraFields[boletosWithoutExtraFields.length - 1].fields).not.toHaveProperty('email_do_sacado')
+      expect(boletos[boletos.length - 1].fields.emails_do_sacado).toEqual(expectedEmail)
+      expect(boletosWithoutExtraFields[boletosWithoutExtraFields.length - 1].fields).not.toHaveProperty('emails_do_sacado')
     })
   })
 
@@ -403,7 +403,7 @@ describe('cnab-file', (): void => {
   describe('banco do brasil cnab240 e-mails from segments S and Y-04', (): void => {
     const readLastBoletoEmails = (rawLines: string[]): unknown => {
       const boletos = CnabFile.fromLines(rawLines).read(CNAB_EMAIL_FIELDS).boletos
-      return boletos[boletos.length - 1].fields.email_do_sacado
+      return boletos[boletos.length - 1].fields.emails_do_sacado
     }
 
     it('given e-mails in both segments when reading then joins them in a single list', (): void => {

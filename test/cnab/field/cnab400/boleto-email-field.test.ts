@@ -68,7 +68,7 @@ describe.each([
       errors: [new CnabGenericFieldError({
         message: 'Campo email do sacado inválido: joao@exemplo.com;maria@exemplo.com não é um e-mail',
         lineNumber: 5,
-        fieldKey: 'email_do_sacado',
+        fieldKey: 'emails_do_sacado',
         range: emailRange
       })]
     })
