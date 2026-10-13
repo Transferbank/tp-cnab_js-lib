@@ -1,12 +1,10 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { FieldTestCase, findFieldClass, findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
+import { FieldTestCase, findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
-import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabFormat } from '@cnab/type/cnab-format'
-import { CNAB_NOSSO_NUMERO_FIELDS } from '@cnab/bank/cnab-identification-fields'
 import { Cnab400BoletoNossoNumeroField } from '@cnab/field/cnab400/boleto-nosso-numero-field'
+import { Cnab400BancoDoBrasilBoletoNossoNumeroField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
 
 const baseCases: FieldTestCase[] = [
   [
@@ -21,7 +19,7 @@ const baseCases: FieldTestCase[] = [
 const bancoDoBrasilCases: FieldTestCase[] = [
   [
     'Banco do Brasil CNAB400',
-    findFieldClass(CNAB_NOSSO_NUMERO_FIELDS, CnabBank.BANCODOBRASIL, CnabFormat.CNAB400),
+    Cnab400BancoDoBrasilBoletoNossoNumeroField,
     'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
     '7',
     '90076541000044534'

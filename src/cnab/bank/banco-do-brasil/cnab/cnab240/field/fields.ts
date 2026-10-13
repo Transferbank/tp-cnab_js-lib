@@ -7,4 +7,3 @@ export { Cnab240BancoDoBrasilBoletoDddField } from '@cnab/bank/banco-do-brasil/c
 export { Cnab240BancoDoBrasilBoletoCelularField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-celular-field'
 export { Cnab240BancoDoBrasilBoletoSeuNumeroField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-seu-numero-field'
 export { Cnab240BancoDoBrasilBoletoUsoDaEmpresaField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-uso-da-empresa-field'
-export { Cnab240BancoDoBrasilBoletoNossoNumeroField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-nosso-numero-field'
