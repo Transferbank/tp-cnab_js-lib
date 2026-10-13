@@ -7,7 +7,7 @@ import { isValidEmail } from '@cnab/utils/email-parser'
 
 export class Cnab240BoletoEmailField extends CnabField<string[]> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'email_do_sacado'
+  readonly fieldKey = 'emails_do_sacado'
   protected readonly optionalRecordCode: string = '03'
   readonly range: [number, number] = [20, 69]
 
