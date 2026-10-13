@@ -1,2 +1,6 @@
 export { Cnab400BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-sacado-documento-field'
 export { Cnab400BancoDoBrasilBoletoEmailField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-email-field'
+export { Cnab400BancoDoBrasilBoletoSeuNumeroField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-seu-numero-field'
+export { Cnab400BancoDoBrasilBoletoSeuNumeroRegistro5Field } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-seu-numero-registro-5-field'
+export { Cnab400BancoDoBrasilBoletoUsoDaEmpresaField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-uso-da-empresa-field'
+export { Cnab400BancoDoBrasilBoletoNossoNumeroField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-nosso-numero-field'
