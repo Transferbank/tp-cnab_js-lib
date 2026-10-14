@@ -3,7 +3,11 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
-import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
+import {
+  CnabFileTypeNotRecognizedException,
+  CnabFileTypeNotSupportedException,
+  CnabInvalidFileException
+} from '@cnab/exception/cnab-exception'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
@@ -87,6 +91,36 @@ describe('cnab-file', (): void => {
       expect(cnabFile.schema).not.toBeNull()
     }
   )
+
+  it.each([
+    ['bradesco/cnab240/bradesco_cnab_240.txt', [143, 143] as [number, number]],
+    ['itau/cnab400/ITAU_cnab_400.REM', [2, 2] as [number, number]]
+  ])('given return file %s when opening then refuses it as a file type not supported', (examplePath: string, fileTypeRange: [number, number]): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), examplePath))
+    rawLines[0] = replaceLineRange(rawLines[0], fileTypeRange, '2')
+
+    // When
+    const open = (): CnabFile => CnabFile.fromLines(rawLines)
+
+    // Then
+    expect(open).toThrow(CnabFileTypeNotSupportedException)
+  })
+
+  it.each([
+    ['bradesco/cnab240/bradesco_cnab_240.txt', [143, 143] as [number, number]],
+    ['itau/cnab400/ITAU_cnab_400.REM', [2, 2] as [number, number]]
+  ])('given file %s with an unknown file type code when opening then refuses it', (examplePath: string, fileTypeRange: [number, number]): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), examplePath))
+    rawLines[0] = replaceLineRange(rawLines[0], fileTypeRange, '9')
+
+    // When
+    const open = (): CnabFile => CnabFile.fromLines(rawLines)
+
+    // Then
+    expect(open).toThrow(CnabFileTypeNotRecognizedException)
+  })
 
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt'],

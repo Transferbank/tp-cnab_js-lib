@@ -1,6 +1,7 @@
 import { Cnab } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -8,6 +9,8 @@ import { CnabFieldClass } from '@cnab/type/cnab-field'
 import {
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
+  CnabFileTypeNotRecognizedException,
+  CnabFileTypeNotSupportedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException,
   CnabInvalidFileException
@@ -32,6 +35,8 @@ export class CnabFile {
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
     cnabFile.format = CnabFile.detectFormat(cnabFile.rawLines[0])
+    const fileType = CnabFile.detectFileType(cnabFile.rawLines[0], cnabFile.format)
+    if (fileType != CnabFileType.REMESSA) throw new CnabFileTypeNotSupportedException(fileType)
     cnabFile.bank = CnabFile.detectBank(cnabFile.rawLines[0], cnabFile.format)
     cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)
     cnabFile.boletoCount = cnabFile.schema.countBoletos(cnabFile.rawLines)
@@ -46,9 +51,16 @@ export class CnabFile {
   }
 
   private static detectFormat(header: string): CnabFormat {
-    if (header.length === 240) return CnabFormat.CNAB240
-    if (header.length === 400) return CnabFormat.CNAB400
+    if (header.length == 240) return CnabFormat.CNAB240
+    if (header.length == 400) return CnabFormat.CNAB400
     throw new CnabFormatNotRecognizedException(header.length)
+  }
+
+  private static detectFileType(header: string, cnabFormat: CnabFormat): CnabFileType {
+    const code = cnabFormat == CnabFormat.CNAB240 ? header.substring(142, 143) : header.substring(1, 2)
+    if (code == '1') return CnabFileType.REMESSA
+    if (code == '2') return CnabFileType.RETORNO
+    throw new CnabFileTypeNotRecognizedException(code, cnabFormat)
   }
 
   private static detectBank(header: string, cnabFormat: CnabFormat): CnabBank {

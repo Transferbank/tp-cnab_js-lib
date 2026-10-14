@@ -1,5 +1,6 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { CnabValidationError } from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabException extends Error {
@@ -18,6 +19,18 @@ export class CnabMinimumLinesNotReachedException extends CnabException {
 export class CnabFormatNotRecognizedException extends CnabException {
   constructor(lineLength: number) {
     super(`Formato CNAB não reconhecido. Primeira linha tem ${lineLength} caracteres. Esperado: 240 ou 400`)
+  }
+}
+
+export class CnabFileTypeNotRecognizedException extends CnabException {
+  constructor(fileTypeCode: string, cnabFormat: CnabFormat) {
+    super(`Tipo de arquivo não reconhecido: código ${fileTypeCode} no header do CNAB${cnabFormat}. Esperado: 1 (remessa) ou 2 (retorno)`)
+  }
+}
+
+export class CnabFileTypeNotSupportedException extends CnabException {
+  constructor(fileType: CnabFileType) {
+    super(`Arquivo de ${fileType} não suportado: esperado um lote de criação (arquivo remessa)`)
   }
 }
 
