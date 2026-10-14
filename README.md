@@ -4,7 +4,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 ## Funcionalidades
 
-- Detecção automática de banco, formato (CNAB 240 ou CNAB 400) e quantidade de boletos, a partir do próprio conteúdo do arquivo
+- Detecção automática de banco, formato (CNAB 240 ou CNAB 400), tipo de arquivo (lote de criação ou de validação) e quantidade de boletos, a partir do próprio conteúdo do arquivo
 - Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
 - Leitura dos boletos, com os valores dos campos já convertidos (texto, número e data)
 - Erros de validação tipados, com linha, campo e mensagem
@@ -262,6 +262,16 @@ cnabFile.format // ex: '240'
 cnabFile.boletoCount // ex: 3
 ```
 
+#### Lote de criação e lote de validação
+
+O banco recebe um **lote de criação** (arquivo remessa), com os boletos a registrar, e devolve um **lote de validação** (arquivo retorno), com o que aconteceu com cada um. O tipo do arquivo é identificado pelo header, e cada tipo é aberto por uma classe:
+
+| Tipo                                | Classe            | Funções                                               |
+| ----------------------------------- | ----------------- | ----------------------------------------------------- |
+| Lote de criação (arquivo remessa)   | `CnabFile`        | `openCnabFile`, `openCnabFileFromLines`               |
+| Lote de validação (arquivo retorno) | `CnabRetornoFile` | `openCnabRetornoFile`, `openCnabRetornoFileFromLines` |
+
+Abrir um arquivo com a classe do outro tipo lança `CnabFileTypeNotSupportedException`. A leitura de lotes de validação ainda não tem nenhum banco: por enquanto, `CnabRetornoFile` lança `CnabBankSchemaNotFoundException` para todo lote de validação.
 
 ### Validando o arquivo inteiro
 
@@ -351,6 +361,8 @@ Problemas que impedem o processamento do arquivo lançam exceções que estendem
 | ------------------------------------- | ------------------------------------------------- |
 | `CnabMinimumLinesNotReachedException` | O arquivo tem menos de 3 linhas                   |
 | `CnabFormatNotRecognizedException`    | A primeira linha não tem 240 nem 400 caracteres   |
+| `CnabFileTypeNotRecognizedException`  | O tipo no header não é remessa nem retorno        |
+| `CnabFileTypeNotSupportedException`   | O arquivo é do outro tipo (remessa ou retorno)    |
 | `CnabBankCodeNotFoundException`       | O código do banco no header não é reconhecido     |
 | `CnabBankSchemaNotFoundException`     | O banco não tem suporte para o formato do arquivo |
 | `CnabInvalidFileException`            | `read()` em um arquivo que não passa na validação |
