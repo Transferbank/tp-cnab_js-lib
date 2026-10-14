@@ -15,7 +15,7 @@ import {
 // 7 bancos); o Itau e o unico com divergencia real e passa seu range menor ([34, 63]).
 describe('NomeBoletoField', (): void => {
   describe('shouldValidate', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     describe.each([
       { segment: 'P', expectedShouldValidate: false },
@@ -54,13 +54,13 @@ describe('NomeBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: NomeBoletoField(), examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstName: 'JOAO DA SILVA EXEMPLO' },
-      { FieldClass: NomeBoletoField(), examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
-      { FieldClass: NomeBoletoField(), examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
-      { FieldClass: NomeBoletoField(34, 63), examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
-      { FieldClass: NomeBoletoField(), examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
-      { FieldClass: NomeBoletoField(), examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
-      { FieldClass: NomeBoletoField(), examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' }
+      { FieldClass: NomeBoletoField(), examplePath: 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', expectedFirstName: 'JOAO DA SILVA EXEMPLO' },
+      { FieldClass: NomeBoletoField(), examplePath: 'bradesco/cnab240/remessa/bradesco_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
+      { FieldClass: NomeBoletoField(), examplePath: 'caixa/cnab240/remessa/caixa_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
+      { FieldClass: NomeBoletoField(34, 63), examplePath: 'itau/cnab240/remessa/itau_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
+      { FieldClass: NomeBoletoField(), examplePath: 'santander/cnab240/remessa/santander_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
+      { FieldClass: NomeBoletoField(), examplePath: 'sicoob/cnab240/remessa/sicoob_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' },
+      { FieldClass: NomeBoletoField(), examplePath: 'sicredi/cnab240/remessa/sicredi_cnab_240.txt', expectedFirstName: 'JOAO EXEMPLO SILVA' }
     ])(
       'given segment Q lines with valid name ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstName }: {
@@ -90,7 +90,7 @@ describe('NomeBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     it('given segment Q line with blank name when validating then returns null value and field error', (): void => {
       // Given

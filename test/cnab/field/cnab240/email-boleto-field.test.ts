@@ -28,14 +28,14 @@ describe.each([
   [
     'BradescoEmailBoletoField (segment Y-04, code 03)',
     BradescoEmailBoletoField,
-    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'bradesco/cnab240/remessa/bradesco_cnab_240.txt',
     'financeiro@comercialexemplo.com.br',
     '04'
   ],
   [
     'CaixaEmailBoletoField (segment Y-04, code 04)',
     CaixaEmailBoletoField,
-    'caixa/cnab240/caixa_cnab_240.txt',
+    'caixa/cnab240/remessa/caixa_cnab_240.txt',
     'maria.souza@exemplo.com',
     '03'
   ]
@@ -94,7 +94,7 @@ describe.each([
 })
 
 describe('BancoDoBrasilEmailSegmentoSBoletoField (segment S, print type 8, accepts e-mails separated by semicolon)', (): void => {
-  const segmentoS = findFirstSegment('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'S')
+  const segmentoS = findFirstSegment('banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', 'S')
 
   it('given segment S from the example file when reading then returns each e-mail', (): void => {
     // Given
@@ -156,7 +156,7 @@ describe('BancoDoBrasilEmailSegmentoSBoletoField (segment S, print type 8, accep
 
 // No Banco do Brasil, o segmento Y-04 usa o tipo de registro '4' na posição 8, e não o '3' do padrão FEBRABAN.
 describe('BancoDoBrasilEmailSegmentoYBoletoField (segment Y-04 with record type 4)', (): void => {
-  const segmentoY = findFirstSegment('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'Y', '03', '4')
+  const segmentoY = findFirstSegment('banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', 'Y', '03', '4')
 
   it('given segment Y-04 from the example file when reading then returns its e-mail', (): void => {
     // Given

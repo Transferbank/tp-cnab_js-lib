@@ -7,7 +7,7 @@ import { DataDeJurosBoletoField } from '@cnab/field/cnab240/data-de-juros-boleto
 describe('DataDeJurosBoletoField', (): void => {
   it('given the segment P from the example file when reading then returns the date', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/remessa/bradesco_cnab_240.txt')), 'P')
     assert(line != null, 'Linha não encontrada')
     const field = new DataDeJurosBoletoField(line, 5)
 

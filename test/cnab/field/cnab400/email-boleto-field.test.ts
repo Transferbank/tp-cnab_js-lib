@@ -21,14 +21,14 @@ describe.each([
   [
     'CaixaEmailBoletoField (record 3)',
     CaixaEmailBoletoField,
-    findRecord('caixa/cnab400/caixa_cnab_400.REM', '3'),
+    findRecord('caixa/cnab400/remessa/caixa_cnab_400.REM', '3'),
     [54, 103],
     'leticia.modelo@exemplo.com'
   ],
   [
     'ItauEmailBoletoField (record 5)',
     ItauEmailBoletoField,
-    findRecord('itau/cnab400/ITAU_cnab_400.REM', '5'),
+    findRecord('itau/cnab400/remessa/ITAU_cnab_400.REM', '5'),
     [2, 121],
     'compras@materiaisomega.com.br'
   ]
@@ -78,7 +78,7 @@ describe.each([
 describe('BancoDoBrasilEmailBoletoField (record 5, service type 01, accepts e-mails separated by semicolon)', (): void => {
   it('given record 5 with service type 01 from the example file when reading then returns each e-mail', (): void => {
     // Given
-    const registro5Email = findRecord('banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '501')
+    const registro5Email = findRecord('banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', '501')
     const field = new BancoDoBrasilEmailBoletoField(registro5Email, 227)
 
     // When

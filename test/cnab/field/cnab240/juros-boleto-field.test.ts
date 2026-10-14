@@ -7,7 +7,7 @@ import { JurosBoletoField } from '@cnab/field/cnab240/juros-boleto-field'
 describe('JurosBoletoField', (): void => {
   it('given the segment P from the example file when reading then returns the juros with two decimals', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/remessa/bradesco_cnab_240.txt')), 'P')
     assert(line != null, 'Linha não encontrada')
     const field = new JurosBoletoField(line, 5)
 

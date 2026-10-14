@@ -7,7 +7,7 @@ import { TotalDeParcelasBoletoField } from '@cnab/field/cnab400/total-de-parcela
 import { SeuNumeroBoletoField } from '@cnab/field/cnab400/seu-numero-boleto-field'
 import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab400/uso-da-empresa-boleto-field'
 
-const lines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
+const lines = readExampleLines(path.join(resPath(), 'itau/cnab400/remessa/ITAU_cnab_400.REM'))
 
 function lineWith(usoDaEmpresa: string, seuNumero: string): string {
   const line = findFirstCnab400RecordLine(lines, '1')

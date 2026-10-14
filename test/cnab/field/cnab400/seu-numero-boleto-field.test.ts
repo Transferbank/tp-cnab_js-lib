@@ -11,21 +11,21 @@ const cases: FieldTestCase[] = [
   [
     'SeuNumeroBoletoField (exemplo Itaú)',
     SeuNumeroBoletoField,
-    'itau/cnab400/ITAU_cnab_400.REM',
+    'itau/cnab400/remessa/ITAU_cnab_400.REM',
     '1',
     '10001-1/3'
   ],
   [
     'Banco do Brasil CNAB400 (registro 7)',
     BancoDoBrasilSeuNumeroBoletoField,
-    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM',
     '7',
     'XX10001-01'
   ],
   [
     'Banco do Brasil CNAB400 (registro 5, 15 posições)',
     BancoDoBrasilSeuNumeroRegistro5BoletoField,
-    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM',
     '503',
     'XX100037-02'
   ]
@@ -59,7 +59,7 @@ describe.each<FieldTestCase>(cases)('%s', (
 describe('SeuNumeroBoletoField', (): void => {
   it('given a seu número filled with zeros when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM')), '1')
+    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/remessa/ITAU_cnab_400.REM')), '1')
     assert(line != null, 'Linha não encontrada')
     const field = new SeuNumeroBoletoField(replaceLineRange(line, getFieldRange(SeuNumeroBoletoField), '0000000000'), 5)
 

@@ -5,13 +5,13 @@ import { Cnab240RemessaBoletoGroupRule } from '@cnab/group-rule/cnab240/remessa-
 
 describe('Cnab240RemessaBoletoGroupRule', (): void => {
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'],
-    ['bradesco/cnab240/bradesco_cnab_240.txt'],
-    ['caixa/cnab240/caixa_cnab_240.txt'],
-    ['itau/cnab240/itau_cnab_240.txt'],
-    ['santander/cnab240/santander_cnab_240.txt'],
-    ['sicoob/cnab240/sicoob_cnab_240.txt'],
-    ['sicredi/cnab240/sicredi_cnab_240.txt']
+    ['banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt'],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt'],
+    ['caixa/cnab240/remessa/caixa_cnab_240.txt'],
+    ['itau/cnab240/remessa/itau_cnab_240.txt'],
+    ['santander/cnab240/remessa/santander_cnab_240.txt'],
+    ['sicoob/cnab240/remessa/sicoob_cnab_240.txt'],
+    ['sicredi/cnab240/remessa/sicredi_cnab_240.txt']
   ])(
     'given doc lines from %s when checking group start then marks only segment P lines',
     (examplePath: string): void => {

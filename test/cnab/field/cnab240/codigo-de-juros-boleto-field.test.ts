@@ -7,7 +7,7 @@ import { CodigoDeJurosBoletoField } from '@cnab/field/cnab240/codigo-de-juros-bo
 describe('CodigoDeJurosBoletoField', (): void => {
   it('given the segment P from the example file when reading then returns the code', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/remessa/bradesco_cnab_240.txt')), 'P')
     assert(line != null, 'Linha não encontrada')
     const field = new CodigoDeJurosBoletoField(line, 5)
 

@@ -20,7 +20,7 @@ import { NomeBoletoField } from '@cnab/field/cnab400/nome-boleto-field'
 describe('NomeBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
-      const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+      const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -49,7 +49,7 @@ describe('NomeBoletoField', (): void => {
     })
 
     describe('para o Banco do Brasil, cujo registro de detalhe comeca com 7', (): void => {
-      const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+      const examplePath = 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -89,13 +89,13 @@ describe('NomeBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: NomeBoletoField(235, 271, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' },
-      { FieldClass: NomeBoletoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstName: 'COMERCIAL ALFA LTDA' },
-      { FieldClass: NomeBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstName: 'JOAO DA SILVA EXEMPLO' },
-      { FieldClass: NomeBoletoField(235, 264), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstName: 'JOAO EXEMPLO SILVA - ME' },
-      { FieldClass: NomeBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' },
-      { FieldClass: NomeBoletoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstName: 'JOAO DA SILVA EXEMPLO' },
-      { FieldClass: NomeBoletoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' }
+      { FieldClass: NomeBoletoField(235, 271, '7'), examplePath: 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' },
+      { FieldClass: NomeBoletoField(), examplePath: 'bradesco/cnab400/remessa/bradesco_cnab_400.txt', expectedFirstName: 'COMERCIAL ALFA LTDA' },
+      { FieldClass: NomeBoletoField(), examplePath: 'caixa/cnab400/remessa/caixa_cnab_400.REM', expectedFirstName: 'JOAO DA SILVA EXEMPLO' },
+      { FieldClass: NomeBoletoField(235, 264), examplePath: 'itau/cnab400/remessa/ITAU_cnab_400.REM', expectedFirstName: 'JOAO EXEMPLO SILVA - ME' },
+      { FieldClass: NomeBoletoField(), examplePath: 'santander/cnab400/remessa/santander_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' },
+      { FieldClass: NomeBoletoField(), examplePath: 'sicoob/cnab400/remessa/sicoob_cnab_400.REM', expectedFirstName: 'JOAO DA SILVA EXEMPLO' },
+      { FieldClass: NomeBoletoField(), examplePath: 'sicredi/cnab400/remessa/sicredi_cnab_400.REM', expectedFirstName: 'COMERCIAL ALFA LTDA' }
     ])(
       'given detail lines with valid name ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstName }: {
@@ -125,7 +125,7 @@ describe('NomeBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+    const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
     it('given detail line with blank name when validating then returns null value and field error', (): void => {
       // Given

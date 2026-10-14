@@ -20,7 +20,7 @@ import { VencimentoBoletoField } from '@cnab/field/cnab400/vencimento-boleto-fie
 describe('VencimentoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
-      const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+      const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -49,7 +49,7 @@ describe('VencimentoBoletoField', (): void => {
     })
 
     describe('para o Banco do Brasil, cujo registro de detalhe comeca com 7', (): void => {
-      const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+      const examplePath = 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -80,13 +80,13 @@ describe('VencimentoBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: VencimentoBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 20) },
-      { FieldClass: VencimentoBoletoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: new Date(2026, 7, 24) },
-      { FieldClass: VencimentoBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
-      { FieldClass: VencimentoBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 6) },
-      { FieldClass: VencimentoBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) },
-      { FieldClass: VencimentoBoletoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
-      { FieldClass: VencimentoBoletoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) }
+      { FieldClass: VencimentoBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 20) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'bradesco/cnab400/remessa/bradesco_cnab_400.txt', expectedFirstValue: new Date(2026, 7, 24) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'caixa/cnab400/remessa/caixa_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'itau/cnab400/remessa/ITAU_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 6) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'santander/cnab400/remessa/santander_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'sicoob/cnab400/remessa/sicoob_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'sicredi/cnab400/remessa/sicredi_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) }
     ])(
       'given detail lines with valid due date ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
@@ -116,7 +116,7 @@ describe('VencimentoBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+    const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
     it('given detail line with blank date when validating then returns null value and field error', (): void => {
       // Given

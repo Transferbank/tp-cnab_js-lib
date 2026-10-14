@@ -64,8 +64,8 @@ function createFileFromPath(filePath: string): File {
 
 describe('cnab-file', (): void => {
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 17, 3],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76, 37]
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'bradesco', '240', 17, 3],
+    ['bradesco/cnab400/remessa/bradesco_cnab_400.txt', 'bradesco', '400', 76, 37]
   ])(
     'given document file when opening then detects bank, format, file type, lines and boleto count',
     async (
@@ -93,8 +93,8 @@ describe('cnab-file', (): void => {
   )
 
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', [143, 143] as [number, number]],
-    ['itau/cnab400/ITAU_cnab_400.REM', [2, 2] as [number, number]]
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', [143, 143] as [number, number]],
+    ['itau/cnab400/remessa/ITAU_cnab_400.REM', [2, 2] as [number, number]]
   ])('given file %s with an unknown file type code when opening then refuses it', (examplePath: string, fileTypeRange: [number, number]): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), examplePath))
@@ -108,8 +108,8 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt'],
-    ['itau/cnab400/ITAU_cnab_400.REM']
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt'],
+    ['itau/cnab400/remessa/ITAU_cnab_400.REM']
   ])(
     'given valid document file when validating with feedback then reports no errors',
     async (examplePath: string): Promise<void> => {
@@ -128,8 +128,8 @@ describe('cnab-file', (): void => {
   )
 
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 5, 240],
-    ['itau/cnab400/ITAU_cnab_400.REM', 2, 400]
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 5, 240],
+    ['itau/cnab400/remessa/ITAU_cnab_400.REM', 2, 400]
   ])(
     'given document file with truncated line when validating then reports line size error',
     (examplePath: string, truncatedLineNumber: number, expectedSize: number): void => {
@@ -158,15 +158,15 @@ describe('cnab-file', (): void => {
   )
 
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 3],
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 3],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 37],
-    ['caixa/cnab240/caixa_cnab_240.txt', 3],
-    ['itau/cnab240/itau_cnab_240.txt', 4],
-    ['itau/cnab400/ITAU_cnab_400.REM', 319],
-    ['santander/cnab240/santander_cnab_240.txt', 3],
-    ['sicoob/cnab240/sicoob_cnab_240.txt', 3],
-    ['sicredi/cnab240/sicredi_cnab_240.txt', 3]
+    ['banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', 3],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 3],
+    ['bradesco/cnab400/remessa/bradesco_cnab_400.txt', 37],
+    ['caixa/cnab240/remessa/caixa_cnab_240.txt', 3],
+    ['itau/cnab240/remessa/itau_cnab_240.txt', 4],
+    ['itau/cnab400/remessa/ITAU_cnab_400.REM', 319],
+    ['santander/cnab240/remessa/santander_cnab_240.txt', 3],
+    ['sicoob/cnab240/remessa/sicoob_cnab_240.txt', 3],
+    ['sicredi/cnab240/remessa/sicredi_cnab_240.txt', 3]
   ])(
     'given valid document file from any bank when opening and validating then reports the right boleto count and no errors',
     (examplePath: string, expectedBoletoCount: number): void => {
@@ -185,7 +185,7 @@ describe('cnab-file', (): void => {
 
   it('given valid cnab240 document file when reading then extracts every boleto field', (): void => {
     // Given
-    const cnabFile = openExample('itau/cnab240/itau_cnab_240.txt')
+    const cnabFile = openExample('itau/cnab240/remessa/itau_cnab_240.txt')
     const expectedBoletos = [
       new CnabBoleto({
         fields: {
@@ -254,7 +254,7 @@ describe('cnab-file', (): void => {
 
   it('given valid cnab400 document file when reading then extracts every boleto field', (): void => {
     // Given
-    const cnabFile = openExample('itau/cnab400/ITAU_cnab_400.REM')
+    const cnabFile = openExample('itau/cnab400/remessa/ITAU_cnab_400.REM')
     const expectedFirstBoleto = new CnabBoleto({
       fields: {
         nome_do_sacado: 'JOAO EXEMPLO SILVA - ME',
@@ -281,7 +281,7 @@ describe('cnab-file', (): void => {
   it('given document file with invalid lines when reading then throws with the first validation error', (): void => {
     // Given
     const truncatedSize = 5
-    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
+    const rawLines = readExampleLines(path.join(resPath(), 'itau/cnab400/remessa/ITAU_cnab_400.REM'))
     rawLines[2] = rawLines[2].substring(0, truncatedSize)
     rawLines[4] = rawLines[4].substring(0, truncatedSize)
     const cnabFile = CnabFile.fromLines(rawLines)
@@ -306,8 +306,8 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
-    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1')]
+    ['itau/cnab240/remessa/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
+    ['itau/cnab400/remessa/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1')]
   ])(
     'given document file %s without boleto lines when reading then returns no boletos',
     (examplePath: string, isNotBoletoLine: (line: string) => boolean): void => {
@@ -329,7 +329,7 @@ describe('cnab-file', (): void => {
     //  como opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário.
     // Given
     const addressFieldKeys = ['endereco_do_sacado', 'bairro_do_sacado', 'cep_do_sacado', 'cidade_do_sacado', 'uf_do_sacado']
-    const rawLines = readExampleLines(path.join(resPath(), 'caixa/cnab240/caixa_cnab_240.txt'))
+    const rawLines = readExampleLines(path.join(resPath(), 'caixa/cnab240/remessa/caixa_cnab_240.txt'))
       .map((line: string) => (line[7] == '3' && line[13] == 'Q' ? replaceLineRange(line, [74, 153], '') : line))
     const cnabFile = CnabFile.fromLines(rawLines)
 
@@ -349,10 +349,10 @@ describe('cnab-file', (): void => {
 
   describe('extra fields filtered by bank and format', (): void => {
     it.each([
-      ['an itau cnab400 field', 'itau/cnab400/ITAU_cnab_400.REM', ItauCnab400NossoNumeroExtraField, '10377333'],
-      ['an itau cnab400 field', 'bradesco/cnab400/bradesco_cnab_400.txt', ItauCnab400NossoNumeroExtraField, undefined],
-      ['an itau cnab400 field', 'itau/cnab240/itau_cnab_240.txt', ItauCnab400NossoNumeroExtraField, undefined],
-      ['a field without bank and format', 'bradesco/cnab400/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020200']
+      ['an itau cnab400 field', 'itau/cnab400/remessa/ITAU_cnab_400.REM', ItauCnab400NossoNumeroExtraField, '10377333'],
+      ['an itau cnab400 field', 'bradesco/cnab400/remessa/bradesco_cnab_400.txt', ItauCnab400NossoNumeroExtraField, undefined],
+      ['an itau cnab400 field', 'itau/cnab240/remessa/itau_cnab_240.txt', ItauCnab400NossoNumeroExtraField, undefined],
+      ['a field without bank and format', 'bradesco/cnab400/remessa/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020200']
     ])('given %s when reading %s then reads it only if the file is in its scope', (_: string, examplePath: string, extraField: CnabFieldClass, expectedNossoNumero: string | undefined): void => {
       // Given
       const cnabFile = openExample(examplePath)
@@ -367,8 +367,8 @@ describe('cnab-file', (): void => {
     })
 
     it.each([
-      ['itau/cnab400/ITAU_cnab_400.REM', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '10377333'],
-      ['bradesco/cnab400/bradesco_cnab_400.txt', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '09100010629']
+      ['itau/cnab400/remessa/ITAU_cnab_400.REM', [ItauCnab400NossoNumeroExtraField, BradescoCnab400NossoNumeroExtraField], '10377333'],
+      ['bradesco/cnab400/remessa/bradesco_cnab_400.txt', [BradescoCnab400NossoNumeroExtraField, ItauCnab400NossoNumeroExtraField], '09100010629']
     ])('given extra fields of several banks with the same key, the other bank last, when reading %s then reads only the field of its bank', (examplePath: string, extraFields: CnabFieldClass[], expectedNossoNumero: string): void => {
       // Given
       const cnabFile = openExample(examplePath)
@@ -383,11 +383,11 @@ describe('cnab-file', (): void => {
 
   describe('CNAB_EMAIL_FIELDS', (): void => {
     it.each([
-      ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', ['contato@variedadesgama.com.br', 'financeiro@variedadesgama.com.br']],
-      ['bradesco/cnab240/bradesco_cnab_240.txt', ['financeiro@comercialexemplo.com.br']],
-      ['caixa/cnab240/caixa_cnab_240.txt', ['maria.souza@exemplo.com']],
-      ['caixa/cnab400/caixa_cnab_400.REM', ['leticia.modelo@exemplo.com']],
-      ['itau/cnab400/ITAU_cnab_400.REM', ['compras@materiaisomega.com.br']]
+      ['banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', ['contato@variedadesgama.com.br', 'financeiro@variedadesgama.com.br']],
+      ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', ['financeiro@comercialexemplo.com.br']],
+      ['caixa/cnab240/remessa/caixa_cnab_240.txt', ['maria.souza@exemplo.com']],
+      ['caixa/cnab400/remessa/caixa_cnab_400.REM', ['leticia.modelo@exemplo.com']],
+      ['itau/cnab400/remessa/ITAU_cnab_400.REM', ['compras@materiaisomega.com.br']]
     ])('given document file %s when reading with the e-mail fields then reads only the e-mails of its layout', (examplePath: string, expectedEmail: string[]): void => {
       // Given
       const cnabFile = openExample(examplePath)
@@ -406,10 +406,10 @@ describe('cnab-file', (): void => {
 
   describe('CNAB_TELEFONE_FIELDS', (): void => {
     it.each([
-      ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '11', '98765432'],
-      ['bradesco/cnab240/bradesco_cnab_240.txt', '11', '987654321'],
-      ['caixa/cnab240/caixa_cnab_240.txt', '21', '912345678'],
-      ['caixa/cnab400/caixa_cnab_400.REM', '31', '998877665']
+      ['banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', '11', '98765432'],
+      ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', '11', '987654321'],
+      ['caixa/cnab240/remessa/caixa_cnab_240.txt', '21', '912345678'],
+      ['caixa/cnab400/remessa/caixa_cnab_400.REM', '31', '998877665']
     ])('given document file %s when reading with the phone fields then reads only the phone of its layout', (examplePath: string, expectedDdd: string, expectedCelular: string): void => {
       // Given
       const cnabFile = openExample(examplePath)
@@ -435,7 +435,7 @@ describe('cnab-file', (): void => {
 
     it('given e-mails in both segments when reading then joins them in a single list', (): void => {
       // Given
-      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt'))
 
       // When
       const emails = readLastBoletoEmails(rawLines)
@@ -446,7 +446,7 @@ describe('cnab-file', (): void => {
 
     it('given the same e-mail in both segments when reading then keeps it only once', (): void => {
       // Given
-      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'))
+      const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt'))
       const segmentoYIndex = rawLines.findIndex((line: string) => line[13] == 'Y')
       rawLines[segmentoYIndex] = replaceLineRange(rawLines[segmentoYIndex], [20, 69], 'financeiro@exemplo.com')
 
@@ -459,20 +459,20 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
-    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
-    'bradesco/cnab240/bradesco_cnab_240.txt',
-    'bradesco/cnab400/bradesco_cnab_400.txt',
-    'caixa/cnab240/caixa_cnab_240.txt',
-    'caixa/cnab400/caixa_cnab_400.REM',
-    'itau/cnab240/itau_cnab_240.txt',
-    'itau/cnab400/ITAU_cnab_400.REM',
-    'santander/cnab240/santander_cnab_240.txt',
-    'santander/cnab400/santander_cnab_400.REM',
-    'sicoob/cnab240/sicoob_cnab_240.txt',
-    'sicoob/cnab400/sicoob_cnab_400.REM',
-    'sicredi/cnab240/sicredi_cnab_240.txt',
-    'sicredi/cnab400/sicredi_cnab_400.REM'
+    'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt',
+    'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM',
+    'bradesco/cnab240/remessa/bradesco_cnab_240.txt',
+    'bradesco/cnab400/remessa/bradesco_cnab_400.txt',
+    'caixa/cnab240/remessa/caixa_cnab_240.txt',
+    'caixa/cnab400/remessa/caixa_cnab_400.REM',
+    'itau/cnab240/remessa/itau_cnab_240.txt',
+    'itau/cnab400/remessa/ITAU_cnab_400.REM',
+    'santander/cnab240/remessa/santander_cnab_240.txt',
+    'santander/cnab400/remessa/santander_cnab_400.REM',
+    'sicoob/cnab240/remessa/sicoob_cnab_240.txt',
+    'sicoob/cnab400/remessa/sicoob_cnab_400.REM',
+    'sicredi/cnab240/remessa/sicredi_cnab_240.txt',
+    'sicredi/cnab400/remessa/sicredi_cnab_400.REM'
   ])('given document file %s when reading then every boleto has the nosso número', (examplePath: string): void => {
     // Given
     const cnabFile = openExample(examplePath)
@@ -491,7 +491,7 @@ describe('cnab-file', (): void => {
 
   it('given banco do brasil cnab400 with record 5 service type 03 when reading the seu número then it replaces the one in record 7', (): void => {
     // Given
-    const cnabFile = openExample('banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM')
+    const cnabFile = openExample('banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM')
 
     // When
     const boletos = cnabFile.read(CNAB_SEU_NUMERO_FIELDS).boletos
@@ -502,20 +502,20 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined],
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 'XX10001-01', '10.010001.01', 1, undefined],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 'XX10001-01', '10.010001.01', 1, undefined],
-    ['caixa/cnab240/caixa_cnab_240.txt', '10001-1 3', '10001-1 3', 1, 3],
-    ['caixa/cnab400/caixa_cnab_400.REM', '10001 1/3', '0000010001', 1, 3],
-    ['itau/cnab240/itau_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
-    ['itau/cnab400/ITAU_cnab_400.REM', '10001-1/3', '000000000000000010001-1/3', 1, 3],
-    ['santander/cnab240/santander_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
-    ['santander/cnab400/santander_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined],
-    ['sicoob/cnab240/sicoob_cnab_240.txt', '10001', '10001', undefined, undefined],
-    ['sicoob/cnab400/sicoob_cnab_400.REM', '10001', '10001', undefined, undefined],
-    ['sicredi/cnab240/sicredi_cnab_240.txt', 'XX:10001/1', '50001', 1, undefined],
-    ['sicredi/cnab400/sicredi_cnab_400.REM', '10001-1 3', undefined, 1, 3]
+    ['banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
+    ['banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'XX10001-01', '10.010001.01', 1, undefined],
+    ['bradesco/cnab400/remessa/bradesco_cnab_400.txt', 'XX10001-01', '10.010001.01', 1, undefined],
+    ['caixa/cnab240/remessa/caixa_cnab_240.txt', '10001-1 3', '10001-1 3', 1, 3],
+    ['caixa/cnab400/remessa/caixa_cnab_400.REM', '10001 1/3', '0000010001', 1, 3],
+    ['itau/cnab240/remessa/itau_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
+    ['itau/cnab400/remessa/ITAU_cnab_400.REM', '10001-1/3', '000000000000000010001-1/3', 1, 3],
+    ['santander/cnab240/remessa/santander_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
+    ['santander/cnab400/remessa/santander_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined],
+    ['sicoob/cnab240/remessa/sicoob_cnab_240.txt', '10001', '10001', undefined, undefined],
+    ['sicoob/cnab400/remessa/sicoob_cnab_400.REM', '10001', '10001', undefined, undefined],
+    ['sicredi/cnab240/remessa/sicredi_cnab_240.txt', 'XX:10001/1', '50001', 1, undefined],
+    ['sicredi/cnab400/remessa/sicredi_cnab_400.REM', '10001-1 3', undefined, 1, 3]
   ])('given document file %s when reading with the identification and parcela fields then reads them from the boleto', (examplePath: string, expectedSeuNumero: string, expectedUsoDaEmpresa: string | undefined, expectedParcela: number | undefined, expectedTotal: number | undefined): void => {
     // Given
     const cnabFile = openExample(examplePath)
@@ -536,8 +536,8 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', undefined, undefined, 3.39]
+    ['banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', undefined, undefined, 3.39]
   ])('given document file %s when reading then reads the juros of its layout', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedJuros: number): void => {
     // Given
     const cnabFile = openExample(examplePath)

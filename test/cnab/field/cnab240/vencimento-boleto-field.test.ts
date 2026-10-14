@@ -14,7 +14,7 @@ import {
 
 describe('VencimentoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     describe.each([
       { segment: 'P', expectedShouldValidate: true },
@@ -45,13 +45,13 @@ describe('VencimentoBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt' },
-      { examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt' },
-      { examplePath: 'caixa/cnab240/caixa_cnab_240.txt' },
-      { examplePath: 'itau/cnab240/itau_cnab_240.txt' },
-      { examplePath: 'santander/cnab240/santander_cnab_240.txt' },
-      { examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt' },
-      { examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt' }
+      { examplePath: 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt' },
+      { examplePath: 'bradesco/cnab240/remessa/bradesco_cnab_240.txt' },
+      { examplePath: 'caixa/cnab240/remessa/caixa_cnab_240.txt' },
+      { examplePath: 'itau/cnab240/remessa/itau_cnab_240.txt' },
+      { examplePath: 'santander/cnab240/remessa/santander_cnab_240.txt' },
+      { examplePath: 'sicoob/cnab240/remessa/sicoob_cnab_240.txt' },
+      { examplePath: 'sicredi/cnab240/remessa/sicredi_cnab_240.txt' }
     ])(
       'given segment P lines with valid due date ($examplePath) when reading value and validating then accepts all lines',
       ({ examplePath }: {
@@ -80,7 +80,7 @@ describe('VencimentoBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     it('given segment P line with blank date when validating then returns null value and field error', (): void => {
       // Given

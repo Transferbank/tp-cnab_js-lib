@@ -12,7 +12,7 @@ describe.each([
   [
     'BradescoDddBoletoField (segment Y-04 code 03)',
     BradescoDddBoletoField,
-    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'bradesco/cnab240/remessa/bradesco_cnab_240.txt',
     '03',
     '3',
     [70, 71],
@@ -21,7 +21,7 @@ describe.each([
   [
     'CaixaDddBoletoField (segment Y-04 code 04)',
     CaixaDddBoletoField,
-    'caixa/cnab240/caixa_cnab_240.txt',
+    'caixa/cnab240/remessa/caixa_cnab_240.txt',
     '04',
     '3',
     [70, 71],
@@ -30,7 +30,7 @@ describe.each([
   [
     'BancoDoBrasilDddBoletoField (segment Y-04 with record type 4)',
     BancoDoBrasilDddBoletoField,
-    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt',
     '03',
     '4',
     [70, 71],
