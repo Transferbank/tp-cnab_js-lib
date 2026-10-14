@@ -23,7 +23,7 @@ import * as Cnab400Itau from '@cnab/bank/itau/cnab/cnab400/field/fields'
 import * as Cnab240Sicoob from '@cnab/bank/sicoob/cnab/cnab240/field/fields'
 import * as Cnab240Bradesco from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 
-import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
+import { Cnab240RemessaBoletoGroupRule } from '@cnab/group-rule/cnab240/remessa-boleto-group-rule'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
 
 
@@ -33,7 +33,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.BRADESCO,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: new Cnab240BoletoGroupRule(),
+      boletoGroupRule: new Cnab240RemessaBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
@@ -98,7 +98,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.ITAU,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: new Cnab240BoletoGroupRule(),
+      boletoGroupRule: new Cnab240RemessaBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
@@ -165,7 +165,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.SANTANDER,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: new Cnab240BoletoGroupRule(),
+      boletoGroupRule: new Cnab240RemessaBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
@@ -233,7 +233,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.BANCODOBRASIL,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: new Cnab240BoletoGroupRule(),
+      boletoGroupRule: new Cnab240RemessaBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
@@ -301,7 +301,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.CAIXA,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: new Cnab240BoletoGroupRule(),
+      boletoGroupRule: new Cnab240RemessaBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
@@ -369,7 +369,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.SICREDI,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: new Cnab240BoletoGroupRule(),
+      boletoGroupRule: new Cnab240RemessaBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
@@ -434,7 +434,7 @@ function registerCnabSchemas(): CnabSchema[] {
     new CnabSchema({
       bank: CnabBank.SICOOB,
       fmt: CnabFormat.CNAB240,
-      boletoGroupRule: new Cnab240BoletoGroupRule(),
+      boletoGroupRule: new Cnab240RemessaBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
