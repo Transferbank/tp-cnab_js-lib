@@ -1,14 +1,10 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { replaceLineRange } from '@test/test-utils'
+import { cnab240RetornoLine, replaceLineRange } from '@test/test-utils'
 import { ValorTituloBoletoField } from '@cnab/field/cnab240/retorno/valor-titulo-boleto-field'
 import { ValorPagoBoletoField } from '@cnab/field/cnab240/retorno/valor-pago-boleto-field'
 import { JurosMultaBoletoField } from '@cnab/field/cnab240/retorno/juros-multa-boleto-field'
-
-function retornoLine(segment: string): string {
-  return '7560001300001'.concat(segment).padEnd(240, ' ')
-}
 
 describe.each([
   ['ValorTituloBoletoField', ValorTituloBoletoField, 'T', 'U', [82, 96]],
@@ -19,7 +15,7 @@ describe.each([
 
   it('given a filled amount when reading then returns it in reais', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(retornoLine(segment), fieldRange, '000000000123456'), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', segment), fieldRange, '000000000123456'), 1)
 
     // When
     const result = field.validate()
@@ -32,7 +28,7 @@ describe.each([
 
   it('given a zeroed amount when reading then it is absent and valid', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(retornoLine(segment), fieldRange, '000000000000000'), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', segment), fieldRange, '000000000000000'), 1)
 
     // When
     const result = field.validate()
@@ -44,7 +40,7 @@ describe.each([
 
   it('given a line of the other segment when checking then does not read the field', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(retornoLine(otherSegment), fieldRange, '000000000123456'), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', otherSegment), fieldRange, '000000000123456'), 1)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -57,7 +53,7 @@ describe.each([
 describe('ValorBoletoField', (): void => {
   it('given a non numeric amount when validating then reports an invalid format', (): void => {
     // Given
-    const field = new ValorPagoBoletoField(replaceLineRange(retornoLine('U'), [78, 92], '0000000001234AB'), 1)
+    const field = new ValorPagoBoletoField(replaceLineRange(cnab240RetornoLine('3', 'U'), [78, 92], '0000000001234AB'), 1)
 
     // When
     const result = field.validate()

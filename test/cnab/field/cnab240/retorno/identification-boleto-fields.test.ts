@@ -1,13 +1,9 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
-import { replaceLineRange } from '@test/test-utils'
+import { cnab240RetornoLine, replaceLineRange } from '@test/test-utils'
 import { NossoNumeroBoletoField } from '@cnab/field/cnab240/retorno/nosso-numero-boleto-field'
 import { SeuNumeroBoletoField } from '@cnab/field/cnab240/retorno/seu-numero-boleto-field'
 import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab240/retorno/uso-da-empresa-boleto-field'
-
-function retornoLine(segment: string): string {
-  return '7560001300001'.concat(segment).padEnd(240, ' ')
-}
 
 describe.each([
   ['NossoNumeroBoletoField', NossoNumeroBoletoField, [38, 57], '00035000000001234501'],
@@ -18,7 +14,7 @@ describe.each([
 
   it('given a segment T line when reading then returns the field as written', (): void => {
     // Given
-    const rawLine = replaceLineRange(retornoLine('T'), fieldRange, value)
+    const rawLine = replaceLineRange(cnab240RetornoLine('3', 'T'), fieldRange, value)
     const field = new FieldClass(rawLine, 1)
 
     // When
@@ -33,7 +29,7 @@ describe.each([
 
   it('given a segment U line when checking then does not read the field', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(retornoLine('U'), fieldRange, value), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', 'U'), fieldRange, value), 1)
 
     // When
     const shouldValidate = field.shouldValidate()
