@@ -33,7 +33,10 @@ export class CnabFileTypeNotSupportedException extends CnabException {
     const expected = expectedFileType == CnabFileType.REMESSA
       ? 'lote de criação (arquivo remessa)'
       : 'lote de validação (arquivo retorno)'
-    super(`Arquivo de ${fileType} não suportado: esperado um ${expected}`)
+    const suggestion = fileType == CnabFileType.RETORNO
+      ? 'use CnabRetornoFile (ou openCnabRetornoFile)'
+      : 'use CnabFile (ou openCnabFile)'
+    super(`Arquivo de ${fileType} não suportado: esperado um ${expected}. Para abri-lo, ${suggestion}`)
   }
 }
 
