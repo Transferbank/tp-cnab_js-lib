@@ -272,7 +272,7 @@ O banco recebe um **lote de criação** (arquivo remessa), com os boletos a regi
 | Lote de criação (arquivo remessa)   | `CnabFile`        | `openCnabFile`, `openCnabFileFromLines`               |
 | Lote de validação (arquivo retorno) | `CnabRetornoFile` | `openCnabRetornoFile`, `openCnabRetornoFileFromLines` |
 
-Abrir um arquivo com a classe do outro tipo lança `CnabFileTypeNotSupportedException`. A leitura de lotes de validação ainda não tem nenhum banco: por enquanto, `CnabRetornoFile` lança `CnabBankSchemaNotFoundException` para todo lote de validação.
+Abrir um arquivo com a classe do outro tipo lança `CnabFileTypeNotSupportedException`. Ainda não há bancos com leitura de lote de validação.
 
 ### Validando o arquivo inteiro
 
