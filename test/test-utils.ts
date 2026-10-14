@@ -47,6 +47,10 @@ export function cnab240RetornoLine(recordType: string, segment: string = ' '): s
   return '7560001'.concat(recordType, '00001', segment).padEnd(240, ' ')
 }
 
+export function cnab400RetornoLine(recordType: string): string {
+  return recordType.padEnd(400, ' ')
+}
+
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
   return lines.find(line => line.startsWith(recordType))
 }
