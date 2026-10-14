@@ -29,7 +29,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 Os campos do boleto são de dois tipos:
 
-- **Canônicos:** lidos por padrão em toda leitura. Verificar o catálogo em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+- **Canônicos:** lidos por padrão em toda leitura. Verificar o catálogo em [`cnab-remessa-bank-schemas.ts`](src/cnab/bank/cnab-remessa-bank-schemas.ts).
 - **Extras:** lidos só quando passados em `validate` e `read`, no parâmetro `extraFields`. A lib oferece constantes prontas com campos extras, e quem usa a lib também pode escrever os seus (veja [Campos extras](#campos-extras)).
 
 Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
@@ -327,7 +327,7 @@ class DataDeEmissaoBoletoField extends CnabField<string> {
 const cnab = cnabFile.read([DataDeEmissaoBoletoField])
 ```
 
-Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-remessa-bank-schemas.ts`](src/cnab/bank/cnab-remessa-bank-schemas.ts).
 
 ### Tratando erros de validação
 

@@ -470,4 +470,4 @@ export function indexCnabSchemas(
   return indexed as Record<CnabBank, Record<CnabFormat, CnabSchema>>
 }
 
-export const CNAB_BANK_SCHEMAS: Record<CnabBank, Record<CnabFormat, CnabSchema>> = indexCnabSchemas(registerCnabSchemas())
+export const CNAB_REMESSA_BANK_SCHEMAS: Record<CnabBank, Record<CnabFormat, CnabSchema>> = indexCnabSchemas(registerCnabSchemas())

@@ -5,9 +5,9 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { describe, it, expect } from '@jest/globals'
 import { genCnabSchemaStub } from '@test/cnab/doubles/cnab-schema-stub'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
-import { CNAB_BANK_SCHEMAS, indexCnabSchemas } from '@cnab/bank/cnab-bank-schemas'
+import { CNAB_REMESSA_BANK_SCHEMAS, indexCnabSchemas } from '@cnab/bank/cnab-remessa-bank-schemas'
 
-describe('cnab-bank-schemas', (): void => {
+describe('cnab-remessa-bank-schemas', (): void => {
   it('given schemas when indexing then keys come from each schema', (): void => {
     // Given
     const schemas = [
@@ -50,7 +50,7 @@ describe('cnab-bank-schemas', (): void => {
   it('given schema registry when reading declared fields then each field matches its line type', (): void => {
     // Given
     const declaredFields: Array<[string, typeof CnabField<unknown>]> = []
-    for (const schemasByFormat of Object.values(CNAB_BANK_SCHEMAS)) {
+    for (const schemasByFormat of Object.values(CNAB_REMESSA_BANK_SCHEMAS)) {
       for (const schema of Object.values(
         schemasByFormat as Record<string, unknown>
       )) {
