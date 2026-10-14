@@ -3,7 +3,7 @@ import { CnabBaseFile } from '@cnab/type/cnab-base-file'
 import { CNAB_RETORNO_BANK_SCHEMAS } from '@cnab/bank/cnab-retorno-bank-schemas'
 
 export class CnabRetornoFile extends CnabBaseFile {
-  protected readonly fileType = CnabFileType.RETORNO
+  readonly fileType = CnabFileType.RETORNO
   protected readonly schemas = CNAB_RETORNO_BANK_SCHEMAS
 
   private constructor() {

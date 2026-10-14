@@ -3,7 +3,7 @@ import { CnabBaseFile } from '@cnab/type/cnab-base-file'
 import { CNAB_REMESSA_BANK_SCHEMAS } from '@cnab/bank/cnab-remessa-bank-schemas'
 
 export class CnabFile extends CnabBaseFile {
-  protected readonly fileType = CnabFileType.REMESSA
+  readonly fileType = CnabFileType.REMESSA
   protected readonly schemas = CNAB_REMESSA_BANK_SCHEMAS
 
   private constructor() {
