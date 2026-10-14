@@ -58,7 +58,7 @@ export abstract class CnabBaseFile {
   }
 
   private static detectBank(header: string, cnabFormat: CnabFormat): CnabBank {
-    const code = cnabFormat === CnabFormat.CNAB240
+    const code = cnabFormat == CnabFormat.CNAB240
       ? header.substring(0, 3)
       : header.substring(76, 79)
     const bank = CnabBank.fromCode(code)
