@@ -7,28 +7,29 @@ import { ValorPagoBoletoField } from '@cnab/field/cnab240/retorno/valor-pago-bol
 import { JurosMultaBoletoField } from '@cnab/field/cnab240/retorno/juros-multa-boleto-field'
 
 describe.each([
-  ['ValorTituloBoletoField', ValorTituloBoletoField, 'T', 'U', [82, 96]],
-  ['ValorPagoBoletoField', ValorPagoBoletoField, 'U', 'T', [78, 92]],
-  ['JurosMultaBoletoField', JurosMultaBoletoField, 'U', 'T', [18, 32]]
-])('%s', (_: string, FieldClass: CnabFieldClass<number>, segment: string, otherSegment: string, range: number[]): void => {
-  const fieldRange = range as [number, number]
-
-  it('given a filled amount when reading then returns it in reais', (): void => {
+  ['ValorTituloBoletoField', ValorTituloBoletoField, 'T', [82, 96]],
+  ['ValorPagoBoletoField', ValorPagoBoletoField, 'U', [78, 92]],
+  ['JurosMultaBoletoField', JurosMultaBoletoField, 'U', [18, 32]]
+])('%s', (_: string, FieldClass: CnabFieldClass<number>, segment: string, range: number[]): void => {
+  it('given a filled amount in its segment when reading then returns it in reais', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', segment), fieldRange, '000000000123456'), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', segment), range as [number, number], '000000000123456'), 1)
 
     // When
+    const shouldValidate = field.shouldValidate()
     const result = field.validate()
 
     // Then
-    expect(field.shouldValidate()).toBe(true)
+    expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(1234.56)
   })
+})
 
+describe('ValorBoletoField', (): void => {
   it('given a zeroed amount when reading then it is absent and valid', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', segment), fieldRange, '000000000000000'), 1)
+    const field = new ValorPagoBoletoField(replaceLineRange(cnab240RetornoLine('3', 'U'), [78, 92], '000000000000000'), 1)
 
     // When
     const result = field.validate()
@@ -38,9 +39,9 @@ describe.each([
     expect(field.value).toBeNull()
   })
 
-  it('given a line of the other segment when checking then does not read the field', (): void => {
+  it('given a line of another segment when checking then does not read the field', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', otherSegment), fieldRange, '000000000123456'), 1)
+    const field = new ValorPagoBoletoField(cnab240RetornoLine('3', 'T'), 1)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -48,9 +49,7 @@ describe.each([
     // Then
     expect(shouldValidate).toBe(false)
   })
-})
 
-describe('ValorBoletoField', (): void => {
   it('given a non numeric amount when validating then reports an invalid format', (): void => {
     // Given
     const field = new ValorPagoBoletoField(replaceLineRange(cnab240RetornoLine('3', 'U'), [78, 92], '0000000001234AB'), 1)
