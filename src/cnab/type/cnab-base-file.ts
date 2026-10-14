@@ -21,8 +21,8 @@ export abstract class CnabBaseFile {
   public bank!: CnabBank
   public schema!: CnabSchema
   public boletoCount!: number
+  public abstract readonly fileType: CnabFileType
 
-  protected abstract readonly fileType: CnabFileType
   protected abstract readonly schemas: Record<CnabBank, Record<CnabFormat, CnabSchema>>
 
   protected load(lines: string[]): this {

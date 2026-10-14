@@ -68,7 +68,7 @@ describe('cnab-file', (): void => {
     ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 17, 3],
     ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76, 37]
   ])(
-    'given document file when opening then detects bank, format, lines and boleto count',
+    'given document file when opening then detects bank, format, file type, lines and boleto count',
     async (
       examplePath: string,
       expectedBank: string,
@@ -86,6 +86,7 @@ describe('cnab-file', (): void => {
       // Then
       expect(cnabFile.bank).toBe(expectedBank)
       expect(cnabFile.format).toBe(expectedFormat)
+      expect(cnabFile.fileType).toBe('remessa')
       expect(cnabFile.rawLines.length).toBe(expectedLineCount)
       expect(cnabFile.boletoCount).toBe(expectedBoletoCount)
       expect(cnabFile.schema).not.toBeNull()

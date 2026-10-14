@@ -254,11 +254,12 @@ import { openCnabFileFromLines } from '@fx55/cnab-lib-ts'
 const cnabFile = openCnabFileFromLines(lines) // string[]
 ```
 
-Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de boletos detectados:
+Depois de aberto, o `CnabFile` já expõe o banco, o formato, o tipo de arquivo e a quantidade de boletos detectados:
 
 ```ts
 cnabFile.bank // ex: 'bradesco'
 cnabFile.format // ex: '240'
+cnabFile.fileType // ex: 'remessa'
 cnabFile.boletoCount // ex: 3
 ```
 
