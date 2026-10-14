@@ -1,13 +1,9 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { replaceLineRange } from '@test/test-utils'
+import { cnab240RetornoLine, replaceLineRange } from '@test/test-utils'
 import { DataDeOcorrenciaBoletoField } from '@cnab/field/cnab240/retorno/data-de-ocorrencia-boleto-field'
 import { DataDeCreditoBoletoField } from '@cnab/field/cnab240/retorno/data-de-credito-boleto-field'
-
-function retornoLine(segment: string): string {
-  return '7560001300001'.concat(segment).padEnd(240, ' ')
-}
 
 describe.each([
   ['DataDeOcorrenciaBoletoField', DataDeOcorrenciaBoletoField, [138, 145]],
@@ -17,7 +13,7 @@ describe.each([
 
   it('given a filled date when reading then returns it', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(retornoLine('U'), fieldRange, '03062026'), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', 'U'), fieldRange, '03062026'), 1)
 
     // When
     const result = field.validate()
@@ -30,7 +26,7 @@ describe.each([
 
   it('given a zeroed date when reading then it is absent and valid', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(retornoLine('U'), fieldRange, '00000000'), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', 'U'), fieldRange, '00000000'), 1)
 
     // When
     const result = field.validate()
@@ -42,7 +38,7 @@ describe.each([
 
   it('given a segment T line when checking then does not read the field', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(retornoLine('T'), fieldRange, '03062026'), 1)
+    const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', 'T'), fieldRange, '03062026'), 1)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -55,7 +51,7 @@ describe.each([
 describe('DataBoletoField', (): void => {
   it('given an impossible date when validating then reports an invalid format', (): void => {
     // Given
-    const field = new DataDeCreditoBoletoField(replaceLineRange(retornoLine('U'), [146, 153], '31022026'), 1)
+    const field = new DataDeCreditoBoletoField(replaceLineRange(cnab240RetornoLine('3', 'U'), [146, 153], '31022026'), 1)
 
     // When
     const result = field.validate()
