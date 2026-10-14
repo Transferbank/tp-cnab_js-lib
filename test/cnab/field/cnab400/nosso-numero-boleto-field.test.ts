@@ -14,42 +14,42 @@ const cases: FieldTestCase[] = [
   [
     'Banco do Brasil CNAB400 (registro 7)',
     BancoDoBrasilNossoNumeroBoletoField,
-    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM',
     '7',
     '90076541000044534'
   ],
   [
     'Bradesco CNAB400',
     BradescoNossoNumeroBoletoField,
-    'bradesco/cnab400/bradesco_cnab_400.txt',
+    'bradesco/cnab400/remessa/bradesco_cnab_400.txt',
     '1',
     '09100010629P'
   ],
   [
     'Caixa CNAB400',
     CaixaNossoNumeroBoletoField,
-    'caixa/cnab400/caixa_cnab_400.REM',
+    'caixa/cnab400/remessa/caixa_cnab_400.REM',
     '1',
     '01000000000000001'
   ],
   [
     'Itaú CNAB400 (classe base)',
     NossoNumeroBoletoField,
-    'itau/cnab400/ITAU_cnab_400.REM',
+    'itau/cnab400/remessa/ITAU_cnab_400.REM',
     '1',
     '10377333'
   ],
   [
     'Sicoob CNAB400',
     SicoobNossoNumeroBoletoField,
-    'sicoob/cnab400/sicoob_cnab_400.REM',
+    'sicoob/cnab400/remessa/sicoob_cnab_400.REM',
     '1',
     '000000010011'
   ],
   [
     'Sicredi CNAB400',
     SicrediNossoNumeroBoletoField,
-    'sicredi/cnab400/sicredi_cnab_400.REM',
+    'sicredi/cnab400/remessa/sicredi_cnab_400.REM',
     '1',
     '262000001'
   ]
@@ -83,7 +83,7 @@ describe.each<FieldTestCase>(cases)('%s', (
 describe('NossoNumeroBoletoField', (): void => {
   it('given a nosso número filled with zeros when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM')), '1')
+    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/remessa/ITAU_cnab_400.REM')), '1')
     assert(line != null, 'Linha não encontrada')
     const field = new NossoNumeroBoletoField(replaceLineRange(line, getFieldRange(NossoNumeroBoletoField), '00000000'), 5)
 

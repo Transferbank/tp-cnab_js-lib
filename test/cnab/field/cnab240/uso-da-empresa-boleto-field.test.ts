@@ -9,7 +9,7 @@ const cases: FieldTestCase[] = [
   [
     'UsoDaEmpresaBoletoField (padrão FEBRABAN, exemplo Bradesco)',
     UsoDaEmpresaBoletoField,
-    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'bradesco/cnab240/remessa/bradesco_cnab_240.txt',
     'P',
     '10.010001.01'
   ]
@@ -43,7 +43,7 @@ describe.each<FieldTestCase>(cases)('%s', (
 describe('UsoDaEmpresaBoletoField', (): void => {
   it('given a uso da empresa filled with zeros when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/remessa/bradesco_cnab_240.txt')), 'P')
     assert(line != null, 'Linha não encontrada')
     const field = new UsoDaEmpresaBoletoField(replaceLineRange(line, getFieldRange(UsoDaEmpresaBoletoField), '0000000000000000000000000'), 5)
 

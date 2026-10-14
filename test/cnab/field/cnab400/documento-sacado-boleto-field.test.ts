@@ -26,7 +26,7 @@ type DocumentoSacadoFieldClass = new (rawLine: string, lineNumber: number) => Do
 describe('DocumentoSacadoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
-      const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+      const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -54,7 +54,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
     })
 
     describe('para o Banco do Brasil, cujo registro de detalhe comeca com 7', (): void => {
-      const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+      const examplePath = 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -84,13 +84,13 @@ describe('DocumentoSacadoBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: BancoDoBrasilDocumentoSacadoBoletoField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstDocument: '01000000997396' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstDocument: '20000000997330' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstDocument: '11122233396' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstDocument: '30000997300020' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstDocument: '40000997300084' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDocument: '11122233396' },
-      { FieldClass: SicrediDocumentoSacadoBoletoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstDocument: '40000997300084' }
+      { FieldClass: BancoDoBrasilDocumentoSacadoBoletoField, examplePath: 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', expectedFirstDocument: '01000000997396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'bradesco/cnab400/remessa/bradesco_cnab_400.txt', expectedFirstDocument: '20000000997330' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'caixa/cnab400/remessa/caixa_cnab_400.REM', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab400/remessa/ITAU_cnab_400.REM', expectedFirstDocument: '30000997300020' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'santander/cnab400/remessa/santander_cnab_400.REM', expectedFirstDocument: '40000997300084' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicoob/cnab400/remessa/sicoob_cnab_400.REM', expectedFirstDocument: '11122233396' },
+      { FieldClass: SicrediDocumentoSacadoBoletoField, examplePath: 'sicredi/cnab400/remessa/sicredi_cnab_400.REM', expectedFirstDocument: '40000997300084' }
     ])(
       'given detail lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
@@ -120,7 +120,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
   })
 
   describe('validate with error (validacao por indicador de tipo)', (): void => {
-    const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+    const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
     it('given detail line with blank document when validating then returns null value and field error', (): void => {
       // Given
@@ -177,7 +177,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
   })
 
   describe('validate with error (Banco do Brasil - indicador "00" isento)', (): void => {
-    const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+    const examplePath = 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM'
 
     it('given detail line with indicator "00" and a garbage document when validating then accepts the line', (): void => {
       // Given
@@ -205,7 +205,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
   })
 
   describe('validate with error (Sicredi - indicador de 1 char na posicao 219)', (): void => {
-    const examplePath = 'sicredi/cnab400/sicredi_cnab_400.REM'
+    const examplePath = 'sicredi/cnab400/remessa/sicredi_cnab_400.REM'
 
     it('given detail line with blank document when validating then returns null value and field error', (): void => {
       // Given

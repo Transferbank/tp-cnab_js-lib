@@ -8,7 +8,7 @@ import { CodigoDeMultaBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field
 describe('CodigoDeMultaBoletoField', (): void => {
   it('given a code outside the bank table when validating then reports the invalid code', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'R')
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/remessa/bradesco_cnab_240.txt')), 'R')
     assert(line != null, 'Linha não encontrada')
     const field = new CodigoDeMultaBoletoField(replaceLineRange(line, [66, 66], '3'), 5)
 

@@ -11,21 +11,21 @@ const cases: FieldTestCase[] = [
   [
     'UsoDaEmpresaBoletoField (exemplo Itaú)',
     UsoDaEmpresaBoletoField,
-    'itau/cnab400/ITAU_cnab_400.REM',
+    'itau/cnab400/remessa/ITAU_cnab_400.REM',
     '1',
     '000000000000000010001-1/3'
   ],
   [
     'Banco do Brasil CNAB400 (registro 7)',
     BancoDoBrasilUsoDaEmpresaBoletoField,
-    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM',
     '7',
     '10.010001.01'
   ],
   [
     'Caixa CNAB400',
     CaixaUsoDaEmpresaBoletoField,
-    'caixa/cnab400/caixa_cnab_400.REM',
+    'caixa/cnab400/remessa/caixa_cnab_400.REM',
     '1',
     '0000010001'
   ]
@@ -59,7 +59,7 @@ describe.each<FieldTestCase>(cases)('%s', (
 describe('UsoDaEmpresaBoletoField', (): void => {
   it('given a uso da empresa filled with zeros when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM')), '1')
+    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/remessa/ITAU_cnab_400.REM')), '1')
     assert(line != null, 'Linha não encontrada')
     const field = new UsoDaEmpresaBoletoField(replaceLineRange(line, getFieldRange(UsoDaEmpresaBoletoField), '0000000000000000000000000'), 5)
 

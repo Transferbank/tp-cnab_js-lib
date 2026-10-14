@@ -14,7 +14,7 @@ import {
 
 describe('ValorTituloBoletoField', (): void => {
   describe('shouldValidate', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     describe.each([
       { segment: 'P', expectedShouldValidate: true },
@@ -44,13 +44,13 @@ describe('ValorTituloBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 1234.50 },
-      { examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 100 },
-      { examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 1234.50 },
-      { examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 10000 },
-      { examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 1234.50 },
-      { examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 10000 },
-      { examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 1234.50 }
+      { examplePath: 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', expectedFirstValue: 1234.50 },
+      { examplePath: 'bradesco/cnab240/remessa/bradesco_cnab_240.txt', expectedFirstValue: 100 },
+      { examplePath: 'caixa/cnab240/remessa/caixa_cnab_240.txt', expectedFirstValue: 1234.50 },
+      { examplePath: 'itau/cnab240/remessa/itau_cnab_240.txt', expectedFirstValue: 10000 },
+      { examplePath: 'santander/cnab240/remessa/santander_cnab_240.txt', expectedFirstValue: 1234.50 },
+      { examplePath: 'sicoob/cnab240/remessa/sicoob_cnab_240.txt', expectedFirstValue: 10000 },
+      { examplePath: 'sicredi/cnab240/remessa/sicredi_cnab_240.txt', expectedFirstValue: 1234.50 }
     ])(
       'given segment P lines with valid amount ($examplePath) when reading value and validating then accepts all lines',
       ({ examplePath, expectedFirstValue }: {
@@ -79,7 +79,7 @@ describe('ValorTituloBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     it('given segment P line with blank amount when validating then returns null value and field error', (): void => {
       // Given

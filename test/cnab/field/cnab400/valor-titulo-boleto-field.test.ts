@@ -21,7 +21,7 @@ import { ValorTituloBoletoField } from '@cnab/field/cnab400/valor-titulo-boleto-
 describe('ValorTituloBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
-      const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+      const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -50,7 +50,7 @@ describe('ValorTituloBoletoField', (): void => {
     })
 
     describe('para o Banco do Brasil, cujo registro de detalhe comeca com 7', (): void => {
-      const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+      const examplePath = 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -81,13 +81,13 @@ describe('ValorTituloBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: ValorTituloBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 3390.20 },
-      { FieldClass: ValorTituloBoletoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: 22560.93 },
-      { FieldClass: ValorTituloBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 150.00 },
-      { FieldClass: ValorTituloBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 6762.31 },
-      { FieldClass: ValorTituloBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 368.12 },
-      { FieldClass: ValorTituloBoletoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 150.00 },
-      { FieldClass: ValorTituloBoletoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: 368.12 }
+      { FieldClass: ValorTituloBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', expectedFirstValue: 3390.20 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'bradesco/cnab400/remessa/bradesco_cnab_400.txt', expectedFirstValue: 22560.93 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'caixa/cnab400/remessa/caixa_cnab_400.REM', expectedFirstValue: 150.00 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'itau/cnab400/remessa/ITAU_cnab_400.REM', expectedFirstValue: 6762.31 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'santander/cnab400/remessa/santander_cnab_400.REM', expectedFirstValue: 368.12 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'sicoob/cnab400/remessa/sicoob_cnab_400.REM', expectedFirstValue: 150.00 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'sicredi/cnab400/remessa/sicredi_cnab_400.REM', expectedFirstValue: 368.12 }
     ])(
       'given detail lines with valid amount ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
@@ -117,7 +117,7 @@ describe('ValorTituloBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+    const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
     it('given detail line with blank amount when validating then returns null value and field error', (): void => {
       // Given

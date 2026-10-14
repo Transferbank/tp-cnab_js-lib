@@ -5,7 +5,7 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { MultaBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/multa-boleto-field'
 
 describe('MultaBoletoField', (): void => {
-  const detailLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
+  const detailLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/remessa/sicredi_cnab_400.REM'))
     .filter((line: string) => line[0] == '1')
 
   it.each([

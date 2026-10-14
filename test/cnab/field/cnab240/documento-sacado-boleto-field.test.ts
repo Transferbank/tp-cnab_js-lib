@@ -17,7 +17,7 @@ type DocumentoSacadoFieldClass = new (rawLine: string, lineNumber: number) => Do
 
 describe('DocumentoSacadoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     describe.each([
       { segment: 'P', expectedShouldValidate: false },
@@ -47,13 +47,13 @@ describe('DocumentoSacadoBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: BancoDoBrasilDocumentoSacadoBoletoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '10000791989' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '11122233396' }
+      { FieldClass: BancoDoBrasilDocumentoSacadoBoletoField, examplePath: 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'bradesco/cnab240/remessa/bradesco_cnab_240.txt', expectedFirstDocument: '10000791989' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'caixa/cnab240/remessa/caixa_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab240/remessa/itau_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'santander/cnab240/remessa/santander_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicoob/cnab240/remessa/sicoob_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicredi/cnab240/remessa/sicredi_cnab_240.txt', expectedFirstDocument: '11122233396' }
     ])(
       'given segment Q lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
@@ -83,7 +83,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
   })
 
   describe('validate with error (validacao por indicador de tipo)', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     it('given segment Q line with blank document when validating then returns null value and field error', (): void => {
       // Given
@@ -140,7 +140,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
   })
 
   describe('validate with error (Banco do Brasil - indicador "0" tratado como CNPJ)', (): void => {
-    const examplePath = 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'
+    const examplePath = 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt'
 
     it('given segment Q line with indicator "0" and a valid CNPJ when validating then accepts the line', (): void => {
       // Given

@@ -7,7 +7,7 @@ import { JurosBoletoField } from '@cnab/field/cnab400/juros-boleto-field'
 describe('JurosBoletoField', (): void => {
   it('given juros filled with zeros when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM')), '1')
+    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/remessa/ITAU_cnab_400.REM')), '1')
     assert(line != null, 'Linha não encontrada')
     const field = new JurosBoletoField(replaceLineRange(line, getFieldRange(JurosBoletoField), '0000000000000'), 5)
 

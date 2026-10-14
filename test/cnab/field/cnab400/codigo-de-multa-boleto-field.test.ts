@@ -8,7 +8,7 @@ import { CodigoDeMultaBoletoField } from '@cnab/bank/santander/cnab/cnab400/fiel
 describe('CodigoDeMultaBoletoField', (): void => {
   it('given a code outside the bank table when validating then reports the invalid code', (): void => {
     // Given
-    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'santander/cnab400/santander_cnab_400.REM')), '1')
+    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'santander/cnab400/remessa/santander_cnab_400.REM')), '1')
     assert(line != null, 'Linha não encontrada')
     const field = new CodigoDeMultaBoletoField(replaceLineRange(line, [78, 78], '2'), 5)
 

@@ -20,7 +20,7 @@ import { CepBoletoField } from '@cnab/field/cnab400/cep-boleto-field'
 describe('CepBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
-      const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+      const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -49,7 +49,7 @@ describe('CepBoletoField', (): void => {
     })
 
     describe('para o Banco do Brasil, cujo registro de detalhe comeca com 7', (): void => {
-      const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+      const examplePath = 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -80,13 +80,13 @@ describe('CepBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: CepBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: '78285000' },
-      { FieldClass: CepBoletoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: '29045402' },
-      { FieldClass: CepBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: '01310100' },
-      { FieldClass: CepBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: '63540000' },
-      { FieldClass: CepBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: '78520000' },
-      { FieldClass: CepBoletoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: '01310100' },
-      { FieldClass: CepBoletoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: '01310100' }
+      { FieldClass: CepBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', expectedFirstValue: '78285000' },
+      { FieldClass: CepBoletoField(), examplePath: 'bradesco/cnab400/remessa/bradesco_cnab_400.txt', expectedFirstValue: '29045402' },
+      { FieldClass: CepBoletoField(), examplePath: 'caixa/cnab400/remessa/caixa_cnab_400.REM', expectedFirstValue: '01310100' },
+      { FieldClass: CepBoletoField(), examplePath: 'itau/cnab400/remessa/ITAU_cnab_400.REM', expectedFirstValue: '63540000' },
+      { FieldClass: CepBoletoField(), examplePath: 'santander/cnab400/remessa/santander_cnab_400.REM', expectedFirstValue: '78520000' },
+      { FieldClass: CepBoletoField(), examplePath: 'sicoob/cnab400/remessa/sicoob_cnab_400.REM', expectedFirstValue: '01310100' },
+      { FieldClass: CepBoletoField(), examplePath: 'sicredi/cnab400/remessa/sicredi_cnab_400.REM', expectedFirstValue: '01310100' }
     ])(
       'given detail lines with valid cep ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
@@ -116,7 +116,7 @@ describe('CepBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
+    const examplePath = 'bradesco/cnab400/remessa/bradesco_cnab_400.txt'
 
     it('given detail line with blank cep when validating then returns null value and field error', (): void => {
       // Given
