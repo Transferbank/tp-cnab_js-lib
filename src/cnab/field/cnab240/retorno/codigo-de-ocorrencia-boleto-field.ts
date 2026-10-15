@@ -3,7 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { isDigitsOnly } from '@cnab/utils/document-parser'
+import { isValidOcorrenciaCode } from '@cnab/utils/ocorrencia-parser'
 
 export class CodigoDeOcorrenciaBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -16,13 +16,13 @@ export class CodigoDeOcorrenciaBoletoField extends CnabField<string> {
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && value.length == 2 && isDigitsOnly(value)
+    const isValid = value != null && isValidOcorrenciaCode(value)
     const errors = []
 
     if (!isValid) {
       errors.push(
         new CnabGenericFieldError({
-          message: 'Campo código de ocorrência inválido: deve conter 2 dígitos numéricos',
+          message: 'Campo código de ocorrência inválido: deve conter 2 letras maiúsculas ou dígitos',
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
           range: this.range

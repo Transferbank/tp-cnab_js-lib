@@ -31,7 +31,7 @@ describe('CodigoDeOcorrenciaBoletoField', (): void => {
 
   it.each([
     ['blank', '  '],
-    ['non numeric', 'A6']
+    ['invalid character', '6#']
   ])('given a segment T line with %s code when validating then returns field error', (_: string, code: string): void => {
     // Given
     const field = new CodigoDeOcorrenciaBoletoField(replaceLineRange(cnab240RetornoLine('3', 'T'), [16, 17], code), 1)
@@ -44,7 +44,7 @@ describe('CodigoDeOcorrenciaBoletoField', (): void => {
       isValid: false,
       errors: [
         new CnabGenericFieldError({
-          message: 'Campo código de ocorrência inválido: deve conter 2 dígitos numéricos',
+          message: 'Campo código de ocorrência inválido: deve conter 2 letras maiúsculas ou dígitos',
           lineNumber: 1,
           fieldKey: 'codigo_de_ocorrencia',
           range: [16, 17]
