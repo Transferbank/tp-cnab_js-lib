@@ -1,6 +1,14 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+
+export type FieldTestCase = [
+  string,
+  CnabFieldClass<string>,
+  string,
+  string,
+  string
+]
 
 type CnabFieldConstructor<T extends CnabField<unknown> = CnabField<unknown>> =
   new (rawLine: string, lineNumber: number) => T
