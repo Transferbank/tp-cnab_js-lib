@@ -5,10 +5,9 @@ import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export abstract class IdentificacaoBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  protected readonly segment: string = 'T'
 
   shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmento(this.rawLine, this.segment)
+    return Cnab240LineTypeChecker.isSegmentoT(this.rawLine)
   }
 
   protected performValidation(): CnabValidationResult {
