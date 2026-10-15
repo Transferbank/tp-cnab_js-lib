@@ -1,5 +1,4 @@
 import { CnabFile } from '@cnab/type/cnab-file'
-import { CnabRetornoFile } from '@cnab/type/cnab-retorno-file'
 
 export async function openCnabFile(file: File): Promise<CnabFile> {
   return CnabFile.open(file)
@@ -9,15 +8,7 @@ export function openCnabFileFromLines(lines: string[]): CnabFile {
   return CnabFile.fromLines(lines)
 }
 
-export async function openCnabRetornoFile(file: File): Promise<CnabRetornoFile> {
-  return CnabRetornoFile.open(file)
-}
-
-export function openCnabRetornoFileFromLines(lines: string[]): CnabRetornoFile {
-  return CnabRetornoFile.fromLines(lines)
-}
-
-export { CnabFile, CnabRetornoFile }
+export { CnabFile }
 export { Cnab, CnabBoleto } from '@cnab/type/cnab'
 export { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 export { CnabField, CnabFieldClass, optional } from '@cnab/type/cnab-field'
@@ -33,7 +24,6 @@ export {
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
   CnabFileTypeNotRecognizedException,
-  CnabFileTypeNotSupportedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException,
   CnabInvalidFileException

@@ -265,14 +265,17 @@ cnabFile.boletoCount // ex: 3
 
 #### Lote de criação e lote de validação
 
-O banco recebe um **lote de criação** (arquivo remessa), com os boletos a registrar, e devolve um **lote de validação** (arquivo retorno), com o que aconteceu com cada um. O tipo do arquivo é identificado pelo header, e cada tipo é aberto por uma classe:
+O banco recebe um **lote de criação** (arquivo remessa), com os boletos a registrar, e devolve um **lote de validação** (arquivo retorno), com o que aconteceu com cada um. Os dois são abertos pelas mesmas funções: o tipo é identificado pelo header e fica em `cnabFile.fileType`:
 
-| Tipo                                | Classe            | Funções                                               |
-| ----------------------------------- | ----------------- | ----------------------------------------------------- |
-| Lote de criação (arquivo remessa)   | `CnabFile`        | `openCnabFile`, `openCnabFileFromLines`               |
-| Lote de validação (arquivo retorno) | `CnabRetornoFile` | `openCnabRetornoFile`, `openCnabRetornoFileFromLines` |
+```ts
+import { CnabFileType } from '@fx55/cnab-lib-ts'
 
-Abrir um arquivo com a classe do outro tipo lança `CnabFileTypeNotSupportedException`. Ainda não há bancos com leitura de lote de validação.
+if (cnabFile.fileType == CnabFileType.RETORNO) {
+  // lote de validação
+}
+```
+
+Ainda não há bancos com leitura de lote de validação: abrir um arquivo retorno lança `CnabBankSchemaNotFoundException`.
 
 ### Validando o arquivo inteiro
 
@@ -363,7 +366,6 @@ Problemas que impedem o processamento do arquivo lançam exceções que estendem
 | `CnabMinimumLinesNotReachedException` | O arquivo tem menos de 3 linhas                   |
 | `CnabFormatNotRecognizedException`    | A primeira linha não tem 240 nem 400 caracteres   |
 | `CnabFileTypeNotRecognizedException`  | O tipo no header não é remessa nem retorno        |
-| `CnabFileTypeNotSupportedException`   | O arquivo é do outro tipo (remessa ou retorno)    |
 | `CnabBankCodeNotFoundException`       | O código do banco no header não é reconhecido     |
-| `CnabBankSchemaNotFoundException`     | O banco não tem suporte para o formato do arquivo |
+| `CnabBankSchemaNotFoundException`     | Banco sem suporte para o formato/tipo do arquivo  |
 | `CnabInvalidFileException`            | `read()` em um arquivo que não passa na validação |
