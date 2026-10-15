@@ -66,6 +66,10 @@ export class Cnab240LineTypeChecker {
     return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === 'U'
   }
 
+  static isSegmento(rawLine: string, segment: string): boolean {
+    return this.hasMinLength(rawLine, 14) && rawLine[7] === '3' && rawLine[13] === segment
+  }
+
   static isSegmentoY(rawLine: string, optionalRecordCode?: string, recordType: string = '3'): boolean {
     const isSegmento = this.hasMinLength(rawLine, 14) && rawLine[7] === recordType && rawLine[13] === 'Y'
     return isSegmento && (optionalRecordCode == null || rawLine.substring(17, 19) === optionalRecordCode)
