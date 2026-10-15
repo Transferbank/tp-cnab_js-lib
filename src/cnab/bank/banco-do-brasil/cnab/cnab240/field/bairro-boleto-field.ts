@@ -1,4 +1,4 @@
-import { BairroBoletoField as Cnab240BairroBoletoField } from '@cnab/field/cnab240/bairro-boleto-field'
+import { BairroBoletoField as Cnab240BairroBoletoField } from '@cnab/field/cnab240/remessa/bairro-boleto-field'
 
 // Nota do manual: o layout declara 114 a 128 (15 posições), mas "são tratadas somente
 // 12 posições, da posição 114 a 125" - usamos o range realmente tratado pelo banco.

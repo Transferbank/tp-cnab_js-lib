@@ -1,5 +1,5 @@
 import { DocumentType, documentTypeByIndicator } from '@cnab/utils/document-parser'
-import { DocumentoSacadoBoletoField as Cnab240DocumentoSacadoBoletoField } from '@cnab/field/cnab240/documento-sacado-boleto-field'
+import { DocumentoSacadoBoletoField as Cnab240DocumentoSacadoBoletoField } from '@cnab/field/cnab240/remessa/documento-sacado-boleto-field'
 
 // BB aceita "0" como indicador, tratado como CNPJ.
 export class DocumentoSacadoBoletoField extends Cnab240DocumentoSacadoBoletoField {

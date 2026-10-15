@@ -1,6 +1,6 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { SeuNumeroBoletoField as Cnab400SeuNumeroBoletoField } from '@cnab/field/cnab400/seu-numero-boleto-field'
+import { SeuNumeroBoletoField as Cnab400SeuNumeroBoletoField } from '@cnab/field/cnab400/remessa/seu-numero-boleto-field'
 
 // Registro 5 vem depois do 7: quando existe, 
 // sobrescreve o seu_numero do registro 7 com esta aqui.

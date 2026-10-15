@@ -1,6 +1,6 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { MultaBoletoField as Cnab400MultaBoletoField } from '@cnab/field/cnab400/multa-boleto-field'
+import { MultaBoletoField as Cnab400MultaBoletoField } from '@cnab/field/cnab400/remessa/multa-boleto-field'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
 export class MultaBoletoField extends Cnab400MultaBoletoField {
