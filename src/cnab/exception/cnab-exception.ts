@@ -66,3 +66,9 @@ export class CnabSchemaRegistrationException extends CnabException {
     )
   }
 }
+
+export class CnabDuplicatedOcorrenciaCodeException extends CnabException {
+  constructor(code: string, ocorrencia: string, otherOcorrencia: string) {
+    super(`Tabela de ocorrências inválida: código ${code} registrado em ${ocorrencia} e em ${otherOcorrencia}`)
+  }
+}
