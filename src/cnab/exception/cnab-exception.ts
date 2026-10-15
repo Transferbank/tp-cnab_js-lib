@@ -28,18 +28,6 @@ export class CnabFileTypeNotRecognizedException extends CnabException {
   }
 }
 
-export class CnabFileTypeNotSupportedException extends CnabException {
-  constructor(fileType: CnabFileType, expectedFileType: CnabFileType) {
-    const expected = expectedFileType == CnabFileType.REMESSA
-      ? 'lote de criação (arquivo remessa)'
-      : 'lote de validação (arquivo retorno)'
-    const suggestion = fileType == CnabFileType.RETORNO
-      ? 'use CnabRetornoFile (ou openCnabRetornoFile)'
-      : 'use CnabFile (ou openCnabFile)'
-    super(`Arquivo de ${fileType} não suportado: esperado um ${expected}. Para abri-lo, ${suggestion}`)
-  }
-}
-
 export class CnabBankCodeNotFoundException extends CnabException {
   constructor(bankCode: string, cnabFormat: CnabFormat) {
     super(`Código do banco não encontrado: ${bankCode} para o CNAB${cnabFormat}`)
@@ -47,8 +35,8 @@ export class CnabBankCodeNotFoundException extends CnabException {
 }
 
 export class CnabBankSchemaNotFoundException extends CnabException {
-  constructor(bank: CnabBank, cnabFormat: CnabFormat) {
-    super(`CNAB${cnabFormat} para o banco ${bank} não suportado`)
+  constructor(bank: CnabBank, cnabFormat: CnabFormat, fileType: CnabFileType) {
+    super(`CNAB${cnabFormat} de ${fileType} para o banco ${bank} não suportado`)
   }
 }
 
