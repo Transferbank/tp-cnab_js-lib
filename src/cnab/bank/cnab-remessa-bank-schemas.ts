@@ -9,7 +9,7 @@ import * as Cnab240 from '@cnab/field/cnab240/remessa/fields'
 import * as Cnab400 from '@cnab/field/cnab400/remessa/fields'
 
 import * as Cnab400Sicredi from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
-import * as Cnab400Bradesco from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
+import * as Cnab400Bradesco from '@cnab/bank/bradesco/cnab/cnab400/field/remessa/fields'
 import * as Cnab400Caixa from '@cnab/bank/caixa/cnab/cnab400/field/fields'
 import * as Cnab400Sicoob from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
 import * as Cnab240BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'

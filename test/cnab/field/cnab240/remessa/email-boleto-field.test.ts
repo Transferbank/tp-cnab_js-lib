@@ -5,7 +5,7 @@ import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPat
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab240/remessa/email-boleto-field'
 import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/email-boleto-field'
-import { EmailBoletoField as BradescoEmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/email-boleto-field'
+import { EmailBoletoField as BradescoEmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/email-boleto-field'
 import { EmailSegmentoSBoletoField as BancoDoBrasilEmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-s-boleto-field'
 import { EmailSegmentoYBoletoField as BancoDoBrasilEmailSegmentoYBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-y-boleto-field'
 
