@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab400RecordLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { CodigoDeMultaBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/codigo-de-multa-boleto-field'
+import { CodigoDeMultaBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/remessa/codigo-de-multa-boleto-field'
 
 describe('CodigoDeMultaBoletoField', (): void => {
   it('given a code outside the bank table when validating then reports the invalid code', (): void => {
