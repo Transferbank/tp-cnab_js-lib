@@ -2,7 +2,7 @@ import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { MultaBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/multa-boleto-field'
+import { MultaBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/remessa/multa-boleto-field'
 
 describe('MultaBoletoField', (): void => {
   const detailLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/remessa/sicredi_cnab_400.REM'))
