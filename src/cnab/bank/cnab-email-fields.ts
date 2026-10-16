@@ -2,8 +2,8 @@ import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import * as Cnab240BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 import * as Cnab400BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
 import * as Cnab240Bradesco from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/fields'
-import * as Cnab240Caixa from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import * as Cnab400Caixa from '@cnab/bank/caixa/cnab/cnab400/field/fields'
+import * as Cnab240Caixa from '@cnab/bank/caixa/cnab/cnab240/field/remessa/fields'
+import * as Cnab400Caixa from '@cnab/bank/caixa/cnab/cnab400/field/remessa/fields'
 import * as Cnab400Itau from '@cnab/bank/itau/cnab/cnab400/field/fields'
 
 export const CNAB_EMAIL_FIELDS: CnabFieldClass[] = [

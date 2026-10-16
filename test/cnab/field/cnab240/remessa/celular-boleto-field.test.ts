@@ -5,7 +5,7 @@ import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPat
 import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CelularBoletoField as BradescoCelularBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/celular-boleto-field'
-import { CelularBoletoField as CaixaCelularBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/celular-boleto-field'
+import { CelularBoletoField as CaixaCelularBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/remessa/celular-boleto-field'
 import { CelularBoletoField as BancoDoBrasilCelularBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/celular-boleto-field'
 
 describe.each([
