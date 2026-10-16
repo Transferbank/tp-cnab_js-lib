@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab400RecordLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab400/remessa/email-boleto-field'
-import { EmailBoletoField as ItauEmailBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/email-boleto-field'
+import { EmailBoletoField as ItauEmailBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/remessa/email-boleto-field'
 import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/remessa/email-boleto-field'
 import { EmailBoletoField as BancoDoBrasilEmailBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/email-boleto-field'
 
