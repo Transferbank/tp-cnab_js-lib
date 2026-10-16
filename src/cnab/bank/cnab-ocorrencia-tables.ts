@@ -14,6 +14,7 @@ import { SICREDI_CNAB400_OCORRENCIA_TABLE } from '@cnab/bank/sicredi/cnab/cnab40
 import { SICOOB_CNAB240_OCORRENCIA_TABLE } from '@cnab/bank/sicoob/cnab/cnab240/ocorrencia-table'
 import { SICOOB_CNAB400_OCORRENCIA_TABLE } from '@cnab/bank/sicoob/cnab/cnab400/ocorrencia-table'
 import { BANCO_DO_BRASIL_CNAB240_OCORRENCIA_TABLE } from '@cnab/bank/banco-do-brasil/cnab/cnab240/ocorrencia-table'
+import { BANCO_DO_BRASIL_CNAB400_OCORRENCIA_TABLE } from '@cnab/bank/banco-do-brasil/cnab/cnab400/ocorrencia-table'
 
 export const CNAB_OCORRENCIA_TABLES: Partial<Record<CnabBank, Partial<Record<CnabFormat, CnabOcorrenciaTable>>>> = {
   [CnabBank.BRADESCO]: {
@@ -41,7 +42,8 @@ export const CNAB_OCORRENCIA_TABLES: Partial<Record<CnabBank, Partial<Record<Cna
     [CnabFormat.CNAB400]: SICOOB_CNAB400_OCORRENCIA_TABLE
   },
   [CnabBank.BANCODOBRASIL]: {
-    [CnabFormat.CNAB240]: BANCO_DO_BRASIL_CNAB240_OCORRENCIA_TABLE
+    [CnabFormat.CNAB240]: BANCO_DO_BRASIL_CNAB240_OCORRENCIA_TABLE,
+    [CnabFormat.CNAB400]: BANCO_DO_BRASIL_CNAB400_OCORRENCIA_TABLE
   }
 }
 
