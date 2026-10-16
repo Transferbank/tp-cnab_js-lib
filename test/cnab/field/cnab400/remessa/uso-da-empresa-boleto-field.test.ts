@@ -5,7 +5,7 @@ import { FieldTestCase, findFirstCnab400RecordLine, getFieldRange, readExampleLi
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab400/remessa/uso-da-empresa-boleto-field'
 import { UsoDaEmpresaBoletoField as BancoDoBrasilUsoDaEmpresaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/uso-da-empresa-boleto-field'
-import { UsoDaEmpresaBoletoField as CaixaUsoDaEmpresaBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/uso-da-empresa-boleto-field'
+import { UsoDaEmpresaBoletoField as CaixaUsoDaEmpresaBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/remessa/uso-da-empresa-boleto-field'
 
 const cases: FieldTestCase[] = [
   [

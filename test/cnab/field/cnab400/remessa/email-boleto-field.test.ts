@@ -5,7 +5,7 @@ import { findFirstCnab400RecordLine, readExampleLines, replaceLineRange, resPath
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab400/remessa/email-boleto-field'
 import { EmailBoletoField as ItauEmailBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/email-boleto-field'
-import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/email-boleto-field'
+import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/remessa/email-boleto-field'
 import { EmailBoletoField as BancoDoBrasilEmailBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/email-boleto-field'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
