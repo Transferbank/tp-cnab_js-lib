@@ -7,7 +7,7 @@ import { NossoNumeroBoletoField } from '@cnab/field/cnab400/remessa/nosso-numero
 import { NossoNumeroBoletoField as BancoDoBrasilNossoNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as BradescoNossoNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/remessa/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as CaixaNossoNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/remessa/nosso-numero-boleto-field'
-import { NossoNumeroBoletoField as SicoobNossoNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as SicoobNossoNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/remessa/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as SicrediNossoNumeroBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/remessa/nosso-numero-boleto-field'
 
 const cases: FieldTestCase[] = [
