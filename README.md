@@ -61,7 +61,7 @@ Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é 
 A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
 
 - Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
-- Todos os layouts: Nosso Número (veja [Campos de identificação](#campos-de-identificação))
+- Todos os layouts: Nosso Número (veja [Nosso Número](#nosso-número))
 
 ### Campos de contato
 
@@ -93,31 +93,9 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 | `ddd_do_sacado`     | DDD do celular do sacado    | `string`   |
 | `celular_do_sacado` | Número do celular do sacado | `string`   |
 
-### Campos de identificação
+### Nosso Número
 
-Três campos identificam o boleto: o Seu Número e o Uso da Empresa ligam o boleto ao sistema de quem o emitiu, e o Nosso Número o identifica no banco.
-
-O Nosso Número faz parte da leitura padrão e aparece em `fields` sem nada a mais. O Seu Número e o Uso da Empresa não: para lê-los, passe uma das constantes como campos extras.
-
-```ts
-import { CNAB_IDENTIFICATION_FIELDS } from '@fx55/cnab-lib-ts'
-
-const cnab = cnabFile.read(CNAB_IDENTIFICATION_FIELDS)
-```
-
-- `CNAB_IDENTIFICATION_FIELDS`: Seu Número e Uso da Empresa;
-- `CNAB_SEU_NUMERO_FIELDS`: só o Seu Número;
-- `CNAB_USO_DA_EMPRESA_FIELDS`: só o Uso da Empresa.
-
-Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os três campos são **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Os valores vêm como estão no arquivo, sem validação de formato.
-
-| Chave            | Descrição                                                                                  | Tipo     |
-| ---------------- | ------------------------------------------------------------------------------------------ | -------- |
-| `seu_numero`     | Número do documento cobrado, como a nota fiscal ou a duplicata. Sai impresso no boleto     | `string` |
-| `uso_da_empresa` | Campo livre para a empresa identificar o boleto no seu sistema. Não sai impresso no boleto | `string` |
-| `nosso_numero`   | Número que identifica o boleto no banco. Sai impresso no boleto e no código de barras      | `string` |
-
-O Seu Número identifica o documento, não o boleto: as parcelas de uma mesma nota costumam ter o mesmo Seu Número. Para identificar um boleto, use o Nosso Número ou, se o sistema que gerou a remessa preenche com um valor único, o Uso da Empresa.
+O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão e aparece em `fields` como `nosso_numero`, sem nada a mais. O valor vem como está no arquivo, sem validação de formato.
 
 Quando o banco é quem numera o boleto, o Nosso Número vem zerado ou em branco na remessa, e o número só é definido depois, pelo banco.
 

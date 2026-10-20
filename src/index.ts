@@ -39,8 +39,3 @@ export {
   CnabFieldInvalidNumberError,
   CnabFieldInvalidDateError
 } from '@cnab/type/cnab-validation-error'
-export {
-  CNAB_IDENTIFICATION_FIELDS,
-  CNAB_SEU_NUMERO_FIELDS,
-  CNAB_USO_DA_EMPRESA_FIELDS
-} from '@cnab/bank/cnab-identification-fields'
