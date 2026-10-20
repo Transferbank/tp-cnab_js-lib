@@ -61,7 +61,7 @@ Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é 
 A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
 
 - Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
-- Todos os layouts: Nosso Número (veja [Nosso Número](#nosso-número))
+- Todos os layouts: Nosso Número, que vem em branco quando o banco é quem numera o boleto (veja [Nosso Número](#nosso-número))
 
 ### Campos de contato
 
@@ -95,9 +95,9 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 
 ### Nosso Número
 
-O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão e aparece em `fields` como `nosso_numero`, sem nada a mais. O valor vem como está no arquivo, sem validação de formato.
+O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão de todos os layouts e aparece em `fields` como `nosso_numero`, sem nada a mais. O valor vem como está no arquivo, sem validação de formato.
 
-Quando o banco é quem numera o boleto, o Nosso Número vem zerado ou em branco na remessa, e o número só é definido depois, pelo banco.
+Quando o banco é quem numera o boleto, o Nosso Número vem zerado ou em branco na remessa, e o número só é definido depois, pelo banco. Zerado, ele é devolvido como está; em branco, não é erro de validação e só não aparece em `fields`.
 
 ## Instalação
 
