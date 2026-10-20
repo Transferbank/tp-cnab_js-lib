@@ -8,7 +8,7 @@ import { Cnab400BoletoNossoNumeroField } from '@cnab/field/cnab400/boleto-nosso-
 const baseCases: FieldTestCase[] = [
   [
     'Cnab400BoletoNossoNumeroField (exemplo Itaú)',
-    Cnab400BoletoNossoNumeroField,
+    Cnab400BoletoNossoNumeroField(),
     'itau/cnab400/ITAU_cnab_400.REM',
     '1',
     '10377333'
