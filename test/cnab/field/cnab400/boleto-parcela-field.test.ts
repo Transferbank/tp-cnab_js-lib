@@ -1,0 +1,74 @@
+import * as path from 'path'
+import assert from 'node:assert'
+import { describe, it, expect } from '@jest/globals'
+import { getFieldRange, readExampleLines, replaceLineRange, resPath, findFirstCnab400RecordLine } from '@test/test-utils'
+import { CnabFieldClass } from '@cnab/type/cnab-field'
+import { Cnab400BoletoParcelaField } from '@cnab/field/cnab400/boleto-parcela-field'
+import { Cnab400BoletoSeuNumeroField } from '@cnab/field/cnab400/boleto-seu-numero-field'
+import { Cnab400BoletoUsoDaEmpresaField } from '@cnab/field/cnab400/boleto-uso-da-empresa-field'
+
+class SeuNumeroRegistro5Field extends Cnab400BoletoSeuNumeroField {
+  protected readonly recordType: string = '5'
+}
+
+class ParcelaComSeuNumeroDoRegistro5Field extends Cnab400BoletoParcelaField {
+  protected readonly sourceFields: CnabFieldClass<string>[] = [Cnab400BoletoUsoDaEmpresaField, SeuNumeroRegistro5Field]
+}
+
+const lines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
+
+function lineWith(usoDaEmpresa: string, seuNumero: string): string {
+  const line = findFirstCnab400RecordLine(lines, '1')
+  assert(line != null, 'Linha do boleto não encontrada')
+  return replaceLineRange(
+    replaceLineRange(line, getFieldRange(Cnab400BoletoUsoDaEmpresaField), usoDaEmpresa),
+    getFieldRange(Cnab400BoletoSeuNumeroField),
+    seuNumero
+  )
+}
+
+describe('Cnab400BoletoParcelaField', (): void => {
+  it('given a line that is not the detail record when checking shouldValidate then returns false', (): void => {
+    // Given
+    const line = findFirstCnab400RecordLine(lines, '0')
+    assert(line != null, 'Linha não encontrada')
+
+    // When
+    const shouldValidate = new Cnab400BoletoParcelaField(line, 1).shouldValidate()
+
+    // Then
+    expect(shouldValidate).toBe(false)
+  })
+
+  describe.each([
+    { usoDaEmpresa: '12.345678.01', seuNumero: 'XX123456-0', expected: '1', description: 'parcela in both fields, taken from the uso da empresa' },
+    { usoDaEmpresa: '1234567890', seuNumero: '12345 1/3', expected: '1/3', description: 'parcela only in the seu número' },
+    { usoDaEmpresa: '123456', seuNumero: '123456', expected: null, description: 'no parcela in either field' }
+  ])('given $description', ({ usoDaEmpresa, seuNumero, expected }): void => {
+    it('when reading then returns the parcela found', (): void => {
+      // Given
+      const field = new Cnab400BoletoParcelaField(lineWith(usoDaEmpresa, seuNumero), 5)
+
+      // When
+      const result = field.validate()
+
+      // Then
+      expect(field.shouldValidate()).toBe(true)
+      expect(result).toEqual({ isValid: true, errors: [] })
+      expect(field.value).toBe(expected)
+    })
+  })
+
+  it('given a source field from another record when reading the detail record then ignores it', (): void => {
+    // Given
+    const field = new ParcelaComSeuNumeroDoRegistro5Field(lineWith('123456', '12345 1/3'), 5)
+
+    // When
+    const result = field.validate()
+
+    // Then
+    expect(field.shouldValidate()).toBe(true)
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toBeNull()
+  })
+})
