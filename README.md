@@ -74,14 +74,15 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos extras da lib
 
-| Chave               | Descrição                                                        | Tipo       | Constante                    |
-| ------------------- | ---------------------------------------------------------------- | ---------- | ---------------------------- |
-| `emails_do_sacado`  | E-mails do sacado                                                | `string[]` | `CNAB_EMAIL_FIELDS`          |
-| `ddd_do_sacado`     | DDD do celular do sacado                                         | `string`   | `CNAB_TELEFONE_FIELDS`       |
-| `celular_do_sacado` | Número do celular do sacado                                      | `string`   | `CNAB_TELEFONE_FIELDS`       |
-| `seu_numero`        | Número do documento cobrado, como a nota fiscal ou a duplicata   | `string`   | `CNAB_SEU_NUMERO_FIELDS`     |
-| `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema   | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
-| `parcela`           | Parcela e total, lidos do fim do Uso da Empresa ou do Seu Número | `string`   | `CNAB_PARCELA_FIELDS`        |
+| Chave               | Descrição                                                         | Tipo       | Constante                    |
+| ------------------- | ----------------------------------------------------------------- | ---------- | ---------------------------- |
+| `emails_do_sacado`  | E-mails do sacado                                                 | `string[]` | `CNAB_EMAIL_FIELDS`          |
+| `ddd_do_sacado`     | DDD do celular do sacado                                          | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `celular_do_sacado` | Número do celular do sacado                                       | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `seu_numero`        | Número do documento cobrado, como a nota fiscal ou a duplicata    | `string`   | `CNAB_SEU_NUMERO_FIELDS`     |
+| `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema    | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
+| `parcela`           | Número da parcela, lido do fim do Uso da Empresa ou do Seu Número | `number`   | `CNAB_PARCELA_FIELDS`        |
+| `total_de_parcelas` | Total de parcelas, lido do fim do Uso da Empresa ou do Seu Número | `number`   | `CNAB_PARCELA_FIELDS`        |
 
 Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
@@ -129,7 +130,7 @@ O Seu Número identifica o documento, não o boleto: as parcelas de uma mesma no
 
 #### Parcela
 
-Nenhum layout CNAB tem um campo de parcela comum a todos os bancos. Quem emite o boleto costuma escrever a parcela no fim do Uso da Empresa ou do Seu Número, separada do número do documento. O campo `parcela` procura esse final nos dois campos, primeiro no Uso da Empresa e depois no Seu Número.
+Nenhum layout CNAB tem um campo de parcela comum a todos os bancos. Quem emite o boleto costuma escrever a parcela no fim do Uso da Empresa ou do Seu Número, separada do número do documento. Os campos `parcela` e `total_de_parcelas` procuram esse final nos dois campos, primeiro no Uso da Empresa e depois no Seu Número. Os dois são lidos do primeiro campo em que um formato é encontrado, para que a parcela de um campo nunca se misture com o total de outro.
 
 ```ts
 import { CNAB_PARCELA_FIELDS } from '@fx55/cnab-lib-ts'
@@ -139,16 +140,16 @@ const cnab = cnabFile.read(CNAB_PARCELA_FIELDS)
 
 Os formatos reconhecidos são testados do mais completo para o mais simples, para que um formato simples não leia só parte de um mais completo:
 
-| Formato no fim do campo | Exemplo        | `parcela` |
-| ----------------------- | -------------- | --------- |
-| Espaço, `N/T`           | `12345 1/3`    | `1/3`     |
-| Traço, `N/T`            | `123456-1/3`   | `1/3`     |
-| Traço, `N`, espaço, `T` | `123456-2 5`   | `2/5`     |
-| Traço, `N`              | `XX12345-01`   | `1`       |
-| Ponto, `N`              | `12.345678.01` | `1`       |
-| Barra, `N`              | `XX:123/2`     | `2`       |
+| Formato no fim do campo | Exemplo        | `parcela` | `total_de_parcelas` |
+| ----------------------- | -------------- | --------- | ------------------- |
+| Espaço, `N/T`           | `12345 1/3`    | `1`       | `3`                 |
+| Traço, `N/T`            | `123456-1/3`   | `1`       | `3`                 |
+| Traço, `N`, espaço, `T` | `123456-2 5`   | `2`       | `5`                 |
+| Traço, `N`              | `XX12345-01`   | `1`       | —                   |
+| Ponto, `N`              | `12.345678.01` | `1`       | —                   |
+| Barra, `N`              | `XX:123/2`     | `2`       | —                   |
 
-O valor vem como `parcela/total` quando o campo traz o total, ou só `parcela` quando não traz, sem zeros à esquerda. Quando nenhum formato é encontrado nos dois campos, `parcela` não aparece em `fields`.
+Os dois campos vêm como número inteiro, sem zeros à esquerda. `total_de_parcelas` só aparece quando o formato encontrado traz o total. Quando nenhum formato é encontrado nos dois campos de origem, nenhum dos dois aparece em `fields`.
 
 A parcela é uma interpretação do texto que quem emitiu o boleto escreveu, e não um dado do banco. Um documento que termina com traço e número, como `NF-123`, é lido como parcela `123`. Para identificar a parcela com segurança, guarde a relação entre o Nosso Número e a parcela no sistema que gera a remessa.
 
