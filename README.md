@@ -29,7 +29,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 Os campos do boleto são de dois tipos:
 
-- **Canônicos:** lidos em toda leitura, sem nada a mais. Cada banco e formato declara os seus no catálogo, em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+- **Canônicos:** lidos por padrão em toda leitura, sem nada a mais.Verificar o catálogo em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
 - **Extras:** lidos só quando passados em `validate` e `read`, no parâmetro `extraFields`. A lib oferece constantes prontas com campos extras, e quem usa a lib também pode escrever os seus (veja [Campos extras](#campos-extras)).
 
 Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
@@ -49,7 +49,7 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `uf_do_sacado`        | UF do sacado                    | `string` | Só na Caixa CNAB 240     |
 | `nosso_numero`        | Número do boleto no banco       | `string` | Sim, em todos os layouts |
 
-Um campo opcional pode vir vazio sem erro de validação; os outros, quando vêm vazios, são erro. Os motivos estão em [Campos obrigatórios e opcionais](#campos-obrigatórios-e-opcionais).
+Um campo opcional pode vir vazio sem erro de validação: o valor dele é nulo, e o campo não aparece em `fields`. Os outros, quando vêm vazios, são erro. Os motivos estão em [Campos obrigatórios e opcionais](#campos-obrigatórios-e-opcionais).
 
 #### Campos que o layout não tem
 
