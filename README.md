@@ -51,14 +51,14 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 Por padrão, um campo canônico vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se ele pode vir vazio. Alguns campos canônicos, porém, são **opcionais**: podem vir vazios sem erro, e nesse caso o valor é nulo e o campo não aparece em `fields`. Os campos canônicos opcionais são:
 
-| Campo                | Layouts        | Pode vir vazio quando                                    | Fonte                         |
+| Campo                | Layouts        | Pode vir vazio quando                                    | 
 | -------------------- | -------------- | -------------------------------------------------------- | ----------------------------- |
-| `nosso_numero`       | Todos          | O banco é quem numera o boleto (vem zerado ou em branco) | [Nosso Número](#nosso-número) |
-| `endereco_do_sacado` | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G032 do manual           |
-| `bairro_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G032 do manual           |
-| `cep_do_sacado`      | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Notas G034 e G035 do manual   |
-| `cidade_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G033 do manual           |
-| `uf_do_sacado`       | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G036 do manual           |
+| `nosso_numero`       | Todos          | O banco é quem numera o boleto (vem zerado ou em branco) |
+| `endereco_do_sacado` | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  |
+| `bairro_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | 
+| `cep_do_sacado`      | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  |
+| `cidade_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | 
+| `uf_do_sacado`       | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  |
 
 #### Campos que o layout não tem
 
