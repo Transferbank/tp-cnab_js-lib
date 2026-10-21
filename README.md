@@ -36,45 +36,47 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos canônicos
 
-| Chave                 | Descrição                      | Tipo     | Opcional          |
-| --------------------- | ------------------------------ | -------- | ----------------- |
-| `nome_do_sacado`      | Nome do sacado                 | `string` | Não               |
-| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string` | Não               |
-| `data_de_vencimento`  | Data de vencimento             | `Date`   | Não               |
-| `valor_do_titulo`     | Valor do título, em reais      | `number` | Não               |
-| `endereco_do_sacado`  | Endereço do sacado             | `string` | Em Caixa CNAB 240 |
-| `bairro_do_sacado`    | Bairro do sacado               | `string` | Em Caixa CNAB 240 |
-| `cep_do_sacado`       | CEP do sacado                  | `string` | Em Caixa CNAB 240 |
-| `cidade_do_sacado`    | Cidade do sacado               | `string` | Em Caixa CNAB 240 |
-| `uf_do_sacado`        | UF do sacado                   | `string` | Em Caixa CNAB 240 |
-| `nosso_numero`        | Número do boleto no banco      | `string` | Sim               |
+| Chave                 | Descrição                      | Tipo     |
+| --------------------- | ------------------------------ | -------- |
+| `nome_do_sacado`      | Nome do sacado                 | `string` |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string` |
+| `data_de_vencimento`  | Data de vencimento             | `Date`   |
+| `valor_do_titulo`     | Valor do título, em reais      | `number` |
+| `endereco_do_sacado`  | Endereço do sacado             | `string` |
+| `bairro_do_sacado`    | Bairro do sacado               | `string` |
+| `cep_do_sacado`       | CEP do sacado                  | `string` |
+| `cidade_do_sacado`    | Cidade do sacado               | `string` |
+| `uf_do_sacado`        | UF do sacado                   | `string` |
+| `nosso_numero`        | Número do boleto no banco      | `string` |
 
-Por padrão, um campo canônico vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se ele pode vir vazio. Alguns campos canônicos, porém, são **opcionais**: podem vir vazios sem erro, e nesse caso o valor é nulo e o campo não aparece em `fields`. Os campos canônicos opcionais são:
+#### Campos por banco e formato
 
-| Campo                | Layouts        |
-| -------------------- | -------------- |
-| `nosso_numero`       | Todos          |
-| `endereco_do_sacado` | Caixa CNAB 240 |
-| `bairro_do_sacado`   | Caixa CNAB 240 |
-| `cep_do_sacado`      | Caixa CNAB 240 |
-| `cidade_do_sacado`   | Caixa CNAB 240 |
-| `uf_do_sacado`       | Caixa CNAB 240 |
+- ✅ obrigatório: vazio no arquivo é erro de validação
+- ⚠️ opcional: pode vir vazio; nesse caso o valor é nulo e o campo não aparece em `fields`
+- ❌ inexistente: o layout não tem o campo, e ele nunca aparece em `fields`
 
-#### Campos que o layout não tem
-
-Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é lido e não aparece em `fields`:
-
-| Banco e formato   | Campos que o layout não tem |
-| ----------------- | --------------------------- |
-| Bradesco CNAB 400 | bairro, cidade e UF         |
-| Sicredi CNAB 240  | bairro                      |
-| Sicredi CNAB 400  | bairro, cidade e UF         |
+| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número |
+| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: |
+| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |
+| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |
+| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |
 
 #### Nosso Número
 
 O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão de todos os layouts e aparece em `fields` como `nosso_numero`.
 
-Quando o banco é quem numera o boleto, o Nosso Número vem zerado ou em branco na remessa, e o número só é definido depois, pelo banco. Nos dois casos ele é lido como ausente: não é erro de validação e não aparece em `fields`.
+O Nosso Número é opcional: quando vem vazio ou zerado, o valor é nulo e o campo não aparece em `fields`.
 
 ### Campos extras da lib
 
