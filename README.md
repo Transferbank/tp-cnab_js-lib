@@ -36,18 +36,18 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos canônicos
 
-| Chave                 | Descrição                      | Tipo     |
-| --------------------- | ------------------------------ | -------- |
-| `nome_do_sacado`      | Nome do sacado                 | `string` |
-| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string` |
-| `data_de_vencimento`  | Data de vencimento             | `Date`   |
-| `valor_do_titulo`     | Valor do título, em reais      | `number` |
-| `endereco_do_sacado`  | Endereço do sacado             | `string` |
-| `bairro_do_sacado`    | Bairro do sacado               | `string` |
-| `cep_do_sacado`       | CEP do sacado                  | `string` |
-| `cidade_do_sacado`    | Cidade do sacado               | `string` |
-| `uf_do_sacado`        | UF do sacado                   | `string` |
-| `nosso_numero`        | Número do boleto no banco      | `string` |
+| Chave                 | Descrição                                           | Tipo     |
+| --------------------- | --------------------------------------------------- | -------- |
+| `nome_do_sacado`      | Nome do sacado                                      | `string` |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado                      | `string` |
+| `data_de_vencimento`  | Data de vencimento                                  | `Date`   |
+| `valor_do_titulo`     | Valor do título, em reais                           | `number` |
+| `endereco_do_sacado`  | Endereço do sacado                                  | `string` |
+| `bairro_do_sacado`    | Bairro do sacado                                    | `string` |
+| `cep_do_sacado`       | CEP do sacado                                       | `string` |
+| `cidade_do_sacado`    | Cidade do sacado                                    | `string` |
+| `uf_do_sacado`        | UF do sacado                                        | `string` |
+| `nosso_numero`        | Número do boleto no banco; vazio ou zerado vem nulo | `string` |
 
 #### Campos por banco e formato
 
@@ -71,12 +71,6 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
 | Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |
 | Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |
-
-#### Nosso Número
-
-O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão de todos os layouts e aparece em `fields` como `nosso_numero`.
-
-O Nosso Número é opcional: quando vem vazio ou zerado, o valor é nulo e o campo não aparece em `fields`.
 
 ### Campos extras da lib
 
