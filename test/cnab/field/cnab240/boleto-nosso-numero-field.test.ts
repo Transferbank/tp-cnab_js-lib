@@ -4,14 +4,60 @@ import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { Cnab240BoletoNossoNumeroField } from '@cnab/field/cnab240/boleto-nosso-numero-field'
+import { Cnab240CaixaBoletoNossoNumeroField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
+import { Cnab240ItauBoletoNossoNumeroField } from '@cnab/bank/itau/cnab/cnab240/field/fields'
+import { Cnab240SantanderBoletoNossoNumeroField } from '@cnab/bank/santander/cnab/cnab240/field/fields'
+import { Cnab240SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
 
 const cases: FieldTestCase[] = [
   [
-    'Cnab240BoletoNossoNumeroField (padrão FEBRABAN, exemplo Bradesco)',
+    'Banco do Brasil CNAB240 (classe base)',
+    Cnab240BoletoNossoNumeroField,
+    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'P',
+    '00035000000001234501'
+  ],
+  [
+    'Bradesco CNAB240 (classe base)',
     Cnab240BoletoNossoNumeroField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'P',
     '00100000000123450010'
+  ],
+  [
+    'Caixa CNAB240',
+    Cnab240CaixaBoletoNossoNumeroField,
+    'caixa/cnab240/caixa_cnab_240.txt',
+    'P',
+    '14000000000000001'
+  ],
+  [
+    'Itaú CNAB240',
+    Cnab240ItauBoletoNossoNumeroField,
+    'itau/cnab240/itau_cnab_240.txt',
+    'P',
+    '109000000010'
+  ],
+  [
+    'Santander CNAB240',
+    Cnab240SantanderBoletoNossoNumeroField,
+    'santander/cnab240/santander_cnab_240.txt',
+    'P',
+    '0000000000019'
+  ],
+  [
+    'Sicoob CNAB240 (classe base)',
+    Cnab240BoletoNossoNumeroField,
+    'sicoob/cnab240/sicoob_cnab_240.txt',
+    'P',
+    '000000000001013'
+  ],
+  [
+    'Sicredi CNAB240',
+    Cnab240SicrediBoletoNossoNumeroField,
+    'sicredi/cnab240/sicredi_cnab_240.txt',
+    'P',
+    '262000010'
   ]
 ]
 
