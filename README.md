@@ -74,11 +74,13 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos extras da lib
 
-| Chave               | Descrição                   | Tipo       | Constante              |
-| ------------------- | --------------------------- | ---------- | ---------------------- |
-| `emails_do_sacado`  | E-mails do sacado           | `string[]` | `CNAB_EMAIL_FIELDS`    |
-| `ddd_do_sacado`     | DDD do celular do sacado    | `string`   | `CNAB_TELEFONE_FIELDS` |
-| `celular_do_sacado` | Número do celular do sacado | `string`   | `CNAB_TELEFONE_FIELDS` |
+| Chave               | Descrição                                                      | Tipo       | Constante                    |
+| ------------------- | -------------------------------------------------------------- | ---------- | ---------------------------- |
+| `emails_do_sacado`  | E-mails do sacado                                              | `string[]` | `CNAB_EMAIL_FIELDS`          |
+| `ddd_do_sacado`     | DDD do celular do sacado                                       | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `celular_do_sacado` | Número do celular do sacado                                    | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `seu_numero`        | Número do documento cobrado, como a nota fiscal ou a duplicata | `string`   | `CNAB_SEU_NUMERO_FIELDS`     |
+| `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
 
 Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
@@ -105,6 +107,24 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 | Caixa           | CNAB 240 |   ⚠️   |      ⚠️       |
 | Caixa           | CNAB 400 |   ⚠️   |      ⚠️       |
 | Itaú            | CNAB 400 |   ⚠️   |      ❌       |
+
+#### Seu Número e Uso da Empresa
+
+O Seu Número e o Uso da Empresa ligam o boleto ao sistema de quem o emitiu. Eles não fazem parte da leitura padrão: para lê-los, passe uma das constantes como campos extras.
+
+```ts
+import { CNAB_IDENTIFICATION_FIELDS } from '@fx55/cnab-lib-ts'
+
+const cnab = cnabFile.read(CNAB_IDENTIFICATION_FIELDS)
+```
+
+- `CNAB_IDENTIFICATION_FIELDS`: Seu Número e Uso da Empresa;
+- `CNAB_SEU_NUMERO_FIELDS`: só o Seu Número;
+- `CNAB_USO_DA_EMPRESA_FIELDS`: só o Uso da Empresa.
+
+Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os valores vêm como estão no arquivo, sem validação de formato.
+
+O Seu Número identifica o documento, não o boleto: as parcelas de uma mesma nota costumam ter o mesmo Seu Número. Para identificar um boleto, use o Nosso Número ou, se o sistema que gerou a remessa preenche com um valor único, o Uso da Empresa.
 
 ## Instalação
 
