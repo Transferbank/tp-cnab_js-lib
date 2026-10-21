@@ -29,25 +29,25 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 Os campos do boleto são de dois tipos:
 
-- **Canônicos:** lidos por padrão em toda leitura, sem nada a mais.Verificar o catálogo em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+- **Canônicos:** lidos por padrão em toda leitura. Verificar o catálogo em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
 - **Extras:** lidos só quando passados em `validate` e `read`, no parâmetro `extraFields`. A lib oferece constantes prontas com campos extras, e quem usa a lib também pode escrever os seus (veja [Campos extras](#campos-extras)).
 
 Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
 
 ### Campos canônicos
 
-| Chave                 | Descrição                       | Tipo     | Opcional                 |
-| --------------------- | ------------------------------- | -------- | ------------------------ |
-| `nome_do_sacado`      | Nome do sacado                  | `string` | Não                      |
-| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado  | `string` | Não                      |
-| `data_de_vencimento`  | Data de vencimento              | `Date`   | Não                      |
-| `valor_do_titulo`     | Valor do título, em reais       | `number` | Não                      |
-| `endereco_do_sacado`  | Endereço do sacado              | `string` | Só na Caixa CNAB 240     |
-| `bairro_do_sacado`    | Bairro do sacado                | `string` | Só na Caixa CNAB 240     |
-| `cep_do_sacado`       | CEP do sacado                   | `string` | Só na Caixa CNAB 240     |
-| `cidade_do_sacado`    | Cidade do sacado                | `string` | Só na Caixa CNAB 240     |
-| `uf_do_sacado`        | UF do sacado                    | `string` | Só na Caixa CNAB 240     |
-| `nosso_numero`        | Número do boleto no banco       | `string` | Sim, em todos os layouts |
+| Chave                 | Descrição                      | Tipo     | Opcional          |
+| --------------------- | ------------------------------ | -------- | ----------------- |
+| `nome_do_sacado`      | Nome do sacado                 | `string` | Não               |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string` | Não               |
+| `data_de_vencimento`  | Data de vencimento             | `Date`   | Não               |
+| `valor_do_titulo`     | Valor do título, em reais      | `number` | Não               |
+| `endereco_do_sacado`  | Endereço do sacado             | `string` | Em Caixa CNAB 240 |
+| `bairro_do_sacado`    | Bairro do sacado               | `string` | Em Caixa CNAB 240 |
+| `cep_do_sacado`       | CEP do sacado                  | `string` | Em Caixa CNAB 240 |
+| `cidade_do_sacado`    | Cidade do sacado               | `string` | Em Caixa CNAB 240 |
+| `uf_do_sacado`        | UF do sacado                   | `string` | Em Caixa CNAB 240 |
+| `nosso_numero`        | Número do boleto no banco      | `string` | Sim               |
 
 Por padrão, um campo canônico vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se ele pode vir vazio. Alguns campos canônicos, porém, são **opcionais**: podem vir vazios sem erro, e nesse caso o valor é nulo e o campo não aparece em `fields`. Os campos canônicos opcionais são:
 
