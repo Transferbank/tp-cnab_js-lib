@@ -4,6 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { SeuNumeroBoletoField } from '@cnab/field/cnab240/seu-numero-boleto-field'
+import { SeuNumeroBoletoField as BancoDoBrasilSeuNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/seu-numero-boleto-field'
 
 const cases: FieldTestCase[] = [
   [
@@ -12,6 +13,13 @@ const cases: FieldTestCase[] = [
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'P',
     'XX10001-01'
+  ],
+  [
+    'Banco do Brasil CNAB240',
+    BancoDoBrasilSeuNumeroBoletoField,
+    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'P',
+    'NF00012345'
   ]
 ]
 
