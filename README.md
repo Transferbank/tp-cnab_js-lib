@@ -49,7 +49,12 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `uf_do_sacado`        | UF do sacado                    | `string` | Só na Caixa CNAB 240     |
 | `nosso_numero`        | Número do boleto no banco       | `string` | Sim, em todos os layouts |
 
-Um campo opcional pode vir vazio sem erro de validação: o valor dele é nulo, e o campo não aparece em `fields`. Os outros, quando vêm vazios, são erro. Os motivos estão em [Campos obrigatórios e opcionais](#campos-obrigatórios-e-opcionais).
+Por padrão, um campo canônico vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se ele pode vir vazio. Alguns campos canônicos, porém, são **opcionais**: podem vir vazios sem erro, e nesse caso o valor é nulo e o campo não aparece em `fields`. Os campos canônicos opcionais são:
+
+| Layout           | Campos                             | Quando podem vir vazios                                                                             |
+| ---------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Caixa CNAB 240   | Endereço, bairro, CEP, cidade e UF | Quando a emissão e a entrega do boleto são feitas pelo beneficiário (notas G032 a G036 do manual)   |
+| Todos os layouts | Nosso Número                       | Quando o banco é quem numera o boleto: vem zerado ou em branco (veja [Nosso Número](#nosso-número)) |
 
 #### Campos que o layout não tem
 
@@ -60,15 +65,6 @@ Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é li
 | Bradesco CNAB 400 | bairro, cidade e UF         |
 | Sicredi CNAB 240  | bairro                      |
 | Sicredi CNAB 400  | bairro, cidade e UF         |
-
-#### Campos obrigatórios e opcionais
-
-Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se o campo é obrigatório.
-
-A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
-
-- Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
-- Todos os layouts: Nosso Número, que vem zerado ou em branco quando o banco é quem numera o boleto (veja [Nosso Número](#nosso-número))
 
 #### Nosso Número
 
