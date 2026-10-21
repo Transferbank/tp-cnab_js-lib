@@ -51,14 +51,14 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 Por padrão, um campo canônico vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se ele pode vir vazio. Alguns campos canônicos, porém, são **opcionais**: podem vir vazios sem erro, e nesse caso o valor é nulo e o campo não aparece em `fields`. Os campos canônicos opcionais são:
 
-| Campo                | Layouts        | Pode vir vazio quando                                    | 
-| -------------------- | -------------- | -------------------------------------------------------- | ----------------------------- |
-| `nosso_numero`       | Todos          | O banco é quem numera o boleto (vem zerado ou em branco) |
-| `endereco_do_sacado` | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  |
-| `bairro_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | 
-| `cep_do_sacado`      | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  |
-| `cidade_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | 
-| `uf_do_sacado`       | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  |
+| Campo                | Layouts        |
+| -------------------- | -------------- |
+| `nosso_numero`       | Todos          |
+| `endereco_do_sacado` | Caixa CNAB 240 |
+| `bairro_do_sacado`   | Caixa CNAB 240 |
+| `cep_do_sacado`      | Caixa CNAB 240 |
+| `cidade_do_sacado`   | Caixa CNAB 240 |
+| `uf_do_sacado`       | Caixa CNAB 240 |
 
 #### Campos que o layout não tem
 
@@ -72,7 +72,7 @@ Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é li
 
 #### Nosso Número
 
-O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão de todos os layouts e aparece em `fields` como `nosso_numero`, sem nada a mais. O valor vem como está no arquivo, sem validação de formato.
+O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão de todos os layouts e aparece em `fields` como `nosso_numero`.
 
 Quando o banco é quem numera o boleto, o Nosso Número vem zerado ou em branco na remessa, e o número só é definido depois, pelo banco. Nos dois casos ele é lido como ausente: não é erro de validação e não aparece em `fields`.
 
