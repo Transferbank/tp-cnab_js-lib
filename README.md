@@ -74,13 +74,14 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos extras da lib
 
-| Chave               | Descrição                                                      | Tipo       | Constante                    |
-| ------------------- | -------------------------------------------------------------- | ---------- | ---------------------------- |
-| `emails_do_sacado`  | E-mails do sacado                                              | `string[]` | `CNAB_EMAIL_FIELDS`          |
-| `ddd_do_sacado`     | DDD do celular do sacado                                       | `string`   | `CNAB_TELEFONE_FIELDS`       |
-| `celular_do_sacado` | Número do celular do sacado                                    | `string`   | `CNAB_TELEFONE_FIELDS`       |
-| `seu_numero`        | Número do documento cobrado, como a nota fiscal ou a duplicata | `string`   | `CNAB_SEU_NUMERO_FIELDS`     |
-| `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
+| Chave               | Descrição                                                        | Tipo       | Constante                    |
+| ------------------- | ---------------------------------------------------------------- | ---------- | ---------------------------- |
+| `emails_do_sacado`  | E-mails do sacado                                                | `string[]` | `CNAB_EMAIL_FIELDS`          |
+| `ddd_do_sacado`     | DDD do celular do sacado                                         | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `celular_do_sacado` | Número do celular do sacado                                      | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `seu_numero`        | Número do documento cobrado, como a nota fiscal ou a duplicata   | `string`   | `CNAB_SEU_NUMERO_FIELDS`     |
+| `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema   | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
+| `parcela`           | Parcela e total, lidos do fim do Uso da Empresa ou do Seu Número | `string`   | `CNAB_PARCELA_FIELDS`        |
 
 Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
@@ -125,6 +126,31 @@ const cnab = cnabFile.read(CNAB_IDENTIFICATION_FIELDS)
 Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os valores vêm como estão no arquivo, sem validação de formato.
 
 O Seu Número identifica o documento, não o boleto: as parcelas de uma mesma nota costumam ter o mesmo Seu Número. Para identificar um boleto, use o Nosso Número ou, se o sistema que gerou a remessa preenche com um valor único, o Uso da Empresa.
+
+#### Parcela
+
+Nenhum layout CNAB tem um campo de parcela comum a todos os bancos. Quem emite o boleto costuma escrever a parcela no fim do Uso da Empresa ou do Seu Número, separada do número do documento. O campo `parcela` procura esse final nos dois campos, primeiro no Uso da Empresa e depois no Seu Número.
+
+```ts
+import { CNAB_PARCELA_FIELDS } from '@fx55/cnab-lib-ts'
+
+const cnab = cnabFile.read(CNAB_PARCELA_FIELDS)
+```
+
+Os formatos reconhecidos são testados do mais completo para o mais simples, para que um formato simples não leia só parte de um mais completo:
+
+| Formato no fim do campo | Exemplo        | `parcela` |
+| ----------------------- | -------------- | --------- |
+| Espaço, `N/T`           | `12345 1/3`    | `1/3`     |
+| Traço, `N/T`            | `123456-1/3`   | `1/3`     |
+| Traço, `N`, espaço, `T` | `123456-2 5`   | `2/5`     |
+| Traço, `N`              | `XX12345-01`   | `1`       |
+| Ponto, `N`              | `12.345678.01` | `1`       |
+| Barra, `N`              | `XX:123/2`     | `2`       |
+
+O valor vem como `parcela/total` quando o campo traz o total, ou só `parcela` quando não traz, sem zeros à esquerda. Quando nenhum formato é encontrado nos dois campos, `parcela` não aparece em `fields`.
+
+A parcela é uma interpretação do texto que quem emitiu o boleto escreveu, e não um dado do banco. Um documento que termina com traço e número, como `NF-123`, é lido como parcela `123`. Para identificar a parcela com segurança, guarde a relação entre o Nosso Número e a parcela no sistema que gera a remessa.
 
 ## Instalação
 
