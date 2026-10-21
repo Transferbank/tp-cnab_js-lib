@@ -27,22 +27,31 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 ## Campos de boleto
 
+Os campos do boleto são de dois tipos:
+
+- **Canônicos:** lidos em toda leitura, sem nada a mais. Cada banco e formato declara os seus no catálogo, em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+- **Extras:** lidos só quando passados em `validate` e `read`, no parâmetro `extraFields`. A lib oferece constantes prontas com campos extras, e quem usa a lib também pode escrever os seus (veja [Campos extras](#campos-extras)).
+
 Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
 
-| Chave                 | Descrição                       | Tipo     |
-| --------------------- | ------------------------------- | -------- |
-| `nome_do_sacado`      | Nome do sacado                  | `string` |
-| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado  | `string` |
-| `data_de_vencimento`  | Data de vencimento              | `Date`   |
-| `valor_do_titulo`     | Valor do título, em reais       | `number` |
-| `endereco_do_sacado`  | Endereço do sacado              | `string` |
-| `bairro_do_sacado`    | Bairro do sacado                | `string` |
-| `cep_do_sacado`       | CEP do sacado                   | `string` |
-| `cidade_do_sacado`    | Cidade do sacado                | `string` |
-| `uf_do_sacado`        | UF do sacado                    | `string` |
-| `nosso_numero`        | Número do boleto no banco       | `string` |
+### Campos canônicos
 
-### Campos que o layout não tem
+| Chave                 | Descrição                       | Tipo     | Opcional                 |
+| --------------------- | ------------------------------- | -------- | ------------------------ |
+| `nome_do_sacado`      | Nome do sacado                  | `string` | Não                      |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado  | `string` | Não                      |
+| `data_de_vencimento`  | Data de vencimento              | `Date`   | Não                      |
+| `valor_do_titulo`     | Valor do título, em reais       | `number` | Não                      |
+| `endereco_do_sacado`  | Endereço do sacado              | `string` | Só na Caixa CNAB 240     |
+| `bairro_do_sacado`    | Bairro do sacado                | `string` | Só na Caixa CNAB 240     |
+| `cep_do_sacado`       | CEP do sacado                   | `string` | Só na Caixa CNAB 240     |
+| `cidade_do_sacado`    | Cidade do sacado                | `string` | Só na Caixa CNAB 240     |
+| `uf_do_sacado`        | UF do sacado                    | `string` | Só na Caixa CNAB 240     |
+| `nosso_numero`        | Número do boleto no banco       | `string` | Sim, em todos os layouts |
+
+Um campo opcional pode vir vazio sem erro de validação; os outros, quando vêm vazios, são erro. Os motivos estão em [Campos obrigatórios e opcionais](#campos-obrigatórios-e-opcionais).
+
+#### Campos que o layout não tem
 
 Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é lido e não aparece em `fields`:
 
@@ -52,18 +61,32 @@ Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é li
 | Sicredi CNAB 240  | bairro                      |
 | Sicredi CNAB 400  | bairro, cidade e UF         |
 
-Os campos lidos em cada banco e formato estão declarados em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
-
-### Campos obrigatórios e opcionais
+#### Campos obrigatórios e opcionais
 
 Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se o campo é obrigatório.
 
 A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
 
 - Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
-- Todos os layouts: Nosso Número, que vem em branco quando o banco é quem numera o boleto (veja [Nosso Número](#nosso-número))
+- Todos os layouts: Nosso Número, que vem zerado ou em branco quando o banco é quem numera o boleto (veja [Nosso Número](#nosso-número))
 
-### Campos de contato
+#### Nosso Número
+
+O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão de todos os layouts e aparece em `fields` como `nosso_numero`, sem nada a mais. O valor vem como está no arquivo, sem validação de formato.
+
+Quando o banco é quem numera o boleto, o Nosso Número vem zerado ou em branco na remessa, e o número só é definido depois, pelo banco. Nos dois casos ele é lido como ausente: não é erro de validação e não aparece em `fields`.
+
+### Campos extras da lib
+
+| Chave               | Descrição                   | Tipo       | Constante              |
+| ------------------- | --------------------------- | ---------- | ---------------------- |
+| `emails_do_sacado`  | E-mails do sacado           | `string[]` | `CNAB_EMAIL_FIELDS`    |
+| `ddd_do_sacado`     | DDD do celular do sacado    | `string`   | `CNAB_TELEFONE_FIELDS` |
+| `celular_do_sacado` | Número do celular do sacado | `string`   | `CNAB_TELEFONE_FIELDS` |
+
+Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+
+#### Campos de contato
 
 Os campos de contato do pagador não fazem parte dos campos lidos por padrão. Para lê-los, passe as constantes como campos extras:
 
@@ -76,7 +99,7 @@ const cnab = cnabFile.read([...CNAB_EMAIL_FIELDS, ...CNAB_TELEFONE_FIELDS])
 - `CNAB_EMAIL_FIELDS`: e-mail do pagador;
 - `CNAB_TELEFONE_FIELDS`: DDD e celular do pagador.
 
-Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos de contato são **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato:
 
 | Banco           | Formato  | E-mail | DDD e celular |
 | --------------- | :------: | :----: | :-----------: |
@@ -86,18 +109,6 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 | Caixa           | CNAB 240 |   ✅   |      ✅       |
 | Caixa           | CNAB 400 |   ✅   |      ✅       |
 | Itaú            | CNAB 400 |   ✅   |               |
-
-| Chave               | Descrição                   | Tipo       |
-| ------------------- | --------------------------- | ---------- |
-| `emails_do_sacado`  | E-mails do sacado           | `string[]` |
-| `ddd_do_sacado`     | DDD do celular do sacado    | `string`   |
-| `celular_do_sacado` | Número do celular do sacado | `string`   |
-
-### Nosso Número
-
-O Nosso Número é o número que identifica o boleto no banco. Sai impresso no boleto e no código de barras. Ele faz parte da leitura padrão de todos os layouts e aparece em `fields` como `nosso_numero`, sem nada a mais. O valor vem como está no arquivo, sem validação de formato.
-
-Quando o banco é quem numera o boleto, o Nosso Número vem zerado ou em branco na remessa, e o número só é definido depois, pelo banco. Zerado, ele é devolvido como está; em branco, não é erro de validação e só não aparece em `fields`.
 
 ## Instalação
 
