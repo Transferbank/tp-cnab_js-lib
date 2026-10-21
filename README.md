@@ -51,10 +51,14 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 Por padrão, um campo canônico vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se ele pode vir vazio. Alguns campos canônicos, porém, são **opcionais**: podem vir vazios sem erro, e nesse caso o valor é nulo e o campo não aparece em `fields`. Os campos canônicos opcionais são:
 
-| Layout           | Campos                             | Quando podem vir vazios                                                                             |
-| ---------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Caixa CNAB 240   | Endereço, bairro, CEP, cidade e UF | Quando a emissão e a entrega do boleto são feitas pelo beneficiário (notas G032 a G036 do manual)   |
-| Todos os layouts | Nosso Número                       | Quando o banco é quem numera o boleto: vem zerado ou em branco (veja [Nosso Número](#nosso-número)) |
+| Campo                | Layouts        | Pode vir vazio quando                                    | Fonte                         |
+| -------------------- | -------------- | -------------------------------------------------------- | ----------------------------- |
+| `nosso_numero`       | Todos          | O banco é quem numera o boleto (vem zerado ou em branco) | [Nosso Número](#nosso-número) |
+| `endereco_do_sacado` | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G032 do manual           |
+| `bairro_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G032 do manual           |
+| `cep_do_sacado`      | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Notas G034 e G035 do manual   |
+| `cidade_do_sacado`   | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G033 do manual           |
+| `uf_do_sacado`       | Caixa CNAB 240 | O beneficiário emite e entrega o boleto                  | Nota G036 do manual           |
 
 #### Campos que o layout não tem
 
