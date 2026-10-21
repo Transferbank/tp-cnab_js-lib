@@ -2,18 +2,13 @@ import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { getFieldRange, readExampleLines, replaceLineRange, resPath, findFirstCnab400RecordLine } from '@test/test-utils'
-import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { Cnab400BoletoParcelaField } from '@cnab/field/cnab400/boleto-parcela-field'
 import { Cnab400BoletoTotalDeParcelasField } from '@cnab/field/cnab400/boleto-total-de-parcelas-field'
 import { Cnab400BoletoSeuNumeroField } from '@cnab/field/cnab400/boleto-seu-numero-field'
 import { Cnab400BoletoUsoDaEmpresaField } from '@cnab/field/cnab400/boleto-uso-da-empresa-field'
 
-class SeuNumeroRegistro5Field extends Cnab400BoletoSeuNumeroField {
-  protected readonly recordType: string = '5'
-}
-
-class ParcelaComSeuNumeroDoRegistro5Field extends Cnab400BoletoParcelaField {
-  protected readonly sourceFields: CnabFieldClass<string>[] = [Cnab400BoletoUsoDaEmpresaField, SeuNumeroRegistro5Field]
+class ParcelaSemUsoDaEmpresaField extends Cnab400BoletoParcelaField {
+  protected readonly usoDaEmpresaRange: [number, number] | null = null
 }
 
 const lines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
@@ -64,16 +59,15 @@ describe('Cnab400BoletoParcelaField', (): void => {
     })
   })
 
-  it('given a source field from another record when reading the detail record then ignores it', (): void => {
+  it('given a layout without uso da empresa when reading then takes the parcela only from the seu número', (): void => {
     // Given
-    const field = new ParcelaComSeuNumeroDoRegistro5Field(lineWith('123456', '12345 1/3'), 5)
+    const field = new ParcelaSemUsoDaEmpresaField(lineWith('PED1234-2/4', '12345 1/3'), 5)
 
     // When
     const result = field.validate()
 
     // Then
-    expect(field.shouldValidate()).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBeNull()
+    expect(field.value).toBe(1)
   })
 })

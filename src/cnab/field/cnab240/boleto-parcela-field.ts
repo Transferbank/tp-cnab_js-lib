@@ -1,32 +1,29 @@
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { Parcela, findParcela } from '@cnab/utils/parcela-parser'
 import { isDigitsOnly } from '@cnab/utils/value-parser'
-import { Cnab240BoletoSeuNumeroField } from '@cnab/field/cnab240/boleto-seu-numero-field'
-import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/boleto-uso-da-empresa-field'
 
 export class Cnab240BoletoParcelaField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey: string = 'parcela'
-  protected readonly sourceFields: CnabFieldClass<string>[] = [
-    Cnab240BoletoUsoDaEmpresaField,
-    Cnab240BoletoSeuNumeroField
-  ]
+  protected readonly usoDaEmpresaRange: [number, number] | null = [196, 220]
+  protected readonly seuNumeroRange: [number, number] = [63, 77]
 
   get range(): [number, number] {
-    return this.sources()[0].range
+    return this.usoDaEmpresaRange ?? this.seuNumeroRange
   }
 
   shouldValidate(): boolean {
-    return this.sources()[0].shouldValidate()
+    return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
   }
 
   protected extractRawValue(): string {
-    for (const source of this.sources()) {
-      if (!source.shouldValidate()) continue
-      const found = source.value == null ? null : findParcela(source.value)
+    for (const range of [this.usoDaEmpresaRange, this.seuNumeroRange]) {
+      if (range == null) continue
+      const found = findParcela(this.extractRangeFromLine(range[0] - 1, range[1]))
       if (found != null) return this.pick(found)?.toString() ?? ''
     }
     return ''
@@ -45,9 +42,5 @@ export class Cnab240BoletoParcelaField extends CnabField<number> {
       throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
     return parseInt(rawValue, 10)
-  }
-
-  private sources(): CnabField<string>[] {
-    return this.sourceFields.map((SourceField: CnabFieldClass<string>) => new SourceField(this.rawLine, this.lineNumber))
   }
 }
