@@ -36,18 +36,18 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos canônicos
 
-| Chave                 | Descrição                                           | Tipo     |
-| --------------------- | --------------------------------------------------- | -------- |
-| `nome_do_sacado`      | Nome do sacado                                      | `string` |
-| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado                      | `string` |
-| `data_de_vencimento`  | Data de vencimento                                  | `Date`   |
-| `valor_do_titulo`     | Valor do título, em reais                           | `number` |
-| `endereco_do_sacado`  | Endereço do sacado                                  | `string` |
-| `bairro_do_sacado`    | Bairro do sacado                                    | `string` |
-| `cep_do_sacado`       | CEP do sacado                                       | `string` |
-| `cidade_do_sacado`    | Cidade do sacado                                    | `string` |
-| `uf_do_sacado`        | UF do sacado                                        | `string` |
-| `nosso_numero`        | Número do boleto no banco; vazio ou zerado vem nulo | `string` |
+| Chave                 | Descrição                      | Tipo     |
+| --------------------- | ------------------------------ | -------- |
+| `nome_do_sacado`      | Nome do sacado                 | `string` |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string` |
+| `data_de_vencimento`  | Data de vencimento             | `Date`   |
+| `valor_do_titulo`     | Valor do título, em reais      | `number` |
+| `endereco_do_sacado`  | Endereço do sacado             | `string` |
+| `bairro_do_sacado`    | Bairro do sacado               | `string` |
+| `cep_do_sacado`       | CEP do sacado                  | `string` |
+| `cidade_do_sacado`    | Cidade do sacado               | `string` |
+| `uf_do_sacado`        | UF do sacado                   | `string` |
+| `nosso_numero`        | Número do boleto no banco      | `string` |
 
 #### Campos por banco e formato
 
