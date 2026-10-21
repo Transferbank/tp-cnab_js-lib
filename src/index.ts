@@ -44,3 +44,4 @@ export {
   CNAB_SEU_NUMERO_FIELDS,
   CNAB_USO_DA_EMPRESA_FIELDS
 } from '@cnab/bank/cnab-identification-fields'
+export { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
