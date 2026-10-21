@@ -3,6 +3,7 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { getFieldRange, readExampleLines, replaceLineRange, resPath, findFirstCnab240SegmentLine } from '@test/test-utils'
 import { Cnab240BoletoParcelaField } from '@cnab/field/cnab240/boleto-parcela-field'
+import { Cnab240BoletoTotalDeParcelasField } from '@cnab/field/cnab240/boleto-total-de-parcelas-field'
 import { Cnab240BoletoSeuNumeroField } from '@cnab/field/cnab240/boleto-seu-numero-field'
 import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/boleto-uso-da-empresa-field'
 
@@ -32,21 +33,25 @@ describe('Cnab240BoletoParcelaField', (): void => {
   })
 
   describe.each([
-    { usoDaEmpresa: '12.345678.01', seuNumero: 'XX123456-0', expected: '1', description: 'parcela in both fields, taken from the uso da empresa' },
-    { usoDaEmpresa: '1234567890', seuNumero: '12345 1/3', expected: '1/3', description: 'parcela only in the seu número' },
-    { usoDaEmpresa: '123456', seuNumero: '123456', expected: null, description: 'no parcela in either field' }
-  ])('given $description', ({ usoDaEmpresa, seuNumero, expected }): void => {
-    it('when reading then returns the parcela found', (): void => {
+    { usoDaEmpresa: 'PED1234-2/4', seuNumero: 'XX12345-01', expectedParcela: 2, expectedTotal: 4, description: 'parcela and total in the uso da empresa' },
+    { usoDaEmpresa: '12.345678.01', seuNumero: 'XX123456-0', expectedParcela: 1, expectedTotal: null, description: 'parcela in both fields, taken from the uso da empresa' },
+    { usoDaEmpresa: 'XX12345-01', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: null, description: 'total only in the seu número, not mixed with the uso da empresa parcela' },
+    { usoDaEmpresa: '1234567890', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: 3, description: 'parcela and total only in the seu número' },
+    { usoDaEmpresa: '123456', seuNumero: '123456', expectedParcela: null, expectedTotal: null, description: 'no parcela in either field' }
+  ])('given $description', ({ usoDaEmpresa, seuNumero, expectedParcela, expectedTotal }): void => {
+    it('when reading then returns the parcela and the total as numbers', (): void => {
       // Given
-      const field = new Cnab240BoletoParcelaField(lineWith(usoDaEmpresa, seuNumero), 5)
+      const line = lineWith(usoDaEmpresa, seuNumero)
+      const parcela = new Cnab240BoletoParcelaField(line, 5)
+      const total = new Cnab240BoletoTotalDeParcelasField(line, 5)
 
       // When
-      const result = field.validate()
+      const results = [parcela.validate(), total.validate()]
 
       // Then
-      expect(field.shouldValidate()).toBe(true)
-      expect(result).toEqual({ isValid: true, errors: [] })
-      expect(field.value).toBe(expected)
+      expect(results).toEqual([{ isValid: true, errors: [] }, { isValid: true, errors: [] }])
+      expect(parcela.value).toBe(expectedParcela)
+      expect(total.value).toBe(expectedTotal)
     })
   })
 })
