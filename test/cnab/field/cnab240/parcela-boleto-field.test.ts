@@ -2,10 +2,10 @@ import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { getFieldRange, readExampleLines, replaceLineRange, resPath, findFirstCnab240SegmentLine } from '@test/test-utils'
-import { Cnab240BoletoParcelaField } from '@cnab/field/cnab240/parcela-boleto-field'
-import { Cnab240BoletoTotalDeParcelasField } from '@cnab/field/cnab240/total-de-parcelas-boleto-field'
-import { Cnab240BoletoSeuNumeroField } from '@cnab/field/cnab240/seu-numero-boleto-field'
-import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/uso-da-empresa-boleto-field'
+import { ParcelaBoletoField } from '@cnab/field/cnab240/parcela-boleto-field'
+import { TotalDeParcelasBoletoField } from '@cnab/field/cnab240/total-de-parcelas-boleto-field'
+import { SeuNumeroBoletoField } from '@cnab/field/cnab240/seu-numero-boleto-field'
+import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab240/uso-da-empresa-boleto-field'
 
 const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
 
@@ -13,20 +13,20 @@ function lineWith(usoDaEmpresa: string, seuNumero: string): string {
   const line = findFirstCnab240SegmentLine(lines, 'P')
   assert(line != null, 'Linha do boleto não encontrada')
   return replaceLineRange(
-    replaceLineRange(line, getFieldRange(Cnab240BoletoUsoDaEmpresaField), usoDaEmpresa),
-    getFieldRange(Cnab240BoletoSeuNumeroField),
+    replaceLineRange(line, getFieldRange(UsoDaEmpresaBoletoField), usoDaEmpresa),
+    getFieldRange(SeuNumeroBoletoField),
     seuNumero
   )
 }
 
-describe('Cnab240BoletoParcelaField', (): void => {
+describe('ParcelaBoletoField', (): void => {
   it('given a line that is not the segment P when checking shouldValidate then returns false', (): void => {
     // Given
     const line = findFirstCnab240SegmentLine(lines, 'Q')
     assert(line != null, 'Linha não encontrada')
 
     // When
-    const shouldValidate = new Cnab240BoletoParcelaField(line, 1).shouldValidate()
+    const shouldValidate = new ParcelaBoletoField(line, 1).shouldValidate()
 
     // Then
     expect(shouldValidate).toBe(false)
@@ -42,8 +42,8 @@ describe('Cnab240BoletoParcelaField', (): void => {
     it('when reading then returns the parcela and the total as numbers', (): void => {
       // Given
       const line = lineWith(usoDaEmpresa, seuNumero)
-      const parcela = new Cnab240BoletoParcelaField(line, 5)
-      const total = new Cnab240BoletoTotalDeParcelasField(line, 5)
+      const parcela = new ParcelaBoletoField(line, 5)
+      const total = new TotalDeParcelasBoletoField(line, 5)
 
       // When
       const results = [parcela.validate(), total.validate()]

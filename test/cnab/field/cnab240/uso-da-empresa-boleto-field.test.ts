@@ -3,12 +3,12 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
-import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/uso-da-empresa-boleto-field'
+import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab240/uso-da-empresa-boleto-field'
 
 const cases: FieldTestCase[] = [
   [
-    'Cnab240BoletoUsoDaEmpresaField (padrão FEBRABAN, exemplo Bradesco)',
-    Cnab240BoletoUsoDaEmpresaField,
+    'UsoDaEmpresaBoletoField (padrão FEBRABAN, exemplo Bradesco)',
+    UsoDaEmpresaBoletoField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'P',
     '000000000NF0000123'
@@ -40,12 +40,12 @@ describe.each<FieldTestCase>(cases)('%s', (
   })
 })
 
-describe('Cnab240BoletoUsoDaEmpresaField', (): void => {
+describe('UsoDaEmpresaBoletoField', (): void => {
   it('given a uso da empresa filled with zeros when reading then returns null and is valid', (): void => {
     // Given
     const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
     assert(line != null, 'Linha não encontrada')
-    const field = new Cnab240BoletoUsoDaEmpresaField(replaceLineRange(line, getFieldRange(Cnab240BoletoUsoDaEmpresaField), '0000000000000000000000000'), 5)
+    const field = new UsoDaEmpresaBoletoField(replaceLineRange(line, getFieldRange(UsoDaEmpresaBoletoField), '0000000000000000000000000'), 5)
 
     // When
     const result = field.validate()
