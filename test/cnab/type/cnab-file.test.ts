@@ -437,21 +437,21 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', true],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', true],
-    ['bradesco/cnab240/bradesco_cnab_240.txt', true],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', true],
-    ['caixa/cnab240/caixa_cnab_240.txt', true],
-    ['caixa/cnab400/caixa_cnab_400.REM', true],
-    ['itau/cnab240/itau_cnab_240.txt', true],
-    ['itau/cnab400/ITAU_cnab_400.REM', true],
-    ['santander/cnab240/santander_cnab_240.txt', true],
-    ['santander/cnab400/santander_cnab_400.REM', true],
-    ['sicoob/cnab240/sicoob_cnab_240.txt', true],
-    ['sicoob/cnab400/sicoob_cnab_400.REM', false],
-    ['sicredi/cnab240/sicredi_cnab_240.txt', true],
-    ['sicredi/cnab400/sicredi_cnab_400.REM', true]
-  ])('given document file %s when reading then every boleto has the nosso número only if the file fills it', (examplePath: string, expectedNossoNumero: boolean): void => {
+    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'bradesco/cnab400/bradesco_cnab_400.txt',
+    'caixa/cnab240/caixa_cnab_240.txt',
+    'caixa/cnab400/caixa_cnab_400.REM',
+    'itau/cnab240/itau_cnab_240.txt',
+    'itau/cnab400/ITAU_cnab_400.REM',
+    'santander/cnab240/santander_cnab_240.txt',
+    'santander/cnab400/santander_cnab_400.REM',
+    'sicoob/cnab240/sicoob_cnab_240.txt',
+    'sicoob/cnab400/sicoob_cnab_400.REM',
+    'sicredi/cnab240/sicredi_cnab_240.txt',
+    'sicredi/cnab400/sicredi_cnab_400.REM'
+  ])('given document file %s when reading then every boleto has the nosso número', (examplePath: string): void => {
     // Given
     const cnabFile = openExample(examplePath)
 
@@ -463,7 +463,7 @@ describe('cnab-file', (): void => {
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(boletos.length).toBeGreaterThan(0)
     for (const boleto of boletos) {
-      expect('nosso_numero' in boleto.fields).toBe(expectedNossoNumero)
+      expect(boleto.fields).toHaveProperty('nosso_numero')
     }
   })
 })

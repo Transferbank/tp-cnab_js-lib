@@ -47,6 +47,13 @@ const cases: FieldTestCase[] = [
     '30074134'
   ],
   [
+    'Sicoob CNAB400',
+    Cnab400SicoobBoletoNossoNumeroField,
+    'sicoob/cnab400/sicoob_cnab_400.REM',
+    '1',
+    '000000010011'
+  ],
+  [
     'Sicredi CNAB400',
     Cnab400SicrediBoletoNossoNumeroField,
     'sicredi/cnab400/sicredi_cnab_400.REM',
@@ -93,19 +100,5 @@ describe('Cnab400BoletoNossoNumeroField', (): void => {
     // Then
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBeNull()
-  })
-
-  it('given a Sicoob nosso número in positions 63 to 74 when reading then returns it as written', (): void => {
-    // Given
-    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'sicoob/cnab400/sicoob_cnab_400.REM')), '1')
-    assert(line != null, 'Linha não encontrada')
-    const field = new Cnab400SicoobBoletoNossoNumeroField(replaceLineRange(line, getFieldRange(Cnab400SicoobBoletoNossoNumeroField), '000000012345'), 5)
-
-    // When
-    const result = field.validate()
-
-    // Then
-    expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe('000000012345')
   })
 })
