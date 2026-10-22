@@ -483,8 +483,20 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined]
-  ])('given document file %s when reading with the identification and parcela fields then reads them from the boleto', (examplePath: string, expectedSeuNumero: string, expectedUsoDaEmpresa: string, expectedParcela: number, expectedTotal: number | undefined): void => {
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 'XX10001-01', '10.010001.01', 1, undefined],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', 'NF82760-03', '25.159185.03', 3, undefined],
+    ['caixa/cnab240/caixa_cnab_240.txt', 'NF00000001', 'NF00000001', undefined, undefined],
+    ['caixa/cnab400/caixa_cnab_400.REM', '0000150826', 'PED0000001-1/3', 1, 3],
+    ['itau/cnab240/itau_cnab_240.txt', 'NF0000123', '12345 2/6', 2, 6],
+    ['itau/cnab400/ITAU_cnab_400.REM', '10001-1/3', '000000000000000010001-1/3', 1, 3],
+    ['santander/cnab240/santander_cnab_240.txt', 'NF00012345', undefined, undefined, undefined],
+    ['santander/cnab400/santander_cnab_400.REM', '9558.03', '30.9558.03', 3, undefined],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', 'NF00000001', 'PED0000001-1/3', 1, 3],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', 'NF00000001', undefined, undefined, undefined],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', 'NF00000001', undefined, undefined, undefined],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 'NF001-2/4', undefined, 2, 4]
+  ])('given document file %s when reading with the identification and parcela fields then reads them from the boleto', (examplePath: string, expectedSeuNumero: string, expectedUsoDaEmpresa: string | undefined, expectedParcela: number | undefined, expectedTotal: number | undefined): void => {
     // Given
     const cnabFile = openExample(examplePath)
     const extraFields = [...CNAB_IDENTIFICATION_FIELDS, ...CNAB_PARCELA_FIELDS]

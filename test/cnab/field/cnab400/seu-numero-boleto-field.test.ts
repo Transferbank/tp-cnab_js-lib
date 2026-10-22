@@ -6,6 +6,7 @@ import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { SeuNumeroBoletoField } from '@cnab/field/cnab400/seu-numero-boleto-field'
 import { SeuNumeroBoletoField as BancoDoBrasilSeuNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/seu-numero-boleto-field'
 import { SeuNumeroRegistro5BoletoField as BancoDoBrasilSeuNumeroRegistro5BoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/seu-numero-registro-5-boleto-field'
+import { SeuNumeroBoletoField as CaixaSeuNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/seu-numero-boleto-field'
 
 const cases: FieldTestCase[] = [
   [
@@ -28,6 +29,13 @@ const cases: FieldTestCase[] = [
     'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
     '503',
     'XX100037-02'
+  ],
+  [
+    'Caixa CNAB400',
+    CaixaSeuNumeroBoletoField,
+    'caixa/cnab400/caixa_cnab_400.REM',
+    '1',
+    '0000150826'
   ]
 ]
 
