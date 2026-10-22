@@ -1,8 +1,8 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { EmailBoletoField } from '@cnab/field/cnab240/email-boleto-field'
+import { EmailBoletoField as Cnab240EmailBoletoField } from '@cnab/field/cnab240/email-boleto-field'
 
-export class Cnab240BradescoBoletoEmailField extends EmailBoletoField {
+export class EmailBoletoField extends Cnab240EmailBoletoField {
   static readonly bank = CnabBank.BRADESCO
   static readonly format = CnabFormat.CNAB240
 }
