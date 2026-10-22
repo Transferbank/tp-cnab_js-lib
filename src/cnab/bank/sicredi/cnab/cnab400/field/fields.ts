@@ -1,2 +1,5 @@
 export { DocumentoSacadoBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/documento-sacado-boleto-field'
 export { NossoNumeroBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/nosso-numero-boleto-field'
+export { ParcelaBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/parcela-boleto-field'
+export { SeuNumeroBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/seu-numero-boleto-field'
+export { TotalDeParcelasBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/total-de-parcelas-boleto-field'
