@@ -19,7 +19,7 @@ import { DocumentoSacadoBoletoField } from '@cnab/field/cnab400/documento-sacado
 import { DocumentoSacadoBoletoField as BancoDoBrasilDocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/documento-sacado-boleto-field'
 import { DocumentoSacadoBoletoField as SicrediDocumentoSacadoBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/documento-sacado-boleto-field'
 
-type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
+type DocumentoSacadoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
 
 // BB (registro '7' + "00"=Isento) e Sicredi (indicador de 1 char) precisam sobrescrever
 // performValidation, por isso tem subclasse propria em vez de usar a base direto.
@@ -94,7 +94,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
     ])(
       'given detail lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
-        FieldClass: SacadoDocumentoFieldClass
+        FieldClass: DocumentoSacadoFieldClass
         examplePath: string
         expectedFirstDocument: string
       }): void => {
