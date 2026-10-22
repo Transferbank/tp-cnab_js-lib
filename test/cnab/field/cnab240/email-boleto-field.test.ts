@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { Cnab240BoletoEmailField } from '@cnab/field/cnab240/boleto-email-field'
+import { EmailBoletoField } from '@cnab/field/cnab240/email-boleto-field'
 import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import { Cnab240BradescoBoletoEmailField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import {
@@ -43,7 +43,7 @@ describe.each([
   ]
 ])('%s', (
   _: string,
-  EmailField: typeof Cnab240BoletoEmailField,
+  EmailField: typeof EmailBoletoField,
   examplePath: string,
   expectedEmail: string,
   otherBankCode: string

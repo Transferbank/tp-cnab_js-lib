@@ -13,11 +13,11 @@ import {
 } from '@test/test-utils'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BoletoCepField } from '@cnab/field/cnab400/boleto-cep-field'
+import { EnderecoBoletoField } from '@cnab/field/cnab400/endereco-boleto-field'
 
-describe('Cnab400BoletoCepField', (): void => {
+describe('EnderecoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
       const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
@@ -36,7 +36,7 @@ describe('Cnab400BoletoCepField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoCepField()
+          const FieldClass = EnderecoBoletoField()
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -65,7 +65,7 @@ describe('Cnab400BoletoCepField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoCepField('7')
+          const FieldClass = EnderecoBoletoField(275, 314, '7')
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -78,17 +78,25 @@ describe('Cnab400BoletoCepField', (): void => {
     })
   })
 
+  describe('range', (): void => {
+    it('given Sicoob then overrides the base range to a smaller 37-char slice', (): void => {
+      // Then
+      expect(getFieldRange(EnderecoBoletoField(275, 311))).toEqual([275, 311])
+      expect(getFieldRange(EnderecoBoletoField())).toEqual([275, 314])
+    })
+  })
+
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BoletoCepField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: '78285000' },
-      { FieldClass: Cnab400BoletoCepField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: '29045402' },
-      { FieldClass: Cnab400BoletoCepField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: '01310100' },
-      { FieldClass: Cnab400BoletoCepField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: '63540000' },
-      { FieldClass: Cnab400BoletoCepField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: '78520000' },
-      { FieldClass: Cnab400BoletoCepField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: '01310100' },
-      { FieldClass: Cnab400BoletoCepField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: '01310100' }
+      { FieldClass: EnderecoBoletoField(275, 314, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
+      { FieldClass: EnderecoBoletoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: 'AV EXEMPLO 200' },
+      { FieldClass: EnderecoBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
+      { FieldClass: EnderecoBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
+      { FieldClass: EnderecoBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
+      { FieldClass: EnderecoBoletoField(275, 311), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
+      { FieldClass: EnderecoBoletoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: 'RUA DAS PALMEIRAS 45' }
     ])(
-      'given detail lines with valid cep ($examplePath) when reading value and validating then accepts all lines',
+      'given detail lines with valid address ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
         FieldClass: CnabFieldClass<string>
         examplePath: string
@@ -118,9 +126,9 @@ describe('Cnab400BoletoCepField', (): void => {
   describe('validate with error', (): void => {
     const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
 
-    it('given detail line with blank cep when validating then returns null value and field error', (): void => {
+    it('given detail line with blank address when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab400BoletoCepField()
+      const FieldClass = EnderecoBoletoField()
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -142,33 +150,8 @@ describe('Cnab400BoletoCepField', (): void => {
       expect(field.value).toBeNull()
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
-      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
       expect(result.errors[0].lineNumber).toBe(lineNumber)
-    })
-
-    it('given detail line with non-numeric cep when validating then returns field error', (): void => {
-      // Given
-      const FieldClass = Cnab400BoletoCepField()
-      const fieldRange = getFieldRange(FieldClass)
-
-      const lines = readExampleLines(path.join(resPath(), examplePath))
-      const rawLine = findFirstCnab400RecordLine(lines, '1')
-
-      if (rawLine == null) {
-        assert.fail('Linha detalhe não encontrada')
-      }
-
-      const lineNumber = realLineNumber(lines, rawLine)
-      const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGH')
-
-      // When
-      const field = new FieldClass(invalidLine, lineNumber)
-      const result = field.validate()
-
-      // Then
-      expect(invalidLine.length).toBe(rawLine.length)
-      expect(result.isValid).toBe(false)
-      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
     })
   })
 })

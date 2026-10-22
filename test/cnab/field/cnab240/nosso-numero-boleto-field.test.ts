@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
-import { Cnab240BoletoNossoNumeroField } from '@cnab/field/cnab240/boleto-nosso-numero-field'
+import { NossoNumeroBoletoField } from '@cnab/field/cnab240/nosso-numero-boleto-field'
 import { Cnab240CaixaBoletoNossoNumeroField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import { Cnab240ItauBoletoNossoNumeroField } from '@cnab/bank/itau/cnab/cnab240/field/fields'
 import { Cnab240SantanderBoletoNossoNumeroField } from '@cnab/bank/santander/cnab/cnab240/field/fields'
@@ -12,7 +12,7 @@ import { Cnab240SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cn
 const cases: FieldTestCase[] = [
   [
     'Bradesco CNAB240 (classe base)',
-    Cnab240BoletoNossoNumeroField,
+    NossoNumeroBoletoField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'P',
     '00100000000123450010'
@@ -72,12 +72,12 @@ describe.each<FieldTestCase>(cases)('%s', (
   })
 })
 
-describe('Cnab240BoletoNossoNumeroField', (): void => {
+describe('NossoNumeroBoletoField', (): void => {
   it('given a nosso número filled with zeros when reading then returns null and is valid', (): void => {
     // Given
     const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
     assert(line != null, 'Linha não encontrada')
-    const field = new Cnab240BoletoNossoNumeroField(replaceLineRange(line, getFieldRange(Cnab240BoletoNossoNumeroField), '00000000000000000000'), 5)
+    const field = new NossoNumeroBoletoField(replaceLineRange(line, getFieldRange(NossoNumeroBoletoField), '00000000000000000000'), 5)
 
     // When
     const result = field.validate()

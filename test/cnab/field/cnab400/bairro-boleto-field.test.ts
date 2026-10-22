@@ -15,9 +15,9 @@ import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BoletoCidadeField } from '@cnab/field/cnab400/boleto-cidade-field'
+import { BairroBoletoField } from '@cnab/field/cnab400/bairro-boleto-field'
 
-describe('Cnab400BoletoCidadeField', (): void => {
+describe('BairroBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para os bancos com registro de detalhe padrao (comeca com 1)', (): void => {
       const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
@@ -36,7 +36,7 @@ describe('Cnab400BoletoCidadeField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoCidadeField()
+          const FieldClass = BairroBoletoField()
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -65,7 +65,7 @@ describe('Cnab400BoletoCidadeField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoCidadeField('7')
+          const FieldClass = BairroBoletoField(315, 326, '7')
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -78,15 +78,23 @@ describe('Cnab400BoletoCidadeField', (): void => {
     })
   })
 
+  describe('range', (): void => {
+    it('given Sicoob then overrides the base range to compensate for the shorter endereco field', (): void => {
+      // Then
+      expect(getFieldRange(BairroBoletoField(312, 326))).toEqual([312, 326])
+      expect(getFieldRange(BairroBoletoField())).toEqual([315, 326])
+    })
+  })
+
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BoletoCidadeField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'SAO JOSE DOS QU' },
-      { FieldClass: Cnab400BoletoCidadeField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'SAO PAULO' },
-      { FieldClass: Cnab400BoletoCidadeField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'VARZEA ALEGRE' },
-      { FieldClass: Cnab400BoletoCidadeField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'GUARANTA DO NOR' },
-      { FieldClass: Cnab400BoletoCidadeField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'SAO PAULO' }
+      { FieldClass: BairroBoletoField(315, 326, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'JARDIM UNIVE' },
+      { FieldClass: BairroBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField(312, 326), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'CENTRO' }
     ])(
-      'given detail lines with valid city ($examplePath) when reading value and validating then accepts all lines',
+      'given detail lines with valid bairro ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
         FieldClass: CnabFieldClass<string>
         examplePath: string
@@ -116,9 +124,9 @@ describe('Cnab400BoletoCidadeField', (): void => {
   describe('validate with error', (): void => {
     const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
 
-    it('given detail line with blank city when validating then returns null value and field error', (): void => {
+    it('given detail line with blank bairro when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab400BoletoCidadeField()
+      const FieldClass = BairroBoletoField()
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))

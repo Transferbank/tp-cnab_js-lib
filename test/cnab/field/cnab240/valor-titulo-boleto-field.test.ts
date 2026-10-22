@@ -6,13 +6,13 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
-import { Cnab240BoletoValorTituloField } from '@cnab/field/cnab240/boleto-valor-titulo-field'
+import { ValorTituloBoletoField } from '@cnab/field/cnab240/valor-titulo-boleto-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-describe('Cnab240BoletoValorTituloField', (): void => {
+describe('ValorTituloBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
 
@@ -31,7 +31,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BoletoValorTituloField(rawLine, 1)
+        const field = new ValorTituloBoletoField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -60,8 +60,8 @@ describe('Cnab240BoletoValorTituloField', (): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const fields = createFieldsFromLines(
-          filterValidatableLines(lines, Cnab240BoletoValorTituloField),
-          Cnab240BoletoValorTituloField
+          filterValidatableLines(lines, ValorTituloBoletoField),
+          ValorTituloBoletoField
         )
 
         // When
@@ -83,7 +83,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
 
     it('given segment P line with blank amount when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BoletoValorTituloField)
+      const fieldRange = getFieldRange(ValorTituloBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -96,7 +96,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240BoletoValorTituloField(invalidLine, lineNumber)
+      const field = new ValorTituloBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -110,7 +110,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
 
     it('given segment P line with zero amount when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BoletoValorTituloField)
+      const fieldRange = getFieldRange(ValorTituloBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -123,7 +123,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
       // When
-      const field = new Cnab240BoletoValorTituloField(invalidLine, lineNumber)
+      const field = new ValorTituloBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -134,7 +134,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
 
     it('given segment P line with invalid alphanumeric value when reading value then throws error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BoletoValorTituloField)
+      const fieldRange = getFieldRange(ValorTituloBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -147,7 +147,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
 
       // When
-      const field = new Cnab240BoletoValorTituloField(invalidLine, lineNumber)
+      const field = new ValorTituloBoletoField(invalidLine, lineNumber)
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
@@ -157,7 +157,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
     it('given segment P line with digits followed by garbage when reading value then throws error', (): void => {
       // Given: parseInt('00000012345ABCD', 10) retorna 12345 em vez de NaN - sem a
       // checagem de formato, isso passaria como R$123.45 valido.
-      const fieldRange = getFieldRange(Cnab240BoletoValorTituloField)
+      const fieldRange = getFieldRange(ValorTituloBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'P')
@@ -170,7 +170,7 @@ describe('Cnab240BoletoValorTituloField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '00000012345ABCD')
 
       // When
-      const field = new Cnab240BoletoValorTituloField(invalidLine, lineNumber)
+      const field = new ValorTituloBoletoField(invalidLine, lineNumber)
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)

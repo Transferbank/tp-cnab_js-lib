@@ -15,15 +15,15 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BoletoSacadoDocumentoField } from '@cnab/field/cnab400/boleto-sacado-documento-field'
+import { DocumentoSacadoBoletoField } from '@cnab/field/cnab400/documento-sacado-boleto-field'
 import { Cnab400BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-sacado-documento-field'
 import { Cnab400SicrediBoletoSacadoDocumentoField } from '@cnab/bank/sicredi/cnab/cnab400/field/cnab400-sicredi-boleto-sacado-documento-field'
 
-type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab400BoletoSacadoDocumentoField
+type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
 
 // BB (registro '7' + "00"=Isento) e Sicredi (indicador de 1 char) precisam sobrescrever
 // performValidation, por isso tem subclasse propria em vez de usar a base direto.
-describe('Cnab400BoletoSacadoDocumentoField', (): void => {
+describe('DocumentoSacadoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
       const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
@@ -42,7 +42,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const field = new Cnab400BoletoSacadoDocumentoField(rawLine, 1)
+          const field = new DocumentoSacadoBoletoField(rawLine, 1)
 
           // When
           const shouldValidate = field.shouldValidate()
@@ -85,11 +85,11 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
   describe('value and validate', (): void => {
     it.each([
       { FieldClass: Cnab400BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstDocument: '01000000997396' },
-      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstDocument: '20000000997330' },
-      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstDocument: '11122233396' },
-      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstDocument: '30000997300020' },
-      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstDocument: '40000997300084' },
-      { FieldClass: Cnab400BoletoSacadoDocumentoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstDocument: '20000000997330' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstDocument: '30000997300020' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstDocument: '40000997300084' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDocument: '11122233396' },
       { FieldClass: Cnab400SicrediBoletoSacadoDocumentoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstDocument: '40000997300084' }
     ])(
       'given detail lines with valid document ($examplePath) when reading value and validating then accepts all lines',
@@ -124,7 +124,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
 
     it('given detail line with blank document when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BoletoSacadoDocumentoField)
+      const fieldRange = getFieldRange(DocumentoSacadoBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -137,7 +137,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400BoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new DocumentoSacadoBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -151,7 +151,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
 
     it('given detail line with invalid document when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400BoletoSacadoDocumentoField)
+      const fieldRange = getFieldRange(DocumentoSacadoBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -164,7 +164,7 @@ describe('Cnab400BoletoSacadoDocumentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '00000000000000')
 
       // When
-      const field = new Cnab400BoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new DocumentoSacadoBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

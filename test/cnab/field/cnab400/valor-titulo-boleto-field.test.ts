@@ -13,14 +13,15 @@ import {
 } from '@test/test-utils'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BoletoUfField } from '@cnab/field/cnab400/boleto-uf-field'
+import { ValorTituloBoletoField } from '@cnab/field/cnab400/valor-titulo-boleto-field'
 
-describe('Cnab400BoletoUfField', (): void => {
+
+describe('ValorTituloBoletoField', (): void => {
   describe('shouldValidate', (): void => {
-    describe('para os bancos com registro de detalhe padrao (comeca com 1)', (): void => {
-      const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
+    describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
+      const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -36,7 +37,7 @@ describe('Cnab400BoletoUfField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoUfField()
+          const FieldClass = ValorTituloBoletoField()
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -65,7 +66,7 @@ describe('Cnab400BoletoUfField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoUfField('7')
+          const FieldClass = ValorTituloBoletoField('7')
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -80,17 +81,19 @@ describe('Cnab400BoletoUfField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BoletoUfField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'MT' },
-      { FieldClass: Cnab400BoletoUfField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'SP' },
-      { FieldClass: Cnab400BoletoUfField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'CE' },
-      { FieldClass: Cnab400BoletoUfField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'MT' },
-      { FieldClass: Cnab400BoletoUfField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'SP' }
+      { FieldClass: ValorTituloBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 3390.20 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: 22560.93 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 150.00 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 6762.31 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 368.12 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 150.00 },
+      { FieldClass: ValorTituloBoletoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: 368.12 }
     ])(
-      'given detail lines with valid uf ($examplePath) when reading value and validating then accepts all lines',
+      'given detail lines with valid amount ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: CnabFieldClass<string>
+        FieldClass: CnabFieldClass<number>
         examplePath: string
-        expectedFirstValue: string
+        expectedFirstValue: number
       }): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -100,7 +103,7 @@ describe('Cnab400BoletoUfField', (): void => {
         )
 
         // When
-        const results = fields.map((field: CnabField<string>) => field.validate())
+        const results = fields.map((field: CnabField<number>) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
@@ -114,11 +117,11 @@ describe('Cnab400BoletoUfField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
+    const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
 
-    it('given detail line with blank uf when validating then returns null value and field error', (): void => {
+    it('given detail line with blank amount when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab400BoletoUfField()
+      const FieldClass = ValorTituloBoletoField()
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -144,9 +147,9 @@ describe('Cnab400BoletoUfField', (): void => {
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
 
-    it('given detail line with only one letter of uf when validating then returns field error', (): void => {
+    it('given detail line with zero amount when validating then returns field error', (): void => {
       // Given
-      const FieldClass = Cnab400BoletoUfField()
+      const FieldClass = ValorTituloBoletoField()
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -157,7 +160,7 @@ describe('Cnab400BoletoUfField', (): void => {
       }
 
       const lineNumber = realLineNumber(lines, rawLine)
-      const invalidLine = replaceLineRange(rawLine, fieldRange, 'S')
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '0000000000000')
 
       // When
       const field = new FieldClass(invalidLine, lineNumber)
@@ -165,8 +168,55 @@ describe('Cnab400BoletoUfField', (): void => {
 
       // Then
       expect(invalidLine.length).toBe(rawLine.length)
+      expect(field.value).toBe(0)
       expect(result.isValid).toBe(false)
-      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+    })
+
+    it('given detail line with invalid alphanumeric value when reading value then throws error', (): void => {
+      // Given
+      const FieldClass = ValorTituloBoletoField()
+      const fieldRange = getFieldRange(FieldClass)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
+
+      const lineNumber = realLineNumber(lines, rawLine)
+      const invalidLine = replaceLineRange(rawLine, fieldRange, 'ABCDEFGHIJKLM')
+
+      // When
+      const field = new FieldClass(invalidLine, lineNumber)
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
+    })
+
+    it('given detail line with digits followed by garbage when reading value then throws error', (): void => {
+      // Given: parseInt('0000012345ABC', 10) retorna 12345 em vez de NaN - sem a
+      // checagem de formato, isso passaria como R$123.45 valido.
+      const FieldClass = ValorTituloBoletoField()
+      const fieldRange = getFieldRange(FieldClass)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
+
+      const lineNumber = realLineNumber(lines, rawLine)
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '0000012345ABC')
+
+      // When
+      const field = new FieldClass(invalidLine, lineNumber)
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(() => field.value).toThrow(CnabFieldInvalidNumberError)
     })
   })
 })

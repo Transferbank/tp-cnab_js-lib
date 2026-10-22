@@ -13,11 +13,11 @@ import {
 } from '@test/test-utils'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BoletoBairroField } from '@cnab/field/cnab400/boleto-bairro-field'
+import { UfBoletoField } from '@cnab/field/cnab400/uf-boleto-field'
 
-describe('Cnab400BoletoBairroField', (): void => {
+describe('UfBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para os bancos com registro de detalhe padrao (comeca com 1)', (): void => {
       const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
@@ -36,7 +36,7 @@ describe('Cnab400BoletoBairroField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoBairroField()
+          const FieldClass = UfBoletoField()
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -65,7 +65,7 @@ describe('Cnab400BoletoBairroField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoBairroField(315, 326, '7')
+          const FieldClass = UfBoletoField('7')
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -78,23 +78,15 @@ describe('Cnab400BoletoBairroField', (): void => {
     })
   })
 
-  describe('range', (): void => {
-    it('given Sicoob then overrides the base range to compensate for the shorter endereco field', (): void => {
-      // Then
-      expect(getFieldRange(Cnab400BoletoBairroField(312, 326))).toEqual([312, 326])
-      expect(getFieldRange(Cnab400BoletoBairroField())).toEqual([315, 326])
-    })
-  })
-
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BoletoBairroField(315, 326, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'JARDIM UNIVE' },
-      { FieldClass: Cnab400BoletoBairroField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: Cnab400BoletoBairroField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: Cnab400BoletoBairroField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: Cnab400BoletoBairroField(312, 326), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'CENTRO' }
+      { FieldClass: UfBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'MT' },
+      { FieldClass: UfBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'SP' },
+      { FieldClass: UfBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'CE' },
+      { FieldClass: UfBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'MT' },
+      { FieldClass: UfBoletoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'SP' }
     ])(
-      'given detail lines with valid bairro ($examplePath) when reading value and validating then accepts all lines',
+      'given detail lines with valid uf ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
         FieldClass: CnabFieldClass<string>
         examplePath: string
@@ -124,9 +116,9 @@ describe('Cnab400BoletoBairroField', (): void => {
   describe('validate with error', (): void => {
     const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
 
-    it('given detail line with blank bairro when validating then returns null value and field error', (): void => {
+    it('given detail line with blank uf when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab400BoletoBairroField()
+      const FieldClass = UfBoletoField()
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -148,8 +140,33 @@ describe('Cnab400BoletoBairroField', (): void => {
       expect(field.value).toBeNull()
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
-      expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
       expect(result.errors[0].lineNumber).toBe(lineNumber)
+    })
+
+    it('given detail line with only one letter of uf when validating then returns field error', (): void => {
+      // Given
+      const FieldClass = UfBoletoField()
+      const fieldRange = getFieldRange(FieldClass)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
+
+      const lineNumber = realLineNumber(lines, rawLine)
+      const invalidLine = replaceLineRange(rawLine, fieldRange, 'S')
+
+      // When
+      const field = new FieldClass(invalidLine, lineNumber)
+      const result = field.validate()
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(result.isValid).toBe(false)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
     })
   })
 })

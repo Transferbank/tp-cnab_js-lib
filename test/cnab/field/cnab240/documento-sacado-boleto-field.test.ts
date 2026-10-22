@@ -6,16 +6,16 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab240BoletoSacadoDocumentoField } from '@cnab/field/cnab240/boleto-sacado-documento-field'
+import { DocumentoSacadoBoletoField } from '@cnab/field/cnab240/documento-sacado-boleto-field'
 import { Cnab240BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-sacado-documento-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => Cnab240BoletoSacadoDocumentoField
+type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
 
-describe('Cnab240BoletoSacadoDocumentoField', (): void => {
+describe('DocumentoSacadoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
 
@@ -34,7 +34,7 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const field = new Cnab240BoletoSacadoDocumentoField(rawLine, 1)
+        const field = new DocumentoSacadoBoletoField(rawLine, 1)
 
         // When
         const shouldValidate = field.shouldValidate()
@@ -48,12 +48,12 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
   describe('value and validate', (): void => {
     it.each([
       { FieldClass: Cnab240BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '10000791989' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '11122233396' },
-      { FieldClass: Cnab240BoletoSacadoDocumentoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '11122233396' }
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '10000791989' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstDocument: '11122233396' }
     ])(
       'given segment Q lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
@@ -87,7 +87,7 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
 
     it('given segment Q line with blank document when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BoletoSacadoDocumentoField)
+      const fieldRange = getFieldRange(DocumentoSacadoBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -100,7 +100,7 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab240BoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new DocumentoSacadoBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -114,7 +114,7 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
 
     it('given segment Q line with invalid document when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab240BoletoSacadoDocumentoField)
+      const fieldRange = getFieldRange(DocumentoSacadoBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab240SegmentLine(lines, 'Q')
@@ -127,7 +127,7 @@ describe('Cnab240BoletoSacadoDocumentoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '000000000000000')
 
       // When
-      const field = new Cnab240BoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new DocumentoSacadoBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

@@ -13,11 +13,11 @@ import {
 } from '@test/test-utils'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
-import { Cnab400BoletoEnderecoField } from '@cnab/field/cnab400/boleto-endereco-field'
+import { VencimentoBoletoField } from '@cnab/field/cnab400/vencimento-boleto-field'
 
-describe('Cnab400BoletoEnderecoField', (): void => {
+describe('VencimentoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para o registro de detalhe padrao (comeca com 1)', (): void => {
       const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
@@ -36,7 +36,7 @@ describe('Cnab400BoletoEnderecoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoEnderecoField()
+          const FieldClass = VencimentoBoletoField()
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -65,7 +65,7 @@ describe('Cnab400BoletoEnderecoField', (): void => {
             assert.fail(`Linha com tipo de registro ${recordType} não encontrada`)
           }
 
-          const FieldClass = Cnab400BoletoEnderecoField(275, 314, '7')
+          const FieldClass = VencimentoBoletoField('7')
           const field = new FieldClass(rawLine, 1)
 
           // When
@@ -78,29 +78,21 @@ describe('Cnab400BoletoEnderecoField', (): void => {
     })
   })
 
-  describe('range', (): void => {
-    it('given Sicoob then overrides the base range to a smaller 37-char slice', (): void => {
-      // Then
-      expect(getFieldRange(Cnab400BoletoEnderecoField(275, 311))).toEqual([275, 311])
-      expect(getFieldRange(Cnab400BoletoEnderecoField())).toEqual([275, 314])
-    })
-  })
-
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab400BoletoEnderecoField(275, 314, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
-      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: 'AV EXEMPLO 200' },
-      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
-      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
-      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'AV EXEMPLO 100' },
-      { FieldClass: Cnab400BoletoEnderecoField(275, 311), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'RUA EXEMPLO, 123' },
-      { FieldClass: Cnab400BoletoEnderecoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: 'RUA DAS PALMEIRAS 45' }
+      { FieldClass: VencimentoBoletoField('7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 20) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt', expectedFirstValue: new Date(2026, 7, 24) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: new Date(2026, 6, 6) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: new Date(2026, 7, 15) },
+      { FieldClass: VencimentoBoletoField(), examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstValue: new Date(2026, 5, 21) }
     ])(
-      'given detail lines with valid address ($examplePath) when reading value and validating then accepts all lines',
+      'given detail lines with valid due date ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
-        FieldClass: CnabFieldClass<string>
+        FieldClass: CnabFieldClass<Date>
         examplePath: string
-        expectedFirstValue: string
+        expectedFirstValue: Date
       }): void => {
         // Given
         const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -110,11 +102,11 @@ describe('Cnab400BoletoEnderecoField', (): void => {
         )
 
         // When
-        const results = fields.map((field: CnabField<string>) => field.validate())
+        const results = fields.map((field: CnabField<Date>) => field.validate())
 
         // Then
         expect(fields.length).toBeGreaterThan(0)
-        expect(fields[0].value).toBe(expectedFirstValue)
+        expect(fields[0].value).toEqual(expectedFirstValue)
 
         results.forEach((result: CnabValidationResult) => {
           expect(result).toEqual(genValidCnabValidationResult())
@@ -126,9 +118,9 @@ describe('Cnab400BoletoEnderecoField', (): void => {
   describe('validate with error', (): void => {
     const examplePath = 'bradesco/cnab400/bradesco_cnab_400.txt'
 
-    it('given detail line with blank address when validating then returns null value and field error', (): void => {
+    it('given detail line with blank date when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab400BoletoEnderecoField()
+      const FieldClass = VencimentoBoletoField()
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -150,7 +142,57 @@ describe('Cnab400BoletoEnderecoField', (): void => {
       expect(field.value).toBeNull()
       expect(result.isValid).toBe(false)
       expect(result.errors).toHaveLength(1)
-      expect(result.errors[0]).toBeInstanceOf(CnabFieldMinLengthError)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
+      expect(result.errors[0].lineNumber).toBe(lineNumber)
+    })
+
+    it('given detail line with invalid date when reading value then throws error', (): void => {
+      // Given
+      const FieldClass = VencimentoBoletoField()
+      const fieldRange = getFieldRange(FieldClass)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
+
+      const lineNumber = realLineNumber(lines, rawLine)
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
+
+      // When
+      const field = new FieldClass(invalidLine, lineNumber)
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(() => field.value).toThrow(CnabFieldInvalidDateError)
+    })
+
+    it('given detail line with invalid date when validating then returns format error', (): void => {
+      // Given
+      const FieldClass = VencimentoBoletoField()
+      const fieldRange = getFieldRange(FieldClass)
+
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const rawLine = findFirstCnab400RecordLine(lines, '1')
+
+      if (rawLine == null) {
+        assert.fail('Linha detalhe não encontrada')
+      }
+
+      const lineNumber = realLineNumber(lines, rawLine)
+      const invalidLine = replaceLineRange(rawLine, fieldRange, '999999')
+
+      // When
+      const field = new FieldClass(invalidLine, lineNumber)
+      const result = field.validate()
+
+      // Then
+      expect(invalidLine.length).toBe(rawLine.length)
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0]).toBeInstanceOf(CnabGenericFieldError)
       expect(result.errors[0].lineNumber).toBe(lineNumber)
     })
   })

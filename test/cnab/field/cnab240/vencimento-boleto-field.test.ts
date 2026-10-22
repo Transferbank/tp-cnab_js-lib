@@ -6,13 +6,13 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
-import { Cnab240BoletoVencimentoField } from '@cnab/field/cnab240/boleto-vencimento-field'
+import { VencimentoBoletoField } from '@cnab/field/cnab240/vencimento-boleto-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-describe('Cnab240BoletoVencimentoField', (): void => {
+describe('VencimentoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
 
@@ -31,7 +31,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const FieldClass = Cnab240BoletoVencimentoField
+        const FieldClass = VencimentoBoletoField
         const field = new FieldClass(rawLine, 1)
 
         // When
@@ -58,7 +58,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
         examplePath: string
       }): void => {
         // Given
-        const FieldClass = Cnab240BoletoVencimentoField
+        const FieldClass = VencimentoBoletoField
         const lines = readExampleLines(path.join(resPath(), examplePath))
         const fields = createFieldsFromLines(
           filterValidatableLines(lines, FieldClass),
@@ -84,7 +84,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
 
     it('given segment P line with blank date when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoVencimentoField
+      const FieldClass = VencimentoBoletoField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -112,7 +112,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
 
     it('given segment P line with invalid date when reading value then throws error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoVencimentoField
+      const FieldClass = VencimentoBoletoField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
@@ -135,7 +135,7 @@ describe('Cnab240BoletoVencimentoField', (): void => {
 
     it('given segment P line with invalid date when validating then returns format error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoVencimentoField
+      const FieldClass = VencimentoBoletoField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))

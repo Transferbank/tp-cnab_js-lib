@@ -6,14 +6,14 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
-import { Cnab240BoletoEnderecoField } from '@cnab/field/cnab240/boleto-endereco-field'
+import { EnderecoBoletoField } from '@cnab/field/cnab240/endereco-boleto-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
 
-describe('Cnab240BoletoEnderecoField', (): void => {
+describe('EnderecoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
 
@@ -32,7 +32,7 @@ describe('Cnab240BoletoEnderecoField', (): void => {
           assert.fail(`Linha com segmento ${segment} não encontrada`)
         }
 
-        const FieldClass = Cnab240BoletoEnderecoField
+        const FieldClass = EnderecoBoletoField
         const field = new FieldClass(rawLine, 1)
 
         // When
@@ -46,13 +46,13 @@ describe('Cnab240BoletoEnderecoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab240BoletoEnderecoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240BoletoEnderecoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO 123' },
-      { FieldClass: Cnab240BoletoEnderecoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240BoletoEnderecoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO, 100' },
-      { FieldClass: Cnab240BoletoEnderecoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240BoletoEnderecoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
-      { FieldClass: Cnab240BoletoEnderecoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' }
+      { FieldClass: EnderecoBoletoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
+      { FieldClass: EnderecoBoletoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO 123' },
+      { FieldClass: EnderecoBoletoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
+      { FieldClass: EnderecoBoletoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'RUA EXEMPLO, 100' },
+      { FieldClass: EnderecoBoletoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
+      { FieldClass: EnderecoBoletoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' },
+      { FieldClass: EnderecoBoletoField, examplePath: 'sicredi/cnab240/sicredi_cnab_240.txt', expectedFirstValue: 'RUA DAS FLORES 100 APTO 12' }
     ])(
       'given segment Q lines with valid address ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
@@ -86,7 +86,7 @@ describe('Cnab240BoletoEnderecoField', (): void => {
 
     it('given segment Q line with blank address when validating then returns null value and field error', (): void => {
       // Given
-      const FieldClass = Cnab240BoletoEnderecoField
+      const FieldClass = EnderecoBoletoField
       const fieldRange = getFieldRange(FieldClass)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
