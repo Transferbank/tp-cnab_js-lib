@@ -2,6 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { blankIfZeros } from '@cnab/utils/phone-parser'
 
 export class Cnab240BoletoSeuNumeroField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -10,6 +11,10 @@ export class Cnab240BoletoSeuNumeroField extends CnabField<string> {
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
+  }
+
+  protected extractRawValue(): string {
+    return blankIfZeros(super.extractRawValue())
   }
 
   protected performValidation(): CnabValidationResult {

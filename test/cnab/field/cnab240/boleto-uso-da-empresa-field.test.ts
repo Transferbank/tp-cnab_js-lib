@@ -1,7 +1,7 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { FieldTestCase, findFirstCnab240SegmentLine, readExampleLines, resPath } from '@test/test-utils'
+import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/boleto-uso-da-empresa-field'
 
@@ -37,5 +37,21 @@ describe.each<FieldTestCase>(cases)('%s', (
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(expectedValue)
+  })
+})
+
+describe('Cnab240BoletoUsoDaEmpresaField', (): void => {
+  it('given a uso da empresa filled with zeros when reading then returns null and is valid', (): void => {
+    // Given
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
+    assert(line != null, 'Linha não encontrada')
+    const field = new Cnab240BoletoUsoDaEmpresaField(replaceLineRange(line, getFieldRange(Cnab240BoletoUsoDaEmpresaField), '0000000000000000000000000'), 5)
+
+    // When
+    const result = field.validate()
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toBeNull()
   })
 })
