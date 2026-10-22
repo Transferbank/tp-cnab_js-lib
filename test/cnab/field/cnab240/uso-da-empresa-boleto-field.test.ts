@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
-import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/boleto-uso-da-empresa-field'
+import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/uso-da-empresa-boleto-field'
 
 const cases: FieldTestCase[] = [
   [

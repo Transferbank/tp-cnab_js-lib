@@ -1,17 +1,17 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
+import { FieldTestCase, findFirstCnab400RecordLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
-import { Cnab240BoletoSeuNumeroField } from '@cnab/field/cnab240/boleto-seu-numero-field'
+import { Cnab400BoletoSeuNumeroField } from '@cnab/field/cnab400/seu-numero-boleto-field'
 
 const cases: FieldTestCase[] = [
   [
-    'Cnab240BoletoSeuNumeroField (padrão FEBRABAN, exemplo Bradesco)',
-    Cnab240BoletoSeuNumeroField,
-    'bradesco/cnab240/bradesco_cnab_240.txt',
-    'P',
-    'NF0000123'
+    'Cnab400BoletoSeuNumeroField (exemplo Itaú)',
+    Cnab400BoletoSeuNumeroField,
+    'itau/cnab400/ITAU_cnab_400.REM',
+    '1',
+    'NF76872-04'
   ]
 ]
 
@@ -19,13 +19,13 @@ describe.each<FieldTestCase>(cases)('%s', (
   _: string,
   FieldClass: CnabFieldClass<string>,
   examplePath: string,
-  segment: string,
+  recordType: string,
   expectedValue: string
 ): void => {
-  const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), examplePath)), segment)
+  const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), examplePath)), recordType)
   assert(line != null, `Linha não encontrada em ${examplePath}`)
 
-  it('given the segment P from the example file when reading then returns the field as written', (): void => {
+  it('given the detail record from the example file when reading then returns the field as written', (): void => {
     // Given
     const field = new FieldClass(line, 5)
 
@@ -40,12 +40,12 @@ describe.each<FieldTestCase>(cases)('%s', (
   })
 })
 
-describe('Cnab240BoletoSeuNumeroField', (): void => {
+describe('Cnab400BoletoSeuNumeroField', (): void => {
   it('given a seu número filled with zeros when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
+    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM')), '1')
     assert(line != null, 'Linha não encontrada')
-    const field = new Cnab240BoletoSeuNumeroField(replaceLineRange(line, getFieldRange(Cnab240BoletoSeuNumeroField), '000000000000000'), 5)
+    const field = new Cnab400BoletoSeuNumeroField(replaceLineRange(line, getFieldRange(Cnab400BoletoSeuNumeroField), '0000000000'), 5)
 
     // When
     const result = field.validate()

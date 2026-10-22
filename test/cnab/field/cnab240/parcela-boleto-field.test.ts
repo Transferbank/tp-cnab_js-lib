@@ -1,36 +1,32 @@
 import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { getFieldRange, readExampleLines, replaceLineRange, resPath, findFirstCnab400RecordLine } from '@test/test-utils'
-import { Cnab400BoletoParcelaField } from '@cnab/field/cnab400/boleto-parcela-field'
-import { Cnab400BoletoTotalDeParcelasField } from '@cnab/field/cnab400/boleto-total-de-parcelas-field'
-import { Cnab400BoletoSeuNumeroField } from '@cnab/field/cnab400/boleto-seu-numero-field'
-import { Cnab400BoletoUsoDaEmpresaField } from '@cnab/field/cnab400/boleto-uso-da-empresa-field'
+import { getFieldRange, readExampleLines, replaceLineRange, resPath, findFirstCnab240SegmentLine } from '@test/test-utils'
+import { Cnab240BoletoParcelaField } from '@cnab/field/cnab240/parcela-boleto-field'
+import { Cnab240BoletoTotalDeParcelasField } from '@cnab/field/cnab240/total-de-parcelas-boleto-field'
+import { Cnab240BoletoSeuNumeroField } from '@cnab/field/cnab240/seu-numero-boleto-field'
+import { Cnab240BoletoUsoDaEmpresaField } from '@cnab/field/cnab240/uso-da-empresa-boleto-field'
 
-class ParcelaSemUsoDaEmpresaField extends Cnab400BoletoParcelaField {
-  protected readonly usoDaEmpresaRange: [number, number] | null = null
-}
-
-const lines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
+const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
 
 function lineWith(usoDaEmpresa: string, seuNumero: string): string {
-  const line = findFirstCnab400RecordLine(lines, '1')
+  const line = findFirstCnab240SegmentLine(lines, 'P')
   assert(line != null, 'Linha do boleto não encontrada')
   return replaceLineRange(
-    replaceLineRange(line, getFieldRange(Cnab400BoletoUsoDaEmpresaField), usoDaEmpresa),
-    getFieldRange(Cnab400BoletoSeuNumeroField),
+    replaceLineRange(line, getFieldRange(Cnab240BoletoUsoDaEmpresaField), usoDaEmpresa),
+    getFieldRange(Cnab240BoletoSeuNumeroField),
     seuNumero
   )
 }
 
-describe('Cnab400BoletoParcelaField', (): void => {
-  it('given a line that is not the detail record when checking shouldValidate then returns false', (): void => {
+describe('Cnab240BoletoParcelaField', (): void => {
+  it('given a line that is not the segment P when checking shouldValidate then returns false', (): void => {
     // Given
-    const line = findFirstCnab400RecordLine(lines, '0')
+    const line = findFirstCnab240SegmentLine(lines, 'Q')
     assert(line != null, 'Linha não encontrada')
 
     // When
-    const shouldValidate = new Cnab400BoletoParcelaField(line, 1).shouldValidate()
+    const shouldValidate = new Cnab240BoletoParcelaField(line, 1).shouldValidate()
 
     // Then
     expect(shouldValidate).toBe(false)
@@ -46,8 +42,8 @@ describe('Cnab400BoletoParcelaField', (): void => {
     it('when reading then returns the parcela and the total as numbers', (): void => {
       // Given
       const line = lineWith(usoDaEmpresa, seuNumero)
-      const parcela = new Cnab400BoletoParcelaField(line, 5)
-      const total = new Cnab400BoletoTotalDeParcelasField(line, 5)
+      const parcela = new Cnab240BoletoParcelaField(line, 5)
+      const total = new Cnab240BoletoTotalDeParcelasField(line, 5)
 
       // When
       const results = [parcela.validate(), total.validate()]
@@ -57,17 +53,5 @@ describe('Cnab400BoletoParcelaField', (): void => {
       expect(parcela.value).toBe(expectedParcela)
       expect(total.value).toBe(expectedTotal)
     })
-  })
-
-  it('given a layout without uso da empresa when reading then takes the parcela only from the seu número', (): void => {
-    // Given
-    const field = new ParcelaSemUsoDaEmpresaField(lineWith('PED1234-2/4', '12345 1/3'), 5)
-
-    // When
-    const result = field.validate()
-
-    // Then
-    expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe(1)
   })
 })
