@@ -5,7 +5,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { emailListErrorMessage, parseEmailList } from '@cnab/utils/email-parser'
 
-export abstract class BancoDoBrasilBoletoEmailField extends CnabField<string[]> {
+export abstract class EmailBoletoField extends CnabField<string[]> {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'emails_do_sacado'
