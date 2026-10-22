@@ -8,7 +8,7 @@ import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator} from
 import * as Cnab240 from '@cnab/field/cnab240/fields'
 import * as Cnab400 from '@cnab/field/cnab400/fields'
 
-import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
+import * as Cnab400Sicredi from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as Cnab400Bradesco from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import * as Cnab400Caixa from '@cnab/bank/caixa/cnab/cnab400/field/fields'
 import * as Cnab400Sicoob from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
@@ -17,7 +17,7 @@ import * as Cnab400BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab400/f
 import * as Cnab240Caixa from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import * as Cnab240Itau from '@cnab/bank/itau/cnab/cnab240/field/fields'
 import * as Cnab240Santander from '@cnab/bank/santander/cnab/cnab240/field/fields'
-import * as SicrediFields240 from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
+import * as Cnab240Sicredi from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
 
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
@@ -341,7 +341,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240.CepBoletoField,
           Cnab240.CidadeBoletoField,
           Cnab240.UfBoletoField,
-          optional(SicrediFields240.Cnab240SicrediBoletoNossoNumeroField)
+          optional(Cnab240Sicredi.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -365,10 +365,10 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400.NomeBoletoField(),
           Cnab400.VencimentoBoletoField(),
           Cnab400.ValorTituloBoletoField(),
-          SicrediFields400.Cnab400SicrediBoletoSacadoDocumentoField,
+          Cnab400Sicredi.DocumentoSacadoBoletoField,
           Cnab400.EnderecoBoletoField(),
           Cnab400.CepBoletoField(),
-          optional(SicrediFields400.Cnab400SicrediBoletoNossoNumeroField)
+          optional(Cnab400Sicredi.NossoNumeroBoletoField)
         ],
       },
     }),
