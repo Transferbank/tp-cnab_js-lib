@@ -74,15 +74,15 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos extras da lib
 
-| Chave               | Descrição                                                         | Tipo       | Constante                    |
-| ------------------- | ----------------------------------------------------------------- | ---------- | ---------------------------- |
-| `emails_do_sacado`  | E-mails do sacado                                                 | `string[]` | `CNAB_EMAIL_FIELDS`          |
-| `ddd_do_sacado`     | DDD do celular do sacado                                          | `string`   | `CNAB_TELEFONE_FIELDS`       |
-| `celular_do_sacado` | Número do celular do sacado                                       | `string`   | `CNAB_TELEFONE_FIELDS`       |
-| `seu_numero`        | Número do documento cobrado, como a nota fiscal ou a duplicata    | `string`   | `CNAB_SEU_NUMERO_FIELDS`     |
-| `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema    | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
-| `parcela`           | Número da parcela, lido do fim do Uso da Empresa ou do Seu Número | `number`   | `CNAB_PARCELA_FIELDS`        |
-| `total_de_parcelas` | Total de parcelas, lido do fim do Uso da Empresa ou do Seu Número | `number`   | `CNAB_PARCELA_FIELDS`        |
+| Chave               | Descrição                                                      | Tipo       | Constante                    |
+| ------------------- | -------------------------------------------------------------- | ---------- | ---------------------------- |
+| `emails_do_sacado`  | E-mails do sacado                                              | `string[]` | `CNAB_EMAIL_FIELDS`          |
+| `ddd_do_sacado`     | DDD do celular do sacado                                       | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `celular_do_sacado` | Número do celular do sacado                                    | `string`   | `CNAB_TELEFONE_FIELDS`       |
+| `seu_numero`        | Número do documento cobrado, como a nota fiscal ou a duplicata | `string`   | `CNAB_SEU_NUMERO_FIELDS`     |
+| `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
+| `parcela`           | Número da parcela do boleto                                    | `number`   | `CNAB_PARCELA_FIELDS`        |
+| `total_de_parcelas` | Total de parcelas                                              | `number`   | `CNAB_PARCELA_FIELDS`        |
 
 Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
