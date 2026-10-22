@@ -16,7 +16,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { DocumentoSacadoBoletoField } from '@cnab/field/cnab400/documento-sacado-boleto-field'
-import { Cnab400BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/documento-sacado-boleto-field'
+import { Cnab400BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/cnab400-banco-do-brasil-boleto-sacado-documento-field'
 import { Cnab400SicrediBoletoSacadoDocumentoField } from '@cnab/bank/sicredi/cnab/cnab400/field/cnab400-sicredi-boleto-sacado-documento-field'
 
 type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField

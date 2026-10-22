@@ -12,8 +12,8 @@ import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as BradescoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import * as CaixaFields400 from '@cnab/bank/caixa/cnab/cnab400/field/fields'
 import * as SicoobFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
-import * as BancoDoBrasilFields240 from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
-import * as BancoDoBrasilFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
+import * as Cnab240BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import * as Cnab400BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
 import * as CaixaFields240 from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import * as ItauFields240 from '@cnab/bank/itau/cnab/cnab240/field/fields'
 import * as SantanderFields240 from '@cnab/bank/santander/cnab/cnab240/field/fields'
@@ -218,9 +218,9 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240.NomeBoletoField(),
           Cnab240.VencimentoBoletoField,
           Cnab240.ValorTituloBoletoField,
-          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoSacadoDocumentoField,
+          Cnab240BancoDoBrasil.DocumentoSacadoBoletoField,
           Cnab240.EnderecoBoletoField,
-          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoBairroField,
+          Cnab240BancoDoBrasil.BairroBoletoField,
           Cnab240.CepBoletoField,
           Cnab240.CidadeBoletoField,
           Cnab240.UfBoletoField,
@@ -248,13 +248,13 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400.NomeBoletoField(235, 271, '7'),
           Cnab400.VencimentoBoletoField('7'),
           Cnab400.ValorTituloBoletoField('7'),
-          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField,
+          Cnab400BancoDoBrasil.DocumentoSacadoBoletoField,
           Cnab400.EnderecoBoletoField(275, 314, '7'),
           Cnab400.BairroBoletoField(315, 326, '7'),
           Cnab400.CepBoletoField('7'),
           Cnab400.CidadeBoletoField('7'),
           Cnab400.UfBoletoField('7'),
-          optional(BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoNossoNumeroField)
+          optional(Cnab400BancoDoBrasil.NossoNumeroBoletoField)
         ],
       },
     }),
