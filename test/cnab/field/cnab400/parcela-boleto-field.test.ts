@@ -38,7 +38,7 @@ describe('ParcelaBoletoField', (): void => {
 
   describe.each([
     { usoDaEmpresa: 'PED1234-2/4', seuNumero: 'XX12345-01', expectedParcela: 2, expectedTotal: 4, description: 'parcela and total in the uso da empresa' },
-    { usoDaEmpresa: '12.345678.01', seuNumero: 'XX123456-0', expectedParcela: 1, expectedTotal: null, description: 'parcela in both fields, taken from the uso da empresa' },
+    { usoDaEmpresa: '12.345678.10', seuNumero: 'XX123456-1', expectedParcela: 10, expectedTotal: null, description: 'seu número cut by the field size, parcela taken from the uso da empresa' },
     { usoDaEmpresa: 'XX12345-01', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: null, description: 'total only in the seu número, not mixed with the uso da empresa parcela' },
     { usoDaEmpresa: '1234567890', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: 3, description: 'parcela and total only in the seu número' },
     { usoDaEmpresa: '123456', seuNumero: '123456', expectedParcela: null, expectedTotal: null, description: 'no parcela in either field' }
