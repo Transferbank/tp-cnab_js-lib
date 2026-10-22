@@ -2,21 +2,15 @@ import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 
-const DEFAULT_START = 275
-const DEFAULT_END = 314
 const DEFAULT_RECORD_TYPE = '1'
 
-export function Cnab400BoletoEnderecoField(
-  start: number = DEFAULT_START,
-  end: number = DEFAULT_END,
-  recordType: string = DEFAULT_RECORD_TYPE
-): CnabFieldClass<string> {
-  return class extends CnabField<string> {
+export function ValorTituloBoletoField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<number> {
+  return class extends CnabField<number> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldKey = 'endereco_do_sacado'
-    readonly range: [number, number] = [start, end]
+    readonly fieldKey = 'valor_do_titulo'
+    readonly range: [number, number] = [127, 139]
     protected readonly recordType = recordType
 
     shouldValidate(): boolean {
@@ -24,18 +18,17 @@ export function Cnab400BoletoEnderecoField(
     }
 
     protected performValidation(): CnabValidationResult {
-      const minLength = 1
       const value = this.value
-      const isValid = value != null && value.length >= minLength
+      const isValid = value != null && value > 0
       const errors = []
 
       if (!isValid) {
         errors.push(
-          new CnabFieldMinLengthError({
+          new CnabGenericFieldError({
+            message: 'Campo valor do título inválido: deve ser maior que zero',
             lineNumber: this.lineNumber,
             fieldKey: this.fieldKey,
-            range: this.range,
-            minLength
+            range: this.range
           })
         )
       }
@@ -46,8 +39,12 @@ export function Cnab400BoletoEnderecoField(
       }
     }
 
-    protected parseValue(rawValue: string): string {
-      return rawValue
+    protected parseValue(rawValue: string): number {
+      if (!/^\d+$/.test(rawValue)) {
+        throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
+      }
+
+      return parseInt(rawValue, 10) / 100
     }
   }
 }

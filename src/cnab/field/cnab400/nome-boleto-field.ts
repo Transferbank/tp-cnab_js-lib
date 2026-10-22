@@ -8,7 +8,7 @@ const DEFAULT_START = 235
 const DEFAULT_END = 274
 const DEFAULT_RECORD_TYPE = '1'
 
-export function Cnab400BoletoNomeField(
+export function NomeBoletoField(
   start: number = DEFAULT_START,
   end: number = DEFAULT_END,
   recordType: string = DEFAULT_RECORD_TYPE

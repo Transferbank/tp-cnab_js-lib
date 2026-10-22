@@ -1,31 +1,30 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab240BoletoBairroField extends CnabField<string> {
+export class UfBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'bairro_do_sacado'
-  readonly range: [number, number] = [114, 128]
+  readonly fieldKey = 'uf_do_sacado'
+  readonly range: [number, number] = [152, 153]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
   }
 
   protected performValidation(): CnabValidationResult {
-    const minLength = 1
     const value = this.value
-    const isValid = value != null && value.length >= minLength
+    const isValid = value != null && /^[A-Za-z]{2}$/.test(value)
     const errors = []
 
     if (!isValid) {
       errors.push(
-        new CnabFieldMinLengthError({
+        new CnabGenericFieldError({
+          message: 'Campo uf do sacado inválido: deve conter exatamente 2 letras',
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
-          range: this.range,
-          minLength
+          range: this.range
         })
       )
     }

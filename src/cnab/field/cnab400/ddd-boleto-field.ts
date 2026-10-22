@@ -3,14 +3,13 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { blankIfZeros, isValidCelular } from '@cnab/utils/phone-parser'
+import { blankIfZeros, isValidDdd } from '@cnab/utils/phone-parser'
 
-export class Cnab400BoletoCelularField extends CnabField<string> {
+export class DddBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'celular_do_sacado'
+  readonly fieldKey = 'ddd_do_sacado'
   protected readonly recordType: string = '3'
-  readonly range: [number, number] = [106, 114]
-  protected readonly celularLengths: number[] = [8, 9]
+  readonly range: [number, number] = [104, 105]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isRegistro(this.rawLine, this.recordType)
@@ -22,7 +21,7 @@ export class Cnab400BoletoCelularField extends CnabField<string> {
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && isValidCelular(value, this.celularLengths)
+    const isValid = value != null && isValidDdd(value)
 
     if (isValid) {
       return { isValid, errors: [] }
@@ -32,7 +31,7 @@ export class Cnab400BoletoCelularField extends CnabField<string> {
       isValid,
       errors: [
         new CnabGenericFieldError({
-          message: `Campo celular do sacado inválido: deve conter ${this.celularLengths.join(' ou ')} dígitos numéricos`,
+          message: 'Campo ddd do sacado inválido: deve conter 2 dígitos numéricos',
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
           range: this.range

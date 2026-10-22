@@ -7,7 +7,7 @@ import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 const DEFAULT_START = 34
 const DEFAULT_END = 73
 
-export function Cnab240BoletoNomeField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<string> {
+export function NomeBoletoField(start: number = DEFAULT_START, end: number = DEFAULT_END): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
     readonly fieldKey = 'nome_do_sacado'

@@ -5,7 +5,7 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { isValidEmail } from '@cnab/utils/email-parser'
 
-export class Cnab400BoletoEmailField extends CnabField<string[]> {
+export class EmailBoletoField extends CnabField<string[]> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'emails_do_sacado'
   protected readonly recordType: string = '3'

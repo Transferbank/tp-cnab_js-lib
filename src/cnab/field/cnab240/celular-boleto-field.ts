@@ -3,21 +3,26 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { isValidEmail } from '@cnab/utils/email-parser'
+import { blankIfZeros, isValidCelular } from '@cnab/utils/phone-parser'
 
-export class Cnab240BoletoEmailField extends CnabField<string[]> {
+export class CelularBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'emails_do_sacado'
+  readonly fieldKey = 'celular_do_sacado'
   protected readonly optionalRecordCode: string = '03'
-  readonly range: [number, number] = [20, 69]
+  readonly range: [number, number] = [72, 80]
+  protected readonly celularLengths: number[] = [8, 9]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoY(this.rawLine, this.optionalRecordCode)
   }
 
+  protected extractRawValue(): string {
+    return blankIfZeros(super.extractRawValue())
+  }
+
   protected performValidation(): CnabValidationResult {
-    const email = this.value?.[0]
-    const isValid = email != null && isValidEmail(email)
+    const value = this.value
+    const isValid = value != null && isValidCelular(value, this.celularLengths)
 
     if (isValid) {
       return { isValid, errors: [] }
@@ -27,7 +32,7 @@ export class Cnab240BoletoEmailField extends CnabField<string[]> {
       isValid,
       errors: [
         new CnabGenericFieldError({
-          message: `Campo email do sacado inválido: ${email} não é um e-mail`,
+          message: `Campo celular do sacado inválido: deve conter ${this.celularLengths.join(' ou ')} dígitos numéricos`,
           lineNumber: this.lineNumber,
           fieldKey: this.fieldKey,
           range: this.range
@@ -36,7 +41,7 @@ export class Cnab240BoletoEmailField extends CnabField<string[]> {
     }
   }
 
-  protected parseValue(rawValue: string): string[] {
-    return [rawValue]
+  protected parseValue(rawValue: string): string {
+    return rawValue
   }
 }

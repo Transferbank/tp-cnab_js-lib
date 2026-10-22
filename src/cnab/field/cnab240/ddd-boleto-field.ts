@@ -2,17 +2,17 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { blankIfZeros, isValidDdd } from '@cnab/utils/phone-parser'
 
-export class Cnab400BoletoDddField extends CnabField<string> {
+export class DddBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'ddd_do_sacado'
-  protected readonly recordType: string = '3'
-  readonly range: [number, number] = [104, 105]
+  protected readonly optionalRecordCode: string = '03'
+  readonly range: [number, number] = [70, 71]
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isRegistro(this.rawLine, this.recordType)
+    return Cnab240LineTypeChecker.isSegmentoY(this.rawLine, this.optionalRecordCode)
   }
 
   protected extractRawValue(): string {

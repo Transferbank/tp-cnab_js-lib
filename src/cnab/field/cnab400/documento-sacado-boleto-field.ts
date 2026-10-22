@@ -1,22 +1,23 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   DocumentType,
   documentTypeByIndicator,
   normalizeDocument,
   validateDocumentByType
 } from '@cnab/utils/document-parser'
-import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
+export class DocumentoSacadoBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'documento_do_sacado'
-  readonly range: [number, number] = [19, 33]
+  readonly range: [number, number] = [221, 234]
+  protected readonly recordType: string = '1'
 
   shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
   protected performValidation(): CnabValidationResult {
@@ -42,9 +43,9 @@ export class Cnab240BoletoSacadoDocumentoField extends CnabField<string> {
     }
   }
 
-  // Indicador de tipo de inscrição na posição 18: "1"=CPF, "2"=CNPJ.
+  // Indicador de tipo de inscrição nas posições 219-220: "01"=CPF, "02"=CNPJ.
   protected documentType(): DocumentType | null {
-    return documentTypeByIndicator(this.extractRangeFromLine(17, 18), '1', '2')
+    return documentTypeByIndicator(this.extractRangeFromLine(218, 220), '01', '02')
   }
 
   protected parseValue(rawValue: string): string {

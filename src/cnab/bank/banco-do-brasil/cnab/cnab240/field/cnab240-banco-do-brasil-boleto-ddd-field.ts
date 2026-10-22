@@ -1,9 +1,9 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { Cnab240BoletoDddField } from '@cnab/field/cnab240/boleto-ddd-field'
+import * as Cnab240 from '@cnab/field/cnab240/fields'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab240BancoDoBrasilBoletoDddField extends Cnab240BoletoDddField {
+export class Cnab240BancoDoBrasilBoletoDddField extends Cnab240.DddBoletoField {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB240
 

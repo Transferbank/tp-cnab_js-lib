@@ -1,17 +1,16 @@
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
-import { parseDateDDMMAA } from '@cnab/utils/date-parser'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 
 const DEFAULT_RECORD_TYPE = '1'
 
-export function Cnab400BoletoVencimentoField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<Date> {
-  return class extends CnabField<Date> {
+export function UfBoletoField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<string> {
+  return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldKey = 'data_de_vencimento'
-    readonly range: [number, number] = [121, 126]
+    readonly fieldKey = 'uf_do_sacado'
+    readonly range: [number, number] = [350, 351]
     protected readonly recordType = recordType
 
     shouldValidate(): boolean {
@@ -20,13 +19,13 @@ export function Cnab400BoletoVencimentoField(recordType: string = DEFAULT_RECORD
 
     protected performValidation(): CnabValidationResult {
       const value = this.value
-      const isValid = value != null
+      const isValid = value != null && /^[A-Za-z]{2}$/.test(value)
       const errors = []
 
       if (!isValid) {
         errors.push(
           new CnabGenericFieldError({
-            message: 'Campo data de vencimento é obrigatório',
+            message: 'Campo uf do sacado inválido: deve conter exatamente 2 letras',
             lineNumber: this.lineNumber,
             fieldKey: this.fieldKey,
             range: this.range
@@ -40,12 +39,8 @@ export function Cnab400BoletoVencimentoField(recordType: string = DEFAULT_RECORD
       }
     }
 
-    protected parseValue(rawValue: string): Date {
-      const date = parseDateDDMMAA(rawValue)
-      if (date == null) {
-        throw new CnabFieldInvalidDateError(this.fieldKey, rawValue)
-      }
-      return date
+    protected parseValue(rawValue: string): string {
+      return rawValue
     }
   }
 }

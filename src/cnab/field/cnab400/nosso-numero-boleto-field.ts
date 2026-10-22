@@ -1,16 +1,17 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { blankIfZeros } from '@cnab/utils/phone-parser'
 
-export class Cnab240BoletoNossoNumeroField extends CnabField<string> {
+export class NossoNumeroBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'nosso_numero'
-  readonly range: [number, number] = [38, 57]
+  protected readonly recordType: string = '1'
+  readonly range: [number, number] = [63, 70]
 
   shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
   protected extractRawValue(): string {

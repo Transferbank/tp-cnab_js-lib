@@ -4,10 +4,10 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab240BoletoCidadeField extends CnabField<string> {
+export class EnderecoBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'cidade_do_sacado'
-  readonly range: [number, number] = [137, 151]
+  readonly fieldKey = 'endereco_do_sacado'
+  readonly range: [number, number] = [74, 113]
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoQ(this.rawLine)

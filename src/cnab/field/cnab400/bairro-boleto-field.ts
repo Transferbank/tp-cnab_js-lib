@@ -2,15 +2,21 @@ import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 
+const DEFAULT_START = 315
+const DEFAULT_END = 326
 const DEFAULT_RECORD_TYPE = '1'
 
-export function Cnab400BoletoUfField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<string> {
+export function BairroBoletoField(
+  start: number = DEFAULT_START,
+  end: number = DEFAULT_END,
+  recordType: string = DEFAULT_RECORD_TYPE
+): CnabFieldClass<string> {
   return class extends CnabField<string> {
     static readonly fieldType = CnabFieldType.BOLETO
-    readonly fieldKey = 'uf_do_sacado'
-    readonly range: [number, number] = [350, 351]
+    readonly fieldKey = 'bairro_do_sacado'
+    readonly range: [number, number] = [start, end]
     protected readonly recordType = recordType
 
     shouldValidate(): boolean {
@@ -18,17 +24,18 @@ export function Cnab400BoletoUfField(recordType: string = DEFAULT_RECORD_TYPE): 
     }
 
     protected performValidation(): CnabValidationResult {
+      const minLength = 1
       const value = this.value
-      const isValid = value != null && /^[A-Za-z]{2}$/.test(value)
+      const isValid = value != null && value.length >= minLength
       const errors = []
 
       if (!isValid) {
         errors.push(
-          new CnabGenericFieldError({
-            message: 'Campo uf do sacado inválido: deve conter exatamente 2 letras',
+          new CnabFieldMinLengthError({
             lineNumber: this.lineNumber,
             fieldKey: this.fieldKey,
-            range: this.range
+            range: this.range,
+            minLength
           })
         )
       }

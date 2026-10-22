@@ -5,7 +5,7 @@ import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cna
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab240BoletoVencimentoField extends CnabField<Date> {
+export class VencimentoBoletoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'data_de_vencimento'
   readonly range: [number, number] = [78, 85]
