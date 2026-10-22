@@ -4,14 +4,14 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { Cnab240BradescoBoletoCelularField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
-import { Cnab240CaixaBoletoCelularField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import { Cnab240BancoDoBrasilBoletoCelularField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import { CelularBoletoField as BradescoCelularBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/celular-boleto-field'
+import { CelularBoletoField as CaixaCelularBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/celular-boleto-field'
+import { CelularBoletoField as BancoDoBrasilCelularBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/celular-boleto-field'
 
 describe.each([
   [
-    'Cnab240BradescoBoletoCelularField (segment Y-04 code 03)',
-    Cnab240BradescoBoletoCelularField,
+    'BradescoCelularBoletoField (segment Y-04 code 03)',
+    BradescoCelularBoletoField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     '03',
     '3',
@@ -20,8 +20,8 @@ describe.each([
     '8 ou 9'
   ],
   [
-    'Cnab240CaixaBoletoCelularField (segment Y-04 code 04)',
-    Cnab240CaixaBoletoCelularField,
+    'CaixaCelularBoletoField (segment Y-04 code 04)',
+    CaixaCelularBoletoField,
     'caixa/cnab240/caixa_cnab_240.txt',
     '04',
     '3',
@@ -30,8 +30,8 @@ describe.each([
     '8 ou 9'
   ],
   [
-    'Cnab240BancoDoBrasilBoletoCelularField (segment Y-04 with record type 4)',
-    Cnab240BancoDoBrasilBoletoCelularField,
+    'BancoDoBrasilCelularBoletoField (segment Y-04 with record type 4)',
+    BancoDoBrasilCelularBoletoField,
     'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
     '03',
     '4',

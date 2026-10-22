@@ -1,3 +1,3 @@
-export { Cnab240BradescoBoletoEmailField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-email-field'
-export { Cnab240BradescoBoletoDddField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-ddd-field'
-export { Cnab240BradescoBoletoCelularField } from '@cnab/bank/bradesco/cnab/cnab240/field/cnab240-bradesco-boleto-celular-field'
+export { CelularBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/celular-boleto-field'
+export { DddBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/ddd-boleto-field'
+export { EmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/email-boleto-field'

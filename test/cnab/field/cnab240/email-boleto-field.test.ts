@@ -4,12 +4,10 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab240/email-boleto-field'
-import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import { Cnab240BradescoBoletoEmailField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
-import {
-  Cnab240BancoDoBrasilBoletoEmailSegmentoSField,
-  Cnab240BancoDoBrasilBoletoEmailSegmentoYField
-} from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/email-boleto-field'
+import { EmailBoletoField as BradescoEmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/email-boleto-field'
+import { EmailSegmentoSBoletoField as BancoDoBrasilEmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-s-boleto-field'
+import { EmailSegmentoYBoletoField as BancoDoBrasilEmailSegmentoYBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-y-boleto-field'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
 //  campo testado, porque os arquivos de exemplo só têm dados válidos.
@@ -28,15 +26,15 @@ const findFirstSegment = (
 // Pelo padrão FEBRABAN, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
   [
-    'Cnab240BradescoBoletoEmailField (segment Y-04, code 03)',
-    Cnab240BradescoBoletoEmailField,
+    'BradescoEmailBoletoField (segment Y-04, code 03)',
+    BradescoEmailBoletoField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'financeiro@comercialexemplo.com.br',
     '04'
   ],
   [
-    'Cnab240CaixaBoletoEmailField (segment Y-04, code 04)',
-    Cnab240CaixaBoletoEmailField,
+    'CaixaEmailBoletoField (segment Y-04, code 04)',
+    CaixaEmailBoletoField,
     'caixa/cnab240/caixa_cnab_240.txt',
     'maria.souza@exemplo.com',
     '03'
@@ -95,12 +93,12 @@ describe.each([
   })
 })
 
-describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8, accepts e-mails separated by semicolon)', (): void => {
+describe('BancoDoBrasilEmailSegmentoSBoletoField (segment S, print type 8, accepts e-mails separated by semicolon)', (): void => {
   const segmentoS = findFirstSegment('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'S')
 
   it('given segment S from the example file when reading then returns each e-mail', (): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(segmentoS, 11)
+    const field = new BancoDoBrasilEmailSegmentoSBoletoField(segmentoS, 11)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -115,7 +113,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
   it('given e-mails with a trailing semicolon when reading then ignores it', (): void => {
     // Given
     const lineWithTrailingSemicolon = replaceLineRange(segmentoS, [21, 160], 'joao@exemplo.com;maria@exemplo.com;')
-    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(lineWithTrailingSemicolon, 5)
+    const field = new BancoDoBrasilEmailSegmentoSBoletoField(lineWithTrailingSemicolon, 5)
 
     // When
     const result = field.validate()
@@ -138,7 +136,7 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
     invalidEmail: string
   ): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoSField(replaceLineRange(segmentoS, [21, 160], emails), 5)
+    const field = new BancoDoBrasilEmailSegmentoSBoletoField(replaceLineRange(segmentoS, [21, 160], emails), 5)
 
     // When
     const result = field.validate()
@@ -157,12 +155,12 @@ describe('Cnab240BancoDoBrasilBoletoEmailSegmentoSField (segment S, print type 8
 })
 
 // No Banco do Brasil, o segmento Y-04 usa o tipo de registro '4' na posição 8, e não o '3' do padrão FEBRABAN.
-describe('Cnab240BancoDoBrasilBoletoEmailSegmentoYField (segment Y-04 with record type 4)', (): void => {
+describe('BancoDoBrasilEmailSegmentoYBoletoField (segment Y-04 with record type 4)', (): void => {
   const segmentoY = findFirstSegment('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'Y', '03', '4')
 
   it('given segment Y-04 from the example file when reading then returns its e-mail', (): void => {
     // Given
-    const field = new Cnab240BancoDoBrasilBoletoEmailSegmentoYField(segmentoY, 12)
+    const field = new BancoDoBrasilEmailSegmentoYBoletoField(segmentoY, 12)
 
     // When
     const shouldValidate = field.shouldValidate()

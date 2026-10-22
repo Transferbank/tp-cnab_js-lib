@@ -1,8 +1,8 @@
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { BancoDoBrasilBoletoEmailField } from '@cnab/bank/banco-do-brasil/banco-do-brasil-boleto-email-field'
+import { EmailBoletoField as BancoDoBrasilBaseEmailBoletoField } from '@cnab/bank/banco-do-brasil/email-boleto-field'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
-export class Cnab400BancoDoBrasilBoletoEmailField extends BancoDoBrasilBoletoEmailField {
+export class EmailBoletoField extends BancoDoBrasilBaseEmailBoletoField {
   static readonly format = CnabFormat.CNAB400
   readonly range: [number, number] = [4, 139]
 

@@ -7,13 +7,13 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { DocumentoSacadoBoletoField } from '@cnab/field/cnab240/documento-sacado-boleto-field'
-import { Cnab240BancoDoBrasilBoletoSacadoDocumentoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-sacado-documento-field'
+import { DocumentoSacadoBoletoField as BancoDoBrasilDocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/documento-sacado-boleto-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
+type DocumentoSacadoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
 
 describe('DocumentoSacadoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
@@ -47,7 +47,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab240BancoDoBrasilBoletoSacadoDocumentoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '11122233396' },
+      { FieldClass: BancoDoBrasilDocumentoSacadoBoletoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstDocument: '11122233396' },
       { FieldClass: DocumentoSacadoBoletoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstDocument: '10000791989' },
       { FieldClass: DocumentoSacadoBoletoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstDocument: '11122233396' },
       { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstDocument: '11122233396' },
@@ -57,7 +57,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
     ])(
       'given segment Q lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
-        FieldClass: SacadoDocumentoFieldClass
+        FieldClass: DocumentoSacadoFieldClass
         examplePath: string
         expectedFirstDocument: string
       }): void => {
@@ -156,7 +156,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
       const lineWithZeroIndicator = replaceLineRange(rawLine, [18, 18], '0')
 
       // When
-      const field = new Cnab240BancoDoBrasilBoletoSacadoDocumentoField(lineWithZeroIndicator, lineNumber)
+      const field = new BancoDoBrasilDocumentoSacadoBoletoField(lineWithZeroIndicator, lineNumber)
       const result = field.validate()
 
       // Then

@@ -4,10 +4,10 @@ import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { NossoNumeroBoletoField } from '@cnab/field/cnab240/nosso-numero-boleto-field'
-import { Cnab240CaixaBoletoNossoNumeroField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import { Cnab240ItauBoletoNossoNumeroField } from '@cnab/bank/itau/cnab/cnab240/field/fields'
-import { Cnab240SantanderBoletoNossoNumeroField } from '@cnab/bank/santander/cnab/cnab240/field/fields'
-import { Cnab240SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
+import { NossoNumeroBoletoField as CaixaNossoNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as ItauNossoNumeroBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as SantanderNossoNumeroBoletoField } from '@cnab/bank/santander/cnab/cnab240/field/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as SicrediNossoNumeroBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/nosso-numero-boleto-field'
 
 const cases: FieldTestCase[] = [
   [
@@ -19,28 +19,28 @@ const cases: FieldTestCase[] = [
   ],
   [
     'Caixa CNAB240',
-    Cnab240CaixaBoletoNossoNumeroField,
+    CaixaNossoNumeroBoletoField,
     'caixa/cnab240/caixa_cnab_240.txt',
     'P',
     '14000000000000001'
   ],
   [
     'Itaú CNAB240',
-    Cnab240ItauBoletoNossoNumeroField,
+    ItauNossoNumeroBoletoField,
     'itau/cnab240/itau_cnab_240.txt',
     'P',
     '109000000010'
   ],
   [
     'Santander CNAB240',
-    Cnab240SantanderBoletoNossoNumeroField,
+    SantanderNossoNumeroBoletoField,
     'santander/cnab240/santander_cnab_240.txt',
     'P',
     '0000000000019'
   ],
   [
     'Sicredi CNAB240',
-    Cnab240SicrediBoletoNossoNumeroField,
+    SicrediNossoNumeroBoletoField,
     'sicredi/cnab240/sicredi_cnab_240.txt',
     'P',
     '262000010'

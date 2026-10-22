@@ -4,9 +4,9 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab400RecordLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab400/email-boleto-field'
-import { Cnab400ItauBoletoEmailField } from '@cnab/bank/itau/cnab/cnab400/field/fields'
-import { Cnab400CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab400/field/fields'
-import { Cnab400BancoDoBrasilBoletoEmailField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
+import { EmailBoletoField as ItauEmailBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/email-boleto-field'
+import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/email-boleto-field'
+import { EmailBoletoField as BancoDoBrasilEmailBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/email-boleto-field'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
 //  campo testado, porque os arquivos de exemplo só têm dados válidos.
@@ -19,15 +19,15 @@ const findRecord = (examplePath: string, recordType: string): string => {
 // No CNAB400, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
   [
-    'Cnab400CaixaBoletoEmailField (record 3)',
-    Cnab400CaixaBoletoEmailField,
+    'CaixaEmailBoletoField (record 3)',
+    CaixaEmailBoletoField,
     findRecord('caixa/cnab400/caixa_cnab_400.REM', '3'),
     [54, 103],
     'leticia.modelo@exemplo.com'
   ],
   [
-    'Cnab400ItauBoletoEmailField (record 5)',
-    Cnab400ItauBoletoEmailField,
+    'ItauEmailBoletoField (record 5)',
+    ItauEmailBoletoField,
     findRecord('itau/cnab400/ITAU_cnab_400.REM', '5'),
     [2, 121],
     'compras@materiaisomega.com.br'
@@ -75,11 +75,11 @@ describe.each([
   })
 })
 
-describe('Cnab400BancoDoBrasilBoletoEmailField (record 5, service type 01, accepts e-mails separated by semicolon)', (): void => {
+describe('BancoDoBrasilEmailBoletoField (record 5, service type 01, accepts e-mails separated by semicolon)', (): void => {
   it('given record 5 with service type 01 from the example file when reading then returns each e-mail', (): void => {
     // Given
     const registro5Email = findRecord('banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '501')
-    const field = new Cnab400BancoDoBrasilBoletoEmailField(registro5Email, 227)
+    const field = new BancoDoBrasilEmailBoletoField(registro5Email, 227)
 
     // When
     const shouldValidate = field.shouldValidate()

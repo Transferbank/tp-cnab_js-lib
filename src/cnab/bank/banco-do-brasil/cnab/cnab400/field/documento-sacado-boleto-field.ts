@@ -1,9 +1,9 @@
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { DocumentoSacadoBoletoField } from '@cnab/field/cnab400/documento-sacado-boleto-field'
+import { DocumentoSacadoBoletoField as Cnab400DocumentoSacadoBoletoField } from '@cnab/field/cnab400/documento-sacado-boleto-field'
 
 // Registro de detalhe '7' em vez de '1'. "00"=Isento: título é registrado normalmente
 // sem validar CPF/CNPJ.
-export class Cnab400BancoDoBrasilBoletoSacadoDocumentoField extends DocumentoSacadoBoletoField {
+export class DocumentoSacadoBoletoField extends Cnab400DocumentoSacadoBoletoField {
   protected readonly recordType = '7'
 
   protected performValidation(): CnabValidationResult {

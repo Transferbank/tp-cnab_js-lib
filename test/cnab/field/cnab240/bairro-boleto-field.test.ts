@@ -6,7 +6,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { BairroBoletoField } from '@cnab/field/cnab240/bairro-boleto-field'
-import { Cnab240BancoDoBrasilBoletoBairroField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/cnab240-banco-do-brasil-boleto-bairro-field'
+import { BairroBoletoField as BancoDoBrasilBairroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/bairro-boleto-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
@@ -47,14 +47,14 @@ describe('BairroBoletoField', (): void => {
   describe('range', (): void => {
     it('given Banco do Brasil then overrides the base range to a smaller 12-char slice', (): void => {
       // Then
-      expect(getFieldRange(Cnab240BancoDoBrasilBoletoBairroField)).toEqual([114, 125])
+      expect(getFieldRange(BancoDoBrasilBairroBoletoField)).toEqual([114, 125])
       expect(getFieldRange(BairroBoletoField)).toEqual([114, 128])
     })
   })
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: Cnab240BancoDoBrasilBoletoBairroField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BancoDoBrasilBairroBoletoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'CENTRO' },
       { FieldClass: BairroBoletoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'CENTRO' },
       { FieldClass: BairroBoletoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'CENTRO' },
       { FieldClass: BairroBoletoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'CENTRO' },
@@ -114,7 +114,7 @@ describe('BairroBoletoField', (): void => {
       }
 
       // When
-      const field = new Cnab240BancoDoBrasilBoletoBairroField(rawLine, realLineNumber(lines, rawLine))
+      const field = new BancoDoBrasilBairroBoletoField(rawLine, realLineNumber(lines, rawLine))
 
       // Then
       expect(field.value).toBe('JARDIM AMERI')
