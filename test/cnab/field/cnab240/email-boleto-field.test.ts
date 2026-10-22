@@ -5,7 +5,7 @@ import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPat
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab240/email-boleto-field'
 import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import { Cnab240BradescoBoletoEmailField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
+import { EmailBoletoField as BradescoEmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/email-boleto-field'
 import { EmailSegmentoSBoletoField as BancoDoBrasilEmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-s-boleto-field'
 import { EmailSegmentoYBoletoField as BancoDoBrasilEmailSegmentoYBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-y-boleto-field'
 
@@ -26,8 +26,8 @@ const findFirstSegment = (
 // Pelo padrão FEBRABAN, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
   [
-    'Cnab240BradescoBoletoEmailField (segment Y-04, code 03)',
-    Cnab240BradescoBoletoEmailField,
+    'BradescoEmailBoletoField (segment Y-04, code 03)',
+    BradescoEmailBoletoField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'financeiro@comercialexemplo.com.br',
     '04'
