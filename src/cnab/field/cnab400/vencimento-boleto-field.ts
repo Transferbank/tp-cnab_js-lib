@@ -1,0 +1,51 @@
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { parseDateDDMMAA } from '@cnab/utils/date-parser'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { CnabGenericFieldError, CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
+
+const DEFAULT_RECORD_TYPE = '1'
+
+export function VencimentoBoletoField(recordType: string = DEFAULT_RECORD_TYPE): CnabFieldClass<Date> {
+  return class extends CnabField<Date> {
+    static readonly fieldType = CnabFieldType.BOLETO
+    readonly fieldKey = 'data_de_vencimento'
+    readonly range: [number, number] = [121, 126]
+    protected readonly recordType = recordType
+
+    shouldValidate(): boolean {
+      return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
+    }
+
+    protected performValidation(): CnabValidationResult {
+      const value = this.value
+      const isValid = value != null
+      const errors = []
+
+      if (!isValid) {
+        errors.push(
+          new CnabGenericFieldError({
+            message: 'Campo data de vencimento é obrigatório',
+            lineNumber: this.lineNumber,
+            fieldKey: this.fieldKey,
+            range: this.range
+          })
+        )
+      }
+
+      return {
+        isValid,
+        errors
+      }
+    }
+
+    protected parseValue(rawValue: string): Date {
+      const date = parseDateDDMMAA(rawValue)
+      if (date == null) {
+        throw new CnabFieldInvalidDateError(this.fieldKey, rawValue)
+      }
+      return date
+    }
+  }
+}

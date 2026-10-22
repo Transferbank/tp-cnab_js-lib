@@ -5,37 +5,19 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { optional } from '@cnab/type/cnab-field'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator} from '@cnab/validators/cnab400/cnab400-line-start-validator'
-import { Cnab240BoletoNomeField } from '@cnab/field/cnab240/boleto-nome-field'
-import { Cnab400BoletoNomeField } from '@cnab/field/cnab400/boleto-nome-field'
-import { Cnab240BoletoSacadoDocumentoField } from '@cnab/field/cnab240/boleto-sacado-documento-field'
-import { Cnab400BoletoSacadoDocumentoField } from '@cnab/field/cnab400/boleto-sacado-documento-field'
-import { Cnab240BoletoValorTituloField } from '@cnab/field/cnab240/boleto-valor-titulo-field'
-import { Cnab400BoletoValorTituloField } from '@cnab/field/cnab400/boleto-valor-titulo-field'
-import { Cnab240BoletoVencimentoField } from '@cnab/field/cnab240/boleto-vencimento-field'
-import { Cnab400BoletoVencimentoField } from '@cnab/field/cnab400/boleto-vencimento-field'
-import { Cnab240BoletoCepField } from '@cnab/field/cnab240/boleto-cep-field'
-import { Cnab400BoletoCepField } from '@cnab/field/cnab400/boleto-cep-field'
-import { Cnab240BoletoEnderecoField } from '@cnab/field/cnab240/boleto-endereco-field'
-import { Cnab400BoletoEnderecoField } from '@cnab/field/cnab400/boleto-endereco-field'
-import { Cnab240BoletoBairroField } from '@cnab/field/cnab240/boleto-bairro-field'
-import { Cnab400BoletoBairroField } from '@cnab/field/cnab400/boleto-bairro-field'
-import { Cnab240BoletoCidadeField } from '@cnab/field/cnab240/boleto-cidade-field'
-import { Cnab400BoletoCidadeField } from '@cnab/field/cnab400/boleto-cidade-field'
-import { Cnab240BoletoUfField } from '@cnab/field/cnab240/boleto-uf-field'
-import { Cnab400BoletoUfField } from '@cnab/field/cnab400/boleto-uf-field'
-import { Cnab240BoletoNossoNumeroField } from '@cnab/field/cnab240/boleto-nosso-numero-field'
-import { Cnab400BoletoNossoNumeroField } from '@cnab/field/cnab400/boleto-nosso-numero-field'
+import * as Cnab240 from '@cnab/field/cnab240/fields'
+import * as Cnab400 from '@cnab/field/cnab400/fields'
 
-import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
-import * as BradescoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
-import * as CaixaFields400 from '@cnab/bank/caixa/cnab/cnab400/field/fields'
-import * as SicoobFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
-import * as BancoDoBrasilFields240 from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
-import * as BancoDoBrasilFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
-import * as CaixaFields240 from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import * as ItauFields240 from '@cnab/bank/itau/cnab/cnab240/field/fields'
-import * as SantanderFields240 from '@cnab/bank/santander/cnab/cnab240/field/fields'
-import * as SicrediFields240 from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
+import * as Cnab400Sicredi from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
+import * as Cnab400Bradesco from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
+import * as Cnab400Caixa from '@cnab/bank/caixa/cnab/cnab400/field/fields'
+import * as Cnab400Sicoob from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
+import * as Cnab240BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import * as Cnab400BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
+import * as Cnab240Caixa from '@cnab/bank/caixa/cnab/cnab240/field/fields'
+import * as Cnab240Itau from '@cnab/bank/itau/cnab/cnab240/field/fields'
+import * as Cnab240Santander from '@cnab/bank/santander/cnab/cnab240/field/fields'
+import * as Cnab240Sicredi from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
 
 import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
@@ -59,16 +41,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField(),
-          Cnab240BoletoVencimentoField,
-          Cnab240BoletoValorTituloField,
-          Cnab240BoletoSacadoDocumentoField,
-          Cnab240BoletoEnderecoField,
-          Cnab240BoletoBairroField,
-          Cnab240BoletoCepField,
-          Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(Cnab240BoletoNossoNumeroField)
+          Cnab240.NomeBoletoField(),
+          Cnab240.VencimentoBoletoField,
+          Cnab240.ValorTituloBoletoField,
+          Cnab240.DocumentoSacadoBoletoField,
+          Cnab240.EnderecoBoletoField,
+          Cnab240.BairroBoletoField,
+          Cnab240.CepBoletoField,
+          Cnab240.CidadeBoletoField,
+          Cnab240.UfBoletoField,
+          optional(Cnab240.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -89,13 +71,13 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField(),
-          Cnab400BoletoVencimentoField(),
-          Cnab400BoletoValorTituloField(),
-          Cnab400BoletoSacadoDocumentoField,
-          Cnab400BoletoEnderecoField(),
-          Cnab400BoletoCepField(),
-          optional(BradescoFields400.Cnab400BradescoBoletoNossoNumeroField)
+          Cnab400.NomeBoletoField(),
+          Cnab400.VencimentoBoletoField(),
+          Cnab400.ValorTituloBoletoField(),
+          Cnab400.DocumentoSacadoBoletoField,
+          Cnab400.EnderecoBoletoField(),
+          Cnab400.CepBoletoField(),
+          optional(Cnab400Bradesco.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -115,16 +97,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField(34, 63),
-          Cnab240BoletoVencimentoField,
-          Cnab240BoletoValorTituloField,
-          Cnab240BoletoSacadoDocumentoField,
-          Cnab240BoletoEnderecoField,
-          Cnab240BoletoBairroField,
-          Cnab240BoletoCepField,
-          Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(ItauFields240.Cnab240ItauBoletoNossoNumeroField)
+          Cnab240.NomeBoletoField(34, 63),
+          Cnab240.VencimentoBoletoField,
+          Cnab240.ValorTituloBoletoField,
+          Cnab240.DocumentoSacadoBoletoField,
+          Cnab240.EnderecoBoletoField,
+          Cnab240.BairroBoletoField,
+          Cnab240.CepBoletoField,
+          Cnab240.CidadeBoletoField,
+          Cnab240.UfBoletoField,
+          optional(Cnab240Itau.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -145,16 +127,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField(235, 264),
-          Cnab400BoletoVencimentoField(),
-          Cnab400BoletoValorTituloField(),
-          Cnab400BoletoSacadoDocumentoField,
-          Cnab400BoletoEnderecoField(),
-          Cnab400BoletoBairroField(),
-          Cnab400BoletoCepField(),
-          Cnab400BoletoCidadeField(),
-          Cnab400BoletoUfField(),
-          optional(Cnab400BoletoNossoNumeroField)
+          Cnab400.NomeBoletoField(235, 264),
+          Cnab400.VencimentoBoletoField(),
+          Cnab400.ValorTituloBoletoField(),
+          Cnab400.DocumentoSacadoBoletoField,
+          Cnab400.EnderecoBoletoField(),
+          Cnab400.BairroBoletoField(),
+          Cnab400.CepBoletoField(),
+          Cnab400.CidadeBoletoField(),
+          Cnab400.UfBoletoField(),
+          optional(Cnab400.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -174,16 +156,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField(),
-          Cnab240BoletoVencimentoField,
-          Cnab240BoletoValorTituloField,
-          Cnab240BoletoSacadoDocumentoField,
-          Cnab240BoletoEnderecoField,
-          Cnab240BoletoBairroField,
-          Cnab240BoletoCepField,
-          Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(SantanderFields240.Cnab240SantanderBoletoNossoNumeroField)
+          Cnab240.NomeBoletoField(),
+          Cnab240.VencimentoBoletoField,
+          Cnab240.ValorTituloBoletoField,
+          Cnab240.DocumentoSacadoBoletoField,
+          Cnab240.EnderecoBoletoField,
+          Cnab240.BairroBoletoField,
+          Cnab240.CepBoletoField,
+          Cnab240.CidadeBoletoField,
+          Cnab240.UfBoletoField,
+          optional(Cnab240Santander.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -204,16 +186,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField(),
-          Cnab400BoletoVencimentoField(),
-          Cnab400BoletoValorTituloField(),
-          Cnab400BoletoSacadoDocumentoField,
-          Cnab400BoletoEnderecoField(),
-          Cnab400BoletoBairroField(),
-          Cnab400BoletoCepField(),
-          Cnab400BoletoCidadeField(),
-          Cnab400BoletoUfField(),
-          optional(Cnab400BoletoNossoNumeroField)
+          Cnab400.NomeBoletoField(),
+          Cnab400.VencimentoBoletoField(),
+          Cnab400.ValorTituloBoletoField(),
+          Cnab400.DocumentoSacadoBoletoField,
+          Cnab400.EnderecoBoletoField(),
+          Cnab400.BairroBoletoField(),
+          Cnab400.CepBoletoField(),
+          Cnab400.CidadeBoletoField(),
+          Cnab400.UfBoletoField(),
+          optional(Cnab400.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -233,16 +215,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField(),
-          Cnab240BoletoVencimentoField,
-          Cnab240BoletoValorTituloField,
-          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoSacadoDocumentoField,
-          Cnab240BoletoEnderecoField,
-          BancoDoBrasilFields240.Cnab240BancoDoBrasilBoletoBairroField,
-          Cnab240BoletoCepField,
-          Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(Cnab240BoletoNossoNumeroField)
+          Cnab240.NomeBoletoField(),
+          Cnab240.VencimentoBoletoField,
+          Cnab240.ValorTituloBoletoField,
+          Cnab240BancoDoBrasil.DocumentoSacadoBoletoField,
+          Cnab240.EnderecoBoletoField,
+          Cnab240BancoDoBrasil.BairroBoletoField,
+          Cnab240.CepBoletoField,
+          Cnab240.CidadeBoletoField,
+          Cnab240.UfBoletoField,
+          optional(Cnab240.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -263,16 +245,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField(235, 271, '7'),
-          Cnab400BoletoVencimentoField('7'),
-          Cnab400BoletoValorTituloField('7'),
-          BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoSacadoDocumentoField,
-          Cnab400BoletoEnderecoField(275, 314, '7'),
-          Cnab400BoletoBairroField(315, 326, '7'),
-          Cnab400BoletoCepField('7'),
-          Cnab400BoletoCidadeField('7'),
-          Cnab400BoletoUfField('7'),
-          optional(BancoDoBrasilFields400.Cnab400BancoDoBrasilBoletoNossoNumeroField)
+          Cnab400.NomeBoletoField(235, 271, '7'),
+          Cnab400.VencimentoBoletoField('7'),
+          Cnab400.ValorTituloBoletoField('7'),
+          Cnab400BancoDoBrasil.DocumentoSacadoBoletoField,
+          Cnab400.EnderecoBoletoField(275, 314, '7'),
+          Cnab400.BairroBoletoField(315, 326, '7'),
+          Cnab400.CepBoletoField('7'),
+          Cnab400.CidadeBoletoField('7'),
+          Cnab400.UfBoletoField('7'),
+          optional(Cnab400BancoDoBrasil.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -292,16 +274,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField(),
-          Cnab240BoletoVencimentoField,
-          Cnab240BoletoValorTituloField,
-          Cnab240BoletoSacadoDocumentoField,
-          optional(Cnab240BoletoEnderecoField),// No manual da Caixa CNAB240, as notas G032 a G036
-          optional(Cnab240BoletoBairroField),  //  descrevem endereço, bairro, CEP, cidade e UF do pagador
-          optional(Cnab240BoletoCepField),    //  como opcionais quando a emissão e a entrega do boleto
-          optional(Cnab240BoletoCidadeField), //  são feitas pelo beneficiário.
-          optional(Cnab240BoletoUfField),
-          optional(CaixaFields240.Cnab240CaixaBoletoNossoNumeroField)
+          Cnab240.NomeBoletoField(),
+          Cnab240.VencimentoBoletoField,
+          Cnab240.ValorTituloBoletoField,
+          Cnab240.DocumentoSacadoBoletoField,
+          optional(Cnab240.EnderecoBoletoField),// No manual da Caixa CNAB240, as notas G032 a G036
+          optional(Cnab240.BairroBoletoField),  //  descrevem endereço, bairro, CEP, cidade e UF do pagador
+          optional(Cnab240.CepBoletoField),    //  como opcionais quando a emissão e a entrega do boleto
+          optional(Cnab240.CidadeBoletoField), //  são feitas pelo beneficiário.
+          optional(Cnab240.UfBoletoField),
+          optional(Cnab240Caixa.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -322,16 +304,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField(),
-          Cnab400BoletoVencimentoField(),
-          Cnab400BoletoValorTituloField(),
-          Cnab400BoletoSacadoDocumentoField,
-          Cnab400BoletoEnderecoField(),
-          Cnab400BoletoBairroField(),
-          Cnab400BoletoCepField(),
-          Cnab400BoletoCidadeField(),
-          Cnab400BoletoUfField(),
-          optional(CaixaFields400.Cnab400CaixaBoletoNossoNumeroField)
+          Cnab400.NomeBoletoField(),
+          Cnab400.VencimentoBoletoField(),
+          Cnab400.ValorTituloBoletoField(),
+          Cnab400.DocumentoSacadoBoletoField,
+          Cnab400.EnderecoBoletoField(),
+          Cnab400.BairroBoletoField(),
+          Cnab400.CepBoletoField(),
+          Cnab400.CidadeBoletoField(),
+          Cnab400.UfBoletoField(),
+          optional(Cnab400Caixa.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -351,15 +333,15 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField(),
-          Cnab240BoletoVencimentoField,
-          Cnab240BoletoValorTituloField,
-          Cnab240BoletoSacadoDocumentoField,
-          Cnab240BoletoEnderecoField,
-          Cnab240BoletoCepField,
-          Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(SicrediFields240.Cnab240SicrediBoletoNossoNumeroField)
+          Cnab240.NomeBoletoField(),
+          Cnab240.VencimentoBoletoField,
+          Cnab240.ValorTituloBoletoField,
+          Cnab240.DocumentoSacadoBoletoField,
+          Cnab240.EnderecoBoletoField,
+          Cnab240.CepBoletoField,
+          Cnab240.CidadeBoletoField,
+          Cnab240.UfBoletoField,
+          optional(Cnab240Sicredi.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -380,13 +362,13 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField(),
-          Cnab400BoletoVencimentoField(),
-          Cnab400BoletoValorTituloField(),
-          SicrediFields400.Cnab400SicrediBoletoSacadoDocumentoField,
-          Cnab400BoletoEnderecoField(),
-          Cnab400BoletoCepField(),
-          optional(SicrediFields400.Cnab400SicrediBoletoNossoNumeroField)
+          Cnab400.NomeBoletoField(),
+          Cnab400.VencimentoBoletoField(),
+          Cnab400.ValorTituloBoletoField(),
+          Cnab400Sicredi.DocumentoSacadoBoletoField,
+          Cnab400.EnderecoBoletoField(),
+          Cnab400.CepBoletoField(),
+          optional(Cnab400Sicredi.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -406,16 +388,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab240BoletoNomeField(),
-          Cnab240BoletoVencimentoField,
-          Cnab240BoletoValorTituloField,
-          Cnab240BoletoSacadoDocumentoField,
-          Cnab240BoletoEnderecoField,
-          Cnab240BoletoBairroField,
-          Cnab240BoletoCepField,
-          Cnab240BoletoCidadeField,
-          Cnab240BoletoUfField,
-          optional(Cnab240BoletoNossoNumeroField)
+          Cnab240.NomeBoletoField(),
+          Cnab240.VencimentoBoletoField,
+          Cnab240.ValorTituloBoletoField,
+          Cnab240.DocumentoSacadoBoletoField,
+          Cnab240.EnderecoBoletoField,
+          Cnab240.BairroBoletoField,
+          Cnab240.CepBoletoField,
+          Cnab240.CidadeBoletoField,
+          Cnab240.UfBoletoField,
+          optional(Cnab240.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -436,16 +418,16 @@ function registerCnabSchemas(): CnabSchema[] {
       boleto: {
         fieldType: CnabFieldType.BOLETO,
         fields: [
-          Cnab400BoletoNomeField(),
-          Cnab400BoletoVencimentoField(),
-          Cnab400BoletoValorTituloField(),
-          Cnab400BoletoSacadoDocumentoField,
-          Cnab400BoletoEnderecoField(275, 311),
-          Cnab400BoletoBairroField(312, 326),
-          Cnab400BoletoCepField(),
-          Cnab400BoletoCidadeField(),
-          Cnab400BoletoUfField(),
-          optional(SicoobFields400.Cnab400SicoobBoletoNossoNumeroField)
+          Cnab400.NomeBoletoField(),
+          Cnab400.VencimentoBoletoField(),
+          Cnab400.ValorTituloBoletoField(),
+          Cnab400.DocumentoSacadoBoletoField,
+          Cnab400.EnderecoBoletoField(275, 311),
+          Cnab400.BairroBoletoField(312, 326),
+          Cnab400.CepBoletoField(),
+          Cnab400.CidadeBoletoField(),
+          Cnab400.UfBoletoField(),
+          optional(Cnab400Sicoob.NossoNumeroBoletoField)
         ],
       },
     }),

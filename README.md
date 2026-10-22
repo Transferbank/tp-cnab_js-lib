@@ -99,12 +99,12 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 
 | Banco           | Formato  | E-mail | DDD e celular |
 | --------------- | :------: | :----: | :-----------: |
-| Banco do Brasil | CNAB 240 |   ✅   |      ✅       |
-| Banco do Brasil | CNAB 400 |   ✅   |               |
-| Bradesco        | CNAB 240 |   ✅   |      ✅       |
-| Caixa           | CNAB 240 |   ✅   |      ✅       |
-| Caixa           | CNAB 400 |   ✅   |      ✅       |
-| Itaú            | CNAB 400 |   ✅   |               |
+| Banco do Brasil | CNAB 240 |   ⚠️   |      ⚠️       |
+| Banco do Brasil | CNAB 400 |   ⚠️   |      ❌       |
+| Bradesco        | CNAB 240 |   ⚠️   |      ⚠️       |
+| Caixa           | CNAB 240 |   ⚠️   |      ⚠️       |
+| Caixa           | CNAB 400 |   ⚠️   |      ⚠️       |
+| Itaú            | CNAB 400 |   ⚠️   |      ❌       |
 
 ## Instalação
 
@@ -190,7 +190,7 @@ Por padrão, um campo extra é aplicado a qualquer banco e formato. Como a posi�
 ```ts
 import { CnabBank, CnabField, CnabFieldType, CnabFormat, Cnab400LineTypeChecker, CnabValidationResult } from '@fx55/cnab-lib-ts'
 
-class ItauDataDeEmissaoField extends CnabField<string> {
+class DataDeEmissaoBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   static readonly bank = CnabBank.ITAU
   static readonly format = CnabFormat.CNAB400
@@ -210,7 +210,7 @@ class ItauDataDeEmissaoField extends CnabField<string> {
   }
 }
 
-const cnab = cnabFile.read([ItauDataDeEmissaoField])
+const cnab = cnabFile.read([DataDeEmissaoBoletoField])
 ```
 
 Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
