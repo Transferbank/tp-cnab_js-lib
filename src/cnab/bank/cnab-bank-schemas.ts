@@ -11,7 +11,7 @@ import * as Cnab400 from '@cnab/field/cnab400/fields'
 import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as Cnab400Bradesco from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
 import * as Cnab400Caixa from '@cnab/bank/caixa/cnab/cnab400/field/fields'
-import * as SicoobFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
+import * as Cnab400Sicoob from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
 import * as Cnab240BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 import * as Cnab400BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
 import * as Cnab240Caixa from '@cnab/bank/caixa/cnab/cnab240/field/fields'
@@ -427,7 +427,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400.CepBoletoField(),
           Cnab400.CidadeBoletoField(),
           Cnab400.UfBoletoField(),
-          optional(SicoobFields400.Cnab400SicoobBoletoNossoNumeroField)
+          optional(Cnab400Sicoob.NossoNumeroBoletoField)
         ],
       },
     }),
