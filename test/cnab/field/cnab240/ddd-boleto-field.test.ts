@@ -5,7 +5,7 @@ import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPat
 import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { DddBoletoField as BradescoDddBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/ddd-boleto-field'
-import { Cnab240CaixaBoletoDddField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
+import { DddBoletoField as CaixaDddBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/ddd-boleto-field'
 import { DddBoletoField as BancoDoBrasilDddBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/ddd-boleto-field'
 
 describe.each([
@@ -19,8 +19,8 @@ describe.each([
     '11'
   ],
   [
-    'Cnab240CaixaBoletoDddField (segment Y-04 code 04)',
-    Cnab240CaixaBoletoDddField,
+    'CaixaDddBoletoField (segment Y-04 code 04)',
+    CaixaDddBoletoField,
     'caixa/cnab240/caixa_cnab_240.txt',
     '04',
     '3',

@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab240/email-boleto-field'
-import { Cnab240CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
+import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/email-boleto-field'
 import { EmailBoletoField as BradescoEmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/email-boleto-field'
 import { EmailSegmentoSBoletoField as BancoDoBrasilEmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-s-boleto-field'
 import { EmailSegmentoYBoletoField as BancoDoBrasilEmailSegmentoYBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-y-boleto-field'
@@ -33,8 +33,8 @@ describe.each([
     '04'
   ],
   [
-    'Cnab240CaixaBoletoEmailField (segment Y-04, code 04)',
-    Cnab240CaixaBoletoEmailField,
+    'CaixaEmailBoletoField (segment Y-04, code 04)',
+    CaixaEmailBoletoField,
     'caixa/cnab240/caixa_cnab_240.txt',
     'maria.souza@exemplo.com',
     '03'

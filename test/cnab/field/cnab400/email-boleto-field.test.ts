@@ -5,7 +5,7 @@ import { findFirstCnab400RecordLine, readExampleLines, replaceLineRange, resPath
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab400/email-boleto-field'
 import { Cnab400ItauBoletoEmailField } from '@cnab/bank/itau/cnab/cnab400/field/fields'
-import { Cnab400CaixaBoletoEmailField } from '@cnab/bank/caixa/cnab/cnab400/field/fields'
+import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/email-boleto-field'
 import { EmailBoletoField as BancoDoBrasilEmailBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/email-boleto-field'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
@@ -19,8 +19,8 @@ const findRecord = (examplePath: string, recordType: string): string => {
 // No CNAB400, o campo traz um único e-mail. Só o Banco do Brasil aceita mais de um, separados por ';'.
 describe.each([
   [
-    'Cnab400CaixaBoletoEmailField (record 3)',
-    Cnab400CaixaBoletoEmailField,
+    'CaixaEmailBoletoField (record 3)',
+    CaixaEmailBoletoField,
     findRecord('caixa/cnab400/caixa_cnab_400.REM', '3'),
     [54, 103],
     'leticia.modelo@exemplo.com'
