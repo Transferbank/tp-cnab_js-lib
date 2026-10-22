@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab400RecordLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab400/email-boleto-field'
-import { Cnab400ItauBoletoEmailField } from '@cnab/bank/itau/cnab/cnab400/field/fields'
+import { EmailBoletoField as ItauEmailBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/email-boleto-field'
 import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/email-boleto-field'
 import { EmailBoletoField as BancoDoBrasilEmailBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/email-boleto-field'
 
@@ -26,8 +26,8 @@ describe.each([
     'leticia.modelo@exemplo.com'
   ],
   [
-    'Cnab400ItauBoletoEmailField (record 5)',
-    Cnab400ItauBoletoEmailField,
+    'ItauEmailBoletoField (record 5)',
+    ItauEmailBoletoField,
     findRecord('itau/cnab400/ITAU_cnab_400.REM', '5'),
     [2, 121],
     'compras@materiaisomega.com.br'

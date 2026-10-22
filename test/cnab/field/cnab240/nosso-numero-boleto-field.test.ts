@@ -5,7 +5,7 @@ import { FieldTestCase, findFirstCnab240SegmentLine, getFieldRange, readExampleL
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { NossoNumeroBoletoField } from '@cnab/field/cnab240/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as CaixaNossoNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/nosso-numero-boleto-field'
-import { Cnab240ItauBoletoNossoNumeroField } from '@cnab/bank/itau/cnab/cnab240/field/fields'
+import { NossoNumeroBoletoField as ItauNossoNumeroBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/nosso-numero-boleto-field'
 import { Cnab240SantanderBoletoNossoNumeroField } from '@cnab/bank/santander/cnab/cnab240/field/fields'
 import { Cnab240SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
 
@@ -26,7 +26,7 @@ const cases: FieldTestCase[] = [
   ],
   [
     'Itaú CNAB240',
-    Cnab240ItauBoletoNossoNumeroField,
+    ItauNossoNumeroBoletoField,
     'itau/cnab240/itau_cnab_240.txt',
     'P',
     '109000000010'
