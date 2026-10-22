@@ -1,5 +1,5 @@
-import { NossoNumeroBoletoField } from '@cnab/field/cnab240/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as Cnab240NossoNumeroBoletoField } from '@cnab/field/cnab240/nosso-numero-boleto-field'
 
-export class Cnab240ItauBoletoNossoNumeroField extends NossoNumeroBoletoField {
+export class NossoNumeroBoletoField extends Cnab240NossoNumeroBoletoField {
   readonly range: [number, number] = [38, 49]
 }
