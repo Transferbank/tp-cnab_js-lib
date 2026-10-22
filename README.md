@@ -27,41 +27,62 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 ## Campos de boleto
 
+Os campos do boleto são de dois tipos:
+
+- **Canônicos:** lidos por padrão em toda leitura. Verificar o catálogo em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+- **Extras:** lidos só quando passados em `validate` e `read`, no parâmetro `extraFields`. A lib oferece constantes prontas com campos extras, e quem usa a lib também pode escrever os seus (veja [Campos extras](#campos-extras)).
+
 Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
 
-| Chave                 | Descrição                       | Tipo     |
-| --------------------- | ------------------------------- | -------- |
-| `nome_do_sacado`      | Nome do sacado                  | `string` |
-| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado  | `string` |
-| `data_de_vencimento`  | Data de vencimento              | `Date`   |
-| `valor_do_titulo`     | Valor do título, em reais       | `number` |
-| `endereco_do_sacado`  | Endereço do sacado              | `string` |
-| `bairro_do_sacado`    | Bairro do sacado                | `string` |
-| `cep_do_sacado`       | CEP do sacado                   | `string` |
-| `cidade_do_sacado`    | Cidade do sacado                | `string` |
-| `uf_do_sacado`        | UF do sacado                    | `string` |
+### Campos canônicos
 
-### Campos que o layout não tem
+| Chave                 | Descrição                      | Tipo     |
+| --------------------- | ------------------------------ | -------- |
+| `nome_do_sacado`      | Nome do sacado                 | `string` |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string` |
+| `data_de_vencimento`  | Data de vencimento             | `Date`   |
+| `valor_do_titulo`     | Valor do título, em reais      | `number` |
+| `endereco_do_sacado`  | Endereço do sacado             | `string` |
+| `bairro_do_sacado`    | Bairro do sacado               | `string` |
+| `cep_do_sacado`       | CEP do sacado                  | `string` |
+| `cidade_do_sacado`    | Cidade do sacado               | `string` |
+| `uf_do_sacado`        | UF do sacado                   | `string` |
+| `nosso_numero`        | Número do boleto no banco      | `string` |
 
-Alguns layouts não têm todos os campos acima. Nesses casos, o campo não é lido e não aparece em `fields`:
+#### Campos por banco e formato
 
-| Banco e formato   | Campos que o layout não tem |
-| ----------------- | --------------------------- |
-| Bradesco CNAB 400 | bairro, cidade e UF         |
-| Sicredi CNAB 240  | bairro                      |
-| Sicredi CNAB 400  | bairro, cidade e UF         |
+- ✅ obrigatório: vazio no arquivo é erro de validação
+- ⚠️ opcional: pode vir vazio; nesse caso o valor é nulo e o campo não aparece em `fields`
+- ❌ inexistente: o layout não tem o campo, e ele nunca aparece em `fields`
 
-Os campos lidos em cada banco e formato estão declarados em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número |
+| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: |
+| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |
+| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |
+| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |
+| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |
 
-### Campos obrigatórios e opcionais
+### Campos extras da lib
 
-Os campos que o layout tem são **obrigatórios**: um campo vazio no arquivo é erro de validação, inclusive quando o manual do banco não diz se o campo é obrigatório.
+| Chave               | Descrição                   | Tipo       | Constante              |
+| ------------------- | --------------------------- | ---------- | ---------------------- |
+| `emails_do_sacado`  | E-mails do sacado           | `string[]` | `CNAB_EMAIL_FIELDS`    |
+| `ddd_do_sacado`     | DDD do celular do sacado    | `string`   | `CNAB_TELEFONE_FIELDS` |
+| `celular_do_sacado` | Número do celular do sacado | `string`   | `CNAB_TELEFONE_FIELDS` |
 
-A exceção são os campos que o manual do banco declara **opcionais**, que podem vir vazios:
+Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
-- Caixa CNAB 240: endereço, bairro, CEP, cidade e UF (notas G032 a G036 do manual, opcionais quando a emissão e a entrega do boleto são feitas pelo beneficiário)
-
-### Campos de contato
+#### Campos de contato
 
 Os campos de contato do pagador não fazem parte dos campos lidos por padrão. Para lê-los, passe as constantes como campos extras:
 
@@ -74,7 +95,7 @@ const cnab = cnabFile.read([...CNAB_EMAIL_FIELDS, ...CNAB_TELEFONE_FIELDS])
 - `CNAB_EMAIL_FIELDS`: e-mail do pagador;
 - `CNAB_TELEFONE_FIELDS`: DDD e celular do pagador.
 
-Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os campos de contato são **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
+Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato:
 
 | Banco           | Formato  | E-mail | DDD e celular |
 | --------------- | :------: | :----: | :-----------: |
@@ -84,12 +105,6 @@ Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o d
 | Caixa           | CNAB 240 |   ✅   |      ✅       |
 | Caixa           | CNAB 400 |   ✅   |      ✅       |
 | Itaú            | CNAB 400 |   ✅   |               |
-
-| Chave               | Descrição                   | Tipo       |
-| ------------------- | --------------------------- | ---------- |
-| `emails_do_sacado`  | E-mails do sacado           | `string[]` |
-| `ddd_do_sacado`     | DDD do celular do sacado    | `string`   |
-| `celular_do_sacado` | Número do celular do sacado | `string`   |
 
 ## Instalação
 
@@ -175,12 +190,12 @@ Por padrão, um campo extra é aplicado a qualquer banco e formato. Como a posi�
 ```ts
 import { CnabBank, CnabField, CnabFieldType, CnabFormat, Cnab400LineTypeChecker, CnabValidationResult } from '@fx55/cnab-lib-ts'
 
-class ItauNossoNumeroField extends CnabField<string> {
+class ItauDataDeEmissaoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   static readonly bank = CnabBank.ITAU
   static readonly format = CnabFormat.CNAB400
-  readonly fieldKey = 'nosso_numero'
-  readonly range: [number, number] = [63, 70]
+  readonly fieldKey = 'data_de_emissao'
+  readonly range: [number, number] = [151, 156]
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine)
@@ -195,7 +210,7 @@ class ItauNossoNumeroField extends CnabField<string> {
   }
 }
 
-const cnab = cnabFile.read([ItauNossoNumeroField])
+const cnab = cnabFile.read([ItauDataDeEmissaoField])
 ```
 
 Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
