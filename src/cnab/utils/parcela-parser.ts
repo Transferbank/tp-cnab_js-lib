@@ -28,3 +28,13 @@ export function findParcela(value: string): Parcela | null {
   }
   return null
 }
+
+export function findParcelaInRanges(line: string, ranges: Array<[number, number] | null>): Parcela | null {
+  for (const range of ranges) {
+    if (range == null) continue
+
+    const found = findParcela(line.substring(range[0] - 1, range[1]).trim())
+    if (found != null) return found
+  }
+  return null
+}

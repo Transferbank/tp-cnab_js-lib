@@ -2,7 +2,7 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
-import { Parcela, findParcela } from '@cnab/utils/parcela-parser'
+import { Parcela, findParcelaInRanges } from '@cnab/utils/parcela-parser'
 
 export class Cnab240BoletoParcelaField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -19,12 +19,8 @@ export class Cnab240BoletoParcelaField extends CnabField<number> {
   }
 
   protected extractRawValue(): string {
-    for (const range of [this.usoDaEmpresaRange, this.seuNumeroRange]) {
-      if (range == null) continue
-      const found = findParcela(this.extractRangeFromLine(range[0] - 1, range[1]))
-      if (found != null) return this.pick(found)?.toString() ?? ''
-    }
-    return ''
+    const found = findParcelaInRanges(this.rawLine, [this.usoDaEmpresaRange, this.seuNumeroRange])
+    return found == null ? '' : this.pick(found)?.toString() ?? ''
   }
 
   protected pick(found: Parcela): number | null {
