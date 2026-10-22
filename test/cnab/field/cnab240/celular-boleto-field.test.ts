@@ -6,7 +6,7 @@ import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BradescoBoletoCelularField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import { Cnab240CaixaBoletoCelularField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import { Cnab240BancoDoBrasilBoletoCelularField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import { CelularBoletoField as BancoDoBrasilCelularBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/celular-boleto-field'
 
 describe.each([
   [
@@ -30,8 +30,8 @@ describe.each([
     '8 ou 9'
   ],
   [
-    'Cnab240BancoDoBrasilBoletoCelularField (segment Y-04 with record type 4)',
-    Cnab240BancoDoBrasilBoletoCelularField,
+    'BancoDoBrasilCelularBoletoField (segment Y-04 with record type 4)',
+    BancoDoBrasilCelularBoletoField,
     'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
     '03',
     '4',

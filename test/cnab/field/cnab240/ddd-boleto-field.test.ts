@@ -6,7 +6,7 @@ import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240BradescoBoletoDddField } from '@cnab/bank/bradesco/cnab/cnab240/field/fields'
 import { Cnab240CaixaBoletoDddField } from '@cnab/bank/caixa/cnab/cnab240/field/fields'
-import { Cnab240BancoDoBrasilBoletoDddField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
+import { DddBoletoField as BancoDoBrasilDddBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/ddd-boleto-field'
 
 describe.each([
   [
@@ -28,8 +28,8 @@ describe.each([
     '21'
   ],
   [
-    'Cnab240BancoDoBrasilBoletoDddField (segment Y-04 with record type 4)',
-    Cnab240BancoDoBrasilBoletoDddField,
+    'BancoDoBrasilDddBoletoField (segment Y-04 with record type 4)',
+    BancoDoBrasilDddBoletoField,
     'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
     '03',
     '4',
