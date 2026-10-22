@@ -5,21 +5,53 @@ import { FieldTestCase, findFirstCnab400RecordLine, getFieldRange, readExampleLi
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { Cnab400BoletoNossoNumeroField } from '@cnab/field/cnab400/boleto-nosso-numero-field'
 import { Cnab400BancoDoBrasilBoletoNossoNumeroField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
+import { Cnab400BradescoBoletoNossoNumeroField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
+import { Cnab400CaixaBoletoNossoNumeroField } from '@cnab/bank/caixa/cnab/cnab400/field/fields'
+import { Cnab400SicoobBoletoNossoNumeroField } from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
+import { Cnab400SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 
 const cases: FieldTestCase[] = [
   [
-    'Cnab400BoletoNossoNumeroField (exemplo Itaú)',
+    'Banco do Brasil CNAB400 (registro 7)',
+    Cnab400BancoDoBrasilBoletoNossoNumeroField,
+    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    '7',
+    '90076541000044534'
+  ],
+  [
+    'Bradesco CNAB400',
+    Cnab400BradescoBoletoNossoNumeroField,
+    'bradesco/cnab400/bradesco_cnab_400.txt',
+    '1',
+    '09100010629P'
+  ],
+  [
+    'Caixa CNAB400',
+    Cnab400CaixaBoletoNossoNumeroField,
+    'caixa/cnab400/caixa_cnab_400.REM',
+    '1',
+    '01000000000000001'
+  ],
+  [
+    'Itaú CNAB400 (classe base)',
     Cnab400BoletoNossoNumeroField,
     'itau/cnab400/ITAU_cnab_400.REM',
     '1',
     '10377333'
   ],
   [
-    'Cnab400BancoDoBrasilBoletoNossoNumeroField (registro 7)',
-    Cnab400BancoDoBrasilBoletoNossoNumeroField,
-    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
-    '7',
-    '90076541000044534'
+    'Sicoob CNAB400',
+    Cnab400SicoobBoletoNossoNumeroField,
+    'sicoob/cnab400/sicoob_cnab_400.REM',
+    '1',
+    '000000010011'
+  ],
+  [
+    'Sicredi CNAB400',
+    Cnab400SicrediBoletoNossoNumeroField,
+    'sicredi/cnab400/sicredi_cnab_400.REM',
+    '1',
+    '262000001'
   ]
 ]
 

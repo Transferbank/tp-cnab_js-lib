@@ -23,7 +23,7 @@ function openExample(examplePath: string): CnabFile {
 
 class NossoNumeroExtraField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'nosso_numero'
+  readonly fieldKey = 'campo_extra'
   readonly range: [number, number] = [63, 70]
 
   shouldValidate(): boolean {
@@ -175,7 +175,8 @@ describe('cnab-file', (): void => {
           bairro_do_sacado: 'CENTRO',
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'SAO PAULO',
-          uf_do_sacado: 'SP'
+          uf_do_sacado: 'SP',
+          nosso_numero: '109000000010'
         }
       }),
       new CnabBoleto({
@@ -188,7 +189,8 @@ describe('cnab-file', (): void => {
           bairro_do_sacado: 'CENTRO',
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'SAO PAULO',
-          uf_do_sacado: 'SP'
+          uf_do_sacado: 'SP',
+          nosso_numero: '109000000020'
         }
       }),
       new CnabBoleto({
@@ -201,7 +203,8 @@ describe('cnab-file', (): void => {
           bairro_do_sacado: 'CENTRO',
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'CAMPINAS',
-          uf_do_sacado: 'SP'
+          uf_do_sacado: 'SP',
+          nosso_numero: '109000000030'
         }
       }),
       new CnabBoleto({
@@ -214,7 +217,8 @@ describe('cnab-file', (): void => {
           bairro_do_sacado: 'CENTRO',
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'CAMPINAS',
-          uf_do_sacado: 'SP'
+          uf_do_sacado: 'SP',
+          nosso_numero: '109000000040'
         }
       })
     ]
@@ -239,7 +243,8 @@ describe('cnab-file', (): void => {
         bairro_do_sacado: 'CENTRO',
         cep_do_sacado: '63540000',
         cidade_do_sacado: 'VARZEA ALEGRE',
-        uf_do_sacado: 'CE'
+        uf_do_sacado: 'CE',
+        nosso_numero: '10377333'
       }
     })
 
@@ -336,7 +341,7 @@ describe('cnab-file', (): void => {
 
       // Then
       expect(result).toEqual({ isValid: true, errors: [] })
-      expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
+      expect(cnab.boletos[0].fields.campo_extra).toBe(expectedNossoNumero)
     })
 
     it.each([
@@ -350,7 +355,7 @@ describe('cnab-file', (): void => {
       const cnab = cnabFile.read(extraFields)
 
       // Then
-      expect(cnab.boletos[0].fields.nosso_numero).toBe(expectedNossoNumero)
+      expect(cnab.boletos[0].fields.campo_extra).toBe(expectedNossoNumero)
     })
   })
 
@@ -429,5 +434,36 @@ describe('cnab-file', (): void => {
       // Then
       expect(emails).toEqual(['maria.souza@exemplo.com', 'financeiro@exemplo.com'])
     })
+  })
+
+  it.each([
+    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'bradesco/cnab400/bradesco_cnab_400.txt',
+    'caixa/cnab240/caixa_cnab_240.txt',
+    'caixa/cnab400/caixa_cnab_400.REM',
+    'itau/cnab240/itau_cnab_240.txt',
+    'itau/cnab400/ITAU_cnab_400.REM',
+    'santander/cnab240/santander_cnab_240.txt',
+    'santander/cnab400/santander_cnab_400.REM',
+    'sicoob/cnab240/sicoob_cnab_240.txt',
+    'sicoob/cnab400/sicoob_cnab_400.REM',
+    'sicredi/cnab240/sicredi_cnab_240.txt',
+    'sicredi/cnab400/sicredi_cnab_400.REM'
+  ])('given document file %s when reading then every boleto has the nosso número', (examplePath: string): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const result = cnabFile.validate()
+    const boletos = cnabFile.read().boletos
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boletos.length).toBeGreaterThan(0)
+    for (const boleto of boletos) {
+      expect(boleto.fields).toHaveProperty('nosso_numero')
+    }
   })
 })
