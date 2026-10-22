@@ -1,10 +1,8 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { Parcela, findParcela } from '@cnab/utils/parcela-parser'
-import { isDigitsOnly } from '@cnab/utils/value-parser'
 
 export class Cnab240BoletoParcelaField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -38,9 +36,6 @@ export class Cnab240BoletoParcelaField extends CnabField<number> {
   }
 
   protected parseValue(rawValue: string): number {
-    if (!isDigitsOnly(rawValue)) {
-      throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
-    }
-    return parseInt(rawValue, 10)
+    return Number(rawValue)
   }
 }
