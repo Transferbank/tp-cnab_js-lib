@@ -6,7 +6,7 @@ import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { NossoNumeroBoletoField } from '@cnab/field/cnab240/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as CaixaNossoNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as ItauNossoNumeroBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/nosso-numero-boleto-field'
-import { Cnab240SantanderBoletoNossoNumeroField } from '@cnab/bank/santander/cnab/cnab240/field/fields'
+import { NossoNumeroBoletoField as SantanderNossoNumeroBoletoField } from '@cnab/bank/santander/cnab/cnab240/field/nosso-numero-boleto-field'
 import { Cnab240SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
 
 const cases: FieldTestCase[] = [
@@ -33,7 +33,7 @@ const cases: FieldTestCase[] = [
   ],
   [
     'Santander CNAB240',
-    Cnab240SantanderBoletoNossoNumeroField,
+    SantanderNossoNumeroBoletoField,
     'santander/cnab240/santander_cnab_240.txt',
     'P',
     '0000000000019'
