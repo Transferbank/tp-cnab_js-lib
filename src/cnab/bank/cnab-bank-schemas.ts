@@ -10,11 +10,11 @@ import * as Cnab400 from '@cnab/field/cnab400/fields'
 
 import * as SicrediFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
 import * as Cnab400Bradesco from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
-import * as CaixaFields400 from '@cnab/bank/caixa/cnab/cnab400/field/fields'
+import * as Cnab400Caixa from '@cnab/bank/caixa/cnab/cnab400/field/fields'
 import * as SicoobFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
 import * as Cnab240BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/fields'
 import * as Cnab400BancoDoBrasil from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/fields'
-import * as CaixaFields240 from '@cnab/bank/caixa/cnab/cnab240/field/fields'
+import * as Cnab240Caixa from '@cnab/bank/caixa/cnab/cnab240/field/fields'
 import * as ItauFields240 from '@cnab/bank/itau/cnab/cnab240/field/fields'
 import * as SantanderFields240 from '@cnab/bank/santander/cnab/cnab240/field/fields'
 import * as SicrediFields240 from '@cnab/bank/sicredi/cnab/cnab240/field/fields'
@@ -283,7 +283,7 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240.CepBoletoField),    //  como opcionais quando a emissão e a entrega do boleto
           optional(Cnab240.CidadeBoletoField), //  são feitas pelo beneficiário.
           optional(Cnab240.UfBoletoField),
-          optional(CaixaFields240.Cnab240CaixaBoletoNossoNumeroField)
+          optional(Cnab240Caixa.NossoNumeroBoletoField)
         ],
       },
     }),
@@ -313,7 +313,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400.CepBoletoField(),
           Cnab400.CidadeBoletoField(),
           Cnab400.UfBoletoField(),
-          optional(CaixaFields400.Cnab400CaixaBoletoNossoNumeroField)
+          optional(Cnab400Caixa.NossoNumeroBoletoField)
         ],
       },
     }),
