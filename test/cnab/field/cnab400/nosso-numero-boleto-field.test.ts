@@ -5,10 +5,10 @@ import { FieldTestCase, findFirstCnab400RecordLine, getFieldRange, readExampleLi
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { NossoNumeroBoletoField } from '@cnab/field/cnab400/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as BancoDoBrasilNossoNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/nosso-numero-boleto-field'
-import { Cnab400BradescoBoletoNossoNumeroField } from '@cnab/bank/bradesco/cnab/cnab400/field/fields'
-import { Cnab400CaixaBoletoNossoNumeroField } from '@cnab/bank/caixa/cnab/cnab400/field/fields'
-import { Cnab400SicoobBoletoNossoNumeroField } from '@cnab/bank/sicoob/cnab/cnab400/field/fields'
-import { Cnab400SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
+import { NossoNumeroBoletoField as BradescoNossoNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as CaixaNossoNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as SicoobNossoNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/nosso-numero-boleto-field'
+import { NossoNumeroBoletoField as SicrediNossoNumeroBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/nosso-numero-boleto-field'
 
 const cases: FieldTestCase[] = [
   [
@@ -20,14 +20,14 @@ const cases: FieldTestCase[] = [
   ],
   [
     'Bradesco CNAB400',
-    Cnab400BradescoBoletoNossoNumeroField,
+    BradescoNossoNumeroBoletoField,
     'bradesco/cnab400/bradesco_cnab_400.txt',
     '1',
     '09100010629P'
   ],
   [
     'Caixa CNAB400',
-    Cnab400CaixaBoletoNossoNumeroField,
+    CaixaNossoNumeroBoletoField,
     'caixa/cnab400/caixa_cnab_400.REM',
     '1',
     '01000000000000001'
@@ -41,14 +41,14 @@ const cases: FieldTestCase[] = [
   ],
   [
     'Sicoob CNAB400',
-    Cnab400SicoobBoletoNossoNumeroField,
+    SicoobNossoNumeroBoletoField,
     'sicoob/cnab400/sicoob_cnab_400.REM',
     '1',
     '000000010011'
   ],
   [
     'Sicredi CNAB400',
-    Cnab400SicrediBoletoNossoNumeroField,
+    SicrediNossoNumeroBoletoField,
     'sicredi/cnab400/sicredi_cnab_400.REM',
     '1',
     '262000001'

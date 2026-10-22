@@ -17,9 +17,9 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { DocumentoSacadoBoletoField } from '@cnab/field/cnab400/documento-sacado-boleto-field'
 import { DocumentoSacadoBoletoField as BancoDoBrasilDocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/documento-sacado-boleto-field'
-import { Cnab400SicrediBoletoSacadoDocumentoField } from '@cnab/bank/sicredi/cnab/cnab400/field/cnab400-sicredi-boleto-sacado-documento-field'
+import { DocumentoSacadoBoletoField as SicrediDocumentoSacadoBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/documento-sacado-boleto-field'
 
-type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
+type DocumentoSacadoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
 
 // BB (registro '7' + "00"=Isento) e Sicredi (indicador de 1 char) precisam sobrescrever
 // performValidation, por isso tem subclasse propria em vez de usar a base direto.
@@ -90,11 +90,11 @@ describe('DocumentoSacadoBoletoField', (): void => {
       { FieldClass: DocumentoSacadoBoletoField, examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstDocument: '30000997300020' },
       { FieldClass: DocumentoSacadoBoletoField, examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstDocument: '40000997300084' },
       { FieldClass: DocumentoSacadoBoletoField, examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstDocument: '11122233396' },
-      { FieldClass: Cnab400SicrediBoletoSacadoDocumentoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstDocument: '40000997300084' }
+      { FieldClass: SicrediDocumentoSacadoBoletoField, examplePath: 'sicredi/cnab400/sicredi_cnab_400.REM', expectedFirstDocument: '40000997300084' }
     ])(
       'given detail lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
-        FieldClass: SacadoDocumentoFieldClass
+        FieldClass: DocumentoSacadoFieldClass
         examplePath: string
         expectedFirstDocument: string
       }): void => {
@@ -209,7 +209,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
 
     it('given detail line with blank document when validating then returns null value and field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400SicrediBoletoSacadoDocumentoField)
+      const fieldRange = getFieldRange(SicrediDocumentoSacadoBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -222,7 +222,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '')
 
       // When
-      const field = new Cnab400SicrediBoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new SicrediDocumentoSacadoBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then
@@ -236,7 +236,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
 
     it('given detail line with indicator "2" (CNPJ) but a valid CPF document when validating then returns field error', (): void => {
       // Given
-      const fieldRange = getFieldRange(Cnab400SicrediBoletoSacadoDocumentoField)
+      const fieldRange = getFieldRange(SicrediDocumentoSacadoBoletoField)
 
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const rawLine = findFirstCnab400RecordLine(lines, '1')
@@ -249,7 +249,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
       const invalidLine = replaceLineRange(rawLine, fieldRange, '00052998224725')
 
       // When
-      const field = new Cnab400SicrediBoletoSacadoDocumentoField(invalidLine, lineNumber)
+      const field = new SicrediDocumentoSacadoBoletoField(invalidLine, lineNumber)
       const result = field.validate()
 
       // Then

@@ -13,7 +13,7 @@ import {
   filterValidatableLines, createFieldsFromLines, getFieldRange
 } from '@test/test-utils'
 
-type SacadoDocumentoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
+type DocumentoSacadoFieldClass = new (rawLine: string, lineNumber: number) => DocumentoSacadoBoletoField
 
 describe('DocumentoSacadoBoletoField', (): void => {
   describe('shouldValidate', (): void => {
@@ -57,7 +57,7 @@ describe('DocumentoSacadoBoletoField', (): void => {
     ])(
       'given segment Q lines with valid document ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstDocument }: {
-        FieldClass: SacadoDocumentoFieldClass
+        FieldClass: DocumentoSacadoFieldClass
         examplePath: string
         expectedFirstDocument: string
       }): void => {
