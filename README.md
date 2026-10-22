@@ -126,6 +126,11 @@ const cnab = cnabFile.read(CNAB_IDENTIFICATION_FIELDS)
 
 Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os valores vêm como estão no arquivo, sem validação de formato.
 
+| Banco           | Formato  | Seu Número | Uso da Empresa | Parcela e total |
+| --------------- | :------: | :--------: | :------------: | :-------------: |
+| Banco do Brasil | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Banco do Brasil | CNAB 400 |     ⚠️     |       ⚠️       |       ⚠️        |
+
 O Seu Número e o Uso da Empresa são escritos por quem emite o boleto e não são únicos por boleto em todos os emissores. Para identificar um boleto, use o Nosso Número.
 
 #### Parcela
