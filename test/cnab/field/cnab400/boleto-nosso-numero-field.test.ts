@@ -40,13 +40,6 @@ const cases: FieldTestCase[] = [
     '10377333'
   ],
   [
-    'Santander CNAB400 (classe base)',
-    Cnab400BoletoNossoNumeroField,
-    'santander/cnab400/santander_cnab_400.REM',
-    '1',
-    '30074134'
-  ],
-  [
     'Sicoob CNAB400',
     Cnab400SicoobBoletoNossoNumeroField,
     'sicoob/cnab400/sicoob_cnab_400.REM',

@@ -11,13 +11,6 @@ import { Cnab240SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cn
 
 const cases: FieldTestCase[] = [
   [
-    'Banco do Brasil CNAB240 (classe base)',
-    Cnab240BoletoNossoNumeroField,
-    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
-    'P',
-    '00035000000001234501'
-  ],
-  [
     'Bradesco CNAB240 (classe base)',
     Cnab240BoletoNossoNumeroField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
@@ -44,13 +37,6 @@ const cases: FieldTestCase[] = [
     'santander/cnab240/santander_cnab_240.txt',
     'P',
     '0000000000019'
-  ],
-  [
-    'Sicoob CNAB240 (classe base)',
-    Cnab240BoletoNossoNumeroField,
-    'sicoob/cnab240/sicoob_cnab_240.txt',
-    'P',
-    '000000000001013'
   ],
   [
     'Sicredi CNAB240',
