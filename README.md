@@ -138,7 +138,7 @@ import { CNAB_PARCELA_FIELDS } from '@fx55/cnab-lib-ts'
 const cnab = cnabFile.read(CNAB_PARCELA_FIELDS)
 ```
 
-Os formatos reconhecidos são testados do mais completo para o mais simples, para que um formato simples não leia só parte de um mais completo:
+Formatos reconhecidos:
 
 | Formato no fim do campo | Exemplo        | `parcela` | `total_de_parcelas` |
 | ----------------------- | -------------- | --------- | ------------------- |
