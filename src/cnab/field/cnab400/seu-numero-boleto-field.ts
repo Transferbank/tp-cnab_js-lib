@@ -4,7 +4,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { blankIfZeros } from '@cnab/utils/phone-parser'
 
-export class Cnab400BoletoSeuNumeroField extends CnabField<string> {
+export class SeuNumeroBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'seu_numero'
   protected readonly recordType: string = '1'

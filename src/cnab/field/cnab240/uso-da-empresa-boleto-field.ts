@@ -4,7 +4,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { blankIfZeros } from '@cnab/utils/phone-parser'
 
-export class Cnab240BoletoUsoDaEmpresaField extends CnabField<string> {
+export class UsoDaEmpresaBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'uso_da_empresa'
   readonly range: [number, number] = [196, 220]

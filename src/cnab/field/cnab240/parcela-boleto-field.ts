@@ -4,7 +4,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { Parcela, findParcelaInRanges } from '@cnab/utils/parcela-parser'
 
-export class Cnab240BoletoParcelaField extends CnabField<number> {
+export class ParcelaBoletoField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey: string = 'parcela'
   protected readonly usoDaEmpresaRange: [number, number] | null = [196, 220]

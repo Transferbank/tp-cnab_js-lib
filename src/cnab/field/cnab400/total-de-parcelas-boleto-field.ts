@@ -1,7 +1,7 @@
 import { Parcela } from '@cnab/utils/parcela-parser'
-import { Cnab400BoletoParcelaField } from '@cnab/field/cnab400/parcela-boleto-field'
+import { ParcelaBoletoField } from '@cnab/field/cnab400/parcela-boleto-field'
 
-export class Cnab400BoletoTotalDeParcelasField extends Cnab400BoletoParcelaField {
+export class TotalDeParcelasBoletoField extends ParcelaBoletoField {
   readonly fieldKey: string = 'total_de_parcelas'
 
   protected pick(found: Parcela): number | null {
