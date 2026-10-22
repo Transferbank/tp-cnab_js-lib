@@ -1,7 +1,6 @@
-export { DocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/documento-sacado-boleto-field'
 export { BairroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/bairro-boleto-field'
-
+export { CelularBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/celular-boleto-field'
+export { DddBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/ddd-boleto-field'
+export { DocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/documento-sacado-boleto-field'
 export { EmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-s-boleto-field'
 export { EmailSegmentoYBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-y-boleto-field'
-export { DddBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/ddd-boleto-field'
-export { CelularBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/celular-boleto-field'
