@@ -1,8 +1,8 @@
 import { DocumentType, documentTypeByIndicator } from '@cnab/utils/document-parser'
-import * as Cnab400 from '@cnab/field/cnab400/fields'
+import { DocumentoSacadoBoletoField } from '@cnab/field/cnab400/documento-sacado-boleto-field'
 
 // Indicador ocupa só 1 char (pos. 219); 220 é filler fixo "0".
-export class Cnab400SicrediBoletoSacadoDocumentoField extends Cnab400.DocumentoSacadoBoletoField {
+export class Cnab400SicrediBoletoSacadoDocumentoField extends DocumentoSacadoBoletoField {
   protected documentType(): DocumentType | null {
     return documentTypeByIndicator(this.extractRangeFromLine(218, 219), '1', '2')
   }
