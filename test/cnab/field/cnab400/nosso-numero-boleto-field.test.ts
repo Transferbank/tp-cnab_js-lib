@@ -8,7 +8,7 @@ import { NossoNumeroBoletoField as BancoDoBrasilNossoNumeroBoletoField } from '@
 import { NossoNumeroBoletoField as BradescoNossoNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as CaixaNossoNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/nosso-numero-boleto-field'
 import { NossoNumeroBoletoField as SicoobNossoNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/nosso-numero-boleto-field'
-import { Cnab400SicrediBoletoNossoNumeroField } from '@cnab/bank/sicredi/cnab/cnab400/field/fields'
+import { NossoNumeroBoletoField as SicrediNossoNumeroBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/nosso-numero-boleto-field'
 
 const cases: FieldTestCase[] = [
   [
@@ -48,7 +48,7 @@ const cases: FieldTestCase[] = [
   ],
   [
     'Sicredi CNAB400',
-    Cnab400SicrediBoletoNossoNumeroField,
+    SicrediNossoNumeroBoletoField,
     'sicredi/cnab400/sicredi_cnab_400.REM',
     '1',
     '262000001'
