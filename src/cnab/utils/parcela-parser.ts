@@ -15,10 +15,12 @@ export interface Parcela {
 export function findParcela(value: string): Parcela | null {
   for (const pattern of PARCELA_PATTERNS) {
     const match = pattern.exec(value)
-    if (match != null) return { 
-                                parcela: Number(match[1]), 
-                                total: match[2] == null ? null : Number(match[2]) 
-                              }
+    if (match != null) {
+      return {
+        parcela: Number(match[1]),
+        total: match[2] == null ? null : Number(match[2])
+      }
+    }
   }
   return null
 }
