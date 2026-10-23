@@ -1,3 +1,7 @@
 export { CelularBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/celular-boleto-field'
 export { DddBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/ddd-boleto-field'
 export { EmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/email-boleto-field'
+export { ParcelaBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/parcela-boleto-field'
+export { SeuNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/seu-numero-boleto-field'
+export { TotalDeParcelasBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/total-de-parcelas-boleto-field'
+export { UsoDaEmpresaBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/uso-da-empresa-boleto-field'
