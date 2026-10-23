@@ -126,7 +126,7 @@ const cnab = cnabFile.read(CNAB_IDENTIFICATION_FIELDS)
 
 Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os valores vêm como estão no arquivo, sem validação de formato.
 
-O Seu Número identifica o documento, não o boleto: as parcelas de uma mesma nota costumam ter o mesmo Seu Número. Para identificar um boleto, use o Nosso Número ou, se o sistema que gerou a remessa preenche com um valor único, o Uso da Empresa.
+O Seu Número e o Uso da Empresa são escritos por quem emite o boleto e não são únicos por boleto em todos os emissores. Para identificar um boleto, use o Nosso Número.
 
 #### Parcela
 
