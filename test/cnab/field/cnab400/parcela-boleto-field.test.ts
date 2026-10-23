@@ -7,7 +7,7 @@ import { TotalDeParcelasBoletoField } from '@cnab/field/cnab400/total-de-parcela
 import { SeuNumeroBoletoField } from '@cnab/field/cnab400/seu-numero-boleto-field'
 import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab400/uso-da-empresa-boleto-field'
 
-class ParcelaSemUsoDaEmpresaField extends ParcelaBoletoField {
+class ParcelaSemUsoDaEmpresaBoletoField extends ParcelaBoletoField {
   protected readonly usoDaEmpresaRange: [number, number] | null = null
 }
 
@@ -61,7 +61,7 @@ describe('ParcelaBoletoField', (): void => {
 
   it('given a layout without uso da empresa when reading then takes the parcela only from the seu número', (): void => {
     // Given
-    const field = new ParcelaSemUsoDaEmpresaField(lineWith('PED1234-2/4', '12345 1/3'), 5)
+    const field = new ParcelaSemUsoDaEmpresaBoletoField(lineWith('PED1234-2/4', '12345 1/3'), 5)
 
     // When
     const result = field.validate()
