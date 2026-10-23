@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals'
-import { findParcela } from '@cnab/utils/parcela-parser'
+import { findParcela, findParcelaInRanges } from '@cnab/utils/parcela-parser'
 
 describe('parcela-parser', (): void => {
   describe('findParcela', (): void => {
@@ -27,6 +27,27 @@ describe('parcela-parser', (): void => {
       it('when searching then returns null', (): void => {
         expect(findParcela(value)).toBeNull()
       })
+    })
+  })
+  describe('findParcelaInRanges', (): void => {
+    const firstRange: [number, number] = [1, 15]
+    const secondRange: [number, number] = [16, 30]
+    const lineWith = (first: string, second: string): string => first.padEnd(15) + second.padEnd(15)
+
+    describe.each([
+      { first: 'PED1234-2/4', second: 'XX12345-01', expected: { parcela: 2, total: 4 }, description: 'parcela and total in the first range' },
+      { first: '12.345678.10', second: 'XX123456-1', expected: { parcela: 10, total: null }, description: 'second value cut by the field size, parcela taken from the first range' },
+      { first: 'XX12345-01', second: '12345 1/3', expected: { parcela: 1, total: null }, description: 'total only in the second range, not mixed with the first range parcela' },
+      { first: '1234567890', second: '12345 1/3', expected: { parcela: 1, total: 3 }, description: 'parcela and total only in the second range' },
+      { first: '123456', second: '123456', expected: null, description: 'no parcela in either range' }
+    ])('given $description', ({ first, second, expected }): void => {
+      it('when searching then returns the parcela of the first range that has one', (): void => {
+        expect(findParcelaInRanges(lineWith(first, second), [firstRange, secondRange])).toEqual(expected)
+      })
+    })
+
+    it('given a null range when searching then skips it', (): void => {
+      expect(findParcelaInRanges(lineWith('PED1234-2/4', '12345 1/3'), [null, secondRange])).toEqual({ parcela: 1, total: 3 })
     })
   })
 })

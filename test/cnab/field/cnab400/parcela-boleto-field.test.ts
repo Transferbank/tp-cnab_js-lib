@@ -7,10 +7,6 @@ import { TotalDeParcelasBoletoField } from '@cnab/field/cnab400/total-de-parcela
 import { SeuNumeroBoletoField } from '@cnab/field/cnab400/seu-numero-boleto-field'
 import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab400/uso-da-empresa-boleto-field'
 
-class ParcelaSemUsoDaEmpresaBoletoField extends ParcelaBoletoField {
-  protected readonly usoDaEmpresaRange: [number, number] | null = null
-}
-
 const lines = readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM'))
 
 function lineWith(usoDaEmpresa: string, seuNumero: string): string {
@@ -37,11 +33,8 @@ describe('ParcelaBoletoField', (): void => {
   })
 
   describe.each([
-    { usoDaEmpresa: 'PED1234-2/4', seuNumero: 'XX12345-01', expectedParcela: 2, expectedTotal: 4, description: 'parcela and total in the uso da empresa' },
-    { usoDaEmpresa: '12.345678.10', seuNumero: 'XX123456-1', expectedParcela: 10, expectedTotal: null, description: 'seu número cut by the field size, parcela taken from the uso da empresa' },
-    { usoDaEmpresa: 'XX12345-01', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: null, description: 'total only in the seu número, not mixed with the uso da empresa parcela' },
-    { usoDaEmpresa: '1234567890', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: 3, description: 'parcela and total only in the seu número' },
-    { usoDaEmpresa: '123456', seuNumero: '123456', expectedParcela: null, expectedTotal: null, description: 'no parcela in either field' }
+    { usoDaEmpresa: 'PED1234-2/4', seuNumero: '12345 1/3', expectedParcela: 2, expectedTotal: 4, description: 'parcela in both fields, taken from the uso da empresa' },
+    { usoDaEmpresa: '123456', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: 3, description: 'parcela and total in the seu número' }
   ])('given $description', ({ usoDaEmpresa, seuNumero, expectedParcela, expectedTotal }): void => {
     it('when reading then returns the parcela and the total as numbers', (): void => {
       // Given
@@ -57,17 +50,5 @@ describe('ParcelaBoletoField', (): void => {
       expect(parcela.value).toBe(expectedParcela)
       expect(total.value).toBe(expectedTotal)
     })
-  })
-
-  it('given a layout without uso da empresa when reading then takes the parcela only from the seu número', (): void => {
-    // Given
-    const field = new ParcelaSemUsoDaEmpresaBoletoField(lineWith('PED1234-2/4', '12345 1/3'), 5)
-
-    // When
-    const result = field.validate()
-
-    // Then
-    expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe(1)
   })
 })
