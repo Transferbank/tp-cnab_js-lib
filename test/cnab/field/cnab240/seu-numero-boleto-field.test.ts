@@ -11,7 +11,7 @@ const cases: FieldTestCase[] = [
     SeuNumeroBoletoField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'P',
-    'NF0000123'
+    'XX10001-01'
   ]
 ]
 

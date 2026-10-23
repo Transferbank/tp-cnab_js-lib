@@ -11,7 +11,7 @@ const cases: FieldTestCase[] = [
     UsoDaEmpresaBoletoField,
     'bradesco/cnab240/bradesco_cnab_240.txt',
     'P',
-    '000000000NF0000123'
+    '10.010001.01'
   ]
 ]
 

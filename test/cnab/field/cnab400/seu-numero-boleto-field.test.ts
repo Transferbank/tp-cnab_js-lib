@@ -11,7 +11,7 @@ const cases: FieldTestCase[] = [
     SeuNumeroBoletoField,
     'itau/cnab400/ITAU_cnab_400.REM',
     '1',
-    'NF76872-04'
+    '10001-1/3'
   ]
 ]
 
