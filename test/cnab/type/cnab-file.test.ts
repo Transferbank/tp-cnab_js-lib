@@ -477,13 +477,13 @@ describe('cnab-file', (): void => {
     const boletos = cnabFile.read(CNAB_SEU_NUMERO_FIELDS).boletos
 
     // Then
-    expect(boletos[0].fields.seu_numero).toBe('NF82697-02')
-    expect(boletos[boletos.length - 1].fields.seu_numero).toBe('PEDIDO1234-1/3')
+    expect(boletos[0].fields.seu_numero).toBe('XX10001-01')
+    expect(boletos[boletos.length - 1].fields.seu_numero).toBe('XX100037-02')
   })
 
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'NF00012345', 'PED1234-1/3', 1, 3],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'NF82697-02', '25.159220.02', 2, undefined]
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined]
   ])('given document file %s when reading with the identification and parcela fields then reads them from the boleto', (examplePath: string, expectedSeuNumero: string, expectedUsoDaEmpresa: string, expectedParcela: number, expectedTotal: number | undefined): void => {
     // Given
     const cnabFile = openExample(examplePath)

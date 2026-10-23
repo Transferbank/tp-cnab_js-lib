@@ -20,14 +20,14 @@ const cases: FieldTestCase[] = [
     BancoDoBrasilSeuNumeroBoletoField,
     'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
     '7',
-    'NF82697-02'
+    'XX10001-01'
   ],
   [
     'Banco do Brasil CNAB400 (registro 5, 15 posições)',
     BancoDoBrasilSeuNumeroRegistro5BoletoField,
     'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
     '503',
-    'PEDIDO1234-1/3'
+    'XX100037-02'
   ]
 ]
 
