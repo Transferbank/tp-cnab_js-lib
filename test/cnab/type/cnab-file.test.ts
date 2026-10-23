@@ -13,6 +13,8 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CNAB_EMAIL_FIELDS } from '@cnab/bank/cnab-email-fields'
 import { CNAB_TELEFONE_FIELDS } from '@cnab/bank/cnab-telefone-fields'
+import { CNAB_IDENTIFICATION_FIELDS, CNAB_SEU_NUMERO_FIELDS } from '@cnab/bank/cnab-identification-fields'
+import { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -465,5 +467,39 @@ describe('cnab-file', (): void => {
     for (const boleto of boletos) {
       expect(boleto.fields).toHaveProperty('nosso_numero')
     }
+  })
+
+  it('given banco do brasil cnab400 with record 5 service type 03 when reading the seu número then it replaces the one in record 7', (): void => {
+    // Given
+    const cnabFile = openExample('banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM')
+
+    // When
+    const boletos = cnabFile.read(CNAB_SEU_NUMERO_FIELDS).boletos
+
+    // Then
+    expect(boletos[0].fields.seu_numero).toBe('XX10001-01')
+    expect(boletos[boletos.length - 1].fields.seu_numero).toBe('XX100037-02')
+  })
+
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '10001-1/3', '000000000000000010001-1/3', 1, 3],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'XX10001-01', '10.010001.01', 1, undefined]
+  ])('given document file %s when reading with the identification and parcela fields then reads them from the boleto', (examplePath: string, expectedSeuNumero: string, expectedUsoDaEmpresa: string, expectedParcela: number, expectedTotal: number | undefined): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+    const extraFields = [...CNAB_IDENTIFICATION_FIELDS, ...CNAB_PARCELA_FIELDS]
+
+    // When
+    const result = cnabFile.validate(true, extraFields)
+    const boleto = cnabFile.read(extraFields).boletos[0]
+    const boletoWithoutExtraFields = cnabFile.read().boletos[0]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.seu_numero).toBe(expectedSeuNumero)
+    expect(boleto.fields.uso_da_empresa).toBe(expectedUsoDaEmpresa)
+    expect(boleto.fields.parcela).toBe(expectedParcela)
+    expect(boleto.fields.total_de_parcelas).toBe(expectedTotal)
+    expect(boletoWithoutExtraFields.fields).not.toHaveProperty('parcela')
   })
 })
