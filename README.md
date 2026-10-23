@@ -151,7 +151,7 @@ Formatos reconhecidos:
 
 Os dois campos vêm como número inteiro, sem zeros à esquerda. `total_de_parcelas` só aparece quando o formato encontrado traz o total. Quando nenhum formato é encontrado nos dois campos de origem, nenhum dos dois aparece em `fields`.
 
-A parcela é uma interpretação do texto que quem emitiu o boleto escreveu, e não um dado do banco. Um documento que termina com traço e número, como `NF-123`, é lido como parcela `123`. Para identificar a parcela com segurança, guarde a relação entre o Nosso Número e a parcela no sistema que gera a remessa.
+A parcela é uma interpretação do texto que quem emitiu o boleto escreveu, e não um dado do banco. Para identificar a parcela com segurança, guarde a relação entre o Nosso Número e a parcela no sistema que gera a remessa.
 
 ## Instalação
 
