@@ -27,7 +27,7 @@ const cases: FieldTestCase[] = [
     CaixaUsoDaEmpresaBoletoField,
     'caixa/cnab400/caixa_cnab_400.REM',
     '1',
-    'PED0000001-1/3'
+    '0000010001'
   ]
 ]
 
