@@ -6,5 +6,4 @@ export class TotalDeParcelasBoletoField extends Cnab400TotalDeParcelasBoletoFiel
   static readonly bank = CnabBank.CAIXA
   static readonly format = CnabFormat.CNAB400
   protected readonly usoDaEmpresaRange: [number, number] | null = [32, 56]
-  protected readonly seuNumeroRange: [number, number] = [117, 126]
 }

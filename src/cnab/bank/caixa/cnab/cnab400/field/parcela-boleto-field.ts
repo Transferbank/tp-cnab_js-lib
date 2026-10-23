@@ -6,5 +6,4 @@ export class ParcelaBoletoField extends Cnab400ParcelaBoletoField {
   static readonly bank = CnabBank.CAIXA
   static readonly format = CnabFormat.CNAB400
   protected readonly usoDaEmpresaRange: [number, number] | null = [32, 56]
-  protected readonly seuNumeroRange: [number, number] = [117, 126]
 }

@@ -5,5 +5,4 @@ import { SeuNumeroBoletoField as Cnab400SeuNumeroBoletoField } from '@cnab/field
 export class SeuNumeroBoletoField extends Cnab400SeuNumeroBoletoField {
   static readonly bank = CnabBank.CAIXA
   static readonly format = CnabFormat.CNAB400
-  readonly range: [number, number] = [117, 126]
 }
