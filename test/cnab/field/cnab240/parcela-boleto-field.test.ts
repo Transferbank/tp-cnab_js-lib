@@ -33,7 +33,7 @@ describe('ParcelaBoletoField', (): void => {
   })
 
   describe.each([
-    { usoDaEmpresa: 'PED1234-2/4', seuNumero: '12345 1/3', expectedParcela: 2, expectedTotal: 4, description: 'parcela in both fields, taken from the uso da empresa' },
+    { usoDaEmpresa: '12.345678.10', seuNumero: 'XX123456-1', expectedParcela: 10, expectedTotal: null, description: 'seu número cut by the field size, parcela taken from the uso da empresa' },
     { usoDaEmpresa: '123456', seuNumero: '12345 1/3', expectedParcela: 1, expectedTotal: 3, description: 'parcela and total in the seu número' }
   ])('given $description', ({ usoDaEmpresa, seuNumero, expectedParcela, expectedTotal }): void => {
     it('when reading then returns the parcela and the total as numbers', (): void => {
