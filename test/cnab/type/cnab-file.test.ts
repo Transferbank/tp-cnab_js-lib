@@ -573,4 +573,22 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.data_de_juros).toEqual(expectedData)
     expect(boleto.fields.juros).toBe(expectedJuros)
   })
+
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2026, 11, 16), 1],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2]
+  ])('given document file %s when reading then reads the multa of its layout', (examplePath: string, expectedCodigo: string, expectedData: Date, expectedMulta: number): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const result = cnabFile.validate(true)
+    const boleto = cnabFile.read().boletos[0]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.codigo_de_multa).toBe(expectedCodigo)
+    expect(boleto.fields.data_de_multa).toEqual(expectedData)
+    expect(boleto.fields.multa).toBe(expectedMulta)
+  })
 })
