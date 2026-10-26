@@ -126,6 +126,23 @@ const cnab = cnabFile.read(CNAB_IDENTIFICATION_FIELDS)
 
 Cada constante traz o campo de cada layout que o tem, e cada arquivo lê só o do seu banco e formato. Os valores vêm como estão no arquivo, sem validação de formato.
 
+| Banco           | Formato  | Seu Número | Uso da Empresa | Parcela e total |
+| --------------- | :------: | :--------: | :------------: | :-------------: |
+| Banco do Brasil | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Banco do Brasil | CNAB 400 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Bradesco        | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Bradesco        | CNAB 400 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Caixa           | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Caixa           | CNAB 400 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Itaú            | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Itaú            | CNAB 400 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Santander       | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Santander       | CNAB 400 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Sicoob          | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Sicoob          | CNAB 400 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Sicredi         | CNAB 240 |     ⚠️     |       ⚠️       |       ⚠️        |
+| Sicredi         | CNAB 400 |     ⚠️     |       ❌       |       ⚠️        |
+
 O Seu Número e o Uso da Empresa são escritos por quem emite o boleto e não são únicos por boleto em todos os emissores. Para identificar um boleto, use o Nosso Número.
 
 #### Parcela

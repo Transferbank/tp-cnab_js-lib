@@ -1,1 +1,5 @@
 export { NossoNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/nosso-numero-boleto-field'
+export { ParcelaBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/parcela-boleto-field'
+export { SeuNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/seu-numero-boleto-field'
+export { TotalDeParcelasBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/total-de-parcelas-boleto-field'
+export { UsoDaEmpresaBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/uso-da-empresa-boleto-field'
