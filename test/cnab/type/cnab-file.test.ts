@@ -111,7 +111,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt', 5, 240],
-    ['itau/cnab400/ITAU_cnab_400.REM', 2, 400]
+    ['itau/cnab400/ITAU_cnab_400.REM', 640, 400]
   ])(
     'given document file with truncated line when validating then reports line size error',
     (examplePath: string, truncatedLineNumber: number, expectedSize: number): void => {
@@ -196,7 +196,10 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000020',
-          juros: 0.19
+          juros: 0.19,
+          codigo_de_multa: '2',
+          data_de_multa: new Date(2026, 11, 21),
+          multa: 3
         }
       }),
       new CnabBoleto({
@@ -224,7 +227,10 @@ describe('cnab-file', (): void => {
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'CAMPINAS',
           uf_do_sacado: 'SP',
-          nosso_numero: '109000000040'
+          nosso_numero: '109000000040',
+          codigo_de_multa: '2',
+          data_de_multa: new Date(2027, 0, 1),
+          multa: 3
         }
       })
     ]
@@ -251,9 +257,13 @@ describe('cnab-file', (): void => {
         cidade_do_sacado: 'VARZEA ALEGRE',
         uf_do_sacado: 'CE',
         nosso_numero: '10377333',
-        juros: 6.76
+        juros: 6.76,
+        codigo_de_multa: '2',
+        data_de_multa: new Date(2026, 6, 6),
+        multa: 2
       }
     })
+
 
     // When
     const cnab = cnabFile.read()
@@ -292,7 +302,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
-    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1')]
+    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1') && !line.startsWith('2')]
   ])(
     'given document file %s without boleto lines when reading then returns no boletos',
     (examplePath: string, isNotBoletoLine: (line: string) => boolean): void => {
@@ -577,8 +587,20 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2026, 11, 16), 1],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2]
-  ])('given document file %s when reading then reads the multa of its layout', (examplePath: string, expectedCodigo: string, expectedData: Date, expectedMulta: number): void => {
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '2', new Date(2026, 11, 15), 2],
+    ['caixa/cnab240/caixa_cnab_240.txt', '2', new Date(2026, 11, 16), 2.5],
+    ['itau/cnab240/itau_cnab_240.txt', undefined, undefined, undefined],
+    ['santander/cnab240/santander_cnab_240.txt', '2', new Date(2026, 11, 16), 1.5],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '0', undefined, undefined],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '2', new Date(2026, 11, 16), 2],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', '2', undefined, 2],
+    ['caixa/cnab400/caixa_cnab_400.REM', undefined, new Date(2026, 7, 16), 5],
+    ['itau/cnab400/ITAU_cnab_400.REM', '2', new Date(2026, 6, 6), 2],
+    ['santander/cnab400/santander_cnab_400.REM', '4', new Date(2026, 5, 22), 4],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', undefined, undefined, 2]
+  ])('given document file %s when reading then reads the multa of its layout', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedMulta: number | undefined): void => {
     // Given
     const cnabFile = openExample(examplePath)
 
