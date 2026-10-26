@@ -1,1 +1,5 @@
 export { EmailBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/email-boleto-field'
+export { ParcelaBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/parcela-boleto-field'
+export { SeuNumeroBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/seu-numero-boleto-field'
+export { TotalDeParcelasBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/total-de-parcelas-boleto-field'
+export { UsoDaEmpresaBoletoField } from '@cnab/bank/itau/cnab/cnab400/field/uso-da-empresa-boleto-field'
