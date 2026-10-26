@@ -45,3 +45,5 @@ export {
   CNAB_USO_DA_EMPRESA_FIELDS
 } from '@cnab/bank/cnab-identification-fields'
 export { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
+export { CnabTipoDeJuros } from '@cnab/type/cnab-tipo-de-juros'
+export { getTipoDeJuros } from '@cnab/bank/cnab-tipo-de-juros-tables'
