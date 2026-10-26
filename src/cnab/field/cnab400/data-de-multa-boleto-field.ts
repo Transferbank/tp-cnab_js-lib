@@ -24,8 +24,12 @@ export class DataDeMultaBoletoField extends CnabField<Date> {
     return { isValid: true, errors: [] }
   }
 
+  protected parseDate(rawValue: string): Date | null {
+    return parseDateDDMMAA(rawValue)
+  }
+
   protected parseValue(rawValue: string): Date {
-    const date = parseDateDDMMAA(rawValue)
+    const date = this.parseDate(rawValue)
     if (date == null) {
       throw new CnabFieldInvalidDateError(this.fieldKey, rawValue)
     }

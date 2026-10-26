@@ -10,13 +10,15 @@ export class CodigoDeMultaBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'codigo_de_multa'
   readonly range: [number, number] = [66, 66]
+  protected readonly zeroIsAbsent: boolean = true
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoR(this.rawLine)
   }
 
   protected extractRawValue(): string {
-    return blankIfZeros(super.extractRawValue())
+    const rawValue = super.extractRawValue()
+    return this.zeroIsAbsent ? blankIfZeros(rawValue) : rawValue
   }
 
   protected performValidation(): CnabValidationResult {

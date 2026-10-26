@@ -1,4 +1,6 @@
+export { CodigoDeMultaBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/codigo-de-multa-boleto-field'
 export { JurosBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/juros-boleto-field'
+export { MultaBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/multa-boleto-field'
 export { NossoNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/nosso-numero-boleto-field'
 export { ParcelaBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/parcela-boleto-field'
 export { SeuNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab400/field/seu-numero-boleto-field'
