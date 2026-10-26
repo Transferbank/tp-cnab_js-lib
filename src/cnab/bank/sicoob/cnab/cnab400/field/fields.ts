@@ -1,3 +1,4 @@
+export { JurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/juros-boleto-field'
 export { NossoNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/nosso-numero-boleto-field'
 export { ParcelaBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/parcela-boleto-field'
 export { SeuNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/seu-numero-boleto-field'
