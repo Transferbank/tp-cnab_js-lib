@@ -5,4 +5,5 @@ import { CodigoDeJurosBoletoField as Cnab240CodigoDeJurosBoletoField } from '@cn
 export class CodigoDeJurosBoletoField extends Cnab240CodigoDeJurosBoletoField {
   static readonly bank = CnabBank.SICOOB
   static readonly format = CnabFormat.CNAB240
+  protected readonly zeroIsAbsent: boolean = false
 }
