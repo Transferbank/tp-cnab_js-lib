@@ -10,6 +10,7 @@ export class CodigoDeMultaBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'codigo_de_multa'
   readonly range: [number, number] = [78, 78]
+  protected readonly zeroIsAbsent: boolean = true
   protected readonly recordType: string = '1'
 
   shouldValidate(): boolean {
@@ -17,7 +18,8 @@ export class CodigoDeMultaBoletoField extends CnabField<string> {
   }
 
   protected extractRawValue(): string {
-    return blankIfZeros(super.extractRawValue())
+    const rawValue = super.extractRawValue()
+    return this.zeroIsAbsent ? blankIfZeros(rawValue) : rawValue
   }
 
   protected performValidation(): CnabValidationResult {
