@@ -179,7 +179,9 @@ describe('cnab-file', (): void => {
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
-          nosso_numero: '109000000010'
+          nosso_numero: '109000000010',
+          data_de_juros: new Date(2026, 11, 16),
+          juros: 0.05
         }
       }),
       new CnabBoleto({
@@ -247,7 +249,9 @@ describe('cnab-file', (): void => {
         cep_do_sacado: '63540000',
         cidade_do_sacado: 'VARZEA ALEGRE',
         uf_do_sacado: 'CE',
-        nosso_numero: '10377333'
+        nosso_numero: '10377333',
+        data_de_juros: new Date(2026, 6, 6),
+        juros: 6.76
       }
     })
 
@@ -518,7 +522,19 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', undefined, undefined, 3.39]
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', undefined, undefined, 3.39],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['caixa/cnab240/caixa_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['itau/cnab240/itau_cnab_240.txt', undefined, new Date(2026, 11, 16), 0.05],
+    ['santander/cnab240/santander_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', undefined, undefined, 22.56],
+    ['caixa/cnab400/caixa_cnab_400.REM', '1', new Date(2026, 7, 16), 0.05],
+    ['itau/cnab400/ITAU_cnab_400.REM', undefined, new Date(2026, 6, 6), 6.76],
+    ['santander/cnab400/santander_cnab_400.REM', undefined, undefined, 0.05],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 'A', new Date(2026, 5, 22), 0.12]
   ])('given document file %s when reading then reads the juros of its layout', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedJuros: number): void => {
     // Given
     const cnabFile = openExample(examplePath)
