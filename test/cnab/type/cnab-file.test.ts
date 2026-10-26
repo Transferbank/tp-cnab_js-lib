@@ -181,7 +181,7 @@ describe('cnab-file', (): void => {
           uf_do_sacado: 'SP',
           nosso_numero: '109000000010',
           data_de_juros: new Date(2026, 11, 16),
-          juros: 0.05
+          juros: 0.09
         }
       }),
       new CnabBoleto({
@@ -521,16 +521,16 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '1', new Date(2026, 11, 16), 0.03],
     ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', undefined, undefined, 3.39],
     ['bradesco/cnab240/bradesco_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
-    ['caixa/cnab240/caixa_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
-    ['itau/cnab240/itau_cnab_240.txt', undefined, new Date(2026, 11, 16), 0.05],
-    ['santander/cnab240/santander_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
-    ['sicoob/cnab240/sicoob_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
-    ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
+    ['caixa/cnab240/caixa_cnab_240.txt', '1', new Date(2026, 11, 16), 0.07],
+    ['itau/cnab240/itau_cnab_240.txt', undefined, new Date(2026, 11, 16), 0.09],
+    ['santander/cnab240/santander_cnab_240.txt', '1', new Date(2026, 11, 16), 0.11],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '1', new Date(2026, 11, 16), 0.13],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 16), 0.15],
     ['bradesco/cnab400/bradesco_cnab_400.txt', undefined, undefined, 22.56],
-    ['caixa/cnab400/caixa_cnab_400.REM', '1', new Date(2026, 7, 16), 0.05],
+    ['caixa/cnab400/caixa_cnab_400.REM', '1', new Date(2026, 7, 16), 0.17],
     ['itau/cnab400/ITAU_cnab_400.REM', undefined, new Date(2026, 6, 6), 6.76],
     ['santander/cnab400/santander_cnab_400.REM', undefined, undefined, 0.05],
     ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2],
