@@ -76,7 +76,17 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 #### Juros
 
-Nos layouts que têm os campos de juros, eles são lidos em toda leitura. O valor de `juros` pode ser em reais por dia ou um percentual: quem diz é o código de juros. Cada banco usa códigos próprios, e `getTipoDeJuros` traduz o código para um tipo comum:
+O valor dos campos de juros são sempre lidos pelo sistema. De acordo com os manuais, o campo `codigo_de_juros` define como o juros deve ser tratado, como valor fixo ou percentual. Cada banco define seus próprios códigos . Utilize  `getTipoDeJuros` para traduzir o código extraído do campo 
+
+`getTipoDeJuros` devolve um destes tipos:
+
+| Tipo            | Significado de `juros`                      |
+| --------------- | ------------------------------------------- |
+| `VALOR_POR_DIA` | valor em reais cobrado por dia de atraso    |
+| `TAXA_MENSAL`   | percentual cobrado ao mês                   |
+| `TAXA_DIARIA`   | percentual cobrado ao dia                   |
+| `ISENTO`        | o boleto não cobra juros                    |
+| `OUTRO`         | código sem um desses tipos como equivalente |
 
 ```ts
 import { getTipoDeJuros } from '@fx55/cnab-lib-ts'
@@ -91,7 +101,7 @@ Os dois campos são **opcionais**: quando vêm vazios ou zerados, eles não apar
 
 Alguns layouts não têm código ou data de juros. Isso não é falta de suporte da lib: o layout do banco não tem esses campos, porque o banco sempre cobra os juros do mesmo jeito.
 
-- **Sem código:** o tipo de juros é fixo, e o valor em `juros` é sempre lido da mesma forma. Para esses layouts, `getTipoDeJuros` devolve o tipo fixo.
+- **Sem código:** o tipo de juros é fixo, e o valor em `juros` é sempre lido da mesma forma. Para esses layouts, `getTipoDeJuros` devolve o tipo fixo determinado pelo banco.
 - **Sem data:** os juros são cobrados desde o primeiro dia de atraso.
 
 A data de início dos juros não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_JUROS_FIELDS` como campos extras.
@@ -115,15 +125,7 @@ const cnab = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)
 | Sicredi         | CNAB 240 |      ⚠️       |
 | Sicredi         | CNAB 400 |      ⚠️       |
 
-`getTipoDeJuros` devolve um destes tipos:
 
-| Tipo            | Significado de `juros`                      |
-| --------------- | ------------------------------------------- |
-| `VALOR_POR_DIA` | valor em reais cobrado por dia de atraso    |
-| `TAXA_MENSAL`   | percentual cobrado ao mês                   |
-| `TAXA_DIARIA`   | percentual cobrado ao dia                   |
-| `ISENTO`        | o boleto não cobra juros                    |
-| `OUTRO`         | código sem um desses tipos como equivalente |
 
 Quando o código é `null`, o resultado depende do layout:
 
