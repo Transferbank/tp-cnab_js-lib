@@ -112,25 +112,27 @@ import { CNAB_DATA_DE_JUROS_FIELDS } from '@fx55/cnab-lib-ts'
 const cnab = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)
 ```
 
-| Banco           | Formato  | Data de juros |
-| --------------- | :------: | :-----------: |
-| Banco do Brasil | CNAB 240 |      ⚠️       |
-| Bradesco        | CNAB 240 |      ⚠️       |
-| Caixa           | CNAB 240 |      ⚠️       |
-| Caixa           | CNAB 400 |      ⚠️       |
-| Itaú            | CNAB 240 |      ⚠️       |
-| Itaú            | CNAB 400 |      ⚠️       |
-| Santander       | CNAB 240 |      ⚠️       |
-| Sicoob          | CNAB 240 |      ⚠️       |
-| Sicredi         | CNAB 240 |      ⚠️       |
-| Sicredi         | CNAB 400 |      ⚠️       |
+Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros começam. Cada banco tem o seu padrão:
+
+| Banco           | Formato  | Com a data vazia, os juros começam |
+| --------------- | :------: | ---------------------------------- |
+| Banco do Brasil | CNAB 240 | o manual não diz                   |
+| Bradesco        | CNAB 240 | no vencimento                      |
+| Caixa           | CNAB 240 | no dia seguinte ao vencimento      |
+| Caixa           | CNAB 400 | no dia seguinte ao vencimento      |
+| Itaú            | CNAB 240 | no vencimento                      |
+| Itaú            | CNAB 400 | o manual não diz                   |
+| Santander       | CNAB 240 | o manual não diz                   |
+| Sicoob          | CNAB 240 | no dia seguinte ao vencimento      |
+| Sicredi         | CNAB 240 | no dia seguinte ao vencimento      |
+| Sicredi         | CNAB 400 | no dia seguinte ao vencimento      |
 
 
 
 Quando o código é `null`, o resultado depende do layout:
 
 - **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_POR_DIA` ou `TAXA_MENSAL`.
-- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`.
+- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`. Quem decide o tipo é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra valor por dia quando há valor de juros e não cobra juros quando não há.
 
 ### Campos extras da lib
 
