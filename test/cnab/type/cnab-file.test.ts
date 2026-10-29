@@ -16,6 +16,7 @@ import { CNAB_TELEFONE_FIELDS } from '@cnab/bank/cnab-telefone-fields'
 import { CNAB_IDENTIFICATION_FIELDS, CNAB_SEU_NUMERO_FIELDS } from '@cnab/bank/cnab-identification-fields'
 import { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
 import { CNAB_DATA_DE_JUROS_FIELDS } from '@cnab/bank/cnab-juros-fields'
+import { CNAB_DATA_DE_MULTA_FIELDS } from '@cnab/bank/cnab-multa-fields'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -582,13 +583,15 @@ describe('cnab-file', (): void => {
     const cnabFile = openExample(examplePath)
 
     // When
-    const result = cnabFile.validate(true)
-    const boleto = cnabFile.read().boletos[0]
+    const result = cnabFile.validate(true, CNAB_DATA_DE_MULTA_FIELDS)
+    const boleto = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos[0]
+    const boletoWithoutExtraFields = cnabFile.read().boletos[0]
 
     // Then
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(boleto.fields.codigo_de_multa).toBe(expectedCodigo)
     expect(boleto.fields.data_de_multa).toEqual(expectedData)
     expect(boleto.fields.multa).toBe(expectedMulta)
+    expect(boletoWithoutExtraFields.fields).not.toHaveProperty('data_de_multa')
   })
 })
