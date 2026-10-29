@@ -105,6 +105,15 @@ const cnab = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)
 | Banco           | Formato  | Data de juros |
 | --------------- | :------: | :-----------: |
 | Banco do Brasil | CNAB 240 |      ⚠️       |
+| Bradesco        | CNAB 240 |      ⚠️       |
+| Caixa           | CNAB 240 |      ⚠️       |
+| Caixa           | CNAB 400 |      ⚠️       |
+| Itaú            | CNAB 240 |      ⚠️       |
+| Itaú            | CNAB 400 |      ⚠️       |
+| Santander       | CNAB 240 |      ⚠️       |
+| Sicoob          | CNAB 240 |      ⚠️       |
+| Sicredi         | CNAB 240 |      ⚠️       |
+| Sicredi         | CNAB 400 |      ⚠️       |
 
 `getTipoDeJuros` devolve um destes tipos:
 

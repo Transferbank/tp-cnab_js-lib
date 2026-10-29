@@ -180,7 +180,6 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000010',
-          data_de_juros: new Date(2026, 11, 16),
           juros: 0.09
         }
       }),
@@ -196,7 +195,6 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000020',
-          data_de_juros: new Date(2026, 11, 21),
           juros: 0.19
         }
       }),
@@ -252,7 +250,6 @@ describe('cnab-file', (): void => {
         cidade_do_sacado: 'VARZEA ALEGRE',
         uf_do_sacado: 'CE',
         nosso_numero: '10377333',
-        data_de_juros: new Date(2026, 6, 6),
         juros: 6.76
       }
     })
@@ -569,7 +566,7 @@ describe('cnab-file', (): void => {
     const cnabFile = openExample(examplePath)
 
     // When
-    const boleto = cnabFile.read().boletos[1]
+    const boleto = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS).boletos[1]
 
     // Then
     expect(boleto.fields.codigo_de_juros).toBe(expectedCodigo)
