@@ -63,18 +63,18 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :---: | :-------------: | :---: |
 | Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
 | Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
-| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
-| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
-| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
-| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
-| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
-| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
-| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
-| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
-| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
-| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
-| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
+| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ⚠️   |
+| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ⚠️   |
+| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
 
 #### Juros
 
@@ -158,10 +158,15 @@ for (const boleto of cnabFile.read().boletos) {
 
 Quando o código é `null`, o resultado depende do layout:
 
-- **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_FIXO` ou `PERCENTUAL`.
-- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`.
+- **O banco define um tipo para o código ausente:** a função devolve esse tipo. Isso acontece quando o layout não tem o campo de código (Caixa CNAB 400 e Sicoob CNAB 400) e no Sicredi CNAB 400, cujo manual diz que o código vazio vale como percentual.
+- **Nos demais layouts:** o arquivo não informou o tipo, e a função devolve `null`.
 
 Um código que não está na tabela do banco é erro de validação.
+
+Alguns layouts não têm código ou data de multa. Isso não é falta de suporte da lib: o layout do banco não tem esses campos, porque o banco sempre cobra a multa do mesmo jeito.
+
+- **Sem código:** o tipo de multa é fixo, determinado pelo banco: `VALOR_FIXO` na Caixa CNAB 400 e `PERCENTUAL` no Sicoob CNAB 400.
+- **Sem data:** a multa é cobrada no primeiro dia de atraso. É o caso do Bradesco CNAB 400 e do Sicoob CNAB 400.
 
 A data de início da multa não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_MULTA_FIELDS` como campos extras.
 
@@ -177,6 +182,16 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando a multa pa
 | --------------- | :------: | ------------------------------ |
 | Banco do Brasil | CNAB 240 | o manual não diz               |
 | Banco do Brasil | CNAB 400 | o manual não diz               |
+| Bradesco        | CNAB 240 | no vencimento                  |
+| Caixa           | CNAB 240 | no vencimento                  |
+| Caixa           | CNAB 400 | no vencimento                  |
+| Itaú            | CNAB 240 | o manual não diz               |
+| Itaú            | CNAB 400 | o manual não diz               |
+| Santander       | CNAB 240 | no vencimento                  |
+| Santander       | CNAB 400 | o banco recusa o boleto        |
+| Sicoob          | CNAB 240 | no dia seguinte ao vencimento  |
+| Sicredi         | CNAB 240 | no dia seguinte ao vencimento  |
+| Sicredi         | CNAB 400 | no dia seguinte ao vencimento  |
 
 ### Campos extras da lib
 
