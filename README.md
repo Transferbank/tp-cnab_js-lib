@@ -89,6 +89,11 @@ for (const boleto of cnabFile.read().boletos) {
 
 Os dois campos são **opcionais**: quando vêm vazios ou zerados, eles não aparecem em `fields`. Um código que não está na tabela do banco é erro de validação.
 
+Alguns layouts não têm código ou data de juros. Isso não é falta de suporte da lib: o layout do banco não tem esses campos, porque o banco sempre cobra os juros do mesmo jeito.
+
+- **Sem código:** o tipo de juros é fixo, e o valor em `juros` é sempre lido da mesma forma. Para esses layouts, `getTipoDeJuros` devolve o tipo fixo.
+- **Sem data:** os juros são cobrados desde o primeiro dia de atraso.
+
 A data de início dos juros não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_JUROS_FIELDS` como campos extras.
 
 ```ts
@@ -113,7 +118,7 @@ const cnab = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)
 
 Quando o código é `null`, o resultado depende do layout:
 
-- **Layout sem campo de código:** a função devolve o tipo fixo do layout, `VALOR_POR_DIA` ,`TAXA_MENSAL` , etc .
+- **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_POR_DIA` ou `TAXA_MENSAL`.
 - **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`.
 
 ### Campos extras da lib
