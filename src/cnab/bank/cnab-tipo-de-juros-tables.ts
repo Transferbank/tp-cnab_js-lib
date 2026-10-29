@@ -60,7 +60,8 @@ export const CNAB_TIPO_DE_JUROS_TABLES: Record<CnabBank, Record<CnabFormat, Cnab
         '2': CnabTipoDeJuros.TAXA_MENSAL,
         '3': CnabTipoDeJuros.ISENTO,
         '4': CnabTipoDeJuros.OUTRO,
-        '5': CnabTipoDeJuros.VALOR_POR_DIA
+        '5': CnabTipoDeJuros.VALOR_POR_DIA,
+        '6': CnabTipoDeJuros.TAXA_MENSAL
       }
     },
     [CnabFormat.CNAB400]: {
