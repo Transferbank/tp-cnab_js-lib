@@ -6,7 +6,7 @@ import { getTipoDeJuros } from '@cnab/bank/cnab-tipo-de-juros-tables'
 
 describe('getTipoDeJuros', (): void => {
   it.each([
-    ['a code table and no code', CnabBank.BRADESCO, CnabFormat.CNAB240, null, null],
+    ['a layout with codes and the code not informed', CnabBank.BRADESCO, CnabFormat.CNAB240, null, null],
     ['a code in the table', CnabBank.SICOOB, CnabFormat.CNAB240, '0', CnabTipoDeJuros.ISENTO],
     ['a letter code', CnabBank.SICREDI, CnabFormat.CNAB400, 'B', CnabTipoDeJuros.TAXA_DIARIA],
     ['a layout without code', CnabBank.SICOOB, CnabFormat.CNAB400, null, CnabTipoDeJuros.TAXA_MENSAL]
