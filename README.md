@@ -49,7 +49,6 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `uf_do_sacado`        | UF do sacado                   | `string` |
 | `nosso_numero`        | Número do boleto no banco      | `string` |
 | `codigo_de_juros`     | Código de juros do banco       | `string` |
-| `data_de_juros`       | Data de início dos juros       | `Date`   |
 | `juros`               | Valor ou taxa de juros         | `number` |
 
 #### Campos por banco e formato
@@ -58,22 +57,22 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 - ⚠️ opcional: pode vir vazio; nesse caso o valor é nulo e o campo não aparece em `fields`
 - ❌ inexistente: o layout não tem o campo, e ele nunca aparece em `fields`
 
-| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número | Código de juros | Data de juros | Juros |
-| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :-----------: | :---: |
-| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |      ⚠️       |  ⚠️   |
-| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ⚠️   |
-| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |      ❌       |  ❌   |
-| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |      ❌       |  ❌   |
+| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número | Código de juros | Juros |
+| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :---: |
+| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |
+| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |
+| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |  ❌   |
+| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ❌        |  ❌   |
+| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ❌   |
+| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |  ❌   |
 
 #### Juros
 
@@ -88,7 +87,19 @@ for (const boleto of cnabFile.read().boletos) {
 }
 ```
 
-Os três campos são **opcionais**: quando vêm vazios ou zerados, eles não aparecem em `fields`. Um código que não está na tabela do banco é erro de validação.
+Os dois campos são **opcionais**: quando vêm vazios ou zerados, eles não aparecem em `fields`. Um código que não está na tabela do banco é erro de validação.
+
+A data de início dos juros não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_JUROS_FIELDS` como campos extras.
+
+```ts
+import { CNAB_DATA_DE_JUROS_FIELDS } from '@fx55/cnab-lib-ts'
+
+const cnab = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)
+```
+
+| Banco           | Formato  | Data de juros |
+| --------------- | :------: | :-----------: |
+| Banco do Brasil | CNAB 240 |      ⚠️       |
 
 `getTipoDeJuros` devolve um destes tipos:
 
@@ -116,6 +127,7 @@ Quando o código é `null`, o resultado depende do layout:
 | `uso_da_empresa`    | Campo livre para a empresa identificar o boleto no seu sistema | `string`   | `CNAB_USO_DA_EMPRESA_FIELDS` |
 | `parcela`           | Número da parcela do boleto                                    | `number`   | `CNAB_PARCELA_FIELDS`        |
 | `total_de_parcelas` | Total de parcelas                                              | `number`   | `CNAB_PARCELA_FIELDS`        |
+| `data_de_juros`     | Data de início dos juros                                       | `Date`     | `CNAB_DATA_DE_JUROS_FIELDS`  |
 
 Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 

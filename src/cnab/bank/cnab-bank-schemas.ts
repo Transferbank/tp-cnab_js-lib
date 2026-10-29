@@ -226,7 +226,6 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240.UfBoletoField,
           optional(Cnab240.NossoNumeroBoletoField),
           optional(Cnab240BancoDoBrasil.CodigoDeJurosBoletoField),
-          optional(Cnab240BancoDoBrasil.DataDeJurosBoletoField),
           optional(Cnab240BancoDoBrasil.JurosBoletoField)
         ],
       },
