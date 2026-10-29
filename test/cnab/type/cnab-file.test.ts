@@ -195,7 +195,9 @@ describe('cnab-file', (): void => {
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
-          nosso_numero: '109000000020'
+          nosso_numero: '109000000020',
+          data_de_juros: new Date(2026, 11, 21),
+          juros: 0.19
         }
       }),
       new CnabBoleto({
@@ -526,7 +528,7 @@ describe('cnab-file', (): void => {
     ['bradesco/cnab240/bradesco_cnab_240.txt', '1', new Date(2026, 11, 16), 0.05],
     ['caixa/cnab240/caixa_cnab_240.txt', '1', new Date(2026, 11, 16), 0.07],
     ['itau/cnab240/itau_cnab_240.txt', undefined, new Date(2026, 11, 16), 0.09],
-    ['santander/cnab240/santander_cnab_240.txt', '1', new Date(2026, 11, 16), 0.11],
+    ['santander/cnab240/santander_cnab_240.txt', '1', new Date(2026, 11, 15), 0.11],
     ['sicoob/cnab240/sicoob_cnab_240.txt', '1', new Date(2026, 11, 16), 0.13],
     ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 16), 0.15],
     ['bradesco/cnab400/bradesco_cnab_400.txt', undefined, undefined, 22.56],
@@ -550,5 +552,28 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.data_de_juros).toEqual(expectedData)
     expect(boleto.fields.juros).toBe(expectedJuros)
     expect(boletoWithoutExtraFields.fields).not.toHaveProperty('data_de_juros')
+  })
+
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2027, 0, 21), 2.03],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '2', new Date(2026, 11, 21), 2.05],
+    ['caixa/cnab240/caixa_cnab_240.txt', '2', new Date(2027, 0, 21), 2.07],
+    ['itau/cnab240/itau_cnab_240.txt', undefined, new Date(2026, 11, 21), 0.19],
+    ['santander/cnab240/santander_cnab_240.txt', '2', new Date(2027, 0, 20), 2.11],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '2', new Date(2026, 11, 21), 2.13],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '2', new Date(2026, 11, 21), 2.15],
+    ['caixa/cnab400/caixa_cnab_400.REM', '3', new Date(2026, 7, 21), 2.17],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 1.5]
+  ])('given document file %s when reading then reads the juros of the second boleto', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedJuros: number): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const boleto = cnabFile.read().boletos[1]
+
+    // Then
+    expect(boleto.fields.codigo_de_juros).toBe(expectedCodigo)
+    expect(boleto.fields.data_de_juros).toEqual(expectedData)
+    expect(boleto.fields.juros).toBe(expectedJuros)
   })
 })
