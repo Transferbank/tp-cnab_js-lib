@@ -198,7 +198,6 @@ describe('cnab-file', (): void => {
           nosso_numero: '109000000020',
           juros: 0.19,
           codigo_de_multa: '2',
-          data_de_multa: new Date(2026, 11, 21),
           multa: 3
         }
       }),
@@ -229,7 +228,6 @@ describe('cnab-file', (): void => {
           uf_do_sacado: 'SP',
           nosso_numero: '109000000040',
           codigo_de_multa: '2',
-          data_de_multa: new Date(2027, 0, 1),
           multa: 3
         }
       })
@@ -259,7 +257,6 @@ describe('cnab-file', (): void => {
         nosso_numero: '10377333',
         juros: 6.76,
         codigo_de_multa: '2',
-        data_de_multa: new Date(2026, 6, 6),
         multa: 2
       }
     })
