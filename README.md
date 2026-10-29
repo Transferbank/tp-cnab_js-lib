@@ -76,7 +76,7 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 #### Juros
 
-O valor dos campos de juros são sempre lidos pelo sistema. De acordo com os manuais, o campo `codigo_de_juros` define como o juros deve ser tratado, como valor fixo ou percentual. Cada banco define seus próprios códigos . Utilize  `getTipoDeJuros` para traduzir o código extraído do campo 
+Os campos de juros são sempre lidos pelo sistema. De acordo com os manuais, o campo `codigo_de_juros` define como os juros devem ser tratados: em reais por dia ou como percentual. Cada banco define seus próprios códigos. Utilize `getTipoDeJuros` para traduzir o código extraído do campo.
 
 `getTipoDeJuros` devolve um destes tipos:
 
@@ -96,6 +96,11 @@ for (const boleto of cnabFile.read().boletos) {
   getTipoDeJuros(cnabFile.bank, cnabFile.format, codigo) // ex: CnabTipoDeJuros.VALOR_POR_DIA
 }
 ```
+
+Quando o código é `null`, o resultado depende do layout:
+
+- **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_POR_DIA` ou `TAXA_MENSAL`.
+- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`. Quem decide o tipo é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra valor por dia quando há valor de juros e não cobra juros quando não há.
 
 Um código que não está na tabela do banco é erro de validação.
 
@@ -126,13 +131,6 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros c
 | Sicoob          | CNAB 240 | no dia seguinte ao vencimento      |
 | Sicredi         | CNAB 240 | no dia seguinte ao vencimento      |
 | Sicredi         | CNAB 400 | no dia seguinte ao vencimento      |
-
-
-
-Quando o código é `null`, o resultado depende do layout:
-
-- **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_POR_DIA` ou `TAXA_MENSAL`.
-- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`. Quem decide o tipo é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra valor por dia quando há valor de juros e não cobra juros quando não há.
 
 ### Campos extras da lib
 
