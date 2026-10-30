@@ -6,7 +6,7 @@ import { getTipoDeMulta } from '@cnab/bank/cnab-tipo-de-multa-tables'
 
 describe('getTipoDeMulta', (): void => {
   it.each([
-    ['a code table and no code', CnabBank.BRADESCO, CnabFormat.CNAB240, null, null],
+    ['a layout with codes and the code not informed', CnabBank.BRADESCO, CnabFormat.CNAB240, null, null],
     ['a code in the table', CnabBank.BRADESCO, CnabFormat.CNAB400, '2', CnabTipoDeMulta.PERCENTUAL],
     ['a code table with a default and no code', CnabBank.SICREDI, CnabFormat.CNAB400, null, CnabTipoDeMulta.PERCENTUAL],
     ['a layout without code', CnabBank.CAIXA, CnabFormat.CNAB400, null, CnabTipoDeMulta.VALOR_FIXO]
