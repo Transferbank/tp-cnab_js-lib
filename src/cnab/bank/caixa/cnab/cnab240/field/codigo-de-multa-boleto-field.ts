@@ -5,4 +5,5 @@ import { CodigoDeMultaBoletoField as Cnab240CodigoDeMultaBoletoField } from '@cn
 export class CodigoDeMultaBoletoField extends Cnab240CodigoDeMultaBoletoField {
   static readonly bank = CnabBank.CAIXA
   static readonly format = CnabFormat.CNAB240
+  protected readonly zeroIsAbsent: boolean = false
 }

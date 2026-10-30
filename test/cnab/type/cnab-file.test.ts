@@ -17,6 +17,8 @@ import { CNAB_IDENTIFICATION_FIELDS, CNAB_SEU_NUMERO_FIELDS } from '@cnab/bank/c
 import { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
 import { CNAB_DATA_DE_JUROS_FIELDS } from '@cnab/bank/cnab-juros-fields'
 import { CNAB_DATA_DE_MULTA_FIELDS } from '@cnab/bank/cnab-multa-fields'
+import { getTipoDeMulta } from '@cnab/bank/cnab-tipo-de-multa-tables'
+import { CnabTipoDeMulta } from '@cnab/type/cnab-tipo-de-multa'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -612,5 +614,17 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.data_de_multa).toEqual(expectedData)
     expect(boleto.fields.multa).toBe(expectedMulta)
     expect(boletoWithoutExtraFields.fields).not.toHaveProperty('data_de_multa')
+  })
+
+  it('given caixa cnab240 boleto with codigo de multa 0 when reading then resolves it as isento', (): void => {
+    // Given
+    const cnabFile = openExample('caixa/cnab240/caixa_cnab_240.txt')
+
+    // When
+    const boleto = cnabFile.read().boletos[1]
+
+    // Then
+    expect(boleto.fields.codigo_de_multa).toBe('0')
+    expect(getTipoDeMulta(CnabBank.CAIXA, CnabFormat.CNAB240, boleto.fields.codigo_de_multa as string)).toBe(CnabTipoDeMulta.ISENTO)
   })
 })

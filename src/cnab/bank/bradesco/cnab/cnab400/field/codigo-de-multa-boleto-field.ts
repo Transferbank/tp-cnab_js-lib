@@ -6,4 +6,5 @@ export class CodigoDeMultaBoletoField extends Cnab400CodigoDeMultaBoletoField {
   static readonly bank = CnabBank.BRADESCO
   static readonly format = CnabFormat.CNAB400
   readonly range: [number, number] = [66, 66]
+  protected readonly zeroIsAbsent: boolean = false
 }

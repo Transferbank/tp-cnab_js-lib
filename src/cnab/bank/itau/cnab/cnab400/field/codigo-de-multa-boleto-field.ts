@@ -7,4 +7,5 @@ export class CodigoDeMultaBoletoField extends Cnab400CodigoDeMultaBoletoField {
   static readonly format = CnabFormat.CNAB400
   readonly range: [number, number] = [2, 2]
   protected readonly recordType: string = '2'
+  protected readonly zeroIsAbsent: boolean = false
 }
