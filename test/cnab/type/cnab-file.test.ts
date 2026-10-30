@@ -616,6 +616,28 @@ describe('cnab-file', (): void => {
     expect(boletoWithoutExtraFields.fields).not.toHaveProperty('data_de_multa')
   })
 
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2027, 0, 21), 1.25],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '2', new Date(2026, 11, 20), 2],
+    ['itau/cnab240/itau_cnab_240.txt', '2', new Date(2026, 11, 21), 3],
+    ['santander/cnab240/santander_cnab_240.txt', '1', new Date(2027, 0, 21), 3.4],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '2', new Date(2026, 11, 21), 1.75],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 21), 4.1],
+    ['caixa/cnab400/caixa_cnab_400.REM', undefined, new Date(2026, 7, 21), 6.3],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2.5]
+  ])('given document file %s when reading then reads the multa of the second boleto', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedMulta: number): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const boleto = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos[1]
+
+    // Then
+    expect(boleto.fields.codigo_de_multa).toBe(expectedCodigo)
+    expect(boleto.fields.data_de_multa).toEqual(expectedData)
+    expect(boleto.fields.multa).toBe(expectedMulta)
+  })
+
   it('given caixa cnab240 boleto with codigo de multa 0 when reading then resolves it as isento', (): void => {
     // Given
     const cnabFile = openExample('caixa/cnab240/caixa_cnab_240.txt')
