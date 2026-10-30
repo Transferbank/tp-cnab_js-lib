@@ -8,7 +8,8 @@ import {
   CnabFieldParseError,
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
-import { getDescontoCodes } from '@cnab/bank/cnab-tipo-de-desconto-tables'
+import { CnabTipoDeDesconto } from '@cnab/type/cnab-tipo-de-desconto'
+import { getDescontoCodes, getTipoDeDesconto } from '@cnab/bank/cnab-tipo-de-desconto-tables'
 import { blankIfZeros } from '@cnab/utils/phone-parser'
 import { parseImpliedDecimal } from '@cnab/utils/value-parser'
 
@@ -65,11 +66,21 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   }
 
   protected parseValue(_rawValue: string): CnabDesconto[] {
-    return this.informedDescontos().map(ranges => ({
-      codigo: this.extractCodigo(ranges),
-      data: this.extractData(ranges.data),
-      valor: this.extractValor(ranges.valor)
-    }))
+    return this.informedDescontos().map(ranges => {
+      const codigo = this.extractCodigo(ranges)
+      return {
+        codigo,
+        tipo: this.resolveTipo(ranges, codigo),
+        data: this.extractData(ranges.data),
+        valor: this.extractValor(ranges.valor)
+      }
+    })
+  }
+
+  protected resolveTipo(_ranges: CnabDescontoRanges, codigo: string | null): CnabTipoDeDesconto | null {
+    const { bank, format } = this.constructor as typeof CnabField<CnabDesconto[]>
+    if (bank == null || format == null) return null
+    return getTipoDeDesconto(bank, format, codigo)
   }
 
   protected abstract parseDate(rawValue: string): Date | null

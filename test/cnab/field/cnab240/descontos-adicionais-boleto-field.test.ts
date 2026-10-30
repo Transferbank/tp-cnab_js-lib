@@ -4,6 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabTipoDeDesconto } from '@cnab/type/cnab-tipo-de-desconto'
 import { DescontosAdicionaisBoletoField } from '@cnab/field/cnab240/descontos-adicionais-boleto-field'
 
 class BradescoDescontosAdicionaisBoletoField extends DescontosAdicionaisBoletoField {
@@ -27,7 +28,7 @@ describe('DescontosAdicionaisBoletoField', (): void => {
 
     // Then
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toEqual([{ codigo: '1', data: new Date(2026, 11, 10), valor: 5 }])
+    expect(field.value).toEqual([{ codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 5 }])
   })
 
   it('given both descontos filled with zeros when reading then returns null', (): void => {
@@ -69,13 +70,13 @@ describe('DescontosAdicionaisBoletoField', (): void => {
 
   it('given descontos read from a previous line when reading the next one then appends its descontos', (): void => {
     // Given
-    const previous = [{ codigo: '1', data: new Date(2026, 11, 5), valor: 10 }]
+    const previous = [{ codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 5), valor: 10 }]
     const field = new BradescoDescontosAdicionaisBoletoField(segmentoR('1' + '10122026' + '000000000000500' + '0'.repeat(24)), 5)
 
     // When
     const descontos = field.handleDuplicatedValue(previous)
 
     // Then
-    expect(descontos).toEqual([...previous, { codigo: '1', data: new Date(2026, 11, 10), valor: 5 }])
+    expect(descontos).toEqual([...previous, { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 5 }])
   })
 })
