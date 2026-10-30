@@ -259,7 +259,7 @@ describe('cnab-file', (): void => {
         nosso_numero: '10377333',
         juros: 6.76,
         codigo_de_multa: '2',
-        multa: 2
+        multa: 2.7
       }
     })
 
@@ -346,7 +346,7 @@ describe('cnab-file', (): void => {
       ['an itau cnab400 field', 'itau/cnab400/ITAU_cnab_400.REM', ItauCnab400NossoNumeroExtraField, '10377333'],
       ['an itau cnab400 field', 'bradesco/cnab400/bradesco_cnab_400.txt', ItauCnab400NossoNumeroExtraField, undefined],
       ['an itau cnab400 field', 'itau/cnab240/itau_cnab_240.txt', ItauCnab400NossoNumeroExtraField, undefined],
-      ['a field without bank and format', 'bradesco/cnab400/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020200']
+      ['a field without bank and format', 'bradesco/cnab400/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020240']
     ])('given %s when reading %s then reads it only if the file is in its scope', (_: string, examplePath: string, extraField: CnabFieldClass, expectedNossoNumero: string | undefined): void => {
       // Given
       const cnabFile = openExample(examplePath)
@@ -586,19 +586,19 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2026, 11, 16), 1],
-    ['bradesco/cnab240/bradesco_cnab_240.txt', '2', new Date(2026, 11, 15), 2],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '2', new Date(2026, 11, 15), 2.2],
     ['caixa/cnab240/caixa_cnab_240.txt', '2', new Date(2026, 11, 16), 2.5],
     ['itau/cnab240/itau_cnab_240.txt', undefined, undefined, undefined],
     ['santander/cnab240/santander_cnab_240.txt', '2', new Date(2026, 11, 16), 1.5],
     ['sicoob/cnab240/sicoob_cnab_240.txt', '0', undefined, undefined],
-    ['sicredi/cnab240/sicredi_cnab_240.txt', '2', new Date(2026, 11, 16), 2],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', '2', undefined, 2],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '2', new Date(2026, 11, 16), 2.3],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2.6],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', '2', undefined, 2.4],
     ['caixa/cnab400/caixa_cnab_400.REM', undefined, new Date(2026, 7, 16), 5],
-    ['itau/cnab400/ITAU_cnab_400.REM', '2', new Date(2026, 6, 6), 2],
+    ['itau/cnab400/ITAU_cnab_400.REM', '2', new Date(2026, 6, 6), 2.7],
     ['santander/cnab400/santander_cnab_400.REM', '4', new Date(2026, 5, 22), 4],
-    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2],
-    ['sicredi/cnab400/sicredi_cnab_400.REM', undefined, undefined, 2]
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2.8],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', undefined, undefined, 2.9]
   ])('given document file %s when reading then reads the multa of its layout', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedMulta: number | undefined): void => {
     // Given
     const cnabFile = openExample(examplePath)
@@ -624,7 +624,7 @@ describe('cnab-file', (): void => {
     ['sicoob/cnab240/sicoob_cnab_240.txt', '2', new Date(2026, 11, 21), 1.75],
     ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 21), 4.1],
     ['caixa/cnab400/caixa_cnab_400.REM', undefined, new Date(2026, 7, 21), 6.3],
-    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2.5]
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 1.9]
   ])('given document file %s when reading then reads the multa of the second boleto', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedMulta: number): void => {
     // Given
     const cnabFile = openExample(examplePath)
