@@ -623,7 +623,8 @@ describe('cnab-file', (): void => {
     ['sicoob/cnab240/sicoob_cnab_240.txt', '2', new Date(2026, 11, 21), 1.75],
     ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 21), 4.1],
     ['caixa/cnab400/caixa_cnab_400.REM', undefined, new Date(2026, 7, 21), 6.3],
-    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 1.9]
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 1.9],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 'A', new Date(2026, 5, 29), 3.6]
   ])('given document file %s when reading then reads the multa of the second boleto', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedMulta: number): void => {
     // Given
     const cnabFile = openExample(examplePath)
