@@ -108,6 +108,11 @@ for (const boleto of cnabFile.read().boletos) {
 
 Um código que não está na tabela do banco é erro de validação. Quando o código é `null`, as funções devolvem `null`: o arquivo não informou o tipo, e quem decide é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra juros por dia quando há valor de juros e não cobra juros quando não há.
 
+Em geral, o código `0` é tratado como código não informado. A exceção são os layouts onde o manual define `0` como "sem multa" ou "sem juros": neles, o campo traz `'0'` e a função devolve `ISENTO`. São eles:
+
+- **Multa:** Bradesco CNAB 400, Caixa CNAB 240, Itaú CNAB 240 e 400, Sicoob CNAB 240
+- **Juros:** Sicoob CNAB 240
+
 A exceção são os layouts em que o tipo é fixo. Eles não têm o campo de código porque o banco sempre cobra do mesmo jeito; não é falta de suporte da lib. Nesses layouts, as funções devolvem o tipo fixo:
 
 | Banco e formato     | Juros           | Multa        |
