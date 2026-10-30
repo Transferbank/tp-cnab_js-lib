@@ -76,13 +76,11 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
 | Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
 
-#### Juros
+#### Juros e multa
 
-Os campos de juros são sempre lidos pelo sistema. De acordo com os manuais, o campo `codigo_de_juros` define como os juros devem ser tratados: em reais por dia ou como percentual. Cada banco define seus próprios códigos. Utilize `getTipoDeJuros` para traduzir o código extraído do campo.
+Os campos de juros e de multa são sempre lidos pelo sistema. Os juros crescem a cada dia de atraso; a multa é cobrada uma vez só. De acordo com os manuais, `codigo_de_juros` e `codigo_de_multa` definem como os valores em `juros` e `multa` devem ser lidos: em reais ou como percentual. Cada banco define seus próprios códigos. Utilize `getTipoDeJuros` e `getTipoDeMulta` para traduzir o código extraído do campo.
 
-`getTipoDeJuros` devolve um destes tipos:
-
-| Tipo            | Significado de `juros`                      |
+| Tipo de juros   | Significado de `juros`                      |
 | --------------- | ------------------------------------------- |
 | `VALOR_POR_DIA` | valor em reais cobrado por dia de atraso    |
 | `TAXA_MENSAL`   | percentual cobrado ao mês                   |
@@ -90,108 +88,67 @@ Os campos de juros são sempre lidos pelo sistema. De acordo com os manuais, o c
 | `ISENTO`        | o boleto não cobra juros                    |
 | `OUTRO`         | código sem um desses tipos como equivalente |
 
+| Tipo de multa | Significado de `multa`                      |
+| ------------- | ------------------------------------------- |
+| `VALOR_FIXO`  | valor em reais cobrado uma vez              |
+| `PERCENTUAL`  | percentual sobre o valor do título          |
+| `ISENTO`      | o boleto não cobra multa                    |
+| `OUTRO`       | código sem um desses tipos como equivalente |
+
 ```ts
-import { getTipoDeJuros } from '@fx55/cnab-lib-ts'
+import { getTipoDeJuros, getTipoDeMulta } from '@fx55/cnab-lib-ts'
 
 for (const boleto of cnabFile.read().boletos) {
-  const codigo = (boleto.fields.codigo_de_juros as string | undefined) ?? null
-  getTipoDeJuros(cnabFile.bank, cnabFile.format, codigo) // ex: CnabTipoDeJuros.VALOR_POR_DIA
+  const codigoDeJuros = (boleto.fields.codigo_de_juros as string | undefined) ?? null
+  const codigoDeMulta = (boleto.fields.codigo_de_multa as string | undefined) ?? null
+  getTipoDeJuros(cnabFile.bank, cnabFile.format, codigoDeJuros) // ex: CnabTipoDeJuros.VALOR_POR_DIA
+  getTipoDeMulta(cnabFile.bank, cnabFile.format, codigoDeMulta) // ex: CnabTipoDeMulta.PERCENTUAL
 }
 ```
 
-Quando o código é `null`, o resultado depende do layout:
+Um código que não está na tabela do banco é erro de validação. Quando o código é `null`, as funções devolvem `null`: o arquivo não informou o tipo, e quem decide é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra juros por dia quando há valor de juros e não cobra juros quando não há.
 
-- **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_POR_DIA` ou `TAXA_MENSAL`.
-- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`. Quem decide o tipo é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra valor por dia quando há valor de juros e não cobra juros quando não há.
+A exceção são os layouts em que o tipo é fixo. Eles não têm o campo de código porque o banco sempre cobra do mesmo jeito; não é falta de suporte da lib. Nesses layouts, as funções devolvem o tipo fixo:
 
-Um código que não está na tabela do banco é erro de validação.
+| Banco e formato     | Juros           | Multa        |
+| ------------------- | --------------- | ------------ |
+| Banco do Brasil 400 | `VALOR_POR_DIA` |              |
+| Bradesco 400        | `VALOR_POR_DIA` |              |
+| Caixa 400           |                 | `VALOR_FIXO` |
+| Itaú 240            | `VALOR_POR_DIA` |              |
+| Itaú 400            | `VALOR_POR_DIA` |              |
+| Santander 400       | `VALOR_POR_DIA` |              |
+| Sicoob 400          | `TAXA_MENSAL`   | `PERCENTUAL` |
+| Sicredi 400         |                 | `PERCENTUAL` |
 
-Alguns layouts não têm código ou data de juros. Isso não é falta de suporte da lib: o layout do banco não tem esses campos, porque o banco sempre cobra os juros do mesmo jeito.
+O Sicredi CNAB 400 tem o código de multa, mas o manual diz que o código vazio vale como percentual.
 
-- **Sem código:** o tipo de juros é fixo, e o valor em `juros` é sempre lido da mesma forma. Para esses layouts, `getTipoDeJuros` devolve o tipo fixo determinado pelo banco.
-- **Sem data:** os juros são cobrados desde o primeiro dia de atraso.
-
-A data de início dos juros não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_JUROS_FIELDS` como campos extras.
-
-```ts
-import { CNAB_DATA_DE_JUROS_FIELDS } from '@fx55/cnab-lib-ts'
-
-const cnab = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)
-```
-
-Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros começam. Cada banco tem o seu padrão:
-
-| Banco           | Formato  | Com a data vazia, os juros começam |
-| --------------- | :------: | ---------------------------------- |
-| Banco do Brasil | CNAB 240 | o manual não diz                   |
-| Bradesco        | CNAB 240 | no vencimento                      |
-| Caixa           | CNAB 240 | no dia seguinte ao vencimento      |
-| Caixa           | CNAB 400 | no dia seguinte ao vencimento      |
-| Itaú            | CNAB 240 | no vencimento                      |
-| Itaú            | CNAB 400 | o manual não diz                   |
-| Santander       | CNAB 240 | o manual não diz                   |
-| Sicoob          | CNAB 240 | no dia seguinte ao vencimento      |
-| Sicredi         | CNAB 240 | no dia seguinte ao vencimento      |
-| Sicredi         | CNAB 400 | no dia seguinte ao vencimento      |
-
-#### Multa
-
-Os campos de multa são sempre lidos pelo sistema. A multa é cobrada uma vez só, quando o boleto é pago com atraso, ao contrário dos juros, que crescem a cada dia. O campo `codigo_de_multa` define como o valor em `multa` deve ser lido: em reais ou como percentual sobre o valor do título. Cada banco define seus próprios códigos. Utilize `getTipoDeMulta` para traduzir o código extraído do campo.
-
-`getTipoDeMulta` devolve um destes tipos:
-
-| Tipo         | Significado de `multa`                      |
-| ------------ | ------------------------------------------- |
-| `VALOR_FIXO` | valor em reais cobrado uma vez              |
-| `PERCENTUAL` | percentual sobre o valor do título          |
-| `ISENTO`     | o boleto não cobra multa                    |
-| `OUTRO`      | código sem um desses tipos como equivalente |
+A data de início dos juros e da multa não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_JUROS_FIELDS` e `CNAB_DATA_DE_MULTA_FIELDS` como campos extras.
 
 ```ts
-import { getTipoDeMulta } from '@fx55/cnab-lib-ts'
+import { CNAB_DATA_DE_JUROS_FIELDS, CNAB_DATA_DE_MULTA_FIELDS } from '@fx55/cnab-lib-ts'
 
-for (const boleto of cnabFile.read().boletos) {
-  const codigo = (boleto.fields.codigo_de_multa as string | undefined) ?? null
-  getTipoDeMulta(cnabFile.bank, cnabFile.format, codigo) // ex: CnabTipoDeMulta.PERCENTUAL
-}
+const cnab = cnabFile.read([...CNAB_DATA_DE_JUROS_FIELDS, ...CNAB_DATA_DE_MULTA_FIELDS])
 ```
 
-Quando o código é `null`, o resultado depende do layout:
+Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros começam e quando a multa passa a valer. Nos layouts sem campo de data, o banco cobra desde o primeiro dia de atraso.
 
-- **O banco define um tipo para o código ausente:** a função devolve esse tipo. Isso acontece quando o layout não tem o campo de código (Caixa CNAB 400 e Sicoob CNAB 400) e no Sicredi CNAB 400, cujo manual diz que o código vazio vale como percentual.
-- **Nos demais layouts:** o arquivo não informou o tipo, e a função devolve `null`.
-
-Um código que não está na tabela do banco é erro de validação.
-
-Alguns layouts não têm código ou data de multa. Isso não é falta de suporte da lib: o layout do banco não tem esses campos, porque o banco sempre cobra a multa do mesmo jeito.
-
-- **Sem código:** o tipo de multa é fixo, determinado pelo banco: `VALOR_FIXO` na Caixa CNAB 400 e `PERCENTUAL` no Sicoob CNAB 400.
-- **Sem data:** a multa é cobrada no primeiro dia de atraso. É o caso do Bradesco CNAB 400 e do Sicoob CNAB 400.
-
-A data de início da multa não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_MULTA_FIELDS` como campos extras.
-
-```ts
-import { CNAB_DATA_DE_MULTA_FIELDS } from '@fx55/cnab-lib-ts'
-
-const cnab = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS)
-```
-
-Quando a data vem vazia, o arquivo deixou para o banco decidir quando a multa passa a valer. Cada banco tem o seu padrão:
-
-| Banco           | Formato  | Com a data vazia, a multa vale |
-| --------------- | :------: | ------------------------------ |
-| Banco do Brasil | CNAB 240 | o manual não diz               |
-| Banco do Brasil | CNAB 400 | o manual não diz               |
-| Bradesco        | CNAB 240 | no vencimento                  |
-| Caixa           | CNAB 240 | no vencimento                  |
-| Caixa           | CNAB 400 | no vencimento                  |
-| Itaú            | CNAB 240 | o manual não diz               |
-| Itaú            | CNAB 400 | o manual não diz               |
-| Santander       | CNAB 240 | no vencimento                  |
-| Santander       | CNAB 400 | o banco recusa o boleto        |
-| Sicoob          | CNAB 240 | no dia seguinte ao vencimento  |
-| Sicredi         | CNAB 240 | no dia seguinte ao vencimento  |
-| Sicredi         | CNAB 400 | no dia seguinte ao vencimento  |
+| Banco e formato     | Com a data vazia, os juros começam | Com a data vazia, a multa vale |
+| ------------------- | ---------------------------------- | ------------------------------ |
+| Banco do Brasil 240 | o manual não diz                   | o manual não diz               |
+| Banco do Brasil 400 | sem campo de data                  | o manual não diz               |
+| Bradesco 240        | no vencimento                      | no vencimento                  |
+| Bradesco 400        | sem campo de data                  | sem campo de data              |
+| Caixa 240           | no dia seguinte ao vencimento      | no vencimento                  |
+| Caixa 400           | no dia seguinte ao vencimento      | no vencimento                  |
+| Itaú 240            | no vencimento                      | o manual não diz               |
+| Itaú 400            | o manual não diz                   | o manual não diz               |
+| Santander 240       | o manual não diz                   | no vencimento                  |
+| Santander 400       | sem campo de data                  | o banco recusa o boleto        |
+| Sicoob 240          | no dia seguinte ao vencimento      | no dia seguinte ao vencimento  |
+| Sicoob 400          | sem campo de data                  | sem campo de data              |
+| Sicredi 240         | no dia seguinte ao vencimento      | no dia seguinte ao vencimento  |
+| Sicredi 400         | no dia seguinte ao vencimento      | no dia seguinte ao vencimento  |
 
 ### Campos extras da lib
 
