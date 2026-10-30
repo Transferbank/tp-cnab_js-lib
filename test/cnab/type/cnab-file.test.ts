@@ -263,7 +263,6 @@ describe('cnab-file', (): void => {
       }
     })
 
-
     // When
     const cnab = cnabFile.read()
 
