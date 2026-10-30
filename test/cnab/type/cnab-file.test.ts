@@ -19,6 +19,8 @@ import { CNAB_DATA_DE_JUROS_FIELDS } from '@cnab/bank/cnab-juros-fields'
 import { CNAB_DATA_DE_MULTA_FIELDS } from '@cnab/bank/cnab-multa-fields'
 import { getTipoDeMulta } from '@cnab/bank/cnab-tipo-de-multa-tables'
 import { CnabTipoDeMulta } from '@cnab/type/cnab-tipo-de-multa'
+import { CnabDesconto } from '@cnab/type/cnab-desconto'
+import { CnabTipoDeDesconto } from '@cnab/type/cnab-tipo-de-desconto'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -708,5 +710,41 @@ describe('cnab-file', (): void => {
     // Then
     expect(boleto.fields.codigo_de_multa).toBe('0')
     expect(getTipoDeMulta(CnabBank.CAIXA, CnabFormat.CNAB240, boleto.fields.codigo_de_multa as string)).toBe(CnabTipoDeMulta.ISENTO)
+  })
+
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 3.1 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 2.1 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 14), valor: 1.1 }
+    ]],
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 1, [
+      { codigo: '2', tipo: CnabTipoDeDesconto.PERCENTUAL, data: new Date(2027, 0, 15), valor: 5 }
+    ]],
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 2, [
+      { codigo: '3', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, data: null, valor: 0.25 }
+    ]],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 0, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 6, 10), valor: 4 }
+    ]],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 1, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, data: null, valor: 0.15 }
+    ]],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 112, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 20), valor: 4.8 },
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 23), valor: 2.5 },
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 25), valor: 1.2 }
+    ]]
+  ])('given document file %s when reading boleto %i then reads its descontos in file order', (examplePath: string, boletoIndex: number, expectedDescontos: CnabDesconto[]): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const result = cnabFile.validate(true)
+    const boleto = cnabFile.read().boletos[boletoIndex]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.descontos).toEqual(expectedDescontos)
   })
 })
