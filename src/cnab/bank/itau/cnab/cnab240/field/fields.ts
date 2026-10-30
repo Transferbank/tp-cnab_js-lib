@@ -1,3 +1,5 @@
+export { DataDeJurosBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/data-de-juros-boleto-field'
+export { JurosBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/juros-boleto-field'
 export { NossoNumeroBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/nosso-numero-boleto-field'
 export { ParcelaBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/parcela-boleto-field'
 export { SeuNumeroBoletoField } from '@cnab/bank/itau/cnab/cnab240/field/seu-numero-boleto-field'
