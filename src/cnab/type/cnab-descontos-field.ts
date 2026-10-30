@@ -20,7 +20,7 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   protected readonly decimals: number = 2
 
   get range(): [number, number] {
-    const positions = this.descontos.flatMap(({ codigo, data, valor }) => [...(codigo ?? []), ...data, ...valor])
+    const positions = this.descontos.flatMap(({ codigo, data, valor }) => [...(codigo ?? []), ...(data ?? []), ...valor])
     return [Math.min(...positions), Math.max(...positions)]
   }
 
@@ -93,7 +93,8 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
     return ranges.codigo == null ? null : this.extractInformed(ranges.codigo)
   }
 
-  private extractData(range: [number, number]): Date | null {
+  private extractData(range?: [number, number]): Date | null {
+    if (range == null) return null
     const rawValue = this.extractInformed(range)
     if (rawValue == null) return null
     const date = this.parseDate(rawValue)
@@ -113,7 +114,8 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
     return value
   }
 
-  private formatErrors(range: [number, number], extract: (range: [number, number]) => unknown): CnabGenericFieldError[] {
+  private formatErrors(range: [number, number] | undefined, extract: (range: [number, number]) => unknown): CnabGenericFieldError[] {
+    if (range == null) return []
     try {
       extract(range)
       return []
