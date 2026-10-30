@@ -9,6 +9,6 @@ export interface CnabDesconto {
 
 export interface CnabDescontoRanges {
   codigo?: [number, number]
-  data: [number, number]
+  data?: [number, number]
   valor: [number, number]
 }
