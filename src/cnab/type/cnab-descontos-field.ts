@@ -85,15 +85,11 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
 
   protected abstract parseDate(rawValue: string): Date | null
 
-  private informedDescontos(): CnabDescontoRanges[] {
-    return this.descontos.filter(ranges => this.extractCodigo(ranges) != null || this.extractInformed(ranges.valor) != null)
+  protected isInformed(ranges: CnabDescontoRanges): boolean {
+    return this.extractCodigo(ranges) != null || this.extractInformed(ranges.valor) != null
   }
 
-  private extractCodigo(ranges: CnabDescontoRanges): string | null {
-    return ranges.codigo == null ? null : this.extractInformed(ranges.codigo)
-  }
-
-  private extractData(range?: [number, number]): Date | null {
+  protected extractData(range?: [number, number]): Date | null {
     if (range == null) return null
     const rawValue = this.extractInformed(range)
     if (rawValue == null) return null
@@ -102,6 +98,19 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
       throw new CnabFieldInvalidDateError(this.fieldKey, rawValue)
     }
     return date
+  }
+
+  protected extractInformed(range: [number, number]): string | null {
+    const rawValue = blankIfZeros(this.extractRangeFromLine(range[0] - 1, range[1]))
+    return rawValue == '' ? null : rawValue
+  }
+
+  private informedDescontos(): CnabDescontoRanges[] {
+    return this.descontos.filter(ranges => this.isInformed(ranges))
+  }
+
+  private extractCodigo(ranges: CnabDescontoRanges): string | null {
+    return ranges.codigo == null ? null : this.extractInformed(ranges.codigo)
   }
 
   private extractValor(range: [number, number]): number | null {
@@ -128,10 +137,5 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
         range
       })]
     }
-  }
-
-  private extractInformed(range: [number, number]): string | null {
-    const rawValue = blankIfZeros(this.extractRangeFromLine(range[0] - 1, range[1]))
-    return rawValue == '' ? null : rawValue
   }
 }
