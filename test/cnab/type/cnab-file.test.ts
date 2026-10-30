@@ -16,6 +16,7 @@ import { CNAB_TELEFONE_FIELDS } from '@cnab/bank/cnab-telefone-fields'
 import { CNAB_IDENTIFICATION_FIELDS, CNAB_SEU_NUMERO_FIELDS } from '@cnab/bank/cnab-identification-fields'
 import { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
 import { CNAB_DATA_DE_JUROS_FIELDS } from '@cnab/bank/cnab-juros-fields'
+import { CNAB_DATA_DE_MULTA_FIELDS } from '@cnab/bank/cnab-multa-fields'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -572,5 +573,25 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.codigo_de_juros).toBe(expectedCodigo)
     expect(boleto.fields.data_de_juros).toEqual(expectedData)
     expect(boleto.fields.juros).toBe(expectedJuros)
+  })
+
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2026, 11, 16), 1],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2]
+  ])('given document file %s when reading then reads the multa of its layout', (examplePath: string, expectedCodigo: string, expectedData: Date, expectedMulta: number): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const result = cnabFile.validate(true, CNAB_DATA_DE_MULTA_FIELDS)
+    const boleto = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos[0]
+    const boletoWithoutExtraFields = cnabFile.read().boletos[0]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.codigo_de_multa).toBe(expectedCodigo)
+    expect(boleto.fields.data_de_multa).toEqual(expectedData)
+    expect(boleto.fields.multa).toBe(expectedMulta)
+    expect(boletoWithoutExtraFields.fields).not.toHaveProperty('data_de_multa')
   })
 })

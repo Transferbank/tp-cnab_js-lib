@@ -46,5 +46,8 @@ export {
 } from '@cnab/bank/cnab-identification-fields'
 export { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
 export { CNAB_DATA_DE_JUROS_FIELDS } from '@cnab/bank/cnab-juros-fields'
+export { CNAB_DATA_DE_MULTA_FIELDS } from '@cnab/bank/cnab-multa-fields'
 export { CnabTipoDeJuros } from '@cnab/type/cnab-tipo-de-juros'
 export { getTipoDeJuros } from '@cnab/bank/cnab-tipo-de-juros-tables'
+export { CnabTipoDeMulta } from '@cnab/type/cnab-tipo-de-multa'
+export { getTipoDeMulta } from '@cnab/bank/cnab-tipo-de-multa-tables'

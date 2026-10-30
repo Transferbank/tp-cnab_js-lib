@@ -50,6 +50,8 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `nosso_numero`        | Número do boleto no banco      | `string` |
 | `codigo_de_juros`     | Código de juros do banco       | `string` |
 | `juros`               | Valor ou taxa de juros         | `number` |
+| `codigo_de_multa`     | Código de multa do banco       | `string` |
+| `multa`               | Valor ou percentual de multa   | `number` |
 
 #### Campos por banco e formato
 
@@ -57,22 +59,22 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 - ⚠️ opcional: pode vir vazio; nesse caso o valor é nulo e o campo não aparece em `fields`
 - ❌ inexistente: o layout não tem o campo, e ele nunca aparece em `fields`
 
-| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número | Código de juros | Juros |
-| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :---: |
-| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |
-| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |
-| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |
-| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |  ⚠️   |
-| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |
-| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |
-| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |
-| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |
-| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |
-| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |
-| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |
-| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |
-| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |
-| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |
+| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número | Código de juros | Juros | Código de multa | Multa |
+| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :---: | :-------------: | :---: |
+| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
+| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
+| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
+| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
+| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
+| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
+| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
+| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
+| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
+| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ❌        |  ⚠️   |       ❌        |  ❌   |
+| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
+| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ❌        |  ❌   |
 
 #### Juros
 
@@ -132,6 +134,50 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros c
 | Sicredi         | CNAB 240 | no dia seguinte ao vencimento      |
 | Sicredi         | CNAB 400 | no dia seguinte ao vencimento      |
 
+#### Multa
+
+Os campos de multa são sempre lidos pelo sistema. A multa é cobrada uma vez só, quando o boleto é pago com atraso, ao contrário dos juros, que crescem a cada dia. O campo `codigo_de_multa` define como o valor em `multa` deve ser lido: em reais ou como percentual sobre o valor do título. Cada banco define seus próprios códigos. Utilize `getTipoDeMulta` para traduzir o código extraído do campo.
+
+`getTipoDeMulta` devolve um destes tipos:
+
+| Tipo         | Significado de `multa`                      |
+| ------------ | ------------------------------------------- |
+| `VALOR_FIXO` | valor em reais cobrado uma vez              |
+| `PERCENTUAL` | percentual sobre o valor do título          |
+| `ISENTO`     | o boleto não cobra multa                    |
+| `OUTRO`      | código sem um desses tipos como equivalente |
+
+```ts
+import { getTipoDeMulta } from '@fx55/cnab-lib-ts'
+
+for (const boleto of cnabFile.read().boletos) {
+  const codigo = (boleto.fields.codigo_de_multa as string | undefined) ?? null
+  getTipoDeMulta(cnabFile.bank, cnabFile.format, codigo) // ex: CnabTipoDeMulta.PERCENTUAL
+}
+```
+
+Quando o código é `null`, o resultado depende do layout:
+
+- **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_FIXO` ou `PERCENTUAL`.
+- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`.
+
+Um código que não está na tabela do banco é erro de validação.
+
+A data de início da multa não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_MULTA_FIELDS` como campos extras.
+
+```ts
+import { CNAB_DATA_DE_MULTA_FIELDS } from '@fx55/cnab-lib-ts'
+
+const cnab = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS)
+```
+
+Quando a data vem vazia, o arquivo deixou para o banco decidir quando a multa passa a valer. Cada banco tem o seu padrão:
+
+| Banco           | Formato  | Com a data vazia, a multa vale |
+| --------------- | :------: | ------------------------------ |
+| Banco do Brasil | CNAB 240 | o manual não diz               |
+| Banco do Brasil | CNAB 400 | o manual não diz               |
+
 ### Campos extras da lib
 
 | Chave               | Descrição                                                      | Tipo       | Constante                    |
@@ -144,6 +190,7 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros c
 | `parcela`           | Número da parcela do boleto                                    | `number`   | `CNAB_PARCELA_FIELDS`        |
 | `total_de_parcelas` | Total de parcelas                                              | `number`   | `CNAB_PARCELA_FIELDS`        |
 | `data_de_juros`     | Data de início dos juros                                       | `Date`     | `CNAB_DATA_DE_JUROS_FIELDS`  |
+| `data_de_multa`     | Data de início da multa                                        | `Date`     | `CNAB_DATA_DE_MULTA_FIELDS`  |
 
 Os campos extras da lib são sempre **opcionais**: nos layouts sem eles, e quando vêm vazios, eles não aparecem em `fields`. Um campo preenchido com conteúdo inválido continua sendo erro de validação.
 
