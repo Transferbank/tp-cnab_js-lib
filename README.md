@@ -133,22 +133,22 @@ const cnab = cnabFile.read([...CNAB_DATA_DE_JUROS_FIELDS, ...CNAB_DATA_DE_MULTA_
 
 Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros começam e quando a multa passa a valer. Nos layouts sem campo de data, o banco cobra desde o primeiro dia de atraso.
 
-| Banco e formato     | Com a data vazia, os juros começam | Com a data vazia, a multa vale |
-| ------------------- | ---------------------------------- | ------------------------------ |
-| Banco do Brasil 240 | o manual não diz                   | o manual não diz               |
-| Banco do Brasil 400 | sem campo de data                  | o manual não diz               |
-| Bradesco 240        | no vencimento                      | no vencimento                  |
-| Bradesco 400        | sem campo de data                  | sem campo de data              |
-| Caixa 240           | no dia seguinte ao vencimento      | no vencimento                  |
-| Caixa 400           | no dia seguinte ao vencimento      | no vencimento                  |
-| Itaú 240            | no vencimento                      | o manual não diz               |
-| Itaú 400            | o manual não diz                   | o manual não diz               |
-| Santander 240       | o manual não diz                   | no vencimento                  |
-| Santander 400       | sem campo de data                  | o banco recusa o boleto        |
-| Sicoob 240          | no dia seguinte ao vencimento      | no dia seguinte ao vencimento  |
-| Sicoob 400          | sem campo de data                  | sem campo de data              |
-| Sicredi 240         | no dia seguinte ao vencimento      | no dia seguinte ao vencimento  |
-| Sicredi 400         | no dia seguinte ao vencimento      | no dia seguinte ao vencimento  |
+| Banco e formato     | Com a data vazia, os juros começam     | Com a data vazia, a multa vale         |
+| ------------------- | -------------------------------------- | -------------------------------------- |
+| Banco do Brasil 240 | o manual não diz                       | o manual não diz                       |
+| Banco do Brasil 400 | sem campo de data                      | o manual não diz                       |
+| Bradesco 240        | após o vencimento                      | após o vencimento                      |
+| Bradesco 400        | sem campo de data                      | sem campo de data                      |
+| Caixa 240           | a partir do dia seguinte ao vencimento | após o vencimento                      |
+| Caixa 400           | a partir do dia seguinte ao vencimento | após o vencimento                      |
+| Itaú 240            | após o vencimento                      | o manual não diz                       |
+| Itaú 400            | o manual não diz                       | o manual não diz                       |
+| Santander 240       | o manual não diz                       | após o vencimento                      |
+| Santander 400       | sem campo de data                      | após o vencimento                      |
+| Sicoob 240          | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
+| Sicoob 400          | sem campo de data                      | sem campo de data                      |
+| Sicredi 240         | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
+| Sicredi 400         | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
 
 ### Campos extras da lib
 
