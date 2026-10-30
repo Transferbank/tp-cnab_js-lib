@@ -36,22 +36,23 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 ### Campos canônicos
 
-| Chave                 | Descrição                      | Tipo     |
-| --------------------- | ------------------------------ | -------- |
-| `nome_do_sacado`      | Nome do sacado                 | `string` |
-| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string` |
-| `data_de_vencimento`  | Data de vencimento             | `Date`   |
-| `valor_do_titulo`     | Valor do título, em reais      | `number` |
-| `endereco_do_sacado`  | Endereço do sacado             | `string` |
-| `bairro_do_sacado`    | Bairro do sacado               | `string` |
-| `cep_do_sacado`       | CEP do sacado                  | `string` |
-| `cidade_do_sacado`    | Cidade do sacado               | `string` |
-| `uf_do_sacado`        | UF do sacado                   | `string` |
-| `nosso_numero`        | Número do boleto no banco      | `string` |
-| `codigo_de_juros`     | Código de juros do banco       | `string` |
-| `juros`               | Valor ou taxa de juros         | `number` |
-| `codigo_de_multa`     | Código de multa do banco       | `string` |
-| `multa`               | Valor ou percentual de multa   | `number` |
+| Chave                 | Descrição                      | Tipo             |
+| --------------------- | ------------------------------ | ---------------- |
+| `nome_do_sacado`      | Nome do sacado                 | `string`         |
+| `documento_do_sacado` | Documento (CPF/CNPJ) do sacado | `string`         |
+| `data_de_vencimento`  | Data de vencimento             | `Date`           |
+| `valor_do_titulo`     | Valor do título, em reais      | `number`         |
+| `endereco_do_sacado`  | Endereço do sacado             | `string`         |
+| `bairro_do_sacado`    | Bairro do sacado               | `string`         |
+| `cep_do_sacado`       | CEP do sacado                  | `string`         |
+| `cidade_do_sacado`    | Cidade do sacado               | `string`         |
+| `uf_do_sacado`        | UF do sacado                   | `string`         |
+| `nosso_numero`        | Número do boleto no banco      | `string`         |
+| `codigo_de_juros`     | Código de juros do banco       | `string`         |
+| `juros`               | Valor ou taxa de juros         | `number`         |
+| `codigo_de_multa`     | Código de multa do banco       | `string`         |
+| `multa`               | Valor ou percentual de multa   | `number`         |
+| `descontos`           | Descontos do boleto            | `CnabDesconto[]` |
 
 #### Campos por banco e formato
 
@@ -156,6 +157,29 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros c
 | Sicredi 400         | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
 
 Alguns manuais tratam a data inválida como não informada: nos juros, Itaú 240 e Sicredi 240 e 400; na multa, Santander 240 e Sicredi 240 e 400. Nesses layouts, o campo fica de fora do boleto e vale a regra da data vazia. Nos outros, a data inválida é erro de validação.
+
+#### Descontos
+
+Os descontos do boleto são lidos numa lista, em `descontos`, na ordem em que aparecem no arquivo. Cada desconto traz o código do banco, o tipo já traduzido, a data limite e o valor. Os descontos que vêm vazios no arquivo não entram na lista; se o boleto não tem nenhum, a chave não aparece.
+
+```ts
+boleto.fields.descontos
+// [{ codigo: '1', tipo: 'valor_fixo', data: 2026-12-10, valor: 10 },
+//  { codigo: '1', tipo: 'valor_fixo', data: 2026-12-15, valor: 5 }]
+```
+
+| Tipo                         | Significado de `valor`                                        |
+| ---------------------------- | ------------------------------------------------------------- |
+| `VALOR_FIXO`                 | valor em reais, para pagamento até a data                     |
+| `PERCENTUAL`                 | percentual sobre o valor do título, para pagamento até a data |
+| `VALOR_POR_ANTECIPACAO`      | valor em reais por dia de antecipação do pagamento            |
+| `PERCENTUAL_POR_ANTECIPACAO` | percentual por dia de antecipação do pagamento                |
+| `CANCELAMENTO`               | cancelamento de um desconto já registrado                     |
+| `OUTRO`                      | código sem um desses tipos como equivalente                   |
+
+Um código que não está na tabela do banco é erro de validação.
+
+Alguns layouts não têm código de desconto, porque o banco só aceita um tipo. Nesses layouts, o tipo já vem preenchido em cada desconto, sem que o arquivo precise informá-lo. Os descontos por dia de antecipação não têm data.
 
 ### Campos extras da lib
 
