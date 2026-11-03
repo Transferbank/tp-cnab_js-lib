@@ -97,16 +97,11 @@ for (const boleto of cnabFile.read().boletos) {
 }
 ```
 
-Quando o código é `null`, o resultado depende do layout:
+Um código que não está na tabela do banco é erro de validação. Quando o código é `null`, a função devolve `null`: o arquivo não informou o tipo, e quem decide é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra valor por dia quando há valor de juros e não cobra juros quando não há.
 
-- **Layout sem campo de código:** a função devolve o tipo fixo do layout, como `VALOR_POR_DIA` ou `TAXA_MENSAL`.
-- **Layout com campo de código:** o arquivo não informou o tipo, e a função devolve `null`. Quem decide o tipo é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra valor por dia quando há valor de juros e não cobra juros quando não há.
+Alguns layouts não têm código ou data de juros, porque o banco sempre cobra os juros do mesmo jeito; não é falta de suporte da lib.
 
-Um código que não está na tabela do banco é erro de validação.
-
-Alguns layouts não têm código ou data de juros. Isso não é falta de suporte da lib: o layout do banco não tem esses campos, porque o banco sempre cobra os juros do mesmo jeito.
-
-- **Sem código:** o tipo de juros é fixo, e o valor em `juros` é sempre lido da mesma forma. Para esses layouts, `getTipoDeJuros` devolve o tipo fixo determinado pelo banco.
+- **Sem código:** o tipo é fixo, e `getTipoDeJuros` devolve esse tipo mesmo com o código `null`.
 - **Sem data:** os juros são cobrados desde o primeiro dia de atraso.
 
 A data de início dos juros não faz parte da leitura padrão: para lê-la, passe `CNAB_DATA_DE_JUROS_FIELDS` como campos extras.
@@ -119,18 +114,18 @@ const cnab = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)
 
 Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros começam. Cada banco tem o seu padrão:
 
-| Banco           | Formato  | Com a data vazia, os juros começam |
-| --------------- | :------: | ---------------------------------- |
-| Banco do Brasil | CNAB 240 | o manual não diz                   |
-| Bradesco        | CNAB 240 | no vencimento                      |
-| Caixa           | CNAB 240 | no dia seguinte ao vencimento      |
-| Caixa           | CNAB 400 | no dia seguinte ao vencimento      |
-| Itaú            | CNAB 240 | no vencimento                      |
-| Itaú            | CNAB 400 | o manual não diz                   |
-| Santander       | CNAB 240 | o manual não diz                   |
-| Sicoob          | CNAB 240 | no dia seguinte ao vencimento      |
-| Sicredi         | CNAB 240 | no dia seguinte ao vencimento      |
-| Sicredi         | CNAB 400 | no dia seguinte ao vencimento      |
+| Banco           | Formato  | Com a data vazia, os juros começam     |
+| --------------- | :------: | -------------------------------------- |
+| Banco do Brasil | CNAB 240 | o manual não diz                       |
+| Bradesco        | CNAB 240 | após o vencimento                      |
+| Caixa           | CNAB 240 | a partir do dia seguinte ao vencimento |
+| Caixa           | CNAB 400 | a partir do dia seguinte ao vencimento |
+| Itaú            | CNAB 240 | após o vencimento                      |
+| Itaú            | CNAB 400 | o manual não diz                       |
+| Santander       | CNAB 240 | o manual não diz                       |
+| Sicoob          | CNAB 240 | a partir do dia seguinte ao vencimento |
+| Sicredi         | CNAB 240 | a partir do dia seguinte ao vencimento |
+| Sicredi         | CNAB 400 | a partir do dia seguinte ao vencimento |
 
 ### Campos extras da lib
 
