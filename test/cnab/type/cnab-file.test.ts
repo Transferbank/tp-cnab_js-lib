@@ -202,7 +202,12 @@ describe('cnab-file', (): void => {
           nosso_numero: '109000000020',
           juros: 0.19,
           codigo_de_multa: '2',
-          multa: 3
+          multa: 3,
+          descontos: [
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 15), valor: 9.4 },
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 17), valor: 6.4 },
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 19), valor: 3.4 }
+          ]
         }
       }),
       new CnabBoleto({
@@ -216,7 +221,10 @@ describe('cnab-file', (): void => {
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'CAMPINAS',
           uf_do_sacado: 'SP',
-          nosso_numero: '109000000030'
+          nosso_numero: '109000000030',
+          descontos: [
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 20), valor: 2.6 }
+          ]
         }
       }),
       new CnabBoleto({
@@ -756,6 +764,55 @@ describe('cnab-file', (): void => {
     ]],
     ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [
       { codigo: 'B', tipo: CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO, data: null, valor: 0.5 }
+    ]],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 9.1 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 7.1 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 14), valor: 5.1 }
+    ]],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 1, [
+      { codigo: '4', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL, data: null, valor: 0.21 }
+    ]],
+    ['caixa/cnab240/caixa_cnab_240.txt', 0, [
+      { codigo: '2', tipo: CnabTipoDeDesconto.PERCENTUAL, data: new Date(2026, 11, 10), valor: 3.3 },
+      { codigo: '2', tipo: CnabTipoDeDesconto.PERCENTUAL, data: new Date(2026, 11, 12), valor: 2.3 }
+    ]],
+    ['caixa/cnab240/caixa_cnab_240.txt', 1, [
+      { codigo: '6', tipo: CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_UTIL, data: null, valor: 0.12 }
+    ]],
+    ['santander/cnab240/santander_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 8.7 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 6.7 }
+    ]],
+    ['santander/cnab240/santander_cnab_240.txt', 1, [
+      { codigo: '3', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO, data: new Date(2027, 0, 20), valor: 0.33 }
+    ]],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 9.9 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 7.9 }
+    ]],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', 1, [
+      { codigo: '5', tipo: CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_CORRIDO, data: null, valor: 0.17 }
+    ]],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 8.2 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 6.3 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 14), valor: 4.3 }
+    ]],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', 1, [
+      { codigo: '3', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO, data: null, valor: 0.27 }
+    ]],
+    ['caixa/cnab400/caixa_cnab_400.REM', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 7, 10), valor: 7.7 }
+    ]],
+    ['caixa/cnab400/caixa_cnab_400.REM', 1, [
+      { codigo: '4', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL, data: null, valor: 0.19 }
+    ]],
+    ['santander/cnab400/santander_cnab_400.REM', 0, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 15), valor: 6.6 }
+    ]],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', 0, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 7, 10), valor: 5.5 }
     ]]
   ])('given document file %s when reading boleto %i then reads its descontos in file order', (examplePath: string, boletoIndex: number, expectedDescontos: CnabDesconto[]): void => {
     // Given
