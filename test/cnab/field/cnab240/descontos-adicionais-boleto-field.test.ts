@@ -33,8 +33,8 @@ describe('DescontosAdicionaisBoletoField', (): void => {
 
   it.each([
     ['a code without value', '1' + '10122026' + '000000000000000', null],
-    ['a cancelamento without value', '7' + '00000000' + '000000000000000', [{ codigo: '7', tipo: CnabTipoDeDesconto.CANCELAMENTO, data: null, valor: null }]]
-  ])('given %s when reading then lists it only if the bank would apply it', (_: string, desconto: string, expected: unknown): void => {
+    ['a cancelamento', '7' + '00000000' + '000000000000000', null]
+  ])('given %s when reading then leaves it out of the list', (_: string, desconto: string, expected: unknown): void => {
     // Given
     const field = new BradescoDescontosAdicionaisBoletoField(segmentoR(desconto + '0'.repeat(24)), 5)
 
