@@ -31,6 +31,20 @@ describe('DescontosAdicionaisBoletoField', (): void => {
     expect(field.value).toEqual([{ codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 5 }])
   })
 
+  it.each([
+    ['a code without value', '1' + '10122026' + '000000000000000', null],
+    ['a cancelamento without value', '7' + '00000000' + '000000000000000', [{ codigo: '7', tipo: CnabTipoDeDesconto.CANCELAMENTO, data: null, valor: null }]]
+  ])('given %s when reading then lists it only if the bank would apply it', (_: string, desconto: string, expected: unknown): void => {
+    // Given
+    const field = new BradescoDescontosAdicionaisBoletoField(segmentoR(desconto + '0'.repeat(24)), 5)
+
+    // When
+    const descontos = field.value
+
+    // Then
+    expect(descontos).toEqual(expected)
+  })
+
   it('given both descontos filled with zeros when reading then returns null', (): void => {
     // Given
     const field = new BradescoDescontosAdicionaisBoletoField(segmentoR('0'.repeat(48)), 5)

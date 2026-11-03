@@ -86,7 +86,9 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   protected abstract parseDate(rawValue: string): Date | null
 
   protected isInformed(ranges: CnabDescontoRanges): boolean {
-    return this.extractCodigo(ranges) != null || this.extractInformed(ranges.valor) != null
+    if (this.extractInformed(ranges.valor) != null) return true
+    const codigo = this.extractCodigo(ranges)
+    return codigo != null && this.resolveTipo(ranges, codigo) == CnabTipoDeDesconto.CANCELAMENTO
   }
 
   protected extractData(range?: [number, number]): Date | null {
