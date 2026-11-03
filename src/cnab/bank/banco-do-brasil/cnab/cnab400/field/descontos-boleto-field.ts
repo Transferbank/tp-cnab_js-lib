@@ -8,6 +8,12 @@ export class DescontosBoletoField extends Cnab400DescontosBoletoField {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB400
   protected readonly recordType: string = '7'
+  protected readonly comandosDeDesconto: string[] = ['01', '31', '33', '34']
+
+  protected isInformed(ranges: CnabDescontoRanges): boolean {
+    if (!this.holdsDesconto()) return false
+    return super.isInformed(ranges)
+  }
 
   protected extractData(range?: [number, number]): Date | null {
     if (this.isDescontoPorDia(range)) return null
@@ -21,5 +27,11 @@ export class DescontosBoletoField extends Cnab400DescontosBoletoField {
 
   private isDescontoPorDia(range?: [number, number]): boolean {
     return range != null && this.extractInformed(range) == '777777'
+  }
+
+  private holdsDesconto(): boolean {
+    const comando = this.extractRangeFromLine(108, 110)
+    const isVendor = this.extractRangeFromLine(101, 106) == '08VDR'
+    return this.comandosDeDesconto.includes(comando) && !isVendor
   }
 }

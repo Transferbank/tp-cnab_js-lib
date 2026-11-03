@@ -836,4 +836,22 @@ describe('cnab-file', (): void => {
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(boleto.fields.descontos).toEqual(expectedDescontos)
   })
+
+  it.each([
+    ['comando 16 (alterar juros)', [109, 110] as [number, number], '16'],
+    ['comando 35 (cobrar multa)', [109, 110] as [number, number], '35'],
+    ['comando 39 (alterar prazo limite de recebimento)', [109, 110] as [number, number], '39'],
+    ['tipo de cobrança Vendor', [102, 106] as [number, number], '08VDR']
+  ])('given banco do brasil cnab400 boleto with %s when reading then does not read its positions as desconto', (_: string, range: [number, number], value: string): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'))
+    rawLines[1] = replaceLineRange(rawLines[1], range, value)
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const boleto = cnabFile.read().boletos[0]
+
+    // Then
+    expect(boleto.fields).not.toHaveProperty('descontos')
+  })
 })
