@@ -1,15 +1,7 @@
-import { CnabDescontosField } from '@cnab/field/cnab-descontos-field'
-import { parseDateDDMMAA } from '@cnab/utils/date-parser'
-import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { CnabDescontoRanges } from '@cnab/type/cnab-desconto'
+import { DescontosBoletoField } from '@cnab/field/cnab400/descontos-boleto-field'
 
-export abstract class DescontosAdicionaisBoletoField extends CnabDescontosField {
+export abstract class DescontosAdicionaisBoletoField extends DescontosBoletoField {
+  protected abstract readonly descontos: CnabDescontoRanges[]
   protected abstract readonly recordType: string
-
-  shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
-  }
-
-  protected parseDate(rawValue: string): Date | null {
-    return parseDateDDMMAA(rawValue)
-  }
 }
