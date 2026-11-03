@@ -2,15 +2,8 @@ import * as path from 'path'
 import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
-import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabTipoDeDesconto } from '@cnab/type/cnab-tipo-de-desconto'
-import { DescontosAdicionaisBoletoField } from '@cnab/field/cnab240/descontos-adicionais-boleto-field'
-
-class BradescoDescontosAdicionaisBoletoField extends DescontosAdicionaisBoletoField {
-  static readonly bank = CnabBank.BRADESCO
-  static readonly format = CnabFormat.CNAB240
-}
+import { DescontosAdicionaisBoletoField as BradescoDescontosAdicionaisBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/descontos-adicionais-boleto-field'
 
 class BancoDoBrasilDescontosAdicionaisBoletoField extends DescontosAdicionaisBoletoField {
   static readonly bank = CnabBank.BANCODOBRASIL
