@@ -1,4 +1,4 @@
-import { CnabDescontosField } from '@cnab/type/cnab-descontos-field'
+import { CnabDescontosField } from '@cnab/field/cnab-descontos-field'
 import { parseDateDDMMAA } from '@cnab/utils/date-parser'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 
