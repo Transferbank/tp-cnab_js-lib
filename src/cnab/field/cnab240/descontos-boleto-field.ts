@@ -1,5 +1,5 @@
 import { CnabDescontoRanges } from '@cnab/type/cnab-desconto'
-import { CnabDescontosField } from '@cnab/type/cnab-descontos-field'
+import { CnabDescontosField } from '@cnab/field/cnab-descontos-field'
 import { parseDateDDMMAAAA } from '@cnab/utils/date-parser'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
 
