@@ -1,3 +1,4 @@
+export { DescontosBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/descontos-boleto-field'
 export { EspecieDoTituloBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/especie-do-titulo-boleto-field'
 export { JurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/juros-boleto-field'
 export { MultaBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/multa-boleto-field'
