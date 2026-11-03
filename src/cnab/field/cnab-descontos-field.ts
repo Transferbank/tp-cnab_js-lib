@@ -22,13 +22,11 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   private readonly tiposWithDataRequired: (CnabTipoDeDesconto | null)[] = [CnabTipoDeDesconto.VALOR_FIXO, CnabTipoDeDesconto.PERCENTUAL]
 
   get range(): [number, number] {
-    const positions = this.descontos.flatMap(({ codigo, data, valor }) => [...(codigo ?? []), ...(data ?? []), ...valor])
-    return [Math.min(...positions), Math.max(...positions)]
+    return this.descontos[0].valor
   }
 
   protected extractRawValue(): string {
-    if (this.informedDescontos().length === 0) return ''
-    return super.extractRawValue()
+    return this.informedDescontos().map(ranges => this.extractInformed(ranges.valor)).join(' ')
   }
 
   validate(): CnabValidationResult {
