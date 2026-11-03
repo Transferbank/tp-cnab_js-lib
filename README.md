@@ -178,7 +178,6 @@ boleto.fields.descontos
 | `PERCENTUAL_POR_ANTECIPACAO_DIA_CORRIDO` | percentual por dia corrido de antecipação                                                 |
 | `PERCENTUAL_POR_ANTECIPACAO_DIA_UTIL`    | percentual por dia útil de antecipação                                                    |
 | `PERCENTUAL_POR_ANTECIPACAO`             | percentual por dia de antecipação, quando o manual não diz se o dia é corrido ou útil     |
-| `CANCELAMENTO`                           | cancelamento de um desconto já registrado                                                 |
 | `OUTRO`                                  | código sem um desses tipos como equivalente                                               |
 
 Um código que não está na tabela do banco é erro de validação.
