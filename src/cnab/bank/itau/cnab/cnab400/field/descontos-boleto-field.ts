@@ -7,10 +7,10 @@ import { DescontosBoletoField as Cnab400DescontosBoletoField } from '@cnab/field
 export class DescontosBoletoField extends Cnab400DescontosBoletoField {
   static readonly bank = CnabBank.ITAU
   static readonly format = CnabFormat.CNAB400
-  protected readonly instrucoesRanges: [number, number][] = [[157, 158], [159, 160]]
+  protected readonly instrucaoRanges: [number, number][] = [[157, 158], [159, 160]]
 
   protected resolveTipo(ranges: CnabDescontoRanges, codigo: string | null): CnabTipoDeDesconto | null {
-    if (this.instrucoesRanges.some(range => this.extractInformed(range) == '30')) return CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO
+    if (this.instrucaoRanges.some(range => this.extractInformed(range) == '30')) return CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO
     return super.resolveTipo(ranges, codigo)
   }
 }
