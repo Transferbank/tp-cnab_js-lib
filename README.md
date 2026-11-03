@@ -180,9 +180,11 @@ boleto.fields.descontos
 | `PERCENTUAL_POR_ANTECIPACAO`             | percentual por dia de antecipação, quando o manual não diz se o dia é corrido ou útil     |
 | `OUTRO`                                  | código sem um desses tipos como equivalente                                               |
 
-Um código que não está na tabela do banco é erro de validação.
+Quando uma parte do desconto vem vazia:
 
-Alguns layouts não têm código de desconto, porque o banco só aceita um tipo. Nesses layouts, o tipo já vem preenchido em cada desconto, sem que o arquivo precise informá-lo. Os descontos por dia de antecipação não têm data.
+- **Valor:** o desconto não entra na lista.
+- **Código:** o layout não tem código, porque o banco só aceita um tipo, e o tipo já vem preenchido em cada desconto. Quando o layout tem código, ele precisa estar na tabela do banco, como nos juros e na multa.
+- **Data:** se o código pede data (valor fixo ou percentual até a data), é erro de validação, porque o banco recusa o boleto. Os descontos por dia de antecipação não têm data.
 
 ### Campos extras da lib
 
