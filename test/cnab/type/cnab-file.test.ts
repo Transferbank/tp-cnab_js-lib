@@ -877,6 +877,23 @@ describe('cnab-file', (): void => {
     expect(boleto.fields).not.toHaveProperty('descontos')
   })
 
+  it.each([
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [174, 179] as [number, number], 1]
+  ])('given document file %s with a desconto até a data and empty date when validating then accepts it as the vencimento', (examplePath: string, lineIndex: number, dataRange: [number, number], boletoIndex: number): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), examplePath))
+    rawLines[lineIndex] = replaceLineRange(rawLines[lineIndex], dataRange, '0'.repeat(dataRange[1] - dataRange[0] + 1))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+    const boleto = cnabFile.read().boletos[boletoIndex]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.descontos).toContainEqual(expect.objectContaining({ data: null }))
+  })
+
   it('given sicredi cnab400 boleto with desconto 1 and desconto por dia when reading then ignores the desconto por dia', (): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
