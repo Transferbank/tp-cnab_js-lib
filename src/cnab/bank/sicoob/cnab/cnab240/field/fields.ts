@@ -2,6 +2,8 @@ export { CodigoDeJurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/c
 export { CodigoDeMultaBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/codigo-de-multa-boleto-field'
 export { DataDeJurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/data-de-juros-boleto-field'
 export { DataDeMultaBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/data-de-multa-boleto-field'
+export { DescontosAdicionaisBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/descontos-adicionais-boleto-field'
+export { DescontosBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/descontos-boleto-field'
 export { EspecieDoTituloBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/especie-do-titulo-boleto-field'
 export { JurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/juros-boleto-field'
 export { MultaBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/multa-boleto-field'
