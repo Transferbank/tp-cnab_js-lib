@@ -5,20 +5,20 @@ import { CnabTipoDeDesconto, CnabTipoDeDescontoTable } from '@cnab/type/cnab-tip
 const FEBRABAN_CODES: Record<string, CnabTipoDeDesconto> = {
   '1': CnabTipoDeDesconto.VALOR_FIXO,
   '2': CnabTipoDeDesconto.PERCENTUAL,
-  '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, // dias corridos
-  '4': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, // dias úteis
-  '5': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO, // dias corridos
-  '6': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO, // dias úteis
+  '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO,
+  '4': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL,
+  '5': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_CORRIDO,
+  '6': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_UTIL,
   '7': CnabTipoDeDesconto.CANCELAMENTO
 }
 
 const CAIXA_CODES: Record<string, CnabTipoDeDesconto> = {
   '1': CnabTipoDeDesconto.VALOR_FIXO,
   '2': CnabTipoDeDesconto.PERCENTUAL,
-  '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, // dias corridos
-  '4': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, // dias úteis
-  '5': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO, // dias corridos
-  '6': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO // dias úteis
+  '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO,
+  '4': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL,
+  '5': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_CORRIDO,
+  '6': CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_UTIL
 }
 
 export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, CnabTipoDeDescontoTable>> = {
@@ -63,8 +63,8 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
       codes: {
         '1': CnabTipoDeDesconto.VALOR_FIXO,
         '2': CnabTipoDeDesconto.PERCENTUAL,
-        '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, // dias corridos
-        '4': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO // dias úteis
+        '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO,
+        '4': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL
       }
     },
     [CnabFormat.CNAB400]: {
@@ -84,7 +84,7 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
       codes: {
         '1': CnabTipoDeDesconto.VALOR_FIXO,
         '2': CnabTipoDeDesconto.PERCENTUAL,
-        '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO,
+        '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO,
         '7': CnabTipoDeDesconto.CANCELAMENTO
       }
     },

@@ -185,14 +185,18 @@ boleto.fields.descontos
 //  { codigo: '1', tipo: 'valor_fixo', data: 2026-12-15, valor: 5 }]
 ```
 
-| Tipo                         | Significado de `valor`                                        |
-| ---------------------------- | ------------------------------------------------------------- |
-| `VALOR_FIXO`                 | valor em reais, para pagamento até a data                     |
-| `PERCENTUAL`                 | percentual sobre o valor do título, para pagamento até a data |
-| `VALOR_POR_ANTECIPACAO`      | valor em reais por dia de antecipação do pagamento            |
-| `PERCENTUAL_POR_ANTECIPACAO` | percentual por dia de antecipação do pagamento                |
-| `CANCELAMENTO`               | cancelamento de um desconto já registrado                     |
-| `OUTRO`                      | código sem um desses tipos como equivalente                   |
+| Tipo                                     | Significado de `valor`                                                                    |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `VALOR_FIXO`                             | valor em reais, para pagamento até a data                                                 |
+| `PERCENTUAL`                             | percentual sobre o valor do título, para pagamento até a data                             |
+| `VALOR_POR_ANTECIPACAO_DIA_CORRIDO`      | valor em reais por dia corrido de antecipação                                             |
+| `VALOR_POR_ANTECIPACAO_DIA_UTIL`         | valor em reais por dia útil de antecipação                                                |
+| `VALOR_POR_ANTECIPACAO`                  | valor em reais por dia de antecipação, quando o manual não diz se o dia é corrido ou útil |
+| `PERCENTUAL_POR_ANTECIPACAO_DIA_CORRIDO` | percentual por dia corrido de antecipação                                                 |
+| `PERCENTUAL_POR_ANTECIPACAO_DIA_UTIL`    | percentual por dia útil de antecipação                                                    |
+| `PERCENTUAL_POR_ANTECIPACAO`             | percentual por dia de antecipação, quando o manual não diz se o dia é corrido ou útil     |
+| `CANCELAMENTO`                           | cancelamento de um desconto já registrado                                                 |
+| `OUTRO`                                  | código sem um desses tipos como equivalente                                               |
 
 Um código que não está na tabela do banco é erro de validação.
 
