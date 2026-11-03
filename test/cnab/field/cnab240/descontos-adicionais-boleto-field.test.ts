@@ -69,6 +69,19 @@ describe('DescontosAdicionaisBoletoField', (): void => {
     expect(result.errors[0]).toMatchObject({ fieldKey: 'descontos', range: [42, 42] })
   })
 
+  it('given a valor fixo desconto without date when validating then reports the error at the range of the date', (): void => {
+    // Given
+    const field = new BradescoDescontosAdicionaisBoletoField(segmentoR('1' + '00000000' + '000000000000500' + '0'.repeat(24)), 5)
+
+    // When
+    const result = field.validate()
+
+    // Then
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toHaveLength(1)
+    expect(result.errors[0]).toMatchObject({ fieldKey: 'descontos', range: [19, 26] })
+  })
+
   it('given a malformed date in the third desconto when validating then reports the error at the range of that date', (): void => {
     // Given
     const field = new BradescoDescontosAdicionaisBoletoField(segmentoR('1' + '10122026' + '000000000000500' + '1' + '31132026' + '000000000000300'), 5)
