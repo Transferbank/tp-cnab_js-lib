@@ -5,4 +5,5 @@ import { DescontosBoletoField as Cnab240DescontosBoletoField } from '@cnab/field
 export class DescontosBoletoField extends Cnab240DescontosBoletoField {
   static readonly bank = CnabBank.CAIXA
   static readonly format = CnabFormat.CNAB240
+  protected readonly emptyDataMeansVencimento: boolean = true
 }
