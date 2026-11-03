@@ -1,5 +1,6 @@
 export { CodigoDeMultaBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/codigo-de-multa-boleto-field'
 export { DataDeMultaBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/data-de-multa-boleto-field'
+export { DescontosBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/descontos-boleto-field'
 export { JurosBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/juros-boleto-field'
 export { MultaBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/multa-boleto-field'
 export { ParcelaBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/parcela-boleto-field'

@@ -58,7 +58,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240Bradesco.CodigoDeJurosBoletoField),
           optional(Cnab240Bradesco.JurosBoletoField),
           optional(Cnab240Bradesco.CodigoDeMultaBoletoField),
-          optional(Cnab240Bradesco.MultaBoletoField)
+          optional(Cnab240Bradesco.MultaBoletoField),
+          optional(Cnab240Bradesco.DescontosBoletoField),
+          optional(Cnab240Bradesco.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -122,7 +124,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240Itau.NossoNumeroBoletoField),
           optional(Cnab240Itau.JurosBoletoField),
           optional(Cnab240Itau.CodigoDeMultaBoletoField),
-          optional(Cnab240Itau.MultaBoletoField)
+          optional(Cnab240Itau.MultaBoletoField),
+          optional(Cnab240Itau.DescontosBoletoField),
+          optional(Cnab240Itau.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -189,7 +193,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240Santander.CodigoDeJurosBoletoField),
           optional(Cnab240Santander.JurosBoletoField),
           optional(Cnab240Santander.CodigoDeMultaBoletoField),
-          optional(Cnab240Santander.MultaBoletoField)
+          optional(Cnab240Santander.MultaBoletoField),
+          optional(Cnab240Santander.DescontosBoletoField),
+          optional(Cnab240Santander.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -222,7 +228,8 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab400.NossoNumeroBoletoField),
           optional(Cnab400Santander.JurosBoletoField),
           optional(Cnab400Santander.CodigoDeMultaBoletoField),
-          optional(Cnab400Santander.MultaBoletoField)
+          optional(Cnab400Santander.MultaBoletoField),
+          optional(Cnab400Santander.DescontosBoletoField)
         ],
       },
     }),
@@ -325,7 +332,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240Caixa.CodigoDeJurosBoletoField),
           optional(Cnab240Caixa.JurosBoletoField),
           optional(Cnab240Caixa.CodigoDeMultaBoletoField),
-          optional(Cnab240Caixa.MultaBoletoField)
+          optional(Cnab240Caixa.MultaBoletoField),
+          optional(Cnab240Caixa.DescontosBoletoField),
+          optional(Cnab240Caixa.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -358,7 +367,8 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab400Caixa.NossoNumeroBoletoField),
           optional(Cnab400Caixa.CodigoDeJurosBoletoField),
           optional(Cnab400Caixa.JurosBoletoField),
-          optional(Cnab400Caixa.MultaBoletoField)
+          optional(Cnab400Caixa.MultaBoletoField),
+          optional(Cnab400Caixa.DescontosBoletoField)
         ],
       },
     }),
@@ -390,7 +400,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240Sicredi.CodigoDeJurosBoletoField),
           optional(Cnab240Sicredi.JurosBoletoField),
           optional(Cnab240Sicredi.CodigoDeMultaBoletoField),
-          optional(Cnab240Sicredi.MultaBoletoField)
+          optional(Cnab240Sicredi.MultaBoletoField),
+          optional(Cnab240Sicredi.DescontosBoletoField),
+          optional(Cnab240Sicredi.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -456,7 +468,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240Sicoob.CodigoDeJurosBoletoField),
           optional(Cnab240Sicoob.JurosBoletoField),
           optional(Cnab240Sicoob.CodigoDeMultaBoletoField),
-          optional(Cnab240Sicoob.MultaBoletoField)
+          optional(Cnab240Sicoob.MultaBoletoField),
+          optional(Cnab240Sicoob.DescontosBoletoField),
+          optional(Cnab240Sicoob.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -488,7 +502,8 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400.UfBoletoField(),
           optional(Cnab400Sicoob.NossoNumeroBoletoField),
           optional(Cnab400Sicoob.JurosBoletoField),
-          optional(Cnab400Sicoob.MultaBoletoField)
+          optional(Cnab400Sicoob.MultaBoletoField),
+          optional(Cnab400Sicoob.DescontosBoletoField)
         ],
       },
     }),
