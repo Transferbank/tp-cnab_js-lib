@@ -15,7 +15,7 @@ export class DescontosBoletoField extends Cnab400DescontosBoletoField {
 
   protected isInformed(ranges: CnabDescontoRanges): boolean {
     if (ranges.data == null && this.extractInformed(this.descontos[0].valor) != null) return false
-    return this.extractInformed(ranges.valor) != null
+    return super.isInformed(ranges)
   }
 
   protected resolveTipo(ranges: CnabDescontoRanges, codigo: string | null): CnabTipoDeDesconto | null {
