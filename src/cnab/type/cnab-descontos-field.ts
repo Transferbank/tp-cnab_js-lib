@@ -18,6 +18,8 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   readonly fieldKey = 'descontos'
   protected abstract readonly descontos: CnabDescontoRanges[]
   protected readonly decimals: number = 2
+  protected readonly emptyDataMeansVencimento: boolean = false
+  private readonly tiposWithDataRequired: (CnabTipoDeDesconto | null)[] = [CnabTipoDeDesconto.VALOR_FIXO, CnabTipoDeDesconto.PERCENTUAL]
 
   get range(): [number, number] {
     const positions = this.descontos.flatMap(({ codigo, data, valor }) => [...(codigo ?? []), ...(data ?? []), ...valor])
@@ -46,18 +48,7 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
       return { isValid: true, errors: [] }
     }
 
-    const codes = getDescontoCodes(bank, format)
-    const errors = this.informedDescontos()
-      .filter(ranges => ranges.codigo != null)
-      .map(ranges => ({ range: ranges.codigo as [number, number], codigo: this.extractCodigo(ranges) }))
-      .filter(({ codigo }) => codes != null && codigo != null && codes[codigo] == null)
-      .map(({ range, codigo }) => new CnabGenericFieldError({
-        message: `Campo código de desconto inválido: código ${codigo} não existe na tabela do banco`,
-        lineNumber: this.lineNumber,
-        fieldKey: this.fieldKey,
-        range
-      }))
-
+    const errors = [...this.codigoErrors(getDescontoCodes(bank, format)), ...this.dataErrors()]
     return { isValid: errors.length === 0, errors }
   }
 
@@ -123,6 +114,33 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
       throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
     return value
+  }
+
+  private codigoErrors(codes: Record<string, CnabTipoDeDesconto> | undefined): CnabGenericFieldError[] {
+    return this.informedDescontos()
+      .filter(ranges => ranges.codigo != null)
+      .map(ranges => ({ range: ranges.codigo as [number, number], codigo: this.extractCodigo(ranges) }))
+      .filter(({ codigo }) => codes != null && codigo != null && codes[codigo] == null)
+      .map(({ range, codigo }) => new CnabGenericFieldError({
+        message: `Campo código de desconto inválido: código ${codigo} não existe na tabela do banco`,
+        lineNumber: this.lineNumber,
+        fieldKey: this.fieldKey,
+        range
+      }))
+  }
+
+  private dataErrors(): CnabGenericFieldError[] {
+    if (this.emptyDataMeansVencimento) return []
+    return this.informedDescontos()
+      .filter(ranges => ranges.data != null && this.extractData(ranges.data) == null)
+      .map(ranges => ({ ranges, codigo: this.extractCodigo(ranges) }))
+      .filter(({ ranges, codigo }) => codigo != null && this.tiposWithDataRequired.includes(this.resolveTipo(ranges, codigo)))
+      .map(({ ranges, codigo }) => new CnabGenericFieldError({
+        message: `Campo data de desconto ausente: o código ${codigo} exige a data limite`,
+        lineNumber: this.lineNumber,
+        fieldKey: this.fieldKey,
+        range: ranges.data as [number, number]
+      }))
   }
 
   private formatErrors(range: [number, number] | undefined, extract: (range: [number, number]) => unknown): CnabGenericFieldError[] {
