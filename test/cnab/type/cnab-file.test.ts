@@ -935,7 +935,10 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [174, 179] as [number, number], 1]
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [174, 179] as [number, number], 1],
+    ['caixa/cnab240/caixa_cnab_240.txt', 2, [143, 150] as [number, number], 0],
+    ['caixa/cnab400/caixa_cnab_400.REM', 1, [174, 179] as [number, number], 0],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', 2, [143, 150] as [number, number], 0]
   ])('given document file %s with a desconto até a data and empty date when validating then accepts it as the vencimento', (examplePath: string, lineIndex: number, dataRange: [number, number], boletoIndex: number): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), examplePath))
