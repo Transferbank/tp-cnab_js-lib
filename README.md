@@ -127,6 +127,8 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros c
 | Sicredi         | CNAB 240 | a partir do dia seguinte ao vencimento |
 | Sicredi         | CNAB 400 | a partir do dia seguinte ao vencimento |
 
+No Itaú CNAB 240 e no Sicredi CNAB 240 e 400, o manual trata a data de juros inválida como não informada: `data_de_juros` fica de fora do boleto e vale a regra da data vazia. Nos outros layouts, a data inválida é erro de validação.
+
 ### Campos extras da lib
 
 | Chave               | Descrição                                                      | Tipo       | Constante                    |

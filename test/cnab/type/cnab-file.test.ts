@@ -573,4 +573,34 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.data_de_juros).toEqual(expectedData)
     expect(boleto.fields.juros).toBe(expectedJuros)
   })
+
+  it.each([
+    ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [119, 126], '30022026'],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [119, 126], '30022026'],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', (line: string): boolean => line[0] == '1', [21, 28], '20260230']
+  ] as Array<[string, (line: string) => boolean, [number, number], string]>)('given document file %s with invalid data de juros when reading then treats it as not informed', (examplePath: string, isJurosLine: (line: string) => boolean, range: [number, number], invalidDate: string): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+      .map((line: string) => (isJurosLine(line) ? replaceLineRange(line, range, invalidDate) : line))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When
+    const result = cnabFile.validate(true, CNAB_DATA_DE_JUROS_FIELDS)
+    const boleto = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS).boletos[0]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields).not.toHaveProperty('data_de_juros')
+    expect(boleto.fields.juros).toBeDefined()
+  })
+
+  it('given bradesco cnab240 file with invalid data de juros when reading then rejects the file', (): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
+      .map((line: string) => (line[7] == '3' && line[13] == 'P' ? replaceLineRange(line, [119, 126], '30022026') : line))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When / Then
+    expect(() => cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS)).toThrow(CnabInvalidFileException)
+  })
 })

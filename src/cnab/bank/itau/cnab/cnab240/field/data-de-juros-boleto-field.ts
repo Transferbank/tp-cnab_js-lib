@@ -5,4 +5,5 @@ import { DataDeJurosBoletoField as Cnab240DataDeJurosBoletoField } from '@cnab/f
 export class DataDeJurosBoletoField extends Cnab240DataDeJurosBoletoField {
   static readonly bank = CnabBank.ITAU
   static readonly format = CnabFormat.CNAB240
+  protected readonly invalidDateIsAbsent: boolean = true
 }
