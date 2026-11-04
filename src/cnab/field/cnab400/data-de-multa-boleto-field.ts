@@ -11,13 +11,15 @@ export class DataDeMultaBoletoField extends CnabField<Date> {
   readonly fieldKey = 'data_de_multa'
   readonly range: [number, number] = [102, 107]
   protected readonly recordType: string = '1'
+  protected readonly invalidDateIsAbsent: boolean = false
 
   shouldValidate(): boolean {
     return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
   }
 
   protected extractRawValue(): string {
-    return blankIfZeros(super.extractRawValue())
+    const rawValue = blankIfZeros(super.extractRawValue())
+    return this.invalidDateIsAbsent && this.parseDate(rawValue) == null ? '' : rawValue
   }
 
   protected performValidation(): CnabValidationResult {

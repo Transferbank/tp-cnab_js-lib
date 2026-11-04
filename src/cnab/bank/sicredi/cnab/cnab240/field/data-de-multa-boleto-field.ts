@@ -5,4 +5,5 @@ import { DataDeMultaBoletoField as Cnab240DataDeMultaBoletoField } from '@cnab/f
 export class DataDeMultaBoletoField extends Cnab240DataDeMultaBoletoField {
   static readonly bank = CnabBank.SICREDI
   static readonly format = CnabFormat.CNAB240
+  protected readonly invalidDateIsAbsent: boolean = true
 }

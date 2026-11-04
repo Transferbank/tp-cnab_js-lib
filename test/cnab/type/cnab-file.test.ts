@@ -668,6 +668,36 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.multa).toBe(expectedMulta)
   })
 
+  it.each([
+    ['santander/cnab240/santander_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'R', [67, 74], '30022026'],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'R', [67, 74], '30022026'],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', (line: string): boolean => line[0] == '1', [29, 36], '20260230']
+  ] as Array<[string, (line: string) => boolean, [number, number], string]>)('given document file %s with invalid data de multa when reading then treats it as not informed', (examplePath: string, isMultaLine: (line: string) => boolean, range: [number, number], invalidDate: string): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+      .map((line: string) => (isMultaLine(line) ? replaceLineRange(line, range, invalidDate) : line))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When
+    const result = cnabFile.validate(true, CNAB_DATA_DE_MULTA_FIELDS)
+    const boleto = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos[1]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields).not.toHaveProperty('data_de_multa')
+    expect(boleto.fields.multa).toBeDefined()
+  })
+
+  it('given bradesco cnab240 file with invalid data de multa when reading then rejects the file', (): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
+      .map((line: string) => (line[7] == '3' && line[13] == 'R' ? replaceLineRange(line, [67, 74], '30022026') : line))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When / Then
+    expect(() => cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS)).toThrow(CnabInvalidFileException)
+  })
+
   it('given caixa cnab240 boleto with codigo de multa 0 when reading then resolves it as isento', (): void => {
     // Given
     const cnabFile = openExample('caixa/cnab240/caixa_cnab_240.txt')
