@@ -14,4 +14,5 @@ export enum CnabTipoDeDesconto {
 export interface CnabTipoDeDescontoTable {
   codes?: Record<string, CnabTipoDeDesconto>
   withoutCode?: CnabTipoDeDesconto
+  zeroCodeMeansNoDesconto?: boolean
 }
