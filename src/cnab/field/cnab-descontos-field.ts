@@ -9,7 +9,7 @@ import {
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 import { CnabTipoDeDesconto } from '@cnab/type/cnab-tipo-de-desconto'
-import { getDescontoCodes, getTipoDeDesconto } from '@cnab/bank/cnab-tipo-de-desconto-tables'
+import { getDescontoCodes, getTipoDeDesconto, zeroCodeMeansNoDesconto } from '@cnab/bank/cnab-tipo-de-desconto-tables'
 import { blankIfZeros } from '@cnab/utils/phone-parser'
 import { parseImpliedDecimal } from '@cnab/utils/value-parser'
 
@@ -75,7 +75,7 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   protected abstract parseDate(rawValue: string): Date | null
 
   protected isInformed(ranges: CnabDescontoRanges): boolean {
-    return this.extractInformed(ranges.valor) != null
+    return this.extractInformed(ranges.valor) != null && !this.hasNoDescontoCode(ranges)
   }
 
   protected extractData(range?: [number, number]): Date | null {
@@ -92,6 +92,12 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   protected extractInformed(range: [number, number]): string | null {
     const rawValue = blankIfZeros(this.extractRangeFromLine(range[0] - 1, range[1]))
     return rawValue == '' ? null : rawValue
+  }
+
+  private hasNoDescontoCode(ranges: CnabDescontoRanges): boolean {
+    const { bank, format } = this.constructor as typeof CnabField<CnabDesconto[]>
+    if (bank == null || format == null || ranges.codigo == null) return false
+    return zeroCodeMeansNoDesconto(bank, format) && this.extractRangeFromLine(ranges.codigo[0] - 1, ranges.codigo[1]) == '0'
   }
 
   private informedDescontos(): CnabDescontoRanges[] {

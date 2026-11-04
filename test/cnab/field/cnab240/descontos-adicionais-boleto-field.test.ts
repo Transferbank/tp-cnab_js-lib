@@ -12,6 +12,11 @@ class BradescoDescontosAdicionaisBoletoField extends DescontosAdicionaisBoletoFi
   static readonly format = CnabFormat.CNAB240
 }
 
+class BancoDoBrasilDescontosAdicionaisBoletoField extends DescontosAdicionaisBoletoField {
+  static readonly bank = CnabBank.BANCODOBRASIL
+  static readonly format = CnabFormat.CNAB240
+}
+
 function segmentoR(descontos: string): string {
   const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'R')
   assert(line != null, 'Linha não encontrada')
@@ -43,6 +48,30 @@ describe('DescontosAdicionaisBoletoField', (): void => {
 
     // Then
     expect(descontos).toEqual(expected)
+  })
+
+  it('given code 0 with a value when the manual defines 0 as no desconto then leaves it out of the list', (): void => {
+    // Given
+    const field = new BancoDoBrasilDescontosAdicionaisBoletoField(segmentoR('0' + '10122026' + '000000000000500' + '0'.repeat(24)), 5)
+
+    // When
+    const result = field.validate()
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toBeNull()
+  })
+
+  it('given code 0 with a value when the manual does not define 0 then keeps the desconto without tipo', (): void => {
+    // Given
+    const field = new BradescoDescontosAdicionaisBoletoField(segmentoR('0' + '10122026' + '000000000000500' + '0'.repeat(24)), 5)
+
+    // When
+    const result = field.validate()
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toEqual([{ codigo: null, tipo: null, data: new Date(2026, 11, 10), valor: 5 }])
   })
 
   it('given both descontos filled with zeros when reading then returns null', (): void => {
