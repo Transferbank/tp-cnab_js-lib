@@ -3,12 +3,8 @@ import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabTipoDeDesconto } from '@cnab/type/cnab-tipo-de-desconto'
+import { DescontosAdicionaisBoletoField as BancoDoBrasilDescontosAdicionaisBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/descontos-adicionais-boleto-field'
 import { DescontosAdicionaisBoletoField as BradescoDescontosAdicionaisBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/descontos-adicionais-boleto-field'
-
-class BancoDoBrasilDescontosAdicionaisBoletoField extends DescontosAdicionaisBoletoField {
-  static readonly bank = CnabBank.BANCODOBRASIL
-  static readonly format = CnabFormat.CNAB240
-}
 
 function segmentoR(descontos: string): string {
   const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'R')
