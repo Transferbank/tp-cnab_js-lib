@@ -138,8 +138,6 @@ const cnab = cnabFile.read([...CNAB_DATA_DE_JUROS_FIELDS, ...CNAB_DATA_DE_MULTA_
 
 Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros começam e quando a multa passa a valer. Nos layouts sem campo de data, o banco cobra desde o primeiro dia de atraso.
 
-No Santander 240 e no Sicredi 240 e 400, o manual trata a data de multa inválida como não informada: `data_de_multa` fica de fora do boleto e vale a regra da data vazia. Nos outros layouts, a data inválida é erro de validação.
-
 | Banco e formato     | Com a data vazia, os juros começam     | Com a data vazia, a multa vale         |
 | ------------------- | -------------------------------------- | -------------------------------------- |
 | Banco do Brasil 240 | o manual não diz                       | o manual não diz                       |
@@ -157,7 +155,7 @@ No Santander 240 e no Sicredi 240 e 400, o manual trata a data de multa inválid
 | Sicredi 240         | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
 | Sicredi 400         | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
 
-No Itaú CNAB 240 e no Sicredi CNAB 240 e 400, o manual trata a data de juros inválida como não informada: `data_de_juros` fica de fora do boleto e vale a regra da data vazia. Nos outros layouts, a data inválida é erro de validação.
+Alguns manuais tratam a data inválida como não informada: nos juros, Itaú 240 e Sicredi 240 e 400; na multa, Santander 240 e Sicredi 240 e 400. Nesses layouts, o campo fica de fora do boleto e vale a regra da data vazia. Nos outros, a data inválida é erro de validação.
 
 ### Campos extras da lib
 
