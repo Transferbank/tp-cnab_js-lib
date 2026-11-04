@@ -7,6 +7,7 @@ export class DataDeMultaBoletoField extends Cnab400DataDeMultaBoletoField {
   static readonly bank = CnabBank.SICREDI
   static readonly format = CnabFormat.CNAB400
   readonly range: [number, number] = [29, 36]
+  protected readonly invalidDateIsAbsent: boolean = true
 
   protected parseDate(rawValue: string): Date | null {
     return parseDateAAAAMMDD(rawValue)
