@@ -28,7 +28,8 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
         '1': CnabTipoDeDesconto.VALOR_FIXO,
         '2': CnabTipoDeDesconto.PERCENTUAL,
         '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO
-      }
+      },
+      zeroCodeMeansNoDesconto: true
     },
     [CnabFormat.CNAB400]: {
       withoutCode: CnabTipoDeDesconto.VALOR_FIXO
@@ -86,7 +87,8 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
         '2': CnabTipoDeDesconto.PERCENTUAL,
         '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO,
         '7': CnabTipoDeDesconto.CANCELAMENTO
-      }
+      },
+      zeroCodeMeansNoDesconto: true
     },
     [CnabFormat.CNAB400]: {
       codes: {
@@ -99,6 +101,10 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
 
 export function getDescontoCodes(bank: CnabBank, format: CnabFormat): Record<string, CnabTipoDeDesconto> | undefined {
   return CNAB_TIPO_DE_DESCONTO_TABLES[bank][format].codes
+}
+
+export function zeroCodeMeansNoDesconto(bank: CnabBank, format: CnabFormat): boolean {
+  return CNAB_TIPO_DE_DESCONTO_TABLES[bank][format].zeroCodeMeansNoDesconto ?? false
 }
 
 export function getTipoDeDesconto(bank: CnabBank, format: CnabFormat, codigo: string | null): CnabTipoDeDesconto | null {
