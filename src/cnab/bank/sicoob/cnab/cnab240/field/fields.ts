@@ -1,3 +1,6 @@
+export { CodigoDeJurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/codigo-de-juros-boleto-field'
+export { DataDeJurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/data-de-juros-boleto-field'
+export { JurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/juros-boleto-field'
 export { ParcelaBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/parcela-boleto-field'
 export { SeuNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/seu-numero-boleto-field'
 export { TotalDeParcelasBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/total-de-parcelas-boleto-field'

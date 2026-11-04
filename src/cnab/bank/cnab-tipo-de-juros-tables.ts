@@ -37,10 +37,10 @@ export const CNAB_TIPO_DE_JUROS_TABLES: Record<CnabBank, Record<CnabFormat, Cnab
     },
     [CnabFormat.CNAB400]: {
       codes: {
-        '1': CnabTipoDeJuros.VALOR_POR_DIA,
-        '6': CnabTipoDeJuros.VALOR_POR_DIA,
-        '3': CnabTipoDeJuros.TAXA_MENSAL,
-        '8': CnabTipoDeJuros.TAXA_MENSAL,
+        '1': CnabTipoDeJuros.VALOR_POR_DIA, // dias corridos
+        '6': CnabTipoDeJuros.VALOR_POR_DIA, // dias úteis
+        '3': CnabTipoDeJuros.TAXA_MENSAL, // dias corridos
+        '8': CnabTipoDeJuros.TAXA_MENSAL, // dias úteis
         '5': CnabTipoDeJuros.ISENTO
       }
     }
@@ -59,9 +59,9 @@ export const CNAB_TIPO_DE_JUROS_TABLES: Record<CnabBank, Record<CnabFormat, Cnab
         '1': CnabTipoDeJuros.VALOR_POR_DIA,
         '2': CnabTipoDeJuros.TAXA_MENSAL,
         '3': CnabTipoDeJuros.ISENTO,
-        '4': CnabTipoDeJuros.OUTRO,
-        '5': CnabTipoDeJuros.VALOR_POR_DIA,
-        '6': CnabTipoDeJuros.TAXA_MENSAL
+        '4': CnabTipoDeJuros.OUTRO, // comissão de permanência do banco
+        '5': CnabTipoDeJuros.VALOR_POR_DIA, // com tolerância: juros a partir da data de juros
+        '6': CnabTipoDeJuros.TAXA_MENSAL // com tolerância: juros a partir da data de juros
       }
     },
     [CnabFormat.CNAB400]: {

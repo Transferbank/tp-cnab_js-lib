@@ -10,13 +10,15 @@ export class CodigoDeJurosBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'codigo_de_juros'
   readonly range: [number, number] = [118, 118]
+  protected readonly zeroIsAbsent: boolean = true
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
   }
 
   protected extractRawValue(): string {
-    return blankIfZeros(super.extractRawValue())
+    const rawValue = super.extractRawValue()
+    return this.zeroIsAbsent ? blankIfZeros(rawValue) : rawValue
   }
 
   protected performValidation(): CnabValidationResult {
