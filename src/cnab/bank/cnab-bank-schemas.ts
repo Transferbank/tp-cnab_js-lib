@@ -252,7 +252,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab240BancoDoBrasil.CodigoDeJurosBoletoField),
           optional(Cnab240BancoDoBrasil.JurosBoletoField),
           optional(Cnab240BancoDoBrasil.CodigoDeMultaBoletoField),
-          optional(Cnab240BancoDoBrasil.MultaBoletoField)
+          optional(Cnab240BancoDoBrasil.MultaBoletoField),
+          optional(Cnab240BancoDoBrasil.DescontosBoletoField),
+          optional(Cnab240BancoDoBrasil.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -285,7 +287,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab400BancoDoBrasil.NossoNumeroBoletoField),
           optional(Cnab400BancoDoBrasil.JurosBoletoField),
           optional(Cnab400BancoDoBrasil.CodigoDeMultaBoletoField),
-          optional(Cnab400BancoDoBrasil.MultaBoletoField)
+          optional(Cnab400BancoDoBrasil.MultaBoletoField),
+          optional(Cnab400BancoDoBrasil.DescontosBoletoField),
+          optional(Cnab400BancoDoBrasil.DescontosAdicionaisBoletoField)
         ],
       },
     }),
