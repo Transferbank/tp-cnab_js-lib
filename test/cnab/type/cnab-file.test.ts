@@ -17,6 +17,8 @@ import { CNAB_IDENTIFICATION_FIELDS, CNAB_SEU_NUMERO_FIELDS } from '@cnab/bank/c
 import { CNAB_PARCELA_FIELDS } from '@cnab/bank/cnab-parcela-fields'
 import { CNAB_DATA_DE_JUROS_FIELDS } from '@cnab/bank/cnab-juros-fields'
 import { CNAB_DATA_DE_MULTA_FIELDS } from '@cnab/bank/cnab-multa-fields'
+import { getTipoDeMulta } from '@cnab/bank/cnab-tipo-de-multa-tables'
+import { CnabTipoDeMulta } from '@cnab/type/cnab-tipo-de-multa'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -111,7 +113,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt', 5, 240],
-    ['itau/cnab400/ITAU_cnab_400.REM', 2, 400]
+    ['itau/cnab400/ITAU_cnab_400.REM', 640, 400]
   ])(
     'given document file with truncated line when validating then reports line size error',
     (examplePath: string, truncatedLineNumber: number, expectedSize: number): void => {
@@ -196,7 +198,9 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000020',
-          juros: 0.19
+          juros: 0.19,
+          codigo_de_multa: '2',
+          multa: 3
         }
       }),
       new CnabBoleto({
@@ -224,7 +228,9 @@ describe('cnab-file', (): void => {
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'CAMPINAS',
           uf_do_sacado: 'SP',
-          nosso_numero: '109000000040'
+          nosso_numero: '109000000040',
+          codigo_de_multa: '2',
+          multa: 3
         }
       })
     ]
@@ -251,7 +257,9 @@ describe('cnab-file', (): void => {
         cidade_do_sacado: 'VARZEA ALEGRE',
         uf_do_sacado: 'CE',
         nosso_numero: '10377333',
-        juros: 6.76
+        juros: 6.76,
+        codigo_de_multa: '2',
+        multa: 2.7
       }
     })
 
@@ -292,7 +300,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] !== '3'],
-    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1')]
+    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => !line.startsWith('1') && !line.startsWith('2')]
   ])(
     'given document file %s without boleto lines when reading then returns no boletos',
     (examplePath: string, isNotBoletoLine: (line: string) => boolean): void => {
@@ -337,7 +345,7 @@ describe('cnab-file', (): void => {
       ['an itau cnab400 field', 'itau/cnab400/ITAU_cnab_400.REM', ItauCnab400NossoNumeroExtraField, '10377333'],
       ['an itau cnab400 field', 'bradesco/cnab400/bradesco_cnab_400.txt', ItauCnab400NossoNumeroExtraField, undefined],
       ['an itau cnab400 field', 'itau/cnab240/itau_cnab_240.txt', ItauCnab400NossoNumeroExtraField, undefined],
-      ['a field without bank and format', 'bradesco/cnab400/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020200']
+      ['a field without bank and format', 'bradesco/cnab400/bradesco_cnab_400.txt', NossoNumeroExtraField, '00020240']
     ])('given %s when reading %s then reads it only if the file is in its scope', (_: string, examplePath: string, extraField: CnabFieldClass, expectedNossoNumero: string | undefined): void => {
       // Given
       const cnabFile = openExample(examplePath)
@@ -607,8 +615,20 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2026, 11, 16), 1],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2]
-  ])('given document file %s when reading then reads the multa of its layout', (examplePath: string, expectedCodigo: string, expectedData: Date, expectedMulta: number): void => {
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '2', new Date(2026, 11, 15), 2.2],
+    ['caixa/cnab240/caixa_cnab_240.txt', '2', new Date(2026, 11, 16), 2.5],
+    ['itau/cnab240/itau_cnab_240.txt', undefined, undefined, undefined],
+    ['santander/cnab240/santander_cnab_240.txt', '2', new Date(2026, 11, 16), 1.5],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '0', undefined, undefined],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '2', new Date(2026, 11, 16), 2.3],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '2', new Date(2026, 6, 21), 2.6],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', '2', undefined, 2.4],
+    ['caixa/cnab400/caixa_cnab_400.REM', undefined, new Date(2026, 7, 16), 5],
+    ['itau/cnab400/ITAU_cnab_400.REM', '2', new Date(2026, 6, 6), 2.7],
+    ['santander/cnab400/santander_cnab_400.REM', '4', new Date(2026, 5, 22), 4],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 2.8],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', undefined, undefined, 2.9]
+  ])('given document file %s when reading then reads the multa of its layout', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedMulta: number | undefined): void => {
     // Given
     const cnabFile = openExample(examplePath)
 
@@ -623,5 +643,70 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.data_de_multa).toEqual(expectedData)
     expect(boleto.fields.multa).toBe(expectedMulta)
     expect(boletoWithoutExtraFields.fields).not.toHaveProperty('data_de_multa')
+  })
+
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '2', new Date(2027, 0, 21), 1.25],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '2', new Date(2026, 11, 20), 2],
+    ['itau/cnab240/itau_cnab_240.txt', '2', new Date(2026, 11, 21), 3],
+    ['santander/cnab240/santander_cnab_240.txt', '1', new Date(2027, 0, 21), 3.4],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '2', new Date(2026, 11, 21), 1.75],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '1', new Date(2026, 11, 21), 4.1],
+    ['caixa/cnab400/caixa_cnab_400.REM', undefined, new Date(2026, 7, 21), 6.3],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', undefined, undefined, 1.9],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 'A', new Date(2026, 5, 29), 3.6]
+  ])('given document file %s when reading then reads the multa of the second boleto', (examplePath: string, expectedCodigo: string | undefined, expectedData: Date | undefined, expectedMulta: number): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const boleto = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos[1]
+
+    // Then
+    expect(boleto.fields.codigo_de_multa).toBe(expectedCodigo)
+    expect(boleto.fields.data_de_multa).toEqual(expectedData)
+    expect(boleto.fields.multa).toBe(expectedMulta)
+  })
+
+  it.each([
+    ['santander/cnab240/santander_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'R', [67, 74], '30022026'],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'R', [67, 74], '30022026'],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', (line: string): boolean => line[0] == '1', [29, 36], '20260230']
+  ] as Array<[string, (line: string) => boolean, [number, number], string]>)('given document file %s with invalid data de multa when reading then treats it as not informed', (examplePath: string, isMultaLine: (line: string) => boolean, range: [number, number], invalidDate: string): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+      .map((line: string) => (isMultaLine(line) ? replaceLineRange(line, range, invalidDate) : line))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When
+    const result = cnabFile.validate(true, CNAB_DATA_DE_MULTA_FIELDS)
+    const boleto = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos[1]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields).not.toHaveProperty('data_de_multa')
+    expect(boleto.fields.multa).toBeDefined()
+  })
+
+  it('given bradesco cnab240 file with invalid data de multa when reading then rejects the file', (): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
+      .map((line: string) => (line[7] == '3' && line[13] == 'R' ? replaceLineRange(line, [67, 74], '30022026') : line))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When / Then
+    expect(() => cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS)).toThrow(CnabInvalidFileException)
+  })
+
+  it('given caixa cnab240 boleto with codigo de multa 0 when reading then resolves it as isento', (): void => {
+    // Given
+    const cnabFile = openExample('caixa/cnab240/caixa_cnab_240.txt')
+
+    // When
+    const boleto = cnabFile.read().boletos[1]
+
+    // Then
+    expect(boleto.fields.codigo_de_multa).toBe('0')
+    expect(getTipoDeMulta(CnabBank.CAIXA, CnabFormat.CNAB240, boleto.fields.codigo_de_multa as string)).toBe(CnabTipoDeMulta.ISENTO)
   })
 })
