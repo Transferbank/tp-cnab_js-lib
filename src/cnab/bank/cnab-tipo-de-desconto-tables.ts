@@ -108,6 +108,7 @@ export function zeroCodeMeansNoDesconto(bank: CnabBank, format: CnabFormat): boo
 }
 
 export function getTipoDeDesconto(bank: CnabBank, format: CnabFormat, codigo: string | null): CnabTipoDeDesconto | null {
+  if (codigo == '0') return null
   const table = CNAB_TIPO_DE_DESCONTO_TABLES[bank][format]
   if (codigo == null) return table.withoutCode ?? null
   return table.codes?.[codigo] ?? CnabTipoDeDesconto.OUTRO
