@@ -734,6 +734,28 @@ describe('cnab-file', (): void => {
       { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 20), valor: 4.8 },
       { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 23), valor: 2.5 },
       { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 25), valor: 1.2 }
+    ]],
+    ['itau/cnab400/ITAU_cnab_400.REM', 1, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 6, 1), valor: 6.2 }
+    ]],
+    ['itau/cnab400/ITAU_cnab_400.REM', 2, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, data: null, valor: 0.35 }
+    ]],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', 1, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 8, 10), valor: 7 },
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 8, 15), valor: 5 },
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 8, 20), valor: 3 }
+    ]],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', 2, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO, data: null, valor: 0.45 }
+    ]],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 1, [
+      { codigo: 'A', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 20), valor: 8 },
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 23), valor: 6 },
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 26), valor: 4 }
+    ]],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [
+      { codigo: 'B', tipo: CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO, data: null, valor: 0.5 }
     ]]
   ])('given document file %s when reading boleto %i then reads its descontos in file order', (examplePath: string, boletoIndex: number, expectedDescontos: CnabDesconto[]): void => {
     // Given
@@ -764,5 +786,71 @@ describe('cnab-file', (): void => {
 
     // Then
     expect(boleto.fields).not.toHaveProperty('descontos')
+  })
+
+  it.each([
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [174, 179] as [number, number], 1]
+  ])('given document file %s with a desconto até a data and empty date when validating then accepts it as the vencimento', (examplePath: string, lineIndex: number, dataRange: [number, number], boletoIndex: number): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), examplePath))
+    rawLines[lineIndex] = replaceLineRange(rawLines[lineIndex], dataRange, '0'.repeat(dataRange[1] - dataRange[0] + 1))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+    const boleto = cnabFile.read().boletos[boletoIndex]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.descontos).toContainEqual(expect.objectContaining({ data: null }))
+  })
+
+  it('given sicredi cnab400 boleto with desconto 1 and desconto por dia when reading then ignores the desconto por dia', (): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
+    rawLines[2] = replaceLineRange(rawLines[2], [83, 92], '0000000050')
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const boleto = cnabFile.read().boletos[1]
+
+    // Then
+    expect(boleto.fields.descontos).toHaveLength(3)
+    expect(boleto.fields.descontos).not.toContainEqual(expect.objectContaining({ data: null }))
+  })
+
+  it.each([
+    ['A', CnabTipoDeDesconto.VALOR_FIXO],
+    ['B', CnabTipoDeDesconto.PERCENTUAL]
+  ])('given sicredi cnab400 boleto with desconto por dia, tipo %s and descontos 2 and 3 when reading then ignores the desconto por dia and keeps the tipo of the boleto', (codigo: string, tipo: CnabTipoDeDesconto): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
+    rawLines[2] = replaceLineRange(rawLines[2], [18, 18], codigo)
+    rawLines[2] = replaceLineRange(rawLines[2], [83, 92], '0000000050')
+    rawLines[2] = replaceLineRange(rawLines[2], [174, 192], '0'.repeat(19))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const boleto = cnabFile.read().boletos[1]
+
+    // Then
+    expect(boleto.fields.descontos).toEqual([
+      { codigo: null, tipo, data: new Date(2026, 5, 23), valor: 6 },
+      { codigo: null, tipo, data: new Date(2026, 5, 26), valor: 4 }
+    ])
+  })
+
+  it('given sicredi cnab400 boleto with only desconto por dia and a tipo de desconto outside the table when validating then rejects it', (): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
+    rawLines[4] = replaceLineRange(rawLines[4], [18, 18], 'X')
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toContainEqual(expect.objectContaining({ fieldKey: 'descontos', range: [18, 18] }))
   })
 })

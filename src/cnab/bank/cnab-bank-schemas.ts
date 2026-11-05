@@ -88,7 +88,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab400Bradesco.NossoNumeroBoletoField),
           optional(Cnab400Bradesco.JurosBoletoField),
           optional(Cnab400Bradesco.CodigoDeMultaBoletoField),
-          optional(Cnab400Bradesco.MultaBoletoField)
+          optional(Cnab400Bradesco.MultaBoletoField),
+          optional(Cnab400Bradesco.DescontosBoletoField),
+          optional(Cnab400Bradesco.DescontosAdicionaisBoletoField)
         ],
       },
     }),
@@ -153,7 +155,8 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab400.NossoNumeroBoletoField),
           optional(Cnab400Itau.JurosBoletoField),
           optional(Cnab400Itau.CodigoDeMultaBoletoField),
-          optional(Cnab400Itau.MultaBoletoField)
+          optional(Cnab400Itau.MultaBoletoField),
+          optional(Cnab400Itau.DescontosBoletoField)
         ],
       },
     }),
@@ -418,7 +421,9 @@ function registerCnabSchemas(): CnabSchema[] {
           optional(Cnab400Sicredi.CodigoDeJurosBoletoField),
           optional(Cnab400Sicredi.JurosBoletoField),
           optional(Cnab400Sicredi.CodigoDeMultaBoletoField),
-          optional(Cnab400Sicredi.MultaBoletoField)
+          optional(Cnab400Sicredi.MultaBoletoField),
+          optional(Cnab400Sicredi.DescontosBoletoField),
+          optional(Cnab400Sicredi.DescontosAdicionaisBoletoField)
         ],
       },
     }),
