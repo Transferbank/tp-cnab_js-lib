@@ -6,6 +6,8 @@ export { CodigoDeJurosBoletoField } from '@cnab/field/cnab240/codigo-de-juros-bo
 export { CodigoDeMultaBoletoField } from '@cnab/field/cnab240/codigo-de-multa-boleto-field'
 export { DataDeJurosBoletoField } from '@cnab/field/cnab240/data-de-juros-boleto-field'
 export { DataDeMultaBoletoField } from '@cnab/field/cnab240/data-de-multa-boleto-field'
+export { DescontosAdicionaisBoletoField } from '@cnab/field/cnab240/descontos-adicionais-boleto-field'
+export { DescontosBoletoField } from '@cnab/field/cnab240/descontos-boleto-field'
 export { DddBoletoField } from '@cnab/field/cnab240/ddd-boleto-field'
 export { DocumentoSacadoBoletoField } from '@cnab/field/cnab240/documento-sacado-boleto-field'
 export { EmailBoletoField } from '@cnab/field/cnab240/email-boleto-field'
