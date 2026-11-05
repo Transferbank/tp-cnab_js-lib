@@ -957,7 +957,8 @@ describe('cnab-file', (): void => {
   it.each([
     ['caixa/cnab240/caixa_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]],
     ['caixa/cnab400/caixa_cnab_400.REM', (line: string): boolean => line[0] == '1', [84, 84] as [number, number]],
-    ['santander/cnab240/santander_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]]
+    ['santander/cnab240/santander_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]]
   ])('given document file %s with code 0 and a filled desconto when reading then leaves it out because the manual defines 0 as no desconto', (examplePath: string, isDescontoLine: (line: string) => boolean, codigoRange: [number, number]): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), examplePath))
