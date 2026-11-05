@@ -135,10 +135,9 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
     if (this.emptyDataMeansVencimento) return []
     return this.informedDescontos()
       .filter(ranges => ranges.data != null && this.extractData(ranges.data) == null)
-      .map(ranges => ({ ranges, codigo: this.extractCodigo(ranges) }))
-      .filter(({ ranges, codigo }) => codigo != null && this.tiposWithDataRequired.includes(this.resolveTipo(ranges, codigo)))
-      .map(({ ranges, codigo }) => new CnabGenericFieldError({
-        message: `Campo data de desconto ausente: o código ${codigo} exige a data limite`,
+      .filter(ranges => this.tiposWithDataRequired.includes(this.resolveTipo(ranges, this.extractCodigo(ranges))))
+      .map(ranges => new CnabGenericFieldError({
+        message: 'Campo data de desconto ausente: o desconto até a data exige a data limite',
         lineNumber: this.lineNumber,
         fieldKey: this.fieldKey,
         range: ranges.data as [number, number]
