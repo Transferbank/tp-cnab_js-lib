@@ -201,7 +201,7 @@ Quando uma parte do desconto vem vazia:
 
 - **Valor:** o desconto não entra na lista.
 - **Código:** o layout não tem código, porque o banco só aceita um tipo, e o tipo já vem preenchido em cada desconto. Quando o layout tem código, ele precisa estar na tabela do banco, como nos juros e na multa. Se o código vier vazio ou `0`, o arquivo não informou o tipo, e o desconto vem com `tipo: null`. No Banco do Brasil CNAB 240 e no Sicredi CNAB 240, o manual define `0` como sem desconto, e ele não entra na lista.
-- **Data:** se o código pede data (valor fixo ou percentual até a data), é erro de validação, porque o banco recusa o boleto. Os descontos por dia de antecipação não têm data.
+- **Data:** o desconto até a data (valor fixo ou percentual) precisa da data, mesmo nos layouts sem código, e sem ela é erro de validação. Os descontos por dia de antecipação não têm data.
 
 ### Campos extras da lib
 
