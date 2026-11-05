@@ -45,10 +45,12 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
   },
   [CnabBank.CAIXA]: {
     [CnabFormat.CNAB240]: {
-      codes: CAIXA_CODES
+      codes: CAIXA_CODES,
+      zeroCodeMeansNoDesconto: true
     },
     [CnabFormat.CNAB400]: {
-      codes: CAIXA_CODES
+      codes: CAIXA_CODES,
+      zeroCodeMeansNoDesconto: true
     }
   },
   [CnabBank.ITAU]: {
@@ -66,7 +68,8 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
         '2': CnabTipoDeDesconto.PERCENTUAL,
         '3': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO,
         '4': CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL
-      }
+      },
+      zeroCodeMeansNoDesconto: true
     },
     [CnabFormat.CNAB400]: {
       withoutCode: CnabTipoDeDesconto.VALOR_FIXO
