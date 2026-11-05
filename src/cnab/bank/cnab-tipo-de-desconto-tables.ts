@@ -77,7 +77,8 @@ export const CNAB_TIPO_DE_DESCONTO_TABLES: Record<CnabBank, Record<CnabFormat, C
   },
   [CnabBank.SICOOB]: {
     [CnabFormat.CNAB240]: {
-      codes: FEBRABAN_CODES
+      codes: FEBRABAN_CODES,
+      zeroCodeMeansNoDesconto: true
     },
     [CnabFormat.CNAB400]: {
       withoutCode: CnabTipoDeDesconto.VALOR_FIXO
