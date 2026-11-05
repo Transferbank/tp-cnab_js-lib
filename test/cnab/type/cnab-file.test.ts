@@ -819,6 +819,27 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.descontos).not.toContainEqual(expect.objectContaining({ data: null }))
   })
 
+  it.each([
+    ['A', CnabTipoDeDesconto.VALOR_FIXO],
+    ['B', CnabTipoDeDesconto.PERCENTUAL]
+  ])('given sicredi cnab400 boleto with desconto por dia, tipo %s and descontos 2 and 3 when reading then ignores the desconto por dia and keeps the tipo of the boleto', (codigo: string, tipo: CnabTipoDeDesconto): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
+    rawLines[2] = replaceLineRange(rawLines[2], [18, 18], codigo)
+    rawLines[2] = replaceLineRange(rawLines[2], [83, 92], '0000000050')
+    rawLines[2] = replaceLineRange(rawLines[2], [174, 192], '0'.repeat(19))
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const boleto = cnabFile.read().boletos[1]
+
+    // Then
+    expect(boleto.fields.descontos).toEqual([
+      { codigo: null, tipo, data: new Date(2026, 5, 23), valor: 6 },
+      { codigo: null, tipo, data: new Date(2026, 5, 26), valor: 4 }
+    ])
+  })
+
   it('given sicredi cnab400 boleto with only desconto por dia and a tipo de desconto outside the table when validating then rejects it', (): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
