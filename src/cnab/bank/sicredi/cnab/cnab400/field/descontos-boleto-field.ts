@@ -10,7 +10,7 @@ export class DescontosBoletoField extends Cnab400DescontosBoletoField {
   protected readonly emptyDataMeansVencimento: boolean = true
   protected readonly descontos: CnabDescontoRanges[] = [
     { codigo: [18, 18], data: [174, 179], valor: [180, 192] },
-    { valor: [83, 92] }
+    { codigo: [18, 18], valor: [83, 92] }
   ]
 
   protected isInformed(ranges: CnabDescontoRanges): boolean {
@@ -20,9 +20,8 @@ export class DescontosBoletoField extends Cnab400DescontosBoletoField {
 
   protected resolveTipo(ranges: CnabDescontoRanges, codigo: string | null): CnabTipoDeDesconto | null {
     if (ranges.data != null) return super.resolveTipo(ranges, codigo)
-    const tipoDeDesconto = this.extractInformed([18, 18])
-    if (tipoDeDesconto == 'A') return CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO
-    if (tipoDeDesconto == 'B') return CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO
+    if (codigo == 'A') return CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO
+    if (codigo == 'B') return CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO
     return null
   }
 }
