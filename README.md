@@ -200,7 +200,7 @@ boleto.fields.descontos
 Quando uma parte do desconto vem vazia:
 
 - **Valor:** o desconto não entra na lista.
-- **Código:** o layout não tem código, porque o banco só aceita um tipo, e o tipo já vem preenchido em cada desconto. Quando o layout tem código, ele precisa estar na tabela do banco, como nos juros e na multa. Se o código vier vazio ou `0`, o arquivo não informou o tipo, e o desconto vem com `tipo: null`. No Banco do Brasil CNAB 240 e no Sicredi CNAB 240, o manual define `0` como sem desconto, e ele não entra na lista.
+- **Código:** o layout não tem código, porque o banco só aceita um tipo, e o tipo já vem preenchido em cada desconto. Quando o layout tem código, ele precisa estar na tabela do banco, como nos juros e na multa. Se o código vier vazio ou `0`, o arquivo não informou o tipo, e o desconto vem com `tipo: null`. No Banco do Brasil CNAB 240, na Caixa CNAB 240 e 400, no Santander CNAB 240 e no Sicredi CNAB 240, o manual define `0` como sem desconto, e ele não entra na lista.
 - **Data:** o desconto até a data (valor fixo ou percentual) precisa da data, mesmo nos layouts sem código, e sem ela é erro de validação. Na Caixa e no Sicredi, a data vazia vale como o vencimento, e o desconto vem com `data: null`. Os descontos por dia de antecipação, em geral, não têm data.
 
 No Sicredi CNAB 400, o desconto por dia só aparece quando o boleto não tem outro desconto, porque nesse caso o banco o ignora. O manual do Sicredi não diz o tipo do desconto por dia nem dos descontos 2 e 3, então eles seguem o tipo de desconto do boleto: `A` é valor e `B` é percentual. Os descontos 2 e 3 trazem o tipo, mas vêm com `codigo: null`, porque o registro deles não tem código.

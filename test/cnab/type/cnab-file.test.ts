@@ -954,6 +954,26 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.descontos).toContainEqual(expect.objectContaining({ data: null }))
   })
 
+  it.each([
+    ['caixa/cnab240/caixa_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]],
+    ['caixa/cnab400/caixa_cnab_400.REM', (line: string): boolean => line[0] == '1', [84, 84] as [number, number]],
+    ['santander/cnab240/santander_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]]
+  ])('given document file %s with code 0 and a filled desconto when reading then leaves it out because the manual defines 0 as no desconto', (examplePath: string, isDescontoLine: (line: string) => boolean, codigoRange: [number, number]): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), examplePath))
+    const lineIndex = rawLines.findIndex(isDescontoLine)
+    rawLines[lineIndex] = replaceLineRange(rawLines[lineIndex], codigoRange, '0')
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+    const boleto = cnabFile.read().boletos[0]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.descontos ?? []).not.toContainEqual(expect.objectContaining({ codigo: null }))
+  })
+
   it('given sicredi cnab400 boleto with desconto 1 and desconto por dia when reading then ignores the desconto por dia', (): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
