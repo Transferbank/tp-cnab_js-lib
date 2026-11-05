@@ -1,6 +1,8 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabDesconto, CnabDescontoRanges } from '@cnab/type/cnab-desconto'
+import { CnabTipoDeDesconto } from '@cnab/type/cnab-tipo-de-desconto'
+import { getTipoDeDesconto } from '@cnab/bank/cnab-tipo-de-desconto-tables'
 import { DescontosAdicionaisBoletoField as Cnab400DescontosAdicionaisBoletoField } from '@cnab/field/cnab400/descontos-adicionais-boleto-field'
 
 export class DescontosAdicionaisBoletoField extends Cnab400DescontosAdicionaisBoletoField {
@@ -14,7 +16,11 @@ export class DescontosAdicionaisBoletoField extends Cnab400DescontosAdicionaisBo
 
   handleDuplicatedValue(previousValue: unknown): CnabDesconto[] {
     const previous = previousValue as CnabDesconto[]
-    const tipo = previous[0]?.tipo ?? null
-    return [...previous, ...(this.value ?? []).map(desconto => ({ ...desconto, tipo }))]
+    const tipo = getTipoDeDesconto(CnabBank.SICREDI, CnabFormat.CNAB400, previous[0]?.codigo ?? null)
+    return [...previous.filter(desconto => !this.isPerDay(desconto)), ...(this.value ?? []).map(desconto => ({ ...desconto, tipo }))]
+  }
+
+  private isPerDay(desconto: CnabDesconto): boolean {
+    return desconto.tipo == CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO || desconto.tipo == CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO
   }
 }
