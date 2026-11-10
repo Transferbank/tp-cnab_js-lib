@@ -4,6 +4,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldInvalidDateError } from '@cnab/type/cnab-validation-error'
 import { parseDateDDMMAA } from '@cnab/utils/date-parser'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { blankIfZeros } from '@cnab/utils/phone-parser'
 
 export abstract class DataBoletoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -14,8 +15,7 @@ export abstract class DataBoletoField extends CnabField<Date> {
   }
 
   protected extractRawValue(): string {
-    const rawValue = super.extractRawValue()
-    return /^0+$/.test(rawValue) ? '' : rawValue
+    return blankIfZeros(super.extractRawValue())
   }
 
   protected performValidation(): CnabValidationResult {
