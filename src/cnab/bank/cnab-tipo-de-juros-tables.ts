@@ -38,9 +38,9 @@ export const CNAB_TIPO_DE_JUROS_TABLES: Record<CnabBank, Record<CnabFormat, Cnab
     [CnabFormat.CNAB400]: {
       codes: {
         '1': CnabTipoDeJuros.VALOR_POR_DIA, // dias corridos
-        '6': CnabTipoDeJuros.VALOR_POR_DIA, // dias úteis
+        '6': CnabTipoDeJuros.VALOR_POR_DIA_UTIL,
         '3': CnabTipoDeJuros.TAXA_MENSAL, // dias corridos
-        '8': CnabTipoDeJuros.TAXA_MENSAL, // dias úteis
+        '8': CnabTipoDeJuros.TAXA_MENSAL_DIAS_UTEIS,
         '5': CnabTipoDeJuros.ISENTO
       }
     }

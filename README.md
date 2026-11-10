@@ -80,13 +80,15 @@ Os campos de juros são sempre lidos pelo sistema. De acordo com os manuais, o c
 
 `getTipoDeJuros` devolve um destes tipos:
 
-| Tipo            | Significado de `juros`                      |
-| --------------- | ------------------------------------------- |
-| `VALOR_POR_DIA` | valor em reais cobrado por dia de atraso    |
-| `TAXA_MENSAL`   | percentual cobrado ao mês                   |
-| `TAXA_DIARIA`   | percentual cobrado ao dia                   |
-| `ISENTO`        | o boleto não cobra juros                    |
-| `OUTRO`         | código sem um desses tipos como equivalente |
+| Tipo                     | Significado de `juros`                                 |
+| ------------------------ | ------------------------------------------------------ |
+| `VALOR_POR_DIA`          | valor em reais cobrado por dia corrido de atraso       |
+| `VALOR_POR_DIA_UTIL`     | valor em reais cobrado por dia útil de atraso          |
+| `TAXA_MENSAL`            | percentual cobrado ao mês, contando dias corridos      |
+| `TAXA_MENSAL_DIAS_UTEIS` | percentual cobrado ao mês, contando só os dias úteis   |
+| `TAXA_DIARIA`            | percentual cobrado ao dia                              |
+| `ISENTO`                 | o boleto não cobra juros                               |
+| `OUTRO`                  | código sem um desses tipos como equivalente            |
 
 ```ts
 import { getTipoDeJuros } from '@fx55/cnab-lib-ts'
