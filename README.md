@@ -4,7 +4,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 ## Funcionalidades
 
-- Detecção automática de banco, formato (CNAB 240 ou CNAB 400) e quantidade de boletos, a partir do próprio conteúdo do arquivo
+- Detecção automática de banco, formato (CNAB 240 ou CNAB 400), tipo de arquivo (lote de criação ou de validação) e quantidade de boletos, a partir do próprio conteúdo do arquivo
 - Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
 - Leitura dos boletos, com os valores dos campos já convertidos (texto, número e data)
 - Erros de validação tipados, com linha, campo e mensagem
@@ -29,7 +29,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 Os campos do boleto são de dois tipos:
 
-- **Canônicos:** lidos por padrão em toda leitura. Verificar o catálogo em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+- **Canônicos:** lidos por padrão em toda leitura. Verificar o catálogo em [`cnab-remessa-bank-schemas.ts`](src/cnab/bank/cnab-remessa-bank-schemas.ts).
 - **Extras:** lidos só quando passados em `validate` e `read`, no parâmetro `extraFields`. A lib oferece constantes prontas com campos extras, e quem usa a lib também pode escrever os seus (veja [Campos extras](#campos-extras)).
 
 Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de validação e na leitura dos boletos.
@@ -254,14 +254,28 @@ import { openCnabFileFromLines } from '@fx55/cnab-lib-ts'
 const cnabFile = openCnabFileFromLines(lines) // string[]
 ```
 
-Depois de aberto, o `CnabFile` já expõe o banco, o formato e a quantidade de boletos detectados:
+Depois de aberto, o `CnabFile` já expõe o banco, o formato, o tipo de arquivo e a quantidade de boletos detectados:
 
 ```ts
 cnabFile.bank // ex: 'bradesco'
 cnabFile.format // ex: '240'
+cnabFile.fileType // ex: 'remessa'
 cnabFile.boletoCount // ex: 3
 ```
 
+#### Lote de criação e lote de validação
+
+O banco recebe um **lote de criação** (arquivo remessa), com os boletos a registrar, e devolve um **lote de validação** (arquivo retorno), com o que aconteceu com cada um. Os dois são abertos pelas mesmas funções: o tipo é identificado pelo header e fica em `cnabFile.fileType`:
+
+```ts
+import { CnabFileType } from '@fx55/cnab-lib-ts'
+
+if (cnabFile.fileType == CnabFileType.RETORNO) {
+  // lote de validação
+}
+```
+
+Ainda não há bancos com leitura de lote de validação: abrir um arquivo retorno lança `CnabBankSchemaNotFoundException`.
 
 ### Validando o arquivo inteiro
 
@@ -327,7 +341,7 @@ class DataDeEmissaoBoletoField extends CnabField<string> {
 const cnab = cnabFile.read([DataDeEmissaoBoletoField])
 ```
 
-Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
+Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-remessa-bank-schemas.ts`](src/cnab/bank/cnab-remessa-bank-schemas.ts).
 
 ### Tratando erros de validação
 
@@ -351,6 +365,7 @@ Problemas que impedem o processamento do arquivo lançam exceções que estendem
 | ------------------------------------- | ------------------------------------------------- |
 | `CnabMinimumLinesNotReachedException` | O arquivo tem menos de 3 linhas                   |
 | `CnabFormatNotRecognizedException`    | A primeira linha não tem 240 nem 400 caracteres   |
+| `CnabFileTypeNotRecognizedException`  | O tipo no header não é remessa nem retorno        |
 | `CnabBankCodeNotFoundException`       | O código do banco no header não é reconhecido     |
-| `CnabBankSchemaNotFoundException`     | O banco não tem suporte para o formato do arquivo |
+| `CnabBankSchemaNotFoundException`     | Banco sem suporte para o formato/tipo do arquivo  |
 | `CnabInvalidFileException`            | `read()` em um arquivo que não passa na validação |

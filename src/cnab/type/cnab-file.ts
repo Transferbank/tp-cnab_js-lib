@@ -1,21 +1,30 @@
 import { Cnab } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { CnabSchema } from '@cnab/type/cnab-schema'
-import { CNAB_BANK_SCHEMAS } from '@cnab/bank/cnab-bank-schemas'
+import { CNAB_REMESSA_BANK_SCHEMAS } from '@cnab/bank/cnab-remessa-bank-schemas'
+import { CNAB_RETORNO_BANK_SCHEMAS } from '@cnab/bank/cnab-retorno-bank-schemas'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import {
   CnabMinimumLinesNotReachedException,
   CnabFormatNotRecognizedException,
+  CnabFileTypeNotRecognizedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException,
   CnabInvalidFileException
 } from '@cnab/exception/cnab-exception'
 
+const CNAB_BANK_SCHEMAS_BY_FILE_TYPE: Record<CnabFileType, Record<CnabBank, Record<CnabFormat, CnabSchema>>> = {
+  [CnabFileType.REMESSA]: CNAB_REMESSA_BANK_SCHEMAS,
+  [CnabFileType.RETORNO]: CNAB_RETORNO_BANK_SCHEMAS
+}
+
 export class CnabFile {
   public rawLines!: string[]
   public format!: CnabFormat
+  public fileType!: CnabFileType
   public bank!: CnabBank
   public schema!: CnabSchema
   public boletoCount!: number
@@ -32,8 +41,9 @@ export class CnabFile {
     const cnabFile = new CnabFile()
     cnabFile.rawLines = lines
     cnabFile.format = CnabFile.detectFormat(cnabFile.rawLines[0])
+    cnabFile.fileType = CnabFile.detectFileType(cnabFile.rawLines[0], cnabFile.format)
     cnabFile.bank = CnabFile.detectBank(cnabFile.rawLines[0], cnabFile.format)
-    cnabFile.schema = CnabFile.getSchema(cnabFile.bank, cnabFile.format)
+    cnabFile.schema = CnabFile.getSchema(cnabFile.fileType, cnabFile.bank, cnabFile.format)
     cnabFile.boletoCount = cnabFile.schema.countBoletos(cnabFile.rawLines)
     return cnabFile
   }
@@ -46,13 +56,20 @@ export class CnabFile {
   }
 
   private static detectFormat(header: string): CnabFormat {
-    if (header.length === 240) return CnabFormat.CNAB240
-    if (header.length === 400) return CnabFormat.CNAB400
+    if (header.length == 240) return CnabFormat.CNAB240
+    if (header.length == 400) return CnabFormat.CNAB400
     throw new CnabFormatNotRecognizedException(header.length)
   }
 
+  private static detectFileType(header: string, cnabFormat: CnabFormat): CnabFileType {
+    const code = cnabFormat == CnabFormat.CNAB240 ? header.substring(142, 143) : header.substring(1, 2)
+    if (code == '1') return CnabFileType.REMESSA
+    if (code == '2') return CnabFileType.RETORNO
+    throw new CnabFileTypeNotRecognizedException(code, cnabFormat)
+  }
+
   private static detectBank(header: string, cnabFormat: CnabFormat): CnabBank {
-    const code = cnabFormat === CnabFormat.CNAB240
+    const code = cnabFormat == CnabFormat.CNAB240
       ? header.substring(0, 3)
       : header.substring(76, 79)
     const bank = CnabBank.fromCode(code)
@@ -60,9 +77,9 @@ export class CnabFile {
     return bank
   }
 
-  private static getSchema(bank: CnabBank, format: CnabFormat): CnabSchema {
-    const schema = CNAB_BANK_SCHEMAS[bank]?.[format]
-    if (schema == null) throw new CnabBankSchemaNotFoundException(bank, format)
+  private static getSchema(fileType: CnabFileType, bank: CnabBank, format: CnabFormat): CnabSchema {
+    const schema = CNAB_BANK_SCHEMAS_BY_FILE_TYPE[fileType][bank]?.[format]
+    if (schema == null) throw new CnabBankSchemaNotFoundException(bank, format, fileType)
     return schema
   }
 
