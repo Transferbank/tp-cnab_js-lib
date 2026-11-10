@@ -2,13 +2,14 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
+import { isDigitsOnly } from '@cnab/utils/document-parser'
+import { blankIfZeros } from '@cnab/utils/phone-parser'
 
 export abstract class ValorBoletoField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
 
   protected extractRawValue(): string {
-    const rawValue = super.extractRawValue()
-    return /^0+$/.test(rawValue) ? '' : rawValue
+    return blankIfZeros(super.extractRawValue())
   }
 
   protected performValidation(): CnabValidationResult {
@@ -16,7 +17,7 @@ export abstract class ValorBoletoField extends CnabField<number> {
   }
 
   protected parseValue(rawValue: string): number {
-    if (!/^\d+$/.test(rawValue)) {
+    if (!isDigitsOnly(rawValue)) {
       throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
     return parseInt(rawValue, 10) / 100
