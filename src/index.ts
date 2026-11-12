@@ -16,7 +16,7 @@ export { CnabFieldType } from '@cnab/type/cnab-field-type'
 export { CnabBank } from '@cnab/type/cnab-bank'
 export { CnabFormat } from '@cnab/type/cnab-format'
 export { CnabFileType } from '@cnab/type/cnab-file-type'
-export { CnabOcorrencia, CNAB_OCORRENCIA_DESCRIPTIONS, CnabOcorrenciaTable } from '@cnab/type/cnab-ocorrencia'
+export { CnabOcorrencia, CNAB_OCORRENCIA_DESCRIPTIONS } from '@cnab/type/cnab-ocorrencia'
 export { getOcorrencia, getOcorrenciaDescription } from '@cnab/bank/cnab-ocorrencia-tables'
 export { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 export { CNAB_EMAIL_FIELDS } from '@cnab/bank/cnab-email-fields'
@@ -28,8 +28,7 @@ export {
   CnabFileTypeNotRecognizedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException,
-  CnabInvalidFileException,
-  CnabDuplicatedOcorrenciaCodeException
+  CnabInvalidFileException
 } from '@cnab/exception/cnab-exception'
 export {
   CnabValidationError,
