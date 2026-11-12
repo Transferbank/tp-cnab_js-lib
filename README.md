@@ -163,7 +163,7 @@ Alguns manuais tratam a data inválida como não informada: nos juros, Itaú 240
 
 #### Espécie do título
 
-`especie_do_titulo` traz o código do tipo de documento cobrado: duplicata, nota promissória, boleto de proposta etc. Hoje o campo é lido no Banco do Brasil 240 e 400. O mesmo código muda de significado entre bancos e até entre formatos do mesmo banco (no Banco do Brasil, `02` é duplicata mercantil no 240 e nota promissória no 400), por isso use `getEspecieDoTitulo` para traduzi-lo. Um código que não está na tabela do banco é erro de validação. O código "Outros" das tabelas (`99` na maioria dos bancos) e um código fora da tabela são traduzidos como `OUTRO`.
+`especie_do_titulo` traz o código do tipo de documento cobrado: duplicata, nota promissória, boleto de proposta etc. Hoje o campo é lido no Banco do Brasil 240 e 400. O mesmo código muda de significado entre bancos e até entre formatos do mesmo banco (no Banco do Brasil, `02` é duplicata mercantil no 240 e nota promissória no 400), por isso use `getEspecieDoTitulo` para traduzi-lo. O campo é obrigatório: vazio ou com um código que não está na tabela do banco, é erro de validação. O código "Outros" das tabelas (`99` na maioria dos bancos) e um código fora da tabela são traduzidos como `OUTRO`.
 
 ```ts
 import { getEspecieDoTitulo } from '@fx55/cnab-lib-ts'
