@@ -16,7 +16,7 @@ import { SICOOB_CNAB400_OCORRENCIA_TABLE } from '@cnab/bank/sicoob/cnab/cnab400/
 import { BANCO_DO_BRASIL_CNAB240_OCORRENCIA_TABLE } from '@cnab/bank/banco-do-brasil/cnab/cnab240/ocorrencia-table'
 import { BANCO_DO_BRASIL_CNAB400_OCORRENCIA_TABLE } from '@cnab/bank/banco-do-brasil/cnab/cnab400/ocorrencia-table'
 
-export const CNAB_OCORRENCIA_TABLES: Partial<Record<CnabBank, Partial<Record<CnabFormat, CnabOcorrenciaTable>>>> = {
+export const CNAB_OCORRENCIA_TABLES: Record<CnabBank, Record<CnabFormat, CnabOcorrenciaTable>> = {
   [CnabBank.BRADESCO]: {
     [CnabFormat.CNAB240]: BRADESCO_CNAB240_OCORRENCIA_TABLE,
     [CnabFormat.CNAB400]: BRADESCO_CNAB400_OCORRENCIA_TABLE
@@ -47,14 +47,10 @@ export const CNAB_OCORRENCIA_TABLES: Partial<Record<CnabBank, Partial<Record<Cna
   }
 }
 
-export function getOcorrencia(bank: CnabBank, format: CnabFormat, code: string): CnabOcorrencia | null {
-  const table = CNAB_OCORRENCIA_TABLES[bank]?.[format]
-  if (table == null) return null
-  return findOcorrencia(table, code)?.ocorrencia ?? CnabOcorrencia.OUTRA
+export function getOcorrencia(bank: CnabBank, format: CnabFormat, code: string): CnabOcorrencia {
+  return findOcorrencia(CNAB_OCORRENCIA_TABLES[bank][format], code)?.ocorrencia ?? CnabOcorrencia.OUTRA
 }
 
 export function getOcorrenciaDescription(bank: CnabBank, format: CnabFormat, code: string): string | null {
-  const table = CNAB_OCORRENCIA_TABLES[bank]?.[format]
-  if (table == null) return null
-  return findOcorrencia(table, code)?.description ?? null
+  return findOcorrencia(CNAB_OCORRENCIA_TABLES[bank][format], code)?.description ?? null
 }
