@@ -87,7 +87,10 @@ export const ITAU_CNAB400_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
     '87': 'Tarifa SMS Cobrança Ativa Eletrônica',
     '88': 'Tarifa Mensal por Boleto (até 03 envios) Cobrança Ativa Eletrônica',
     '89': 'Tarifa Mensal E-mail Cobrança Ativa Eletrônica',
-    '90': 'Tarifa Mensal SMS Cobrança Ativa Eletrônica'
+    '90': 'Tarifa Mensal SMS Cobrança Ativa Eletrônica',
+    '91': 'Tarifa Mensal de Exclusão de Entrada de Negativação Expressa',
+    '92': 'Tarifa Mensal de Cancelamento de Negativação Expressa',
+    '93': 'Tarifa Mensal de Exclusão de Negativação Expressa por Liquidação'
   },
   [CnabOcorrencia.NEGATIVACAO]: {
     '74': 'Instrução de Negativação Expressa Rejeitada',

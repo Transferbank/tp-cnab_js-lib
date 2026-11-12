@@ -9,13 +9,13 @@ export const SICOOB_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
   },
   [CnabOcorrencia.LIQUIDACAO]: {
     '06': 'Liquidação',
-    '15': 'Franco de Pagamento',
     '17': 'Liquidação Após Baixa ou Liquidação Título Não Registrado',
     '45': 'Título pago com cheque compensado'
   },
   [CnabOcorrencia.BAIXA]: {
     '05': 'Transferência de Carteira/Baixa',
     '09': 'Baixa',
+    '15': 'Franco de Pagamento',
     '25': 'Protestado e Baixado (Baixa por Ter Sido Protestado)',
     '54': 'Confirmação da Instrução de Baixa/Cancelamento de Título Negativado sem Protesto'
   },

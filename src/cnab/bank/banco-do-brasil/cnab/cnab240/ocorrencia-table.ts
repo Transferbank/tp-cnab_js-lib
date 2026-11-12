@@ -9,12 +9,12 @@ export const BANCO_DO_BRASIL_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
   },
   [CnabOcorrencia.LIQUIDACAO]: {
     '06': 'Liquidação',
-    '15': 'Franco de Pagamento',
     '17': 'Liquidação Após Baixa ou Liquidação Título Não Registrado'
   },
   [CnabOcorrencia.BAIXA]: {
     '05': 'Transferência de Carteira/Baixa',
-    '09': 'Baixa'
+    '09': 'Baixa',
+    '15': 'Franco de Pagamento'
   },
   [CnabOcorrencia.ESTORNO]: {
     '44': 'Título pago com cheque devolvido'

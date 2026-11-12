@@ -71,7 +71,13 @@ export const ITAU_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
     '62': 'Débito Mensal de Tarifa - Aviso de Movimentação de Títulos (2154)',
     '85': 'Tarifa por Boleto (até 03 envios) Cobrança Ativa Eletrônica',
     '86': 'Tarifa E-mail Cobrança Ativa Eletrônica',
-    '87': 'Tarifa SMS Cobrança Ativa Eletrônica'
+    '87': 'Tarifa SMS Cobrança Ativa Eletrônica',
+    '88': 'Tarifa Mensal por Boleto (até 03 envios) Cobrança Ativa Eletrônica',
+    '89': 'Tarifa Mensal E-mail Cobrança Ativa Eletrônica',
+    '90': 'Tarifa Mensal SMS Cobrança Ativa Eletrônica',
+    '91': 'Tarifa Mensal de Exclusão de Entrada em Negativação Expressa',
+    '92': 'Tarifa Mensal de Cancelamento de Negativação Expressa',
+    '93': 'Tarifa Mensal de Exclusão/Cancelamento de Negativação Expressa por Liquidação'
   },
   [CnabOcorrencia.NEGATIVACAO]: {
     '74': 'Instrução de Negativação Expressa Rejeitada',
@@ -81,7 +87,8 @@ export const ITAU_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
     '79': 'Negativação Expressa Informacional',
     '80': 'Confirmação de Entrada em Negativação Expressa - Tarifa',
     '82': 'Confirmação do Cancelamento de Negativação Expressa - Tarifa',
-    '83': 'Confirmação da Exclusão/Cancelamento da Negativação Expressa por Liquidação - Tarifa'
+    '83': 'Confirmação da Exclusão/Cancelamento da Negativação Expressa por Liquidação - Tarifa',
+    '94': 'Confirma Recebimento de Instrução de Não Negativar'
   },
   [CnabOcorrencia.INFORMATIVO]: {
     '11': 'Em Ser (só no retorno mensal)',
