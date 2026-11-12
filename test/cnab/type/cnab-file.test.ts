@@ -185,6 +185,7 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000010',
+          especie_do_titulo: '01',
           juros: 0.09
         }
       }),
@@ -200,6 +201,7 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'SAO PAULO',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000020',
+          especie_do_titulo: '01',
           juros: 0.19,
           codigo_de_multa: '2',
           multa: 3
@@ -216,7 +218,8 @@ describe('cnab-file', (): void => {
           cep_do_sacado: '01234567',
           cidade_do_sacado: 'CAMPINAS',
           uf_do_sacado: 'SP',
-          nosso_numero: '109000000030'
+          nosso_numero: '109000000030',
+          especie_do_titulo: '01'
         }
       }),
       new CnabBoleto({
@@ -231,6 +234,7 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'CAMPINAS',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000040',
+          especie_do_titulo: '01',
           codigo_de_multa: '2',
           multa: 3
         }
@@ -259,6 +263,7 @@ describe('cnab-file', (): void => {
         cidade_do_sacado: 'VARZEA ALEGRE',
         uf_do_sacado: 'CE',
         nosso_numero: '10377333',
+        especie_do_titulo: '01',
         juros: 6.76,
         codigo_de_multa: '2',
         multa: 2.7
@@ -733,9 +738,21 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', CnabBank.BANCODOBRASIL, CnabFormat.CNAB240, '02'],
-    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', CnabBank.BANCODOBRASIL, CnabFormat.CNAB400, '01']
-  ])('given document file %s when reading the first boleto then identifies its especie do titulo', (examplePath: string, bank: CnabBank, format: CnabFormat, expectedCodigo: string): void => {
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '01', CnabEspecieDoTitulo.CHEQUE],
+    ['caixa/cnab240/caixa_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['itau/cnab240/itau_cnab_240.txt', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['santander/cnab240/santander_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', '03', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL_POR_INDICACAO],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['caixa/cnab400/caixa_cnab_400.REM', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['itau/cnab400/ITAU_cnab_400.REM', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['santander/cnab400/santander_cnab_400.REM', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 'A', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL_POR_INDICACAO]
+  ])('given document file %s when reading the first boleto then identifies its especie do titulo', (examplePath: string, expectedCodigo: string, expectedEspecie: CnabEspecieDoTitulo): void => {
     // Given
     const cnabFile = openExample(examplePath)
 
@@ -744,7 +761,7 @@ describe('cnab-file', (): void => {
 
     // Then
     expect(boleto.fields.especie_do_titulo).toBe(expectedCodigo)
-    expect(getEspecieDoTitulo(bank, format, boleto.fields.especie_do_titulo as string)).toBe(CnabEspecieDoTitulo.DUPLICATA_MERCANTIL)
+    expect(getEspecieDoTitulo(cnabFile.bank, cnabFile.format, boleto.fields.especie_do_titulo as string)).toBe(expectedEspecie)
   })
 
   it.each([
