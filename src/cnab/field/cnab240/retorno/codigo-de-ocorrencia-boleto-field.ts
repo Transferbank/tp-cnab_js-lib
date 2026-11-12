@@ -3,6 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { isDigitsOnly } from '@cnab/utils/document-parser'
 
 export class CodigoDeOcorrenciaBoletoField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -15,7 +16,7 @@ export class CodigoDeOcorrenciaBoletoField extends CnabField<string> {
 
   protected performValidation(): CnabValidationResult {
     const value = this.value
-    const isValid = value != null && /^\d{2}$/.test(value)
+    const isValid = value != null && value.length == 2 && isDigitsOnly(value)
     const errors = []
 
     if (!isValid) {
