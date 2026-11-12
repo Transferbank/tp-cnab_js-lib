@@ -747,10 +747,13 @@ describe('cnab-file', (): void => {
     expect(getEspecieDoTitulo(bank, format, boleto.fields.especie_do_titulo as string)).toBe(CnabEspecieDoTitulo.DUPLICATA_MERCANTIL)
   })
 
-  it('given banco do brasil cnab400 boleto with an especie outside the table when reading then rejects the file', (): void => {
+  it.each([
+    ['an especie outside the table', '99'],
+    ['a blank especie', '  ']
+  ])('given banco do brasil cnab400 boleto with %s when reading then rejects the file', (_: string, especie: string): void => {
     // Given
     const lines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'))
-      .map((line: string) => (line[0] == '7' ? replaceLineRange(line, [148, 149], '99') : line))
+      .map((line: string) => (line[0] == '7' ? replaceLineRange(line, [148, 149], especie) : line))
     const cnabFile = CnabFile.fromLines(lines)
 
     // When / Then
