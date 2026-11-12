@@ -9,7 +9,6 @@ export const BRADESCO_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
   },
   [CnabOcorrencia.LIQUIDACAO]: {
     '06': 'Liquidação',
-    '15': 'Franco de Pagamento (não tratado pelo banco)',
     '17': 'Liquidação Após Baixa ou Liquidação Título Não Registrado',
     '45': 'Título Pago com Cheque Compensado',
     '66': 'Título Baixado por Pagamento via Pix'
@@ -17,6 +16,7 @@ export const BRADESCO_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
   [CnabOcorrencia.BAIXA]: {
     '05': 'Transferência de Carteira/Baixa (não tratado pelo banco)',
     '09': 'Baixa',
+    '15': 'Franco de Pagamento (não tratado pelo banco)',
     '25': 'Protestado e Baixado (Baixa por Ter Sido Protestado)',
     '54': 'Confirmação da Instrução de Baixa de Título Negativado sem Protesto'
   },
