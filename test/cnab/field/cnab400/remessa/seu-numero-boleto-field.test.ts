@@ -4,8 +4,8 @@ import { describe, it, expect } from '@jest/globals'
 import { FieldTestCase, findFirstCnab400RecordLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
 import { SeuNumeroBoletoField } from '@cnab/field/cnab400/remessa/seu-numero-boleto-field'
-import { SeuNumeroBoletoField as BancoDoBrasilSeuNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/seu-numero-boleto-field'
-import { SeuNumeroRegistro5BoletoField as BancoDoBrasilSeuNumeroRegistro5BoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/seu-numero-registro-5-boleto-field'
+import { SeuNumeroBoletoField as BancoDoBrasilSeuNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/remessa/seu-numero-boleto-field'
+import { SeuNumeroRegistro5BoletoField as BancoDoBrasilSeuNumeroRegistro5BoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/remessa/seu-numero-registro-5-boleto-field'
 
 const cases: FieldTestCase[] = [
   [

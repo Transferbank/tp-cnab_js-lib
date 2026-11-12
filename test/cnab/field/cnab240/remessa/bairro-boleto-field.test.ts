@@ -6,7 +6,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { CnabFieldMinLengthError } from '@cnab/type/cnab-validation-error'
 import { BairroBoletoField } from '@cnab/field/cnab240/remessa/bairro-boleto-field'
-import { BairroBoletoField as BancoDoBrasilBairroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/bairro-boleto-field'
+import { BairroBoletoField as BancoDoBrasilBairroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/remessa/bairro-boleto-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange

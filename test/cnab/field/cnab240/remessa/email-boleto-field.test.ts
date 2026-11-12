@@ -4,10 +4,10 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { EmailBoletoField } from '@cnab/field/cnab240/remessa/email-boleto-field'
-import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/email-boleto-field'
-import { EmailBoletoField as BradescoEmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/email-boleto-field'
-import { EmailSegmentoSBoletoField as BancoDoBrasilEmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-s-boleto-field'
-import { EmailSegmentoYBoletoField as BancoDoBrasilEmailSegmentoYBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-y-boleto-field'
+import { EmailBoletoField as CaixaEmailBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/remessa/email-boleto-field'
+import { EmailBoletoField as BradescoEmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/email-boleto-field'
+import { EmailSegmentoSBoletoField as BancoDoBrasilEmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/remessa/email-segmento-s-boleto-field'
+import { EmailSegmentoYBoletoField as BancoDoBrasilEmailSegmentoYBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/remessa/email-segmento-y-boleto-field'
 
 // Os testes partem das linhas reais dos arquivos de exemplo. Os casos inválidos trocam só o
 //  campo testado, porque os arquivos de exemplo só têm dados válidos.

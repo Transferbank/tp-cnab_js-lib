@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab400RecordLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { CelularBoletoField as CaixaCelularBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/celular-boleto-field'
+import { CelularBoletoField as CaixaCelularBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/remessa/celular-boleto-field'
 
 describe('CaixaCelularBoletoField (record 3)', (): void => {
   const lines = readExampleLines(path.join(resPath(), 'caixa/cnab400/remessa/caixa_cnab_400.REM'))

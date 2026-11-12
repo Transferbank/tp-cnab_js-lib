@@ -1,0 +1,7 @@
+export { CelularBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/celular-boleto-field'
+export { DddBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/ddd-boleto-field'
+export { EmailBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/email-boleto-field'
+export { ParcelaBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/parcela-boleto-field'
+export { SeuNumeroBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/seu-numero-boleto-field'
+export { TotalDeParcelasBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/total-de-parcelas-boleto-field'
+export { UsoDaEmpresaBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/uso-da-empresa-boleto-field'
