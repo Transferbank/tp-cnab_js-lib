@@ -19,6 +19,8 @@ import { CNAB_DATA_DE_JUROS_FIELDS } from '@cnab/bank/cnab-juros-fields'
 import { CNAB_DATA_DE_MULTA_FIELDS } from '@cnab/bank/cnab-multa-fields'
 import { getTipoDeMulta } from '@cnab/bank/cnab-tipo-de-multa-tables'
 import { CnabTipoDeMulta } from '@cnab/type/cnab-tipo-de-multa'
+import { getEspecieDoTitulo } from '@cnab/bank/cnab-especie-do-titulo-tables'
+import { CnabEspecieDoTitulo } from '@cnab/type/cnab-especie-do-titulo'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function openExample(examplePath: string): CnabFile {
@@ -728,6 +730,31 @@ describe('cnab-file', (): void => {
 
     // When / Then
     expect(() => cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS)).toThrow(CnabInvalidFileException)
+  })
+
+  it.each([
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', CnabBank.BANCODOBRASIL, CnabFormat.CNAB240, '02'],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', CnabBank.BANCODOBRASIL, CnabFormat.CNAB400, '01']
+  ])('given document file %s when reading then reads the especie do titulo', (examplePath: string, bank: CnabBank, format: CnabFormat, expectedCodigo: string): void => {
+    // Given
+    const cnabFile = openExample(examplePath)
+
+    // When
+    const boleto = cnabFile.read().boletos[0]
+
+    // Then
+    expect(boleto.fields.especie_do_titulo).toBe(expectedCodigo)
+    expect(getEspecieDoTitulo(bank, format, boleto.fields.especie_do_titulo as string)).toBe(CnabEspecieDoTitulo.DUPLICATA_MERCANTIL)
+  })
+
+  it('given banco do brasil cnab400 boleto with an especie outside the table when reading then rejects the file', (): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'))
+      .map((line: string) => (line[0] == '7' ? replaceLineRange(line, [148, 149], '99') : line))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When / Then
+    expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
   })
 
   it.each([

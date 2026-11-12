@@ -52,6 +52,7 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `juros`               | Valor ou taxa de juros         | `number` |
 | `codigo_de_multa`     | Código de multa do banco       | `string` |
 | `multa`               | Valor ou percentual de multa   | `number` |
+| `especie_do_titulo`   | Código da espécie do título    | `string` |
 
 #### Campos por banco e formato
 
@@ -159,6 +160,19 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros c
 | Sicredi 400         | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
 
 Alguns manuais tratam a data inválida como não informada: nos juros, Itaú 240 e Sicredi 240 e 400; na multa, Santander 240 e Sicredi 240 e 400. Nesses layouts, o campo fica de fora do boleto e vale a regra da data vazia. Nos outros, a data inválida é erro de validação.
+
+#### Espécie do título
+
+`especie_do_titulo` traz o código do tipo de documento cobrado: duplicata, nota promissória, boleto de proposta etc. Hoje o campo é lido no Banco do Brasil 240 e 400. O mesmo código muda de significado entre bancos e até entre formatos do mesmo banco (no Banco do Brasil, `02` é duplicata mercantil no 240 e nota promissória no 400), por isso use `getEspecieDoTitulo` para traduzi-lo. Um código que não está na tabela do banco é erro de validação. O código "Outros" das tabelas (`99` na maioria dos bancos) e um código fora da tabela são traduzidos como `OUTRO`.
+
+```ts
+import { getEspecieDoTitulo } from '@fx55/cnab-lib-ts'
+
+for (const boleto of cnabFile.read().boletos) {
+  const codigo = (boleto.fields.especie_do_titulo as string | undefined) ?? null
+  getEspecieDoTitulo(cnabFile.bank, cnabFile.format, codigo) // ex: CnabEspecieDoTitulo.DUPLICATA_MERCANTIL
+}
+```
 
 ### Campos extras da lib
 
