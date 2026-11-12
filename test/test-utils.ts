@@ -43,6 +43,10 @@ export function findFirstCnab240SegmentLine(
   return lines.find(line => line[7] == recordType && line[13] == segment && line.startsWith(optionalRecordCode, 17))
 }
 
+export function cnab240RetornoLine(recordType: string, segment: string = ' '): string {
+  return '7560001'.concat(recordType, '00001', segment).padEnd(240, ' ')
+}
+
 export function findFirstCnab400RecordLine(lines: string[], recordType: string): string | undefined {
   return lines.find(line => line.startsWith(recordType))
 }
