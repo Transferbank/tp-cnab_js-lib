@@ -10,13 +10,15 @@ export class DataDeJurosBoletoField extends CnabField<Date> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'data_de_juros'
   readonly range: [number, number] = [119, 126]
+  protected readonly invalidDateIsAbsent: boolean = false
 
   shouldValidate(): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(this.rawLine)
   }
 
   protected extractRawValue(): string {
-    return blankIfZeros(super.extractRawValue())
+    const rawValue = blankIfZeros(super.extractRawValue())
+    return this.invalidDateIsAbsent && parseDateDDMMAAAA(rawValue) == null ? '' : rawValue
   }
 
   protected performValidation(): CnabValidationResult {

@@ -1,3 +1,4 @@
+export { JurosBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/juros-boleto-field'
 export { ParcelaBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/parcela-boleto-field'
 export { SeuNumeroBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/seu-numero-boleto-field'
 export { TotalDeParcelasBoletoField } from '@cnab/bank/santander/cnab/cnab400/field/total-de-parcelas-boleto-field'
