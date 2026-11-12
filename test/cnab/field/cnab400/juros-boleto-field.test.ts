@@ -4,7 +4,7 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab400RecordLine, getFieldRange, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { JurosBoletoField } from '@cnab/field/cnab400/juros-boleto-field'
 
-const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/ITAU_cnab_400.REM')), '1')
+const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'itau/cnab400/remessa/ITAU_cnab_400.REM')), '1')
 assert(line != null, 'Linha não encontrada')
 
 describe('JurosBoletoField', (): void => {

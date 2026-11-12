@@ -20,7 +20,7 @@ import { BairroBoletoField } from '@cnab/field/cnab400/bairro-boleto-field'
 describe('BairroBoletoField', (): void => {
   describe('shouldValidate', (): void => {
     describe('para os bancos com registro de detalhe padrao (comeca com 1)', (): void => {
-      const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
+      const examplePath = 'caixa/cnab400/remessa/caixa_cnab_400.REM'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -49,7 +49,7 @@ describe('BairroBoletoField', (): void => {
     })
 
     describe('para o Banco do Brasil, cujo registro de detalhe comeca com 7', (): void => {
-      const examplePath = 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'
+      const examplePath = 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM'
 
       describe.each([
         { recordType: '0', expectedShouldValidate: false },
@@ -88,11 +88,11 @@ describe('BairroBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: BairroBoletoField(315, 326, '7'), examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'JARDIM UNIVE' },
-      { FieldClass: BairroBoletoField(), examplePath: 'caixa/cnab400/caixa_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField(), examplePath: 'itau/cnab400/ITAU_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField(), examplePath: 'santander/cnab400/santander_cnab_400.REM', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField(312, 326), examplePath: 'sicoob/cnab400/sicoob_cnab_400.REM', expectedFirstValue: 'CENTRO' }
+      { FieldClass: BairroBoletoField(315, 326, '7'), examplePath: 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM', expectedFirstValue: 'JARDIM UNIVE' },
+      { FieldClass: BairroBoletoField(), examplePath: 'caixa/cnab400/remessa/caixa_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField(), examplePath: 'itau/cnab400/remessa/ITAU_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField(), examplePath: 'santander/cnab400/remessa/santander_cnab_400.REM', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField(312, 326), examplePath: 'sicoob/cnab400/remessa/sicoob_cnab_400.REM', expectedFirstValue: 'CENTRO' }
     ])(
       'given detail lines with valid bairro ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
@@ -122,7 +122,7 @@ describe('BairroBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'caixa/cnab400/caixa_cnab_400.REM'
+    const examplePath = 'caixa/cnab400/remessa/caixa_cnab_400.REM'
 
     it('given detail line with blank bairro when validating then returns null value and field error', (): void => {
       // Given

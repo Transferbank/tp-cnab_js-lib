@@ -7,7 +7,7 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CelularBoletoField as CaixaCelularBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/celular-boleto-field'
 
 describe('CaixaCelularBoletoField (record 3)', (): void => {
-  const lines = readExampleLines(path.join(resPath(), 'caixa/cnab400/caixa_cnab_400.REM'))
+  const lines = readExampleLines(path.join(resPath(), 'caixa/cnab400/remessa/caixa_cnab_400.REM'))
   const registro3 = findFirstCnab400RecordLine(lines, '3')
   assert(registro3 != null, 'Registro 3 não encontrado')
   const range: [number, number] = [106, 114]

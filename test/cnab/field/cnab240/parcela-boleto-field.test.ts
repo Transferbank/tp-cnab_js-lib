@@ -7,7 +7,7 @@ import { TotalDeParcelasBoletoField } from '@cnab/field/cnab240/total-de-parcela
 import { SeuNumeroBoletoField } from '@cnab/field/cnab240/seu-numero-boleto-field'
 import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab240/uso-da-empresa-boleto-field'
 
-const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
+const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'))
 
 function lineWith(usoDaEmpresa: string, seuNumero: string): string {
   const line = findFirstCnab240SegmentLine(lines, 'P')

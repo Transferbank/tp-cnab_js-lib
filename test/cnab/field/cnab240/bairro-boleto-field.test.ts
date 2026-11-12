@@ -16,7 +16,7 @@ type BairroFieldClass = new (rawLine: string, lineNumber: number) => BairroBolet
 
 describe('BairroBoletoField', (): void => {
   describe('shouldValidate', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     describe.each([
       { segment: 'P', expectedShouldValidate: false },
@@ -54,12 +54,12 @@ describe('BairroBoletoField', (): void => {
 
   describe('value and validate', (): void => {
     it.each([
-      { FieldClass: BancoDoBrasilBairroBoletoField, examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField, examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField, examplePath: 'caixa/cnab240/caixa_cnab_240.txt', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField, examplePath: 'itau/cnab240/itau_cnab_240.txt', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField, examplePath: 'santander/cnab240/santander_cnab_240.txt', expectedFirstValue: 'CENTRO' },
-      { FieldClass: BairroBoletoField, examplePath: 'sicoob/cnab240/sicoob_cnab_240.txt', expectedFirstValue: 'CENTRO' }
+      { FieldClass: BancoDoBrasilBairroBoletoField, examplePath: 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField, examplePath: 'bradesco/cnab240/remessa/bradesco_cnab_240.txt', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField, examplePath: 'caixa/cnab240/remessa/caixa_cnab_240.txt', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField, examplePath: 'itau/cnab240/remessa/itau_cnab_240.txt', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField, examplePath: 'santander/cnab240/remessa/santander_cnab_240.txt', expectedFirstValue: 'CENTRO' },
+      { FieldClass: BairroBoletoField, examplePath: 'sicoob/cnab240/remessa/sicoob_cnab_240.txt', expectedFirstValue: 'CENTRO' }
     ])(
       'given segment Q lines with valid bairro ($examplePath) when reading value and validating then accepts all lines',
       ({ FieldClass, examplePath, expectedFirstValue }: {
@@ -90,7 +90,7 @@ describe('BairroBoletoField', (): void => {
     it('given Bradesco segment Q line with 15-char bairro when reading value then uses the full range', (): void => {
       // Given: "VILA INDUSTRIAL" tem exatamente os 15 caracteres do range - sem nota de
       // truncagem pro Bradesco (diferente do BB), entao o range completo e usado.
-      const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+      const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const fields = createFieldsFromLines(
         filterValidatableLines(lines, BairroBoletoField),
@@ -104,7 +104,7 @@ describe('BairroBoletoField', (): void => {
     it('given Banco do Brasil segment Q line with bairro longer than the treated range when reading value then truncates to 12 characters', (): void => {
       // Given: nota do manual - "São tratadas somente 12 posições, da posição 114 a 125" -
       // "JARDIM AMERICA" (14 caracteres) é o único bairro do fixture maior que isso.
-      const examplePath = 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'
+      const examplePath = 'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt'
       const lines = readExampleLines(path.join(resPath(), examplePath))
       const qLines = lines.filter((line: string) => line.length >= 14 && line[7] === '3' && line[13] === 'Q')
       const rawLine = qLines[1]
@@ -122,7 +122,7 @@ describe('BairroBoletoField', (): void => {
   })
 
   describe('validate with error', (): void => {
-    const examplePath = 'bradesco/cnab240/bradesco_cnab_240.txt'
+    const examplePath = 'bradesco/cnab240/remessa/bradesco_cnab_240.txt'
 
     it('given segment Q line with blank bairro when validating then returns null value and field error', (): void => {
       // Given

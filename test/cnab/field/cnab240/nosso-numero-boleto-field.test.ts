@@ -13,35 +13,35 @@ const cases: FieldTestCase[] = [
   [
     'Bradesco CNAB240 (classe base)',
     NossoNumeroBoletoField,
-    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'bradesco/cnab240/remessa/bradesco_cnab_240.txt',
     'P',
     '00100000000123450010'
   ],
   [
     'Caixa CNAB240',
     CaixaNossoNumeroBoletoField,
-    'caixa/cnab240/caixa_cnab_240.txt',
+    'caixa/cnab240/remessa/caixa_cnab_240.txt',
     'P',
     '14000000000000001'
   ],
   [
     'Itaú CNAB240',
     ItauNossoNumeroBoletoField,
-    'itau/cnab240/itau_cnab_240.txt',
+    'itau/cnab240/remessa/itau_cnab_240.txt',
     'P',
     '109000000010'
   ],
   [
     'Santander CNAB240',
     SantanderNossoNumeroBoletoField,
-    'santander/cnab240/santander_cnab_240.txt',
+    'santander/cnab240/remessa/santander_cnab_240.txt',
     'P',
     '0000000000019'
   ],
   [
     'Sicredi CNAB240',
     SicrediNossoNumeroBoletoField,
-    'sicredi/cnab240/sicredi_cnab_240.txt',
+    'sicredi/cnab240/remessa/sicredi_cnab_240.txt',
     'P',
     '262000010'
   ]
@@ -75,7 +75,7 @@ describe.each<FieldTestCase>(cases)('%s', (
 describe('NossoNumeroBoletoField', (): void => {
   it('given a nosso número filled with zeros when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt')), 'P')
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'bradesco/cnab240/remessa/bradesco_cnab_240.txt')), 'P')
     assert(line != null, 'Linha não encontrada')
     const field = new NossoNumeroBoletoField(replaceLineRange(line, getFieldRange(NossoNumeroBoletoField), '00000000000000000000'), 5)
 

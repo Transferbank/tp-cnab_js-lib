@@ -12,7 +12,7 @@ describe.each([
   [
     'BradescoCelularBoletoField (segment Y-04 code 03)',
     BradescoCelularBoletoField,
-    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'bradesco/cnab240/remessa/bradesco_cnab_240.txt',
     '03',
     '3',
     [72, 80],
@@ -22,7 +22,7 @@ describe.each([
   [
     'CaixaCelularBoletoField (segment Y-04 code 04)',
     CaixaCelularBoletoField,
-    'caixa/cnab240/caixa_cnab_240.txt',
+    'caixa/cnab240/remessa/caixa_cnab_240.txt',
     '04',
     '3',
     [72, 80],
@@ -32,7 +32,7 @@ describe.each([
   [
     'BancoDoBrasilCelularBoletoField (segment Y-04 with record type 4)',
     BancoDoBrasilCelularBoletoField,
-    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'banco-do-brasil/cnab240/remessa/banco_do_brasil_cnab_240.txt',
     '03',
     '4',
     [72, 79],

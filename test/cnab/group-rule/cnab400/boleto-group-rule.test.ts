@@ -5,12 +5,12 @@ import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-ru
 
 describe('Cnab400BoletoGroupRule', (): void => {
   it.each([
-    ['bradesco/cnab400/bradesco_cnab_400.txt'],
-    ['caixa/cnab400/caixa_cnab_400.REM'],
-    ['itau/cnab400/ITAU_cnab_400.REM'],
-    ['santander/cnab400/santander_cnab_400.REM'],
-    ['sicoob/cnab400/sicoob_cnab_400.REM'],
-    ['sicredi/cnab400/sicredi_cnab_400.REM']
+    ['bradesco/cnab400/remessa/bradesco_cnab_400.txt'],
+    ['caixa/cnab400/remessa/caixa_cnab_400.REM'],
+    ['itau/cnab400/remessa/ITAU_cnab_400.REM'],
+    ['santander/cnab400/remessa/santander_cnab_400.REM'],
+    ['sicoob/cnab400/remessa/sicoob_cnab_400.REM'],
+    ['sicredi/cnab400/remessa/sicredi_cnab_400.REM']
   ])(
     'given doc lines from %s when checking group start then marks only detail lines',
     (examplePath: string): void => {
@@ -30,7 +30,7 @@ describe('Cnab400BoletoGroupRule', (): void => {
 
   it('given doc lines with custom record type when checking group start then marks only lines of that record type', (): void => {
     // Given
-    const examplePath = path.join(resPath(), 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM')
+    const examplePath = path.join(resPath(), 'banco-do-brasil/cnab400/remessa/banco_do_brasil_cnab_400.REM')
     const boletoRecordType = '7'
     const rawLines = readExampleLines(examplePath)
     const expectedGroupStarts = rawLines.map((line: string) => line.startsWith(boletoRecordType))
