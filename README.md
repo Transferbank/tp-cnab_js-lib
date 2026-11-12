@@ -59,25 +59,24 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 - ✅ obrigatório: vazio no arquivo é erro de validação
 - ⚠️ opcional: pode vir vazio; nesse caso o valor é nulo e o campo não aparece em `fields`
 - ❌ inexistente: o layout não tem o campo, e ele nunca aparece em `fields`
-- 🚧 em progresso: o layout tem o campo, mas a leitura ainda não foi implementada; o campo ainda não aparece em `fields`
 - 📌 valor fixo: o layout não tem o campo porque o banco sempre usa o mesmo valor; o campo não aparece em `fields`, e a função de tradução devolve esse valor
 
 | Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número | Código de juros | Juros | Código de multa | Multa | Espécie |
 | ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :---: | :-------------: | :---: | :-----: |
 | Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
 | Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
-| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       📌        |  ⚠️   |   🚧    |
-| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       📌        |  ⚠️   |   🚧    |
-| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
-| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       📌        |  ⚠️   |   ✅    |
+| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       📌        |  ⚠️   |   ✅    |
+| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
 
 #### Juros e multa
 
@@ -164,7 +163,7 @@ Alguns manuais tratam a data inválida como não informada: nos juros, Itaú 240
 
 #### Espécie do título
 
-`especie_do_titulo` traz o código do tipo de documento cobrado: duplicata, nota promissória, boleto de proposta etc. Hoje o campo é lido no Banco do Brasil 240 e 400. O mesmo código muda de significado entre bancos e até entre formatos do mesmo banco (no Banco do Brasil, `02` é duplicata mercantil no 240 e nota promissória no 400), por isso use `getEspecieDoTitulo` para traduzi-lo. O campo é obrigatório: vazio ou com um código que não está na tabela do banco, é erro de validação. O código "Outros" das tabelas (`99` na maioria dos bancos) e um código fora da tabela são traduzidos como `OUTRO`.
+`especie_do_titulo` traz o código do tipo de documento cobrado: duplicata, nota promissória, boleto de proposta etc. No CNAB 240 fica no segmento P de todos os bancos; no CNAB 400, no registro de detalhe, com duas posições, menos no Sicredi, que usa uma letra. O mesmo código muda de significado entre bancos e até entre formatos do mesmo banco (no Banco do Brasil, `02` é duplicata mercantil no 240 e nota promissória no 400), por isso use `getEspecieDoTitulo` para traduzi-lo. O campo é obrigatório: vazio ou com um código que não está na tabela do banco, é erro de validação. O código "Outros" das tabelas (`99` na maioria dos bancos) e um código fora da tabela são traduzidos como `OUTRO`.
 
 ```ts
 import { getEspecieDoTitulo } from '@fx55/cnab-lib-ts'
