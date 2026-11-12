@@ -17,7 +17,21 @@ export class EspecieDoTituloBoletoField extends CnabField<string> {
   protected performValidation(): CnabValidationResult {
     const codigo = this.value
     const { bank, format } = this.constructor as typeof CnabField<string>
-    if (codigo == null || bank == null || format == null) {
+    if (codigo == null) {
+      return {
+        isValid: false,
+        errors: [
+          new CnabGenericFieldError({
+            message: 'Campo espécie do título é obrigatório',
+            lineNumber: this.lineNumber,
+            fieldKey: this.fieldKey,
+            range: this.range
+          })
+        ]
+      }
+    }
+
+    if (bank == null || format == null) {
       return { isValid: true, errors: [] }
     }
 
