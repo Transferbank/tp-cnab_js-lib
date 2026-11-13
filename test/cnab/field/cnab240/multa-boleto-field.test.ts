@@ -22,7 +22,7 @@ describe('MultaBoletoField', (): void => {
 
   it('given the segment R without multa from the example file when reading then returns null and is valid', (): void => {
     // Given
-    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt')), 'R')
+    const line = findFirstCnab240SegmentLine(readExampleLines(path.join(resPath(), 'sicoob/cnab240/sicoob_cnab_240.txt')), 'R')
     assert(line != null, 'Linha não encontrada')
     const field = new MultaBoletoField(line, 5)
 
