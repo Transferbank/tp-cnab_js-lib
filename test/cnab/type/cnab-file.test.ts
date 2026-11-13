@@ -624,4 +624,36 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.multa).toBe(expectedMulta)
     expect(boletoWithoutExtraFields.fields).not.toHaveProperty('data_de_multa')
   })
+
+  it('given banco do brasil cnab240 boleto with zeroed segment R multa when reading then has no multa', (): void => {
+    // Given
+    const cnabFile = openExample('banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt')
+
+    // When
+    const boleto = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos[2]
+
+    // Then
+    expect(boleto.fields).not.toHaveProperty('codigo_de_multa')
+    expect(boleto.fields).not.toHaveProperty('data_de_multa')
+    expect(boleto.fields).not.toHaveProperty('multa')
+  })
+
+  it('given banco do brasil cnab400 boleto without registro 5 de multa when reading then has no multa', (): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'))
+    const multaLines = lines.filter((line: string) => line.startsWith('599'))
+    const linesWithoutSecondMulta = lines.filter((line: string) => line !== multaLines[1])
+    const boletosWithMulta = CnabFile.fromLines(lines).read(CNAB_DATA_DE_MULTA_FIELDS).boletos
+    const cnabFile = CnabFile.fromLines(linesWithoutSecondMulta)
+
+    // When
+    const boletos = cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS).boletos
+
+    // Then
+    expect(boletos[0].fields).toEqual(boletosWithMulta[0].fields)
+    expect(boletos[1].fields).not.toHaveProperty('codigo_de_multa')
+    expect(boletos[1].fields).not.toHaveProperty('data_de_multa')
+    expect(boletos[1].fields).not.toHaveProperty('multa')
+    expect(boletos[2].fields).toEqual(boletosWithMulta[2].fields)
+  })
 })
