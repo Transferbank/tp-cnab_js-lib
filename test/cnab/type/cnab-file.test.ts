@@ -206,7 +206,12 @@ describe('cnab-file', (): void => {
           especie_do_titulo: '01',
           juros: 0.19,
           codigo_de_multa: '2',
-          multa: 3
+          multa: 3,
+          descontos: [
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 15), valor: 9.4 },
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 17), valor: 6.4 },
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 19), valor: 3.4 }
+          ]
         }
       }),
       new CnabBoleto({
@@ -221,7 +226,10 @@ describe('cnab-file', (): void => {
           cidade_do_sacado: 'CAMPINAS',
           uf_do_sacado: 'SP',
           nosso_numero: '109000000030',
-          especie_do_titulo: '01'
+          especie_do_titulo: '01',
+          descontos: [
+            { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 20), valor: 2.6 }
+          ]
         }
       }),
       new CnabBoleto({
@@ -845,6 +853,55 @@ describe('cnab-file', (): void => {
     ]],
     ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [
       { codigo: 'B', tipo: CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO, data: null, valor: 0.5 }
+    ]],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 9.1 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 7.1 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 14), valor: 5.1 }
+    ]],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', 1, [
+      { codigo: '4', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL, data: null, valor: 0.21 }
+    ]],
+    ['caixa/cnab240/caixa_cnab_240.txt', 0, [
+      { codigo: '2', tipo: CnabTipoDeDesconto.PERCENTUAL, data: new Date(2026, 11, 10), valor: 3.3 },
+      { codigo: '2', tipo: CnabTipoDeDesconto.PERCENTUAL, data: new Date(2026, 11, 12), valor: 2.3 }
+    ]],
+    ['caixa/cnab240/caixa_cnab_240.txt', 1, [
+      { codigo: '6', tipo: CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_UTIL, data: null, valor: 0.12 }
+    ]],
+    ['santander/cnab240/santander_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 8.7 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 6.7 }
+    ]],
+    ['santander/cnab240/santander_cnab_240.txt', 1, [
+      { codigo: '3', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO, data: new Date(2027, 0, 20), valor: 0.33 }
+    ]],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 9.9 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 7.9 }
+    ]],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', 1, [
+      { codigo: '5', tipo: CnabTipoDeDesconto.PERCENTUAL_POR_ANTECIPACAO_DIA_CORRIDO, data: null, valor: 0.17 }
+    ]],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 8.2 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 6.3 },
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 14), valor: 4.3 }
+    ]],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', 1, [
+      { codigo: '3', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_CORRIDO, data: null, valor: 0.27 }
+    ]],
+    ['caixa/cnab400/caixa_cnab_400.REM', 0, [
+      { codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 7, 10), valor: 7.7 }
+    ]],
+    ['caixa/cnab400/caixa_cnab_400.REM', 1, [
+      { codigo: '4', tipo: CnabTipoDeDesconto.VALOR_POR_ANTECIPACAO_DIA_UTIL, data: null, valor: 0.19 }
+    ]],
+    ['santander/cnab400/santander_cnab_400.REM', 0, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 5, 15), valor: 6.6 }
+    ]],
+    ['sicoob/cnab400/sicoob_cnab_400.REM', 0, [
+      { codigo: null, tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 7, 10), valor: 5.5 }
     ]]
   ])('given document file %s when reading boleto %i then reads its descontos in file order', (examplePath: string, boletoIndex: number, expectedDescontos: CnabDesconto[]): void => {
     // Given
@@ -878,7 +935,10 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [174, 179] as [number, number], 1]
+    ['sicredi/cnab400/sicredi_cnab_400.REM', 2, [174, 179] as [number, number], 1],
+    ['caixa/cnab240/caixa_cnab_240.txt', 2, [143, 150] as [number, number], 0],
+    ['caixa/cnab400/caixa_cnab_400.REM', 1, [174, 179] as [number, number], 0],
+    ['sicredi/cnab240/sicredi_cnab_240.txt', 2, [143, 150] as [number, number], 0]
   ])('given document file %s with a desconto até a data and empty date when validating then accepts it as the vencimento', (examplePath: string, lineIndex: number, dataRange: [number, number], boletoIndex: number): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), examplePath))
@@ -892,6 +952,27 @@ describe('cnab-file', (): void => {
     // Then
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(boleto.fields.descontos).toContainEqual(expect.objectContaining({ data: null }))
+  })
+
+  it.each([
+    ['caixa/cnab240/caixa_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]],
+    ['caixa/cnab400/caixa_cnab_400.REM', (line: string): boolean => line[0] == '1', [84, 84] as [number, number]],
+    ['santander/cnab240/santander_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]]
+  ])('given document file %s with code 0 and a filled desconto when reading then leaves it out because the manual defines 0 as no desconto', (examplePath: string, isDescontoLine: (line: string) => boolean, codigoRange: [number, number]): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), examplePath))
+    const lineIndex = rawLines.findIndex(isDescontoLine)
+    rawLines[lineIndex] = replaceLineRange(rawLines[lineIndex], codigoRange, '0')
+    const cnabFile = CnabFile.fromLines(rawLines)
+
+    // When
+    const result = cnabFile.validate(true)
+    const boleto = cnabFile.read().boletos[0]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields.descontos ?? []).not.toContainEqual(expect.objectContaining({ codigo: null }))
   })
 
   it('given sicredi cnab400 boleto with desconto 1 and desconto por dia when reading then ignores the desconto por dia', (): void => {
