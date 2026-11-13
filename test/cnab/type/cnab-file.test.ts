@@ -735,7 +735,7 @@ describe('cnab-file', (): void => {
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', CnabBank.BANCODOBRASIL, CnabFormat.CNAB240, '02'],
     ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', CnabBank.BANCODOBRASIL, CnabFormat.CNAB400, '01']
-  ])('given document file %s when reading then reads the especie do titulo', (examplePath: string, bank: CnabBank, format: CnabFormat, expectedCodigo: string): void => {
+  ])('given document file %s when reading the first boleto then identifies its especie do titulo', (examplePath: string, bank: CnabBank, format: CnabFormat, expectedCodigo: string): void => {
     // Given
     const cnabFile = openExample(examplePath)
 
