@@ -7,11 +7,23 @@ import { readExampleLines, resPath } from '@test/test-utils'
 
 describe('cnab-file retorno', (): void => {
   it.each([
-    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', 3, 'Liquidação'],
-    ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', 113, 'Liquidação Normal']
+    ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', 3, '06', 'Liquidação'],
+    ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', 37, '06', 'Liquidação Normal'],
+    ['caixa/cnab240/retorno/caixa_cnab_240.txt', 3, '06', 'Liquidação'],
+    ['caixa/cnab400/retorno/caixa_cnab_400.RET', 10, '21', 'Liquidação'],
+    ['itau/cnab240/retorno/itau_cnab_240.txt', 4, '06', 'Liquidação Normal'],
+    ['itau/cnab400/retorno/ITAU_cnab_400.RET', 319, '06', 'Liquidação Normal'],
+    ['santander/cnab240/retorno/santander_cnab_240.txt', 3, '06', 'Liquidação'],
+    ['santander/cnab400/retorno/santander_cnab_400.RET', 128, '06', 'Liquidação do Boleto Efetivada'],
+    ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', 3, '06', 'Liquidação'],
+    ['sicredi/cnab400/retorno/sicredi_cnab_400.RET', 3, '06', 'Liquidação normal'],
+    ['sicoob/cnab240/retorno/sicoob_cnab_240.txt', 3, '06', 'Liquidação'],
+    ['sicoob/cnab400/retorno/sicoob_cnab_400.RET', 10, '06', 'Liquidação Normal'],
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', 3, '06', 'Liquidação'],
+    ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', 113, '06', 'Liquidação Normal']
   ])(
     'given retorno file %s when reading then translates the ocorrência of each boleto',
-    (examplePath: string, expectedEntradas: number, expectedLiquidationDescription: string): void => {
+    (examplePath: string, expectedEntradas: number, liquidationCode: string, expectedLiquidationDescription: string): void => {
       // Given
       const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
 
@@ -29,7 +41,7 @@ describe('cnab-file retorno', (): void => {
         [CnabOcorrencia.LIQUIDACAO]: 2,
         [CnabOcorrencia.BAIXA]: 1
       })
-      expect(getOcorrenciaDescription(cnabFile.bank, cnabFile.format, '06')).toBe(expectedLiquidationDescription)
+      expect(getOcorrenciaDescription(cnabFile.bank, cnabFile.format, liquidationCode)).toBe(expectedLiquidationDescription)
     }
   )
 })
