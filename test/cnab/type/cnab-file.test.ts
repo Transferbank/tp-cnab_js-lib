@@ -748,12 +748,14 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['an especie outside the table', '99'],
-    ['a blank especie', '  ']
-  ])('given banco do brasil cnab400 boleto with %s when reading then rejects the file', (_: string, especie: string): void => {
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'an especie outside the table', (line: string): boolean => line[7] == '3' && line[13] == 'P', [107, 108], '99'],
+    ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'a blank especie', (line: string): boolean => line[7] == '3' && line[13] == 'P', [107, 108], '  '],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'an especie outside the table', (line: string): boolean => line[0] == '7', [148, 149], '99'],
+    ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'a blank especie', (line: string): boolean => line[0] == '7', [148, 149], '  ']
+  ] as Array<[string, string, (line: string) => boolean, [number, number], string]>)('given document file %s with %s when reading then rejects the file', (examplePath: string, _: string, isEspecieLine: (line: string) => boolean, range: [number, number], especie: string): void => {
     // Given
-    const lines = readExampleLines(path.join(resPath(), 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM'))
-      .map((line: string) => (line[0] == '7' ? replaceLineRange(line, [148, 149], especie) : line))
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+      .map((line: string) => (isEspecieLine(line) ? replaceLineRange(line, range, especie) : line))
     const cnabFile = CnabFile.fromLines(lines)
 
     // When / Then
