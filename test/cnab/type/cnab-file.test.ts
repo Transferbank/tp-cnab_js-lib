@@ -730,15 +730,23 @@ describe('cnab-file', (): void => {
     expect(() => cnabFile.read(CNAB_DATA_DE_MULTA_FIELDS)).toThrow(CnabInvalidFileException)
   })
 
-  it('given caixa cnab240 boleto with codigo de multa 0 when reading then resolves it as isento', (): void => {
+  it.each([
+    ['bradesco/cnab400/bradesco_cnab_400.txt', (line: string): boolean => line[0] == '1', [66, 66], 0],
+    ['caixa/cnab240/caixa_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'R', [66, 66], 0],
+    ['itau/cnab240/itau_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'R', [66, 66], 1],
+    ['itau/cnab400/ITAU_cnab_400.REM', (line: string): boolean => line[0] == '2', [2, 2], 0],
+    ['sicoob/cnab240/sicoob_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'R', [66, 66], 0]
+  ] as Array<[string, (line: string) => boolean, [number, number], number]>)('given document file %s with codigo de multa 0 when reading then resolves it as isento', (examplePath: string, isMultaLine: (line: string) => boolean, range: [number, number], boletoIndex: number): void => {
     // Given
-    const cnabFile = openExample('caixa/cnab240/caixa_cnab_240.txt')
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+      .map((line: string) => (isMultaLine(line) ? replaceLineRange(line, range, '0') : line))
+    const cnabFile = CnabFile.fromLines(lines)
 
     // When
-    const boleto = cnabFile.read().boletos[1]
+    const boleto = cnabFile.read().boletos[boletoIndex]
 
     // Then
     expect(boleto.fields.codigo_de_multa).toBe('0')
-    expect(getTipoDeMulta(CnabBank.CAIXA, CnabFormat.CNAB240, boleto.fields.codigo_de_multa as string)).toBe(CnabTipoDeMulta.ISENTO)
+    expect(getTipoDeMulta(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_multa as string)).toBe(CnabTipoDeMulta.ISENTO)
   })
 })
