@@ -2,6 +2,7 @@ export { CodigoDeMultaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab40
 export { DataDeMultaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/data-de-multa-boleto-field'
 export { DocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/documento-sacado-boleto-field'
 export { EmailBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/email-boleto-field'
+export { EspecieDoTituloBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/especie-do-titulo-boleto-field'
 export { JurosBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/juros-boleto-field'
 export { MultaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/multa-boleto-field'
 export { NossoNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/nosso-numero-boleto-field'

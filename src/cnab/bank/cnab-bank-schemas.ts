@@ -249,6 +249,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab240.CidadeBoletoField,
           Cnab240.UfBoletoField,
           optional(Cnab240.NossoNumeroBoletoField),
+          Cnab240BancoDoBrasil.EspecieDoTituloBoletoField,
           optional(Cnab240BancoDoBrasil.CodigoDeJurosBoletoField),
           optional(Cnab240BancoDoBrasil.JurosBoletoField),
           optional(Cnab240BancoDoBrasil.CodigoDeMultaBoletoField),
@@ -283,6 +284,7 @@ function registerCnabSchemas(): CnabSchema[] {
           Cnab400.CidadeBoletoField('7'),
           Cnab400.UfBoletoField('7'),
           optional(Cnab400BancoDoBrasil.NossoNumeroBoletoField),
+          Cnab400BancoDoBrasil.EspecieDoTituloBoletoField,
           optional(Cnab400BancoDoBrasil.JurosBoletoField),
           optional(Cnab400BancoDoBrasil.CodigoDeMultaBoletoField),
           optional(Cnab400BancoDoBrasil.MultaBoletoField)

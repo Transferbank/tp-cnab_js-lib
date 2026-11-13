@@ -52,30 +52,32 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 | `juros`               | Valor ou taxa de juros         | `number` |
 | `codigo_de_multa`     | Código de multa do banco       | `string` |
 | `multa`               | Valor ou percentual de multa   | `number` |
+| `especie_do_titulo`   | Código da espécie do título    | `string` |
 
 #### Campos por banco e formato
 
 - ✅ obrigatório: vazio no arquivo é erro de validação
 - ⚠️ opcional: pode vir vazio; nesse caso o valor é nulo e o campo não aparece em `fields`
 - ❌ inexistente: o layout não tem o campo, e ele nunca aparece em `fields`
+- 🚧 em progresso: o layout tem o campo, mas a leitura ainda não foi implementada; o campo ainda não aparece em `fields`
 - 📌 valor fixo: o layout não tem o campo porque o banco sempre usa o mesmo valor; o campo não aparece em `fields`, e a função de tradução devolve esse valor
 
-| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número | Código de juros | Juros | Código de multa | Multa |
-| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :---: | :-------------: | :---: |
-| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       📌        |  ⚠️   |
-| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       📌        |  ⚠️   |
-| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
-| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |
+| Banco e formato     | Nome | Documento | Vencimento | Valor | Endereço | Bairro | CEP | Cidade | UF  | Nosso Número | Código de juros | Juros | Código de multa | Multa | Espécie |
+| ------------------- | :--: | :-------: | :--------: | :---: | :------: | :----: | :-: | :----: | :-: | :----------: | :-------------: | :---: | :-------------: | :---: | :-----: |
+| Banco do Brasil 240 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Banco do Brasil 400 |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   ✅    |
+| Bradesco 240        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Bradesco 400        |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Caixa 240           |  ✅  |    ✅     |     ✅     |  ✅   |    ⚠️    |   ⚠️   | ⚠️  |   ⚠️   | ⚠️  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Caixa 400           |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       📌        |  ⚠️   |   🚧    |
+| Itaú 240            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Itaú 400            |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Santander 240       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Santander 400       |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Sicoob 240          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Sicoob 400          |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ✅   | ✅  |   ✅   | ✅  |      ⚠️      |       📌        |  ⚠️   |       📌        |  ⚠️   |   🚧    |
+| Sicredi 240         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ✅   | ✅  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
+| Sicredi 400         |  ✅  |    ✅     |     ✅     |  ✅   |    ✅    |   ❌   | ✅  |   ❌   | ❌  |      ⚠️      |       ⚠️        |  ⚠️   |       ⚠️        |  ⚠️   |   🚧    |
 
 #### Juros e multa
 
@@ -159,6 +161,21 @@ Quando a data vem vazia, o arquivo deixou para o banco decidir quando os juros c
 | Sicredi 400         | a partir do dia seguinte ao vencimento | a partir do dia seguinte ao vencimento |
 
 Alguns manuais tratam a data inválida como não informada: nos juros, Itaú 240 e Sicredi 240 e 400; na multa, Santander 240 e Sicredi 240 e 400. Nesses layouts, o campo fica de fora do boleto e vale a regra da data vazia. Nos outros, a data inválida é erro de validação.
+
+#### Espécie do título
+
+`especie_do_titulo` traz o código do tipo de documento cobrado: duplicata, nota promissória, boleto de proposta etc. Hoje o campo é lido no Banco do Brasil 240 e 400. O mesmo código muda de significado entre bancos e até entre formatos do mesmo banco (no Banco do Brasil, `02` é duplicata mercantil no 240 e nota promissória no 400), por isso use `getEspecieDoTitulo` para traduzi-lo. O campo é obrigatório: vazio ou com um código que não está na tabela do banco, é erro de validação. O código "Outros" das tabelas (`99` na maioria dos bancos) e um código fora da tabela são traduzidos como `OUTRO`.
+
+```ts
+import { getEspecieDoTitulo } from '@fx55/cnab-lib-ts'
+
+for (const boleto of cnabFile.read().boletos) {
+  const codigo = (boleto.fields.especie_do_titulo as string | undefined) ?? null
+  getEspecieDoTitulo(cnabFile.bank, cnabFile.format, codigo) // ex: CnabEspecieDoTitulo.DUPLICATA_MERCANTIL
+}
+```
+
+No Banco do Brasil, as espécies `31` (cartão de crédito) e `32` (boleto de proposta) não aceitam cobrança de juros nem de multa. A lib valida cada linha do arquivo separadamente e ainda não aplica essa regra: juros e multa desses boletos são lidos e validados como vierem no arquivo. Quando `getEspecieDoTitulo` devolver `CARTAO_DE_CREDITO` ou `BOLETO_DE_PROPOSTA` para o Banco do Brasil, desconsidere os juros e a multa do boleto.
 
 ### Campos extras da lib
 
