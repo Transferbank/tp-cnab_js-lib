@@ -12,18 +12,22 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 
 ## Bancos suportados
 
-| Banco                   | CNAB 240 | CNAB 400 |
-| ----------------------- | :------: | :------: |
-| Banco do Brasil         |    ✅    |    ✅    |
-| Bradesco                |    ✅    |    ✅    |
-| Caixa Econômica Federal |    ✅    |    ✅    |
-| Itaú                    |    ✅    |    ✅    |
-| Santander               |    ✅    |    ✅    |
-| Sicoob                  |    ✅    |    ✅    |
-| Sicredi                 |    ✅    |    ✅    |
+| Banco                   | Remessa CNAB 240 | Remessa CNAB 400 | Retorno CNAB 240 | Retorno CNAB 400 |
+| ----------------------- | :--------------: | :--------------: | :--------------: | :--------------: |
+| Banco do Brasil         |        ✅        |        ✅        |        ✅        |        ✅        |
+| Bradesco                |        ✅        |        ✅        |        ❌        |        ❌        |
+| Caixa Econômica Federal |        ✅        |        ✅        |        ❌        |        ❌        |
+| Itaú                    |        ✅        |        ✅        |        ❌        |        ❌        |
+| Santander               |        ✅        |        ✅        |        ❌        |        ❌        |
+| Sicoob                  |        ✅        |        ✅        |        ❌        |        ❌        |
+| Sicredi                 |        ✅        |        ✅        |        ❌        |        ❌        |
+
+Remessa é o lote de criação e retorno é o lote de validação (veja [Lote de criação e lote de validação](#lote-de-criação-e-lote-de-validação)).
 
 - ✅ Suportado: o arquivo é validado e lido.
-- ❌ Não reconhecido: bancos e formatos fora desta tabela. `openCnabFile` lança exceções para cada caso (veja [Exceções](#exceções)).
+- ❌ Não suportado ainda: o banco é reconhecido, mas abrir o arquivo lança `CnabBankSchemaNotFoundException`.
+
+Abrir o arquivo de um banco fora desta tabela lança `CnabBankCodeNotFoundException` (veja [Exceções](#exceções)).
 
 ## Campos de boleto
 
@@ -331,7 +335,31 @@ if (cnabFile.fileType == CnabFileType.RETORNO) {
 }
 ```
 
-Ainda não há bancos com leitura de lote de validação: abrir um arquivo retorno lança `CnabBankSchemaNotFoundException`.
+Os bancos que já leem o lote de validação estão na tabela de [Bancos suportados](#bancos-suportados).
+
+Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece uma vez na entrada e de novo na liquidação ou na baixa. Por isso `cnab.boletos` traz um item por ocorrência, com estes campos:
+
+| Chave                  | Descrição                                  | Tipo     |
+| ---------------------- | ------------------------------------------ | -------- |
+| `codigo_de_ocorrencia` | Código da ocorrência, como está no arquivo | `string` |
+
+#### Ocorrências
+
+O mesmo código significa coisas diferentes em cada banco (na Caixa CNAB 400, por exemplo, `02` é baixa e `21` é liquidação). `getOcorrencia` traduz o código para uma categoria comum, e `getOcorrenciaDescription` devolve a descrição do manual do banco:
+
+```ts
+import { CnabOcorrencia, getOcorrencia, getOcorrenciaDescription } from '@fx55/cnab-lib-ts'
+
+for (const boleto of cnabFile.read().boletos) {
+  const code = boleto.fields.codigo_de_ocorrencia as string
+  if (getOcorrencia(cnabFile.bank, cnabFile.format, code) == CnabOcorrencia.LIQUIDACAO) {
+    // boleto pago
+  }
+  getOcorrenciaDescription(cnabFile.bank, cnabFile.format, code) // ex: 'Liquidação Normal'
+}
+```
+
+As categorias são: `ENTRADA_CONFIRMADA`, `ENTRADA_REJEITADA`, `LIQUIDACAO`, `BAIXA`, `ESTORNO`, `PAGAMENTO_PENDENTE`, `INSTRUCAO_CONFIRMADA`, `INSTRUCAO_REJEITADA`, `PROTESTO`, `TARIFA`, `DDA`, `NEGATIVACAO`, `PIX` e `INFORMATIVO`. A descrição de cada uma está em `CNAB_OCORRENCIA_DESCRIPTIONS`. Um código que não está na tabela do banco vira `OUTRA`, e `getOcorrenciaDescription` devolve `null` para ele.
 
 ### Validando o arquivo inteiro
 
