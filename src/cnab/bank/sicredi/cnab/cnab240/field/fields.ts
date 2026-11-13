@@ -2,6 +2,7 @@ export { CodigoDeJurosBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/
 export { CodigoDeMultaBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/codigo-de-multa-boleto-field'
 export { DataDeJurosBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/data-de-juros-boleto-field'
 export { DataDeMultaBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/data-de-multa-boleto-field'
+export { EspecieDoTituloBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/especie-do-titulo-boleto-field'
 export { JurosBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/juros-boleto-field'
 export { MultaBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/multa-boleto-field'
 export { NossoNumeroBoletoField } from '@cnab/bank/sicredi/cnab/cnab240/field/nosso-numero-boleto-field'
