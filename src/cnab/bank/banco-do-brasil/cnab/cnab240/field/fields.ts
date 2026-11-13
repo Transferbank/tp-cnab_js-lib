@@ -4,6 +4,8 @@ export { CodigoDeJurosBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab24
 export { CodigoDeMultaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/codigo-de-multa-boleto-field'
 export { DataDeJurosBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/data-de-juros-boleto-field'
 export { DataDeMultaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/data-de-multa-boleto-field'
+export { DescontosAdicionaisBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/descontos-adicionais-boleto-field'
+export { DescontosBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/descontos-boleto-field'
 export { DddBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/ddd-boleto-field'
 export { DocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/documento-sacado-boleto-field'
 export { EmailSegmentoSBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/email-segmento-s-boleto-field'
