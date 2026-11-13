@@ -175,6 +175,8 @@ for (const boleto of cnabFile.read().boletos) {
 }
 ```
 
+No Banco do Brasil, as espécies `31` (cartão de crédito) e `32` (boleto de proposta) não aceitam cobrança de juros nem de multa. A lib valida cada linha do arquivo separadamente e ainda não aplica essa regra: juros e multa desses boletos são lidos e validados como vierem no arquivo. Quando `getEspecieDoTitulo` devolver `CARTAO_DE_CREDITO` ou `BOLETO_DE_PROPOSTA` para o Banco do Brasil, desconsidere os juros e a multa do boleto.
+
 ### Campos extras da lib
 
 | Chave               | Descrição                                                      | Tipo       | Constante                    |
