@@ -752,13 +752,21 @@ describe('cnab-file', (): void => {
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', 'a blank especie', (line: string): boolean => line[7] == '3' && line[13] == 'P', [107, 108], '  '],
     ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'an especie outside the table', (line: string): boolean => line[0] == '7', [148, 149], '99'],
     ['banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM', 'a blank especie', (line: string): boolean => line[0] == '7', [148, 149], '  ']
-  ] as Array<[string, string, (line: string) => boolean, [number, number], string]>)('given document file %s with %s when reading then rejects the file', (examplePath: string, _: string, isEspecieLine: (line: string) => boolean, range: [number, number], especie: string): void => {
+  ] as Array<[string, string, (line: string) => boolean, [number, number], string]>)('given document file %s with %s when validating then rejects the file because of the especie do titulo', (examplePath: string, _: string, isEspecieLine: (line: string) => boolean, range: [number, number], especie: string): void => {
     // Given
     const lines = readExampleLines(path.join(resPath(), examplePath))
       .map((line: string) => (isEspecieLine(line) ? replaceLineRange(line, range, especie) : line))
     const cnabFile = CnabFile.fromLines(lines)
 
-    // When / Then
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result.isValid).toBe(false)
+    expect(result.errors.length).toBeGreaterThan(0)
+    for (const error of result.errors) {
+      expect(error).toMatchObject({ fieldKey: 'especie_do_titulo', range })
+    }
     expect(() => cnabFile.read()).toThrow(CnabInvalidFileException)
   })
 
