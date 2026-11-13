@@ -1,22 +1,35 @@
 import * as path from 'path'
-import assert from 'node:assert'
 import { describe, it, expect } from '@jest/globals'
-import { findFirstCnab400RecordLine, readExampleLines, resPath } from '@test/test-utils'
-import { MultaBoletoField } from '@cnab/field/cnab400/multa-boleto-field'
+import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { MultaBoletoField } from '@cnab/bank/sicredi/cnab/cnab400/field/multa-boleto-field'
 
 describe('MultaBoletoField', (): void => {
-  it('given the detail record from the example file when reading then returns the multa with two decimals', (): void => {
+  const detailLines = readExampleLines(path.join(resPath(), 'sicredi/cnab400/sicredi_cnab_400.REM'))
+    .filter((line: string) => line[0] == '1')
+
+  it.each([
+    ['a percentual multa', '', [93, 96], 'ABCD'],
+    ['a valor monetário multa', 'A', [97, 108], 'ABCDEFGHIJKL']
+  ] as Array<[string, string, [number, number], string]>)('given sicredi cnab400 boleto with %s and an invalid value when validating then reports the range it was read from', (_: string, codigo: string, range: [number, number], invalidValue: string): void => {
     // Given
-    const line = findFirstCnab400RecordLine(readExampleLines(path.join(resPath(), 'santander/cnab400/santander_cnab_400.REM')), '1')
-    assert(line != null, 'Linha não encontrada')
+    const line = replaceLineRange(replaceLineRange(detailLines[0], [20, 20], codigo), range, invalidValue)
     const field = new MultaBoletoField(line, 5)
 
     // When
     const result = field.validate()
 
     // Then
-    expect(field.shouldValidate()).toBe(true)
-    expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe(4)
+    expect(result).toEqual({
+      isValid: false,
+      errors: [
+        new CnabGenericFieldError({
+          message: `Campo multa com formato inválido: ${invalidValue}`,
+          lineNumber: 5,
+          fieldKey: 'multa',
+          range
+        })
+      ]
+    })
   })
 })
