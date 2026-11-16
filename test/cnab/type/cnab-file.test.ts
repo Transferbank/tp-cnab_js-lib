@@ -739,7 +739,7 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
-    ['bradesco/cnab240/bradesco_cnab_240.txt', '01', CnabEspecieDoTitulo.CHEQUE],
+    ['bradesco/cnab240/bradesco_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
     ['caixa/cnab240/caixa_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
     ['itau/cnab240/itau_cnab_240.txt', '01', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
     ['santander/cnab240/santander_cnab_240.txt', '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
