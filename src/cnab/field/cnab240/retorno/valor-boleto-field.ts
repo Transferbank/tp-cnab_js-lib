@@ -2,8 +2,8 @@ import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
-import { isDigitsOnly } from '@cnab/utils/document-parser'
 import { blankIfZeros } from '@cnab/utils/phone-parser'
+import { parseImpliedDecimal } from '@cnab/utils/value-parser'
 
 export abstract class ValorBoletoField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -17,9 +17,10 @@ export abstract class ValorBoletoField extends CnabField<number> {
   }
 
   protected parseValue(rawValue: string): number {
-    if (!isDigitsOnly(rawValue)) {
+    const value = parseImpliedDecimal(rawValue, 2)
+    if (value == null) {
       throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
-    return parseInt(rawValue, 10) / 100
+    return value
   }
 }
