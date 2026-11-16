@@ -150,6 +150,8 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 5, 240],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 1, 240],
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', 1, 240],
     ['itau/cnab400/remessa/ITAU_cnab_400.REM', 640, 400]
   ])(
     'given document file with truncated line when validating then reports line size error',
