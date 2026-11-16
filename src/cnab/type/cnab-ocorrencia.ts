@@ -47,7 +47,8 @@ const indexes = new WeakMap<CnabOcorrenciaTable, Map<string, CnabOcorrenciaMatch
 
 function indexTable(table: CnabOcorrenciaTable): Map<string, CnabOcorrenciaMatch> {
   const index = new Map<string, CnabOcorrenciaMatch>()
-  for (const [ocorrencia, codes] of Object.entries(table) as Array<[CnabOcorrencia, Record<string, string>]>) {
+  for (const ocorrencia of Object.values(CnabOcorrencia)) {
+    const codes = table[ocorrencia] ?? {}
     for (const [code, description] of Object.entries(codes)) {
       const existing = index.get(code)
       if (existing != null) throw new CnabDuplicatedOcorrenciaCodeException(code, existing.ocorrencia, ocorrencia)
