@@ -7,7 +7,7 @@ import {
   CnabFileTypeNotRecognizedException,
   CnabInvalidFileException
 } from '@cnab/exception/cnab-exception'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabInvalidLineSizeError, CnabInvalidRecordTypeError } from '@cnab/type/cnab-validation-error'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -177,6 +177,31 @@ describe('cnab-file', (): void => {
       // Then
       expect(result.isValid).toBe(false)
       expect(result.errors).toEqual(expectedErrors)
+    }
+  )
+
+  it.each([
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'file header', 0, ['0']],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'batch header', 1, ['1', '2', '3', '4', '5']],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'batch trailer', 15, ['1', '2', '3', '4', '5']],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'file trailer', 16, ['9']],
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', 'batch header', 1, ['1', '2', '3', '4', '5']]
+  ])(
+    'given document file %s with an invalid record type in the %s when validating then reports the record type error',
+    (examplePath: string, _: string, lineNumber: number, expectedRecordTypes: string[]): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), examplePath))
+      rawLines[lineNumber] = replaceLineRange(rawLines[lineNumber], [8, 8], '7')
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [new CnabInvalidRecordTypeError({ lineNumber, expectedRecordTypes, recordType: '7' })]
+      })
     }
   )
 
