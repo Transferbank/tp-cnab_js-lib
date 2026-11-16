@@ -22,7 +22,7 @@ export class CodigoDeMultaBoletoField extends CnabTableCodeField {
     return this.zeroIsAbsent ? blankIfZeros(rawValue) : rawValue
   }
 
-  protected tableCodes(bank: CnabBank, format: CnabFormat): Record<string, unknown> | undefined {
+  protected getTableCodes(bank: CnabBank, format: CnabFormat): Record<string, unknown> | undefined {
     return getMultaCodes(bank, format)
   }
 }

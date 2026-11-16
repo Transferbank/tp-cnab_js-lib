@@ -7,7 +7,7 @@ import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 export abstract class CnabTableCodeField extends CnabField<string> {
   protected abstract readonly codeLabel: string
 
-  protected abstract tableCodes(bank: CnabBank, format: CnabFormat): Record<string, unknown> | undefined
+  protected abstract getTableCodes(bank: CnabBank, format: CnabFormat): Record<string, unknown> | undefined
 
   protected performValidation(): CnabValidationResult {
     const codigo = this.value
@@ -16,7 +16,7 @@ export abstract class CnabTableCodeField extends CnabField<string> {
       return { isValid: true, errors: [] }
     }
 
-    const codes = this.tableCodes(bank, format)
+    const codes = this.getTableCodes(bank, format)
     if (codes == null || codes[codigo] != null) {
       return { isValid: true, errors: [] }
     }

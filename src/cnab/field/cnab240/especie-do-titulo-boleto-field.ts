@@ -32,7 +32,7 @@ export class EspecieDoTituloBoletoField extends CnabTableCodeField {
     }
   }
 
-  protected tableCodes(bank: CnabBank, format: CnabFormat): Record<string, unknown> | undefined {
+  protected getTableCodes(bank: CnabBank, format: CnabFormat): Record<string, unknown> | undefined {
     return getEspecieCodes(bank, format)
   }
 }
