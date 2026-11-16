@@ -13,6 +13,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CNAB_EMAIL_FIELDS } from '@cnab/bank/cnab-email-fields'
 import { CNAB_TELEFONE_FIELDS } from '@cnab/bank/cnab-telefone-fields'
@@ -69,14 +70,14 @@ function createFileFromPath(filePath: string): File {
 
 describe('cnab-file', (): void => {
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 17, 3],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76, 37]
+    ['bradesco/cnab240/bradesco_cnab_240.txt', CnabBank.BRADESCO, CnabFormat.CNAB240, 17, 3],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', CnabBank.BRADESCO, CnabFormat.CNAB400, 76, 37]
   ])(
     'given document file when opening then detects bank, format, file type, lines and boleto count',
     async (
       examplePath: string,
-      expectedBank: string,
-      expectedFormat: string,
+      expectedBank: CnabBank,
+      expectedFormat: CnabFormat,
       expectedLineCount: number,
       expectedBoletoCount: number
     ): Promise<void> => {
@@ -90,7 +91,7 @@ describe('cnab-file', (): void => {
       // Then
       expect(cnabFile.bank).toBe(expectedBank)
       expect(cnabFile.format).toBe(expectedFormat)
-      expect(cnabFile.fileType).toBe('remessa')
+      expect(cnabFile.fileType).toBe(CnabFileType.REMESSA)
       expect(cnabFile.rawLines.length).toBe(expectedLineCount)
       expect(cnabFile.boletoCount).toBe(expectedBoletoCount)
       expect(cnabFile.schema).not.toBeNull()
