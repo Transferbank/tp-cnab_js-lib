@@ -9,7 +9,8 @@ export const SICREDI_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
   },
   [CnabOcorrencia.LIQUIDACAO]: {
     '06': 'Liquidação',
-    '17': 'Liquidação após baixa ou liquidação título não registrado'
+    '17': 'Liquidação após baixa ou liquidação título não registrado',
+    '61': 'Liquidação PIX'
   },
   [CnabOcorrencia.BAIXA]: {
     '09': 'Baixa'
@@ -55,7 +56,8 @@ export const SICREDI_CNAB240_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
   [CnabOcorrencia.PIX]: {
     'P1': 'Confirmado com QR Code',
     'P2': 'Confirmado sem QR Code',
-    'P3': 'Chave Inválida'
+    'P3': 'Chave Inválida',
+    'P6': 'txid em duplicidade/inválido'
   },
   [CnabOcorrencia.INFORMATIVO]: {
     '85': 'Ocorrência informacional por outros motivos'
