@@ -32,7 +32,9 @@ describe('findOcorrencia', (): void => {
     }
 
     // When
-    const find = (): unknown => findOcorrencia(table, '02')
+    const find = (): void => {
+      findOcorrencia(table, '02')
+    }
 
     // Then
     expect(find).toThrow(new CnabDuplicatedOcorrenciaCodeException('02', CnabOcorrencia.ENTRADA_CONFIRMADA, CnabOcorrencia.BAIXA))
