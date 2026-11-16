@@ -5,13 +5,15 @@ import { cnab400RetornoLine, replaceLineRange } from '@test/test-utils'
 import { DataDeOcorrenciaBoletoField } from '@cnab/field/cnab400/retorno/data-de-ocorrencia-boleto-field'
 import { DataDeCreditoBoletoField } from '@cnab/field/cnab400/retorno/data-de-credito-boleto-field'
 
-describe.each([
+const cases: Array<[string, CnabFieldClass<Date>, [number, number]]> = [
   ['DataDeOcorrenciaBoletoField', DataDeOcorrenciaBoletoField, [111, 116]],
   ['DataDeCreditoBoletoField', DataDeCreditoBoletoField, [296, 301]]
-])('%s', (_: string, FieldClass: CnabFieldClass<Date>, range: number[]): void => {
+]
+
+describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<Date>, range: [number, number]): void => {
   it('given a filled date in a detail record when reading then returns it', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(cnab400RetornoLine('1'), range as [number, number], '030626'), 1)
+    const field = new FieldClass(replaceLineRange(cnab400RetornoLine('1'), range, '030626'), 1)
 
     // When
     const shouldValidate = field.shouldValidate()

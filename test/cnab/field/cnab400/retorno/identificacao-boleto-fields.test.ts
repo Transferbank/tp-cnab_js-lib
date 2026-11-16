@@ -5,14 +5,16 @@ import { UsoDaEmpresaBoletoField } from '@cnab/field/cnab400/retorno/uso-da-empr
 import { NossoNumeroBoletoField } from '@cnab/field/cnab400/retorno/nosso-numero-boleto-field'
 import { SeuNumeroBoletoField } from '@cnab/field/cnab400/retorno/seu-numero-boleto-field'
 
-describe.each([
+const cases: Array<[string, CnabFieldClass<string>, [number, number], string]> = [
   ['UsoDaEmpresaBoletoField', UsoDaEmpresaBoletoField, [38, 62], 'PED1234-1/3'],
   ['NossoNumeroBoletoField', NossoNumeroBoletoField, [63, 70], '10377333'],
   ['SeuNumeroBoletoField', SeuNumeroBoletoField, [117, 126], 'NF82697-02']
-])('%s', (_: string, FieldClass: CnabFieldClass<string>, range: number[], value: string): void => {
+]
+
+describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<string>, range: [number, number], value: string): void => {
   it('given a detail record when reading then returns the field as written', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(cnab400RetornoLine('1'), range as [number, number], value), 1)
+    const field = new FieldClass(replaceLineRange(cnab400RetornoLine('1'), range, value), 1)
 
     // When
     const shouldValidate = field.shouldValidate()

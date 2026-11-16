@@ -6,14 +6,16 @@ import { ValorTituloBoletoField } from '@cnab/field/cnab400/retorno/valor-titulo
 import { ValorPagoBoletoField } from '@cnab/field/cnab400/retorno/valor-pago-boleto-field'
 import { JurosMultaBoletoField } from '@cnab/field/cnab400/retorno/juros-multa-boleto-field'
 
-describe.each([
+const cases: Array<[string, CnabFieldClass<number>, [number, number]]> = [
   ['ValorTituloBoletoField', ValorTituloBoletoField, [153, 165]],
   ['ValorPagoBoletoField', ValorPagoBoletoField, [254, 266]],
   ['JurosMultaBoletoField', JurosMultaBoletoField, [267, 279]]
-])('%s', (_: string, FieldClass: CnabFieldClass<number>, range: number[]): void => {
+]
+
+describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<number>, range: [number, number]): void => {
   it('given a filled amount in a detail record when reading then returns it in reais', (): void => {
     // Given
-    const field = new FieldClass(replaceLineRange(cnab400RetornoLine('1'), range as [number, number], '0000000123456'), 1)
+    const field = new FieldClass(replaceLineRange(cnab400RetornoLine('1'), range, '0000000123456'), 1)
 
     // When
     const shouldValidate = field.shouldValidate()
