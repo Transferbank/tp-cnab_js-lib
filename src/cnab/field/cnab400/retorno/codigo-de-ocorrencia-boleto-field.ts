@@ -1,11 +1,11 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { TextField } from '@cnab/field/cnab400/retorno/text-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { isValidOcorrenciaCode } from '@cnab/utils/ocorrencia-parser'
 
-export class CodigoDeOcorrenciaBoletoField extends CnabField<string> {
+export class CodigoDeOcorrenciaBoletoField extends TextField {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'codigo_de_ocorrencia'
   readonly range: [number, number] = [109, 110]
@@ -35,9 +35,5 @@ export class CodigoDeOcorrenciaBoletoField extends CnabField<string> {
       isValid,
       errors
     }
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
   }
 }

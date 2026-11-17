@@ -24,6 +24,19 @@ describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<Date>, range: 
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toEqual(new Date(2026, 5, 3))
   })
+
+  it('given a date when formatting and reading it back then returns the same date', (): void => {
+    // Given
+    const line = cnab400RetornoLine('1')
+    const formatted = new FieldClass(line, 1).formatValue(new Date(2026, 5, 3))
+
+    // When
+    const field = new FieldClass(replaceLineRange(line, range, formatted), 1)
+
+    // Then
+    expect(formatted).toBe('030626')
+    expect(field.value).toEqual(new Date(2026, 5, 3))
+  })
 })
 
 describe('DataBoletoField', (): void => {

@@ -25,6 +25,19 @@ describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<string>, range
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(value)
   })
+
+  it('given a text when formatting and reading it back then returns the same text', (): void => {
+    // Given
+    const line = cnab400RetornoLine('1')
+    const formatted = new FieldClass(line, 1).formatValue(value)
+
+    // When
+    const field = new FieldClass(replaceLineRange(line, range, formatted), 1)
+
+    // Then
+    expect(formatted).toHaveLength(range[1] - range[0] + 1)
+    expect(field.value).toBe(value)
+  })
 })
 
 describe('IdentificacaoBoletoField', (): void => {

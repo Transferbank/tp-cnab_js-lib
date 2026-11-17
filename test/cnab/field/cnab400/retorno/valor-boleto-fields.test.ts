@@ -44,6 +44,19 @@ describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<number>, range
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(1234.56)
   })
+
+  it('given an amount in reais when formatting and reading it back then returns the same amount', (): void => {
+    // Given
+    const line = cnab400RetornoLine('1')
+    const formatted = new FieldClass(line, 1).formatValue(1234.56)
+
+    // When
+    const field = new FieldClass(replaceLineRange(line, range, formatted), 1)
+
+    // Then
+    expect(formatted).toBe('0000000123456')
+    expect(field.value).toBe(1234.56)
+  })
 })
 
 describe('ValorBoletoField', (): void => {
