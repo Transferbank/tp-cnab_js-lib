@@ -88,6 +88,29 @@ describe('CnabWriter', (): void => {
     expect(error).toHaveProperty('errors', expectedErrors)
   })
 
+  it.each([
+    ['without a code', {}],
+    ['with a code the layout does not accept', { codigo_de_ocorrencia: '6#' }]
+  ])('given a boleto %s when writing then throws an invalid file exception with the validation error of the field', (_: string, fields: Record<string, unknown>): void => {
+    // Given
+    const cnab = new Cnab({ boletos: [new CnabBoleto({ fields })] })
+    const expectedErrors = [
+      new CnabGenericFieldError({
+        message: 'Campo código de ocorrência inválido: deve conter 2 letras maiúsculas ou dígitos',
+        lineNumber: 1,
+        fieldKey: 'codigo_de_ocorrencia',
+        range: [109, 110]
+      })
+    ]
+
+    // When
+    const error = captureError((): string[] => CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO))
+
+    // Then
+    expect(error).toBeInstanceOf(CnabInvalidFileException)
+    expect(error).toHaveProperty('errors', expectedErrors)
+  })
+
   describe.each([
     { format: CnabFormat.CNAB240, fileType: CnabFileType.RETORNO },
     { format: CnabFormat.CNAB400, fileType: CnabFileType.REMESSA }

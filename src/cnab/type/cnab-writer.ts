@@ -39,6 +39,11 @@ export class CnabWriter {
       throw new CnabInvalidFileException(errors)
     }
 
+    const result = schema.validate(lines, false)
+    if (!result.isValid) {
+      throw new CnabInvalidFileException(result.errors)
+    }
+
     return lines
   }
 
