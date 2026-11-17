@@ -12,17 +12,23 @@ export enum CnabBank {
   BANCODOBRASIL = 'bancodobrasil'
 }
 
+const BANK_CODES: Record<CnabBank, string> = {
+  [CnabBank.ITAU]: '341',
+  [CnabBank.CAIXA]: '104',
+  [CnabBank.SICREDI]: '748',
+  [CnabBank.SICOOB]: '756',
+  [CnabBank.BRADESCO]: '237',
+  [CnabBank.SANTANDER]: '033',
+  [CnabBank.BANCODOBRASIL]: '001'
+}
+
 export namespace CnabBank {
   export function fromCode(code: string): CnabBank | null {
-    switch (code) {
-      case '341': return CnabBank.ITAU
-      case '104': return CnabBank.CAIXA
-      case '748': return CnabBank.SICREDI
-      case '756': return CnabBank.SICOOB
-      case '237': return CnabBank.BRADESCO
-      case '033': return CnabBank.SANTANDER
-      case '001': return CnabBank.BANCODOBRASIL
-      default: return null
-    }
+    const banks = Object.keys(BANK_CODES) as CnabBank[]
+    return banks.find((bank: CnabBank): boolean => BANK_CODES[bank] == code) ?? null
+  }
+
+  export function toCode(bank: CnabBank): string {
+    return BANK_CODES[bank]
   }
 }
