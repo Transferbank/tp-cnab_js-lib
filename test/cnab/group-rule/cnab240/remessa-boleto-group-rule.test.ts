@@ -1,9 +1,9 @@
 import * as path from 'path'
 import { describe, it, expect } from '@jest/globals'
 import { readExampleLines, resPath } from '@test/test-utils'
-import { Cnab240BoletoGroupRule } from '@cnab/group-rule/cnab240/boleto-group-rule'
+import { Cnab240RemessaBoletoGroupRule } from '@cnab/group-rule/cnab240/remessa-boleto-group-rule'
 
-describe('Cnab240BoletoGroupRule', (): void => {
+describe('Cnab240RemessaBoletoGroupRule', (): void => {
   it.each([
     ['banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt'],
     ['bradesco/cnab240/bradesco_cnab_240.txt'],
@@ -22,7 +22,7 @@ describe('Cnab240BoletoGroupRule', (): void => {
       const expectedGroupStarts = rawLines.map(isSegmentoP)
 
       // When
-      const groupRule = new Cnab240BoletoGroupRule()
+      const groupRule = new Cnab240RemessaBoletoGroupRule()
       const groupStarts = rawLines.map((line: string) => groupRule.check(line))
 
       // Then

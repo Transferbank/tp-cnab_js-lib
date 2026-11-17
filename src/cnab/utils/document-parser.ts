@@ -50,7 +50,7 @@ export function isValidCNPJ(cnpj: string): boolean {
   return digit2 == charValue(value[13])
 }
 
-function isDigitsOnly(value: string): boolean {
+export function isDigitsOnly(value: string): boolean {
   return /^\d+$/.test(value)
 }
 

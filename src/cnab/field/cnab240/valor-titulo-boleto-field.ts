@@ -3,6 +3,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError, CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab240LineTypeChecker } from '@cnab/utils/line-type-checker'
+import { isDigitsOnly } from '@cnab/utils/document-parser'
 
 export class ValorTituloBoletoField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
@@ -36,7 +37,7 @@ export class ValorTituloBoletoField extends CnabField<number> {
   }
 
   protected parseValue(rawValue: string): number {
-    if (!/^\d+$/.test(rawValue)) {
+    if (!isDigitsOnly(rawValue)) {
       throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
 
