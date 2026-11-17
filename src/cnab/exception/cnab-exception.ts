@@ -78,3 +78,9 @@ export class CnabFieldWriteNotImplementedException extends CnabException {
     super(`Campo ${fieldKey} não tem escrita implementada`)
   }
 }
+
+export class CnabWriteNotSupportedException extends CnabException {
+  constructor(cnabFormat: CnabFormat, fileType: CnabFileType) {
+    super(`Escrita de CNAB${cnabFormat} de ${fileType} não suportada`)
+  }
+}

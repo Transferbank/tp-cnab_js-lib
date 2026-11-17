@@ -20,3 +20,9 @@ export function cnab400RetornoTrailerFixedContent(bank: CnabBank): CnabFixedCont
     { range: [5, 7], value: CnabBank.toCode(bank) },
   ]
 }
+
+export function cnab400RetornoDetalheFixedContent(recordType: string): CnabFixedContent[] {
+  return [
+    { range: [1, 1], value: recordType },
+  ]
+}

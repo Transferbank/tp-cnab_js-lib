@@ -11,7 +11,7 @@ import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-ru
 import * as RetornoFields240 from '@cnab/field/cnab240/retorno/fields'
 import * as RetornoFields400 from '@cnab/field/cnab400/retorno/fields'
 
-import { cnab400RetornoHeaderFixedContent, cnab400RetornoTrailerFixedContent } from '@cnab/field/cnab400/retorno/fixed-content'
+import { cnab400RetornoDetalheFixedContent, cnab400RetornoHeaderFixedContent, cnab400RetornoTrailerFixedContent } from '@cnab/field/cnab400/retorno/fixed-content'
 import { SICREDI_CNAB400_RETORNO_TRAILER_FIXED_CONTENT } from '@cnab/bank/sicredi/cnab/cnab400/retorno-fixed-content'
 import { SICOOB_CNAB400_RETORNO_TRAILER_FIXED_CONTENT } from '@cnab/bank/sicoob/cnab/cnab400/retorno-fixed-content'
 
@@ -75,6 +75,7 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -133,6 +134,7 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           CaixaRetornoFields400.ValorPagoBoletoField,
@@ -190,6 +192,7 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           ItauRetornoFields400.ValorPagoBoletoField,
@@ -248,6 +251,7 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -306,6 +310,7 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -364,6 +369,7 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -422,6 +428,7 @@ function registerCnabSchemas(): CnabSchema[] {
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('7'),
         fields: [
           BancoDoBrasilRetornoFields400.CodigoDeOcorrenciaBoletoField,
           BancoDoBrasilRetornoFields400.ValorPagoBoletoField,

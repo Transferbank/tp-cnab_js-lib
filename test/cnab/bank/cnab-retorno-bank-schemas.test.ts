@@ -30,7 +30,7 @@ describe('cnab-retorno-bank-schemas', (): void => {
 
     it('when reading its fixed content then each value fills its whole range', (): void => {
       // Given
-      const fixedContent = [...schema.header.fixedContent, ...schema.trailer.fixedContent]
+      const fixedContent = [...schema.header.fixedContent, ...schema.boleto.fixedContent, ...schema.trailer.fixedContent]
 
       // When
       const mismatched = fixedContent.filter(({ range, value }: CnabFixedContent): boolean => value.length != range[1] - range[0] + 1)
