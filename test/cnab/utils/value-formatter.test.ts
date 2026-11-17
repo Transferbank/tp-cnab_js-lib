@@ -53,7 +53,8 @@ describe('value-formatter', (): void => {
 
     describe.each([
       { value: -1, description: 'a negative amount' },
-      { value: 100000000000, description: 'an amount that does not fit in the field' }
+      { value: 100000000000, description: 'an amount that does not fit in the field' },
+      { value: 1e19, description: 'an amount written in scientific notation' }
     ])('given $description', ({ value }): void => {
       it('when formatting then throws a range error', (): void => {
         expect((): string => formatImpliedDecimal(value, 13, 2)).toThrow(RangeError)

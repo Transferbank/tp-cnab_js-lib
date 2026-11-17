@@ -56,7 +56,7 @@ export function formatImpliedDecimal(value: number | null, length: number, decim
   }
 
   const digits = String(Math.round(value * 10 ** decimals))
-  if (digits.length > length) {
+  if (!isDigitsOnly(digits) || digits.length > length) {
     throw new RangeError(`valor ${value} não cabe em ${length} posições`)
   }
   return digits.padStart(length, '0')
