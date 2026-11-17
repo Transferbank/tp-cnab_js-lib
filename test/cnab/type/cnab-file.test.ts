@@ -3,13 +3,17 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
-import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
+import {
+  CnabFileTypeNotRecognizedException,
+  CnabInvalidFileException
+} from '@cnab/exception/cnab-exception'
 import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { Cnab240LineTypeChecker, Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { CNAB_EMAIL_FIELDS } from '@cnab/bank/cnab-email-fields'
 import { CNAB_TELEFONE_FIELDS } from '@cnab/bank/cnab-telefone-fields'
@@ -66,14 +70,14 @@ function createFileFromPath(filePath: string): File {
 
 describe('cnab-file', (): void => {
   it.each([
-    ['bradesco/cnab240/bradesco_cnab_240.txt', 'bradesco', '240', 17, 3],
-    ['bradesco/cnab400/bradesco_cnab_400.txt', 'bradesco', '400', 76, 37]
+    ['bradesco/cnab240/bradesco_cnab_240.txt', CnabBank.BRADESCO, CnabFormat.CNAB240, 17, 3],
+    ['bradesco/cnab400/bradesco_cnab_400.txt', CnabBank.BRADESCO, CnabFormat.CNAB400, 76, 37]
   ])(
-    'given document file when opening then detects bank, format, lines and boleto count',
+    'given document file when opening then detects bank, format, file type, lines and boleto count',
     async (
       examplePath: string,
-      expectedBank: string,
-      expectedFormat: string,
+      expectedBank: CnabBank,
+      expectedFormat: CnabFormat,
       expectedLineCount: number,
       expectedBoletoCount: number
     ): Promise<void> => {
@@ -87,11 +91,27 @@ describe('cnab-file', (): void => {
       // Then
       expect(cnabFile.bank).toBe(expectedBank)
       expect(cnabFile.format).toBe(expectedFormat)
+      expect(cnabFile.fileType).toBe(CnabFileType.REMESSA)
       expect(cnabFile.rawLines.length).toBe(expectedLineCount)
       expect(cnabFile.boletoCount).toBe(expectedBoletoCount)
       expect(cnabFile.schema).not.toBeNull()
     }
   )
+
+  it.each([
+    ['bradesco/cnab240/bradesco_cnab_240.txt', [143, 143] as [number, number]],
+    ['itau/cnab400/ITAU_cnab_400.REM', [2, 2] as [number, number]]
+  ])('given file %s with an unknown file type code when opening then refuses it', (examplePath: string, fileTypeRange: [number, number]): void => {
+    // Given
+    const rawLines = readExampleLines(path.join(resPath(), examplePath))
+    rawLines[0] = replaceLineRange(rawLines[0], fileTypeRange, '9')
+
+    // When
+    const open = (): CnabFile => CnabFile.fromLines(rawLines)
+
+    // Then
+    expect(open).toThrow(CnabFileTypeNotRecognizedException)
+  })
 
   it.each([
     ['bradesco/cnab240/bradesco_cnab_240.txt'],
