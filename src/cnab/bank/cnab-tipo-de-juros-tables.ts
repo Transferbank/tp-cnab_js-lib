@@ -105,5 +105,5 @@ export function getJurosCodes(bank: CnabBank, format: CnabFormat): Record<string
 export function getTipoDeJuros(bank: CnabBank, format: CnabFormat, codigo: string | null): CnabTipoDeJuros | null {
   const table = CNAB_TIPO_DE_JUROS_TABLES[bank][format]
   if (codigo == null) return table.withoutCode ?? null
-  return table.codes?.[codigo] ?? CnabTipoDeJuros.OUTRO
+  return table.codes?.[codigo] ?? null
 }
