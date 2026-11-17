@@ -2,6 +2,7 @@ import { describe, it, expect } from '@jest/globals'
 import { CnabField, optional } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabFieldWriteNotImplementedException } from '@cnab/exception/cnab-exception'
 import {
   CnabFieldInvalidNumberError,
   CnabFieldMinLengthError,
@@ -67,5 +68,19 @@ describe('optional', (): void => {
         range: [1, 3]
       })]
     })
+  })
+})
+
+describe('write', (): void => {
+  it('given a field without formatting for writing when writing then throws a write not implemented exception', (): void => {
+    // Given
+    const line = Array.from('   ')
+    const field = new FakeNumberField('   ', 0)
+
+    // When
+    const write = (): void => field.write(line, { campo_numerico: 123 })
+
+    // Then
+    expect(write).toThrow(CnabFieldWriteNotImplementedException)
   })
 })

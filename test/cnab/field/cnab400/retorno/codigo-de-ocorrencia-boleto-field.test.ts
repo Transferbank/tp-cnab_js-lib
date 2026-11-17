@@ -44,4 +44,17 @@ describe('CodigoDeOcorrenciaBoletoField', (): void => {
       ]
     })
   })
+
+  it('given the fields of a boleto when writing then fills only the code range of the line', (): void => {
+    // Given
+    const rawLine = cnab400RetornoLine('1')
+    const line = Array.from(rawLine)
+    const field = new CodigoDeOcorrenciaBoletoField(rawLine, 1)
+
+    // When
+    field.write(line, { codigo_de_ocorrencia: '06', nosso_numero: '12345678' })
+
+    // Then
+    expect(line.join('')).toBe(replaceLineRange(rawLine, [109, 110], '06'))
+  })
 })

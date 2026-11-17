@@ -7,6 +7,7 @@ import {
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 import { CnabFieldWriteNotImplementedException } from '@cnab/exception/cnab-exception'
+import { writeAtRange } from '@cnab/utils/line-writer'
 
 export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
@@ -91,6 +92,10 @@ export abstract class CnabField<T> {
 
   formatValue(_value: unknown): string {
     throw new CnabFieldWriteNotImplementedException(this.fieldKey)
+  }
+
+  write(line: string[], fields: Record<string, unknown>): void {
+    writeAtRange(line, this.range, this.formatValue(fields[this.fieldKey] ?? null))
   }
 
   protected get length(): number {
