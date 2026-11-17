@@ -9,8 +9,8 @@ describe('getEspecieDoTitulo', (): void => {
     ['the code not informed', CnabBank.ITAU, CnabFormat.CNAB240, null, null],
     ['the same code in different layouts of the same bank', CnabBank.BANCODOBRASIL, CnabFormat.CNAB240, '02', CnabEspecieDoTitulo.DUPLICATA_MERCANTIL],
     ['the same code in different layouts of the same bank', CnabBank.BANCODOBRASIL, CnabFormat.CNAB400, '02', CnabEspecieDoTitulo.NOTA_PROMISSORIA],
-    ['a letter code', CnabBank.SICREDI, CnabFormat.CNAB400, 'K', CnabEspecieDoTitulo.OUTRO],
-    ['a code outside the table', CnabBank.SANTANDER, CnabFormat.CNAB400, '99', CnabEspecieDoTitulo.OUTRO]
+    ['the Outros code of the table', CnabBank.SICREDI, CnabFormat.CNAB400, 'K', CnabEspecieDoTitulo.OUTRO],
+    ['a code outside the table', CnabBank.SANTANDER, CnabFormat.CNAB400, '99', null]
   ])('given %s when resolving then returns the expected especie', (_: string, bank: CnabBank, format: CnabFormat, codigo: string | null, expected: CnabEspecieDoTitulo | null): void => {
     // When
     const especie = getEspecieDoTitulo(bank, format, codigo)

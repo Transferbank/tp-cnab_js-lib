@@ -285,5 +285,5 @@ export function getEspecieCodes(bank: CnabBank, format: CnabFormat): Record<stri
 
 export function getEspecieDoTitulo(bank: CnabBank, format: CnabFormat, codigo: string | null): CnabEspecieDoTitulo | null {
   if (codigo == null) return null
-  return getEspecieCodes(bank, format)[codigo] ?? CnabEspecieDoTitulo.OUTRO
+  return getEspecieCodes(bank, format)[codigo] ?? null
 }
