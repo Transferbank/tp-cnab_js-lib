@@ -15,7 +15,7 @@ export abstract class TextField extends CnabField<string> {
 
   formatValue(value: unknown): string {
     assertValueType(value, 'text')
-    if (this.numeric && value != null) {
+    if (this.numeric && value != null && value != '') {
       return formatNumericText(value, this.length)
     }
     return formatAlphanumeric(value ?? null, this.length)

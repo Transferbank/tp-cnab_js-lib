@@ -25,12 +25,17 @@ export function assertValueType<K extends keyof CnabValueTypes>(value: unknown, 
   }
 }
 
+const WRITABLE_TEXT_PATTERN = /^[\x20-\x7E\xA0-\xFF]*$/
+
 export function normalizeText(value: string): string {
-  return value.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase()
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase()
 }
 
 export function formatAlphanumeric(value: string | null, length: number): string {
   const text = normalizeText(value ?? '')
+  if (!WRITABLE_TEXT_PATTERN.test(text)) {
+    throw new RangeError(`valor "${text}" tem caractere que não pode ser escrito no arquivo`)
+  }
   if (text.length > length) {
     throw new RangeError(`valor "${text}" não cabe em ${length} posições`)
   }
@@ -38,7 +43,7 @@ export function formatAlphanumeric(value: string | null, length: number): string
 }
 
 export function formatNumericText(value: string, length: number): string {
-  if (value != '' && !isDigitsOnly(value)) {
+  if (!isDigitsOnly(value)) {
     throw new RangeError(`valor "${value}" deve ter só dígitos`)
   }
   if (value.length > length) {
@@ -55,7 +60,13 @@ export function formatImpliedDecimal(value: number | null, length: number, decim
     throw new RangeError(`valor ${value} negativo não pode ser escrito`)
   }
 
-  const digits = String(Math.round(value * 10 ** decimals))
+  const scale = 10 ** decimals
+  const scaled = Math.round(value * scale)
+  if (Math.abs(scaled / scale - value) > Number.EPSILON * Math.max(1, value) * 4) {
+    throw new RangeError(`valor ${value} tem mais de ${decimals} casas decimais`)
+  }
+
+  const digits = String(scaled)
   if (!isDigitsOnly(digits) || digits.length > length) {
     throw new RangeError(`valor ${value} não cabe em ${length} posições`)
   }

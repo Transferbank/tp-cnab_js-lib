@@ -30,6 +30,16 @@ describe('value-formatter', (): void => {
     it('given a text longer than the field when formatting then throws a range error', (): void => {
       expect((): string => formatAlphanumeric('ABCDEF', 5)).toThrow(RangeError)
     })
+
+    describe.each([
+      { value: 'RUA A\nCASA 2', description: 'a line break' },
+      { value: 'RUA A\tCASA 2', description: 'a tab' },
+      { value: 'VALOR EM €', description: 'a character outside Latin-1' }
+    ])('given a text with $description', ({ value }): void => {
+      it('when formatting then throws a range error', (): void => {
+        expect((): string => formatAlphanumeric(value, 20)).toThrow(RangeError)
+      })
+    })
   })
 
   describe('formatNumericText', (): void => {
@@ -47,6 +57,10 @@ describe('value-formatter', (): void => {
       expect(formatImpliedDecimal(0.1 + 0.2, 13, 2)).toBe('0000000000030')
     })
 
+    it('given a large amount with cents when formatting then keeps the cents', (): void => {
+      expect(formatImpliedDecimal(12345678901.23, 13, 2)).toBe('1234567890123')
+    })
+
     it('given an absent amount when formatting then writes zeros', (): void => {
       expect(formatImpliedDecimal(null, 13, 2)).toBe('0000000000000')
     })
@@ -58,6 +72,15 @@ describe('value-formatter', (): void => {
     ])('given $description', ({ value }): void => {
       it('when formatting then throws a range error', (): void => {
         expect((): string => formatImpliedDecimal(value, 13, 2)).toThrow(RangeError)
+      })
+    })
+
+    describe.each([
+      { value: 1.005, decimals: 2, description: 'an amount with more than 2 decimals' },
+      { value: 1.5, decimals: 0, description: 'a fractional integer' }
+    ])('given $description', ({ value, decimals }): void => {
+      it('when formatting then throws a range error instead of rounding', (): void => {
+        expect((): string => formatImpliedDecimal(value, 13, decimals)).toThrow(RangeError)
       })
     })
   })
