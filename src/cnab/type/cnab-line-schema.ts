@@ -10,6 +10,11 @@ import {
   Cnab400LineSizeValidator,
 } from '@cnab/validators/cnab-line-size-validator'
 
+export type CnabFixedContent = {
+  range: [number, number]
+  value: string
+}
+
 interface CnabValidatable {
   shouldValidate(): boolean
   validate(): CnabValidationResult
@@ -26,6 +31,7 @@ export class CnabLineSchema {
   readonly fieldType: CnabFieldType
   readonly fields: CnabFieldClass[]
   readonly declaredValidators: CnabLineValidatorClass[]
+  readonly fixedContent: CnabFixedContent[]
 
   private cachedValidators?: CnabLineValidatorClass[]
 
@@ -36,6 +42,7 @@ export class CnabLineSchema {
     fieldType: CnabFieldType
     fields: CnabFieldClass[]
     validators?: CnabLineValidatorClass[]
+    fixedContent?: CnabFixedContent[]
   }) {
     this.bank = config.bank
     this.fmt = config.fmt
@@ -43,6 +50,7 @@ export class CnabLineSchema {
     this.fieldType = config.fieldType
     this.fields = config.fields
     this.declaredValidators = config.validators ?? []
+    this.fixedContent = config.fixedContent ?? []
   }
 
   static create(config: {
@@ -52,6 +60,7 @@ export class CnabLineSchema {
     fieldType: CnabFieldType
     fields: CnabFieldClass[]
     validators?: CnabLineValidatorClass[]
+    fixedContent?: CnabFixedContent[]
   }): CnabLineSchema {
     return new CnabLineSchema(config)
   }

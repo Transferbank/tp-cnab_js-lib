@@ -1,7 +1,7 @@
 ﻿import { Cnab, CnabBoleto, CnabHeader, CnabTrailer } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+import { CnabFixedContent, CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
@@ -12,6 +12,7 @@ type CnabLineSchemaConfig = {
   fieldType: CnabFieldType
   fields: CnabFieldClass[]
   validators?: CnabLineValidatorClass[]
+  fixedContent?: CnabFixedContent[]
 }
 
 export class CnabSchema {

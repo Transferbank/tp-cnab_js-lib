@@ -1,6 +1,7 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabSchema } from '@cnab/type/cnab-schema'
+import { CnabFixedContent } from '@cnab/type/cnab-line-schema'
 import { indexCnabSchemas } from '@cnab/bank/index-cnab-schemas'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400/cnab400-line-start-validator'
@@ -21,6 +22,38 @@ import * as SantanderRetornoFields240 from '@cnab/bank/santander/cnab/cnab240/fi
 import * as SicoobRetornoFields240 from '@cnab/bank/sicoob/cnab/cnab240/field/retorno/fields'
 import * as SicoobRetornoFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/retorno/fields'
 import * as SicrediRetornoFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/retorno/fields'
+
+function cnab400RetornoHeaderFixedContent(bank: CnabBank): CnabFixedContent[] {
+  return [
+    { range: [1, 1], value: '0' },
+    { range: [2, 2], value: '2' },
+    { range: [3, 9], value: 'RETORNO' },
+    { range: [10, 11], value: '01' },
+    { range: [12, 19], value: 'COBRANCA' },
+    { range: [77, 79], value: CnabBank.toCode(bank) },
+  ]
+}
+
+function cnab400RetornoTrailerFixedContent(bank: CnabBank): CnabFixedContent[] {
+  return [
+    { range: [1, 1], value: '9' },
+    { range: [2, 2], value: '2' },
+    { range: [3, 4], value: '01' },
+    { range: [5, 7], value: CnabBank.toCode(bank) },
+  ]
+}
+
+const SICREDI_CNAB400_RETORNO_TRAILER_FIXED_CONTENT: CnabFixedContent[] = [
+  { range: [1, 1], value: '9' },
+  { range: [2, 2], value: '2' },
+  { range: [3, 5], value: CnabBank.toCode(CnabBank.SICREDI) },
+]
+
+const SICOOB_CNAB400_RETORNO_TRAILER_FIXED_CONTENT: CnabFixedContent[] = [
+  { range: [1, 1], value: '9' },
+  { range: [2, 3], value: '02' },
+  { range: [4, 6], value: CnabBank.toCode(CnabBank.SICOOB) },
+]
 
 function registerCnabSchemas(): CnabSchema[] {
   return [
@@ -61,11 +94,13 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent(CnabBank.BRADESCO),
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent(CnabBank.BRADESCO),
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -117,11 +152,13 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent(CnabBank.CAIXA),
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent(CnabBank.CAIXA),
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -172,11 +209,13 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent(CnabBank.ITAU),
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent(CnabBank.ITAU),
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -228,11 +267,13 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent(CnabBank.SANTANDER),
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent(CnabBank.SANTANDER),
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -284,11 +325,13 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent(CnabBank.SICREDI),
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: SICREDI_CNAB400_RETORNO_TRAILER_FIXED_CONTENT,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -340,11 +383,13 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent(CnabBank.SICOOB),
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: SICOOB_CNAB400_RETORNO_TRAILER_FIXED_CONTENT,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -396,11 +441,13 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent(CnabBank.BANCODOBRASIL),
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent(CnabBank.BANCODOBRASIL),
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
