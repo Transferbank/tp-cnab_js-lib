@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals'
-import { Cnab, CnabBoleto } from '@cnab/type/cnab'
+import { Cnab, CnabBoleto, CnabHeader } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabFileType } from '@cnab/type/cnab-file-type'
@@ -77,6 +77,35 @@ describe('CnabWriter', (): void => {
         lineNumber: 3,
         fieldKey: 'codigo_de_ocorrencia',
         range: [109, 110]
+      })
+    ]
+
+    // When
+    const error = captureError((): string[] => CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO))
+
+    // Then
+    expect(error).toBeInstanceOf(CnabInvalidFileException)
+    expect(error).toHaveProperty('errors', expectedErrors)
+  })
+
+  it('given keys that do not exist in the layout of their line when writing then throws an invalid file exception with an error for each key', (): void => {
+    // Given
+    const cnab = new Cnab({
+      header: new CnabHeader({ fields: { codigo_de_ocorrencia: '06' } }),
+      boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', nosso_numero: '12345678' } })]
+    })
+    const expectedErrors = [
+      new CnabGenericFieldError({
+        message: 'Campo codigo_de_ocorrencia não existe no layout do header',
+        lineNumber: 0,
+        fieldKey: 'codigo_de_ocorrencia',
+        range: [1, 400]
+      }),
+      new CnabGenericFieldError({
+        message: 'Campo nosso_numero não existe no layout do boleto',
+        lineNumber: 1,
+        fieldKey: 'nosso_numero',
+        range: [1, 400]
       })
     ]
 

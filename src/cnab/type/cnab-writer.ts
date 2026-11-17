@@ -3,6 +3,7 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { CnabField } from '@cnab/type/cnab-field'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabGenericFieldError, CnabValidationError } from '@cnab/type/cnab-validation-error'
@@ -17,6 +18,12 @@ import { writeAtRange } from '@cnab/utils/line-writer'
 import { formatDateBR } from '@cnab/utils/date-parser'
 
 const CNAB400_SEQUENCIAL_RANGE: [number, number] = [395, 400]
+
+const LINE_NAMES: Record<CnabFieldType, string> = {
+  [CnabFieldType.HEADER]: 'header',
+  [CnabFieldType.BOLETO]: 'boleto',
+  [CnabFieldType.TRAILER]: 'trailer'
+}
 
 export class CnabWriter {
   static write(cnab: Cnab, bank: CnabBank, format: CnabFormat, fileType: CnabFileType): string[] {
@@ -162,6 +169,9 @@ export class CnabWriter {
       writeAtRange(line, range, value)
     }
 
+    const unknownKeyErrors = CnabWriter.findUnknownKeys(lineSchema, values, lineNumber)
+    errors.push(...unknownKeyErrors)
+
     for (const fieldClass of lineSchema.fields) {
       const field = new fieldClass(line.join(''), lineNumber)
       if (!field.shouldValidate()) {
@@ -174,6 +184,32 @@ export class CnabWriter {
     writeAtRange(line, CNAB400_SEQUENCIAL_RANGE, sequencial)
 
     return line.join('')
+  }
+
+  private static findUnknownKeys(
+    lineSchema: CnabLineSchema,
+    values: Record<string, unknown>,
+    lineNumber: number
+  ): CnabValidationError[] {
+    const knownKeys = new Set<string>()
+    for (const fieldClass of lineSchema.fields) {
+      knownKeys.add(new fieldClass('', lineNumber).fieldKey)
+    }
+
+    const errors: CnabValidationError[] = []
+    for (const fieldKey of Object.keys(values)) {
+      if (knownKeys.has(fieldKey)) {
+        continue
+      }
+      errors.push(new CnabGenericFieldError({
+        message: `Campo ${fieldKey} não existe no layout do ${LINE_NAMES[lineSchema.fieldType]}`,
+        lineNumber,
+        fieldKey,
+        range: [1, Cnab400LineSizeValidator.expectedSize]
+      }))
+    }
+
+    return errors
   }
 
   private static writeField(
