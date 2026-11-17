@@ -9,6 +9,7 @@ export function openCnabFileFromLines(lines: string[]): CnabFile {
 }
 
 export { CnabFile }
+export { CnabWriter } from '@cnab/type/cnab-writer'
 export { Cnab, CnabRecord, CnabBoleto, CnabHeader, CnabTrailer } from '@cnab/type/cnab'
 export { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 export { CnabField, CnabFieldClass, optional } from '@cnab/type/cnab-field'
