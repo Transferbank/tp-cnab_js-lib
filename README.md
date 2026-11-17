@@ -82,22 +82,22 @@ Cada campo é identificado por uma chave (`fieldKey`), usada nos erros de valida
 
 Os campos de juros e de multa são sempre lidos pelo sistema. Os juros crescem a cada dia de atraso; a multa é cobrada uma vez só. De acordo com os manuais, `codigo_de_juros` e `codigo_de_multa` definem como os valores em `juros` e `multa` devem ser lidos: em reais ou como percentual. Cada banco define seus próprios códigos. Utilize `getTipoDeJuros` e `getTipoDeMulta` para traduzir o código extraído do campo.
 
-| Tipo de juros            | Significado de `juros`                               |
-| ------------------------ | ---------------------------------------------------- |
-| `VALOR_POR_DIA`          | valor em reais cobrado por dia corrido de atraso     |
-| `VALOR_POR_DIA_UTIL`     | valor em reais cobrado por dia útil de atraso        |
-| `TAXA_MENSAL`            | percentual cobrado ao mês, contando dias corridos    |
-| `TAXA_MENSAL_DIAS_UTEIS` | percentual cobrado ao mês, contando só os dias úteis |
-| `TAXA_DIARIA`            | percentual cobrado ao dia                            |
-| `ISENTO`                 | o boleto não cobra juros                             |
-| `OUTRO`                  | código sem um desses tipos como equivalente          |
+| Tipo de juros            | Significado de `juros`                                |
+| ------------------------ | ----------------------------------------------------- |
+| `VALOR_POR_DIA`          | valor em reais cobrado por dia corrido de atraso      |
+| `VALOR_POR_DIA_UTIL`     | valor em reais cobrado por dia útil de atraso         |
+| `TAXA_MENSAL`            | percentual cobrado ao mês, contando dias corridos     |
+| `TAXA_MENSAL_DIAS_UTEIS` | percentual cobrado ao mês, contando só os dias úteis  |
+| `TAXA_DIARIA`            | percentual cobrado ao dia                             |
+| `ISENTO`                 | o boleto não cobra juros                              |
+| `OUTRO`                  | código da tabela sem um desses tipos como equivalente |
 
-| Tipo de multa | Significado de `multa`                      |
-| ------------- | ------------------------------------------- |
-| `VALOR_FIXO`  | valor em reais cobrado uma vez              |
-| `PERCENTUAL`  | percentual sobre o valor do título          |
-| `ISENTO`      | o boleto não cobra multa                    |
-| `OUTRO`       | código sem um desses tipos como equivalente |
+| Tipo de multa | Significado de `multa`                                |
+| ------------- | ----------------------------------------------------- |
+| `VALOR_FIXO`  | valor em reais cobrado uma vez                        |
+| `PERCENTUAL`  | percentual sobre o valor do título                    |
+| `ISENTO`      | o boleto não cobra multa                              |
+| `OUTRO`       | código da tabela sem um desses tipos como equivalente |
 
 ```ts
 import { getTipoDeJuros, getTipoDeMulta } from '@fx55/cnab-lib-ts'
@@ -110,7 +110,7 @@ for (const boleto of cnabFile.read().boletos) {
 }
 ```
 
-Um código que não está na tabela do banco é erro de validação. Quando o código é `null`, as funções devolvem `null`: o arquivo não informou o tipo, e quem decide é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra juros por dia quando há valor de juros e não cobra juros quando não há.
+Um código que não está na tabela do banco é erro de validação, e as funções devolvem `null` para ele. Quando o código é `null`, as funções também devolvem `null`: o arquivo não informou o tipo, e quem decide é o banco, pelas regras do manual. A Caixa CNAB 400, por exemplo, cobra juros por dia quando há valor de juros e não cobra juros quando não há.
 
 Em geral, o código `0` é tratado como código não informado. A exceção são os layouts onde o manual define `0` como "sem multa" ou "sem juros": neles, o campo traz `'0'` e a função devolve `ISENTO`. São eles:
 

@@ -109,5 +109,5 @@ export function getMultaCodes(bank: CnabBank, format: CnabFormat): Record<string
 export function getTipoDeMulta(bank: CnabBank, format: CnabFormat, codigo: string | null): CnabTipoDeMulta | null {
   const table = CNAB_TIPO_DE_MULTA_TABLES[bank][format]
   if (codigo == null) return table.withoutCode ?? null
-  return table.codes?.[codigo] ?? CnabTipoDeMulta.OUTRO
+  return table.codes?.[codigo] ?? null
 }
