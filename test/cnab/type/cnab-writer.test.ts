@@ -88,6 +88,17 @@ describe('CnabWriter', (): void => {
     expect(error).toHaveProperty('errors', expectedErrors)
   })
 
+  it('given a code in lowercase when writing then writes it in uppercase without reporting a difference', (): void => {
+    // Given
+    const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: 'ab' } })] })
+
+    // When
+    const lines = CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO)
+
+    // Then
+    expect(lines[1].substring(108, 110)).toBe('AB')
+  })
+
   it.each([
     ['without a code', {}],
     ['with a code the layout does not accept', { codigo_de_ocorrencia: '6#' }]
