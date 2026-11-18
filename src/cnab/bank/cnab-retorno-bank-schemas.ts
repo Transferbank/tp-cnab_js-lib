@@ -12,12 +12,15 @@ import * as RetornoFields240 from '@cnab/field/cnab240/retorno/fields'
 import * as RetornoFields400 from '@cnab/field/cnab400/retorno/fields'
 
 import * as BancoDoBrasilRetornoFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/retorno/fields'
+import * as BradescoRetornoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/retorno/fields'
 import * as CaixaRetornoFields240 from '@cnab/bank/caixa/cnab/cnab240/field/retorno/fields'
 import * as CaixaRetornoFields400 from '@cnab/bank/caixa/cnab/cnab400/field/retorno/fields'
 import * as ItauRetornoFields240 from '@cnab/bank/itau/cnab/cnab240/field/retorno/fields'
 import * as ItauRetornoFields400 from '@cnab/bank/itau/cnab/cnab400/field/retorno/fields'
 import * as SantanderRetornoFields240 from '@cnab/bank/santander/cnab/cnab240/field/retorno/fields'
 import * as SicoobRetornoFields240 from '@cnab/bank/sicoob/cnab/cnab240/field/retorno/fields'
+import * as SicoobRetornoFields400 from '@cnab/bank/sicoob/cnab/cnab400/field/retorno/fields'
+import * as SicrediRetornoFields400 from '@cnab/bank/sicredi/cnab/cnab400/field/retorno/fields'
 
 function registerCnabSchemas(): CnabSchema[] {
   return [
@@ -72,7 +75,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields400.JurosMultaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,
           RetornoFields400.SeuNumeroBoletoField,
-          RetornoFields400.UsoDaEmpresaBoletoField
+          RetornoFields400.UsoDaEmpresaBoletoField,
+          BradescoRetornoFields400.NossoNumeroBoletoField
         ],
       },
     }),
@@ -100,7 +104,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields240.JurosMultaBoletoField,
           RetornoFields240.DataDeOcorrenciaBoletoField,
           CaixaRetornoFields240.SeuNumeroBoletoField,
-          RetornoFields240.UsoDaEmpresaBoletoField
+          RetornoFields240.UsoDaEmpresaBoletoField,
+          CaixaRetornoFields240.NossoNumeroBoletoField
         ],
       },
     }),
@@ -127,7 +132,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields400.MultaPagaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,
           RetornoFields400.SeuNumeroBoletoField,
-          CaixaRetornoFields400.UsoDaEmpresaBoletoField
+          CaixaRetornoFields400.UsoDaEmpresaBoletoField,
+          CaixaRetornoFields400.NossoNumeroBoletoField
         ],
       },
     }),
@@ -153,7 +159,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields240.CodigoDeOcorrenciaBoletoField,
           RetornoFields240.DataDeOcorrenciaBoletoField,
           ItauRetornoFields240.SeuNumeroBoletoField,
-          RetornoFields240.UsoDaEmpresaBoletoField
+          RetornoFields240.UsoDaEmpresaBoletoField,
+          ItauRetornoFields240.NossoNumeroBoletoField
         ],
       },
     }),
@@ -208,7 +215,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields240.JurosMultaBoletoField,
           RetornoFields240.DataDeOcorrenciaBoletoField,
           SantanderRetornoFields240.SeuNumeroBoletoField,
-          SantanderRetornoFields240.UsoDaEmpresaBoletoField
+          SantanderRetornoFields240.UsoDaEmpresaBoletoField,
+          SantanderRetornoFields240.NossoNumeroBoletoField
         ],
       },
     }),
@@ -290,7 +298,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields400.JurosPagoBoletoField,
           RetornoFields400.MultaPagaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,
-          RetornoFields400.SeuNumeroBoletoField
+          RetornoFields400.SeuNumeroBoletoField,
+          SicrediRetornoFields400.NossoNumeroBoletoField
         ],
       },
     }),
@@ -345,7 +354,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields400.JurosMultaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,
           RetornoFields400.SeuNumeroBoletoField,
-          RetornoFields400.UsoDaEmpresaBoletoField
+          RetornoFields400.UsoDaEmpresaBoletoField,
+          SicoobRetornoFields400.NossoNumeroBoletoField
         ],
       },
     }),
