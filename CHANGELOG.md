@@ -27,4 +27,4 @@ Mudanças da `@fx55/cnab-lib-ts` por versão. As versões seguem o [versionament
 - Retorno: `seu_numero`, o número do documento dado pelo beneficiário, nos 14 layouts.
 - Retorno: `uso_da_empresa`, a identificação do boleto na empresa, em 13 dos 14 layouts (o Sicredi CNAB 400 não tem o campo).
 - Retorno: `nosso_numero`, a identificação do boleto no banco, nos 14 layouts.
-- Escrita do lote de validação CNAB 400: `CnabWriter.write`, com `CnabWriteNotSupportedException` para formato ou tipo de arquivo sem escrita.
+- Escrita do lote de validação CNAB 400: `CnabWriter.write`, com os mesmos campos da leitura do retorno, conferida pela própria leitura, e `CnabWriteNotSupportedException` para formato ou tipo de arquivo sem escrita.
