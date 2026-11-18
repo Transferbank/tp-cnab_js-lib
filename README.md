@@ -477,7 +477,7 @@ const lines = CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, Cnab
 - Cada boleto vira um registro de detalhe, entre um header e um trailer.
 - O conteúdo fixo do layout do banco (tipo de registro, `RETORNO`, código do banco) e o número sequencial de cada linha são preenchidos pela lib.
 - Os campos aceitos são os mesmos da leitura do lote de validação do banco, pela mesma chave (veja [Lote de criação e lote de validação](#lote-de-criação-e-lote-de-validação)). Um campo não informado é escrito vazio.
-- Cada valor é escrito no formato do layout: valores com as casas decimais implícitas, datas como DDMMAA, texto em maiúsculas sem acento e alinhado à esquerda, e `nosso_numero` com zeros à esquerda onde o layout é numérico.
+- Texto é escrito em maiúsculas e sem acento.
 - O `valor_pago` informado é sempre o total pago pelo pagador. Na Caixa CNAB 400, a lib escreve o valor principal, descontando `juros_pago` e `multa_paga`.
 - No Itaú CNAB 400, `valor_pago` e `juros_multa` só são lidos em ocorrências de liquidação; informados em outra ocorrência, como uma entrada ou uma baixa, são recusados.
 - O arquivo escrito é validado e lido de volta como a leitura faria. Se um valor não puder ser escrito, se uma chave não existir no layout da linha ou se o valor lido de volta for diferente do informado, `write` lança `CnabInvalidFileException` com um erro para cada campo.
