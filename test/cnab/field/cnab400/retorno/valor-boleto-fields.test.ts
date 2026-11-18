@@ -1,10 +1,20 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabOcorrencia, CnabOcorrenciaTable } from '@cnab/type/cnab-ocorrencia'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { cnab400RetornoLine, replaceLineRange } from '@test/test-utils'
 import { ValorTituloBoletoField } from '@cnab/field/cnab400/retorno/valor-titulo-boleto-field'
 import { ValorPagoBoletoField } from '@cnab/field/cnab400/retorno/valor-pago-boleto-field'
 import { JurosMultaBoletoField } from '@cnab/field/cnab400/retorno/juros-multa-boleto-field'
+
+const OCORRENCIA_TABLE: CnabOcorrenciaTable = {
+  [CnabOcorrencia.LIQUIDACAO]: { '06': 'Liquidação' },
+  [CnabOcorrencia.BAIXA]: { '09': 'Baixa' }
+}
+
+class LiquidacaoOnlyValorPagoBoletoField extends ValorPagoBoletoField {
+  protected readonly liquidacaoOnlyTable = OCORRENCIA_TABLE
+}
 
 const cases: Array<[string, CnabFieldClass<number>, [number, number]]> = [
   ['ValorTituloBoletoField', ValorTituloBoletoField, [153, 165]],
@@ -71,5 +81,21 @@ describe('ValorBoletoField', (): void => {
         })
       ]
     })
+  })
+})
+
+describe('ValorPagoBoletoField', (): void => {
+  it.each([
+    ['06', true],
+    ['09', false]
+  ])('given the ocorrência %s when the field is read only on liquidação then shouldValidate is %s', (code: string, expected: boolean): void => {
+    // Given
+    const line = replaceLineRange(cnab400RetornoLine('1'), [109, 110], code)
+
+    // When
+    const shouldValidate = new LiquidacaoOnlyValorPagoBoletoField(line, 1).shouldValidate()
+
+    // Then
+    expect(shouldValidate).toBe(expected)
   })
 })

@@ -1,5 +1,6 @@
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabOcorrenciaTable, isLiquidacao } from '@cnab/type/cnab-ocorrencia'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
@@ -9,9 +10,10 @@ import { parseImpliedDecimal } from '@cnab/utils/value-parser'
 export abstract class ValorBoletoField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   protected readonly recordType: string = '1'
+  protected readonly liquidacaoOnlyTable: CnabOcorrenciaTable | null = null
 
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType) && this.isReadableOcorrencia()
   }
 
   protected extractRawValue(): string {
@@ -28,5 +30,13 @@ export abstract class ValorBoletoField extends CnabField<number> {
       throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
     return value
+  }
+
+  private isReadableOcorrencia(): boolean {
+    if (this.liquidacaoOnlyTable == null) {
+      return true
+    }
+    const code = this.extractRangeFromLine(108, 110)
+    return isLiquidacao(this.liquidacaoOnlyTable, code)
   }
 }
