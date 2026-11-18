@@ -338,10 +338,11 @@ Os bancos que já leem o lote de validação estão na tabela de [Bancos suporta
 
 Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece uma vez na entrada e de novo na liquidação ou na baixa. Por isso `cnab.boletos` traz um item por ocorrência, com estes campos:
 
-| Chave                  | Descrição                                  | Tipo     |
-| ---------------------- | ------------------------------------------ | -------- |
-| `codigo_de_ocorrencia` | Código da ocorrência, como está no arquivo | `string` |
-| `valor_pago`           | Valor pago pelo pagador, em reais          | `number` |
+| Chave                  | Descrição                                             | Tipo     |
+| ---------------------- | ----------------------------------------------------- | -------- |
+| `codigo_de_ocorrencia` | Código da ocorrência, como está no arquivo            | `string` |
+| `valor_pago`           | Valor pago pelo pagador, em reais                     | `number` |
+| `juros_multa`          | Encargos pagos pelo pagador (juros e multa), em reais | `number` |
 
 `valor_pago` é o total pago pelo pagador. Em alguns layouts, ele junta mais de uma posição do arquivo ou só é lido quando o boleto foi pago:
 
@@ -350,6 +351,8 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 - Sicoob CNAB 240: só é lido na liquidação (na baixa por protesto, a posição repete o valor do título).
 
 O Itaú CNAB 240 ainda não lê `valor_pago`, por falta de informação: o manual descreve a posição como valor lançado em conta, possivelmente já sem a tarifa de cobrança, que fica em outra linha do boleto.
+
+`juros_multa` já é lido no Banco do Brasil; os outros bancos estão em progresso.
 
 #### Ocorrências
 
