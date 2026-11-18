@@ -169,7 +169,7 @@ describe('CnabWriter', (): void => {
     const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '09', valor_pago: 100 } })] })
     const expectedErrors = [
       new CnabGenericFieldError({
-        message: 'Campo valor_pago foi informado como 100, mas é lido do arquivo escrito como vazio',
+        message: 'Campo valor_pago foi informado como 100, mas o layout do banco não lê esse campo com o conteúdo desta linha, como o código de ocorrência',
         lineNumber: 1,
         fieldKey: 'valor_pago',
         range: [254, 266]

@@ -123,7 +123,7 @@ export class CnabWriter {
         continue
       }
       errors.push(new CnabGenericFieldError({
-        message: `Campo ${field.fieldKey} foi informado como ${CnabWriter.describeValue(informed)}, mas é lido do arquivo escrito como ${CnabWriter.describeValue(read)}`,
+        message: CnabWriter.describeMismatch(field, informed, read),
         lineNumber,
         fieldKey: field.fieldKey,
         range: field.range
@@ -142,6 +142,14 @@ export class CnabWriter {
       }
       return false
     }
+  }
+
+  private static describeMismatch(field: CnabField<unknown>, informed: unknown, read: unknown): string {
+    const informedDescription = `Campo ${field.fieldKey} foi informado como ${CnabWriter.describeValue(informed)}`
+    if (field.belongsToLine() && !field.shouldValidate()) {
+      return `${informedDescription}, mas o layout do banco não lê esse campo com o conteúdo desta linha, como o código de ocorrência`
+    }
+    return `${informedDescription}, mas é lido do arquivo escrito como ${CnabWriter.describeValue(read)}`
   }
 
   private static describeValue(value: unknown): string {
