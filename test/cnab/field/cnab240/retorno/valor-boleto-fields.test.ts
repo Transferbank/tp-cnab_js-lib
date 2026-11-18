@@ -6,6 +6,7 @@ import { cnab240RetornoLine, replaceLineRange } from '@test/test-utils'
 import { ValorTituloBoletoField } from '@cnab/field/cnab240/retorno/valor-titulo-boleto-field'
 import { ValorPagoBoletoField } from '@cnab/field/cnab240/retorno/valor-pago-boleto-field'
 import { JurosMultaBoletoField } from '@cnab/field/cnab240/retorno/juros-multa-boleto-field'
+import { ValorPagoBoletoField as SicoobValorPagoBoletoField } from '@cnab/bank/sicoob/cnab/cnab240/field/retorno/valor-pago-boleto-field'
 
 class LiquidacaoOnlyValorPagoBoletoField extends ValorPagoBoletoField {
   protected readonly liquidacaoOnlyTable: CnabOcorrenciaTable = {
@@ -95,5 +96,19 @@ describe('ValorPagoBoletoField', (): void => {
 
     // Then
     expect(shouldValidate).toBe(expected)
+  })
+})
+
+describe('Sicoob ValorPagoBoletoField', (): void => {
+  it('given a protestado e baixado segment U repeating the valor do título when reading then valor pago is not read', (): void => {
+    // Given
+    let line = replaceLineRange(cnab240RetornoLine('3', 'U'), [16, 17], '25')
+    line = replaceLineRange(line, [78, 92], '000000000025000')
+
+    // When
+    const shouldValidate = new SicoobValorPagoBoletoField(line, 1).shouldValidate()
+
+    // Then
+    expect(shouldValidate).toBe(false)
   })
 })

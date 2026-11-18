@@ -14,6 +14,7 @@ import * as RetornoFields400 from '@cnab/field/cnab400/retorno/fields'
 import * as BancoDoBrasilRetornoFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/retorno/fields'
 import * as CaixaRetornoFields400 from '@cnab/bank/caixa/cnab/cnab400/field/retorno/fields'
 import * as ItauRetornoFields400 from '@cnab/bank/itau/cnab/cnab400/field/retorno/fields'
+import * as SicoobRetornoFields240 from '@cnab/bank/sicoob/cnab/cnab240/field/retorno/fields'
 
 function registerCnabSchemas(): CnabSchema[] {
   return [
@@ -265,7 +266,8 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.BOLETO,
         validators: [Cnab240LoteRecordTypeValidator],
         fields: [
-          RetornoFields240.CodigoDeOcorrenciaBoletoField
+          RetornoFields240.CodigoDeOcorrenciaBoletoField,
+          SicoobRetornoFields240.ValorPagoBoletoField
         ],
       },
     }),
