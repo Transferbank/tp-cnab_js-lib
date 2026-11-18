@@ -45,7 +45,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields240.JurosMultaBoletoField,
           RetornoFields240.DataDeOcorrenciaBoletoField,
           RetornoFields240.SeuNumeroBoletoField,
-          RetornoFields240.UsoDaEmpresaBoletoField
+          RetornoFields240.UsoDaEmpresaBoletoField,
+          RetornoFields240.NossoNumeroBoletoField
         ],
       },
     }),
@@ -178,7 +179,8 @@ function registerCnabSchemas(): CnabSchema[] {
           ItauRetornoFields400.JurosMultaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,
           RetornoFields400.SeuNumeroBoletoField,
-          RetornoFields400.UsoDaEmpresaBoletoField
+          RetornoFields400.UsoDaEmpresaBoletoField,
+          RetornoFields400.NossoNumeroBoletoField
         ],
       },
     }),
@@ -232,7 +234,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields400.JurosMultaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,
           RetornoFields400.SeuNumeroBoletoField,
-          RetornoFields400.UsoDaEmpresaBoletoField
+          RetornoFields400.UsoDaEmpresaBoletoField,
+          RetornoFields400.NossoNumeroBoletoField
         ],
       },
     }),
@@ -260,7 +263,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields240.JurosMultaBoletoField,
           RetornoFields240.DataDeOcorrenciaBoletoField,
           RetornoFields240.SeuNumeroBoletoField,
-          RetornoFields240.UsoDaEmpresaBoletoField
+          RetornoFields240.UsoDaEmpresaBoletoField,
+          RetornoFields240.NossoNumeroBoletoField
         ],
       },
     }),
@@ -314,7 +318,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields240.JurosMultaBoletoField,
           RetornoFields240.DataDeOcorrenciaBoletoField,
           RetornoFields240.SeuNumeroBoletoField,
-          RetornoFields240.UsoDaEmpresaBoletoField
+          RetornoFields240.UsoDaEmpresaBoletoField,
+          RetornoFields240.NossoNumeroBoletoField
         ],
       },
     }),
