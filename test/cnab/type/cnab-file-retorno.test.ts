@@ -5,6 +5,19 @@ import { CnabOcorrencia } from '@cnab/type/cnab-ocorrencia'
 import { getOcorrencia, getOcorrenciaDescription } from '@cnab/bank/cnab-ocorrencia-tables'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
+function readFieldOutsideEntradas(examplePath: string, fieldKey: string): unknown[] {
+  const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
+  const boletos = cnabFile.read().boletos
+  const values: unknown[] = []
+  for (const boleto of boletos) {
+    const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
+    if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
+      values.push(boleto.fields[fieldKey] ?? null)
+    }
+  }
+  return values
+}
+
 describe('cnab-file retorno', (): void => {
   it.each([
     ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', 3, '06', 'Liquidação'],
@@ -62,18 +75,8 @@ describe('cnab-file retorno', (): void => {
   ])(
     'given retorno file %s when reading then returns the valor pago of the liquidações and none for the baixa',
     (examplePath: string, expectedValoresPagos: Array<number | null>): void => {
-      // Given
-      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
-
       // When
-      const boletos = cnabFile.read().boletos
-      const valoresPagos: unknown[] = []
-      for (const boleto of boletos) {
-        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
-        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
-          valoresPagos.push(boleto.fields.valor_pago ?? null)
-        }
-      }
+      const valoresPagos = readFieldOutsideEntradas(examplePath, 'valor_pago')
 
       // Then
       expect(valoresPagos).toEqual(expectedValoresPagos)
@@ -95,18 +98,8 @@ describe('cnab-file retorno', (): void => {
   ])(
     'given retorno file %s when reading then returns the juros e multa of the liquidações and none for the baixa',
     (examplePath: string, expectedJurosMulta: Array<number | null>): void => {
-      // Given
-      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
-
       // When
-      const boletos = cnabFile.read().boletos
-      const jurosMulta: unknown[] = []
-      for (const boleto of boletos) {
-        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
-        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
-          jurosMulta.push(boleto.fields.juros_multa ?? null)
-        }
-      }
+      const jurosMulta = readFieldOutsideEntradas(examplePath, 'juros_multa')
 
       // Then
       expect(jurosMulta).toEqual(expectedJurosMulta)
@@ -197,18 +190,8 @@ describe('cnab-file retorno', (): void => {
   ])(
     'given retorno file %s when reading then returns the data de ocorrência of the liquidações and of the baixa',
     (examplePath: string, expectedDatas: Date[]): void => {
-      // Given
-      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
-
       // When
-      const boletos = cnabFile.read().boletos
-      const datas: unknown[] = []
-      for (const boleto of boletos) {
-        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
-        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
-          datas.push(boleto.fields.data_de_ocorrencia ?? null)
-        }
-      }
+      const datas = readFieldOutsideEntradas(examplePath, 'data_de_ocorrencia')
 
       // Then
       expect(datas).toEqual(expectedDatas)
@@ -233,18 +216,8 @@ describe('cnab-file retorno', (): void => {
   ])(
     'given retorno file %s when reading then returns the seu número of the liquidações and of the baixa',
     (examplePath: string, expectedSeusNumeros: string[]): void => {
-      // Given
-      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
-
       // When
-      const boletos = cnabFile.read().boletos
-      const seusNumeros: unknown[] = []
-      for (const boleto of boletos) {
-        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
-        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
-          seusNumeros.push(boleto.fields.seu_numero ?? null)
-        }
-      }
+      const seusNumeros = readFieldOutsideEntradas(examplePath, 'seu_numero')
 
       // Then
       expect(seusNumeros).toEqual(expectedSeusNumeros)
@@ -268,18 +241,8 @@ describe('cnab-file retorno', (): void => {
   ])(
     'given retorno file %s when reading then returns the uso da empresa of the liquidações and of the baixa',
     (examplePath: string, expectedUsosDaEmpresa: string[]): void => {
-      // Given
-      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
-
       // When
-      const boletos = cnabFile.read().boletos
-      const usosDaEmpresa: unknown[] = []
-      for (const boleto of boletos) {
-        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
-        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
-          usosDaEmpresa.push(boleto.fields.uso_da_empresa ?? null)
-        }
-      }
+      const usosDaEmpresa = readFieldOutsideEntradas(examplePath, 'uso_da_empresa')
 
       // Then
       expect(usosDaEmpresa).toEqual(expectedUsosDaEmpresa)
@@ -304,18 +267,8 @@ describe('cnab-file retorno', (): void => {
   ])(
     'given retorno file %s when reading then returns the nosso número of the liquidações and of the baixa with its leading zeros',
     (examplePath: string, expectedNossosNumeros: string[]): void => {
-      // Given
-      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
-
       // When
-      const boletos = cnabFile.read().boletos
-      const nossosNumeros: unknown[] = []
-      for (const boleto of boletos) {
-        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
-        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
-          nossosNumeros.push(boleto.fields.nosso_numero ?? null)
-        }
-      }
+      const nossosNumeros = readFieldOutsideEntradas(examplePath, 'nosso_numero')
 
       // Then
       expect(nossosNumeros).toEqual(expectedNossosNumeros)
