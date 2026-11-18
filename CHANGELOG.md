@@ -19,3 +19,4 @@ Mudanças da `@fx55/cnab-lib-ts` por versão. As versões seguem o [versionament
 - Retorno: `juros_pago` e `multa_paga` na Caixa CNAB 400 e no Sicredi CNAB 400, que mandam juros e multa em posições separadas.
 - Retorno: `data_de_ocorrencia`, a data em que o banco registrou a ocorrência, nos 14 layouts.
 - Retorno: `seu_numero`, o número do documento dado pelo beneficiário, nos 14 layouts.
+- Retorno: `uso_da_empresa`, a identificação do boleto na empresa, em 13 dos 14 layouts (o Sicredi CNAB 400 não tem o campo).

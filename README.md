@@ -363,7 +363,7 @@ A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separad
 
 `data_de_ocorrencia` é a data em que o banco registrou a ocorrência, e não necessariamente a data em que o pagador pagou. No Itaú CNAB 240, o manual a descreve como a data de geração do arquivo.
 
-`uso_da_empresa` já é lido no Banco do Brasil; os outros bancos estão em progresso.
+O Sicredi CNAB 400 não tem `uso_da_empresa` no layout do retorno.
 
 #### Ocorrências
 
