@@ -145,14 +145,16 @@ describe('ValorPagoBoletoField', (): void => {
   it.each([
     ['06', true],
     ['09', false]
-  ])('given the ocorrência %s when the field is read only on liquidação then shouldValidate is %s', (code: string, expected: boolean): void => {
+  ])('given the ocorrência %s when the field is read only on liquidação then shouldValidate is %s and the field still belongs to the line', (code: string, expected: boolean): void => {
     // Given
-    const line = replaceLineRange(cnab400RetornoLine('1'), [109, 110], code)
+    const field = new LiquidacaoOnlyValorPagoBoletoField(replaceLineRange(cnab400RetornoLine('1'), [109, 110], code), 1)
 
     // When
-    const shouldValidate = new LiquidacaoOnlyValorPagoBoletoField(line, 1).shouldValidate()
+    const shouldValidate = field.shouldValidate()
+    const belongsToLine = field.belongsToLine()
 
     // Then
     expect(shouldValidate).toBe(expected)
+    expect(belongsToLine).toBe(true)
   })
 })

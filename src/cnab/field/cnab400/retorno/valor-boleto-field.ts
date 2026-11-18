@@ -11,8 +11,12 @@ export abstract class ValorBoletoField extends ValorField {
   protected readonly liquidacaoOnlyTable: CnabOcorrenciaTable | null = null
   protected readonly ocorrenciaField: CnabFieldClass<string> = CodigoDeOcorrenciaBoletoField
 
+  belongsToLine(): boolean {
+    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType)
+  }
+
   shouldValidate(): boolean {
-    return Cnab400LineTypeChecker.isDetalhe(this.rawLine, this.recordType) && this.isReadableOcorrencia()
+    return this.belongsToLine() && this.isReadableOcorrencia()
   }
 
   private isReadableOcorrencia(): boolean {

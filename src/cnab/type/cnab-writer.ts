@@ -174,7 +174,7 @@ export class CnabWriter {
 
     for (const fieldClass of lineSchema.fields) {
       const field = new fieldClass(line.join(''), lineNumber)
-      if (!field.shouldValidate()) {
+      if (!field.belongsToLine()) {
         continue
       }
       CnabWriter.writeField(field, line, values, lineNumber, errors)

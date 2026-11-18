@@ -90,6 +90,10 @@ export abstract class CnabField<T> {
     return this.value
   }
 
+  belongsToLine(): boolean {
+    return this.shouldValidate()
+  }
+
   formatValue(_value: unknown): string {
     throw new CnabFieldWriteNotImplementedException(this.fieldKey)
   }
