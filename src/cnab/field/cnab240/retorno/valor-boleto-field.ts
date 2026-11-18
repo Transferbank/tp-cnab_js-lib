@@ -1,4 +1,5 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CodigoDeOcorrenciaBoletoField } from '@cnab/field/cnab240/retorno/codigo-de-ocorrencia-boleto-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabOcorrenciaTable, isLiquidacao } from '@cnab/type/cnab-ocorrencia'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -9,6 +10,7 @@ import { parseImpliedDecimal } from '@cnab/utils/value-parser'
 export abstract class ValorBoletoField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
   protected readonly liquidacaoOnlyTable: CnabOcorrenciaTable | null = null
+  protected readonly ocorrenciaField: CnabFieldClass<string> = CodigoDeOcorrenciaBoletoField
 
   protected extractRawValue(): string {
     return blankIfZeros(super.extractRawValue())
@@ -30,7 +32,7 @@ export abstract class ValorBoletoField extends CnabField<number> {
     if (this.liquidacaoOnlyTable == null) {
       return true
     }
-    const code = this.extractRangeFromLine(15, 17)
+    const code = new this.ocorrenciaField(this.rawLine, this.lineNumber).value ?? ''
     return isLiquidacao(this.liquidacaoOnlyTable, code)
   }
 }
