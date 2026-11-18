@@ -21,22 +21,29 @@ export class ValorPagoBoletoField extends ValorBoletoField {
     return sumRawAmounts(rawAmounts)
   }
 
-  write(line: string[], fields: Record<string, unknown>): void {
-    const total = fields[this.fieldKey] ?? null
+  writeDependencies(): string[] {
+    const keys: string[] = []
+    for (const field of this.createAddedFields()) {
+      keys.push(field.fieldKey)
+    }
+    return keys
+  }
+
+  write(line: string[], value: unknown, dependencies: Record<string, unknown>): void {
     const addedFields = this.createAddedFields()
-    if (total == null || addedFields.length == 0) {
-      super.write(line, fields)
+    if (value == null || addedFields.length == 0) {
+      super.write(line, value, dependencies)
       return
     }
 
-    let cents = Number(this.formatValue(total))
+    let cents = Number(this.formatValue(value))
     const addedKeys: string[] = []
     for (const field of addedFields) {
-      cents -= Number(field.formatValue(fields[field.fieldKey] ?? null))
+      cents -= Number(field.formatValue(dependencies[field.fieldKey] ?? null))
       addedKeys.push(field.fieldKey)
     }
     if (cents < 0) {
-      throw new RangeError(`valor ${String(total)} é menor que ${addedKeys.join(' e ')} somados`)
+      throw new RangeError(`valor ${String(value)} é menor que ${addedKeys.join(' e ')} somados`)
     }
     writeAtRange(line, this.range, String(cents).padStart(this.length, '0'))
   }

@@ -78,7 +78,7 @@ describe('write', (): void => {
     const field = new FakeNumberField('   ', 0)
 
     // When
-    const write = (): void => field.write(line, { campo_numerico: 123 })
+    const write = (): void => field.write(line, 123, {})
 
     // Then
     expect(write).toThrow(CnabFieldWriteNotImplementedException)
