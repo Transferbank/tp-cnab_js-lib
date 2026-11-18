@@ -1,3 +1,4 @@
 export { CodigoDeOcorrenciaBoletoField } from '@cnab/field/cnab240/retorno/codigo-de-ocorrencia-boleto-field'
 export { ValorPagoBoletoField } from '@cnab/field/cnab240/retorno/valor-pago-boleto-field'
 export { JurosMultaBoletoField } from '@cnab/field/cnab240/retorno/juros-multa-boleto-field'
+export { DataDeOcorrenciaBoletoField } from '@cnab/field/cnab240/retorno/data-de-ocorrencia-boleto-field'
