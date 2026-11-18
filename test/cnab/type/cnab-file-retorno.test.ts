@@ -50,6 +50,7 @@ describe('cnab-file retorno', (): void => {
     ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', [21421.98, 2346.27, null]],
     ['caixa/cnab240/retorno/caixa_cnab_240.txt', [1234.5, 2525, null]],
     ['caixa/cnab400/retorno/caixa_cnab_400.RET', [150, 232.81, null]],
+    ['itau/cnab400/retorno/ITAU_cnab_400.RET', [6762.31, 6764.56, null]],
     ['santander/cnab240/retorno/santander_cnab_240.txt', [1234.5, 2525, null]],
     ['santander/cnab400/retorno/santander_cnab_400.RET', [368.11, 371.8, null]],
     ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', [1234.5, 2525, null]],
