@@ -5,6 +5,7 @@ import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabWriter } from '@cnab/type/cnab-writer'
+import { CNAB_RETORNO_BANK_SCHEMAS } from '@cnab/bank/cnab-retorno-bank-schemas'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import {
   CnabInvalidFileException,
@@ -312,6 +313,43 @@ describe('CnabWriter', (): void => {
     // Then
     expect(error).toBeInstanceOf(CnabInvalidFileException)
     expect(error).toHaveProperty('errors', expectedErrors)
+  })
+
+  const commonFields = {
+    valor_pago: 105,
+    seu_numero: 'NF 123',
+    uso_da_empresa: 'PEDIDO 12',
+    data_de_ocorrencia: new Date(2026, 5, 3)
+  }
+  const fullBoletoCases: Array<[CnabBank, Record<string, unknown>]> = [
+    [CnabBank.BANCODOBRASIL, { ...commonFields, codigo_de_ocorrencia: '06', nosso_numero: '12345678901234567', juros_multa: 5 }],
+    [CnabBank.BRADESCO, { ...commonFields, codigo_de_ocorrencia: '06', nosso_numero: '09100010141P', juros_multa: 5 }],
+    [CnabBank.CAIXA, { ...commonFields, codigo_de_ocorrencia: '21', nosso_numero: '14000000000001234', juros_pago: 3, multa_paga: 2 }],
+    [CnabBank.ITAU, { ...commonFields, codigo_de_ocorrencia: '06', nosso_numero: '12345678', juros_multa: 5 }],
+    [CnabBank.SANTANDER, { ...commonFields, codigo_de_ocorrencia: '06', nosso_numero: '12345678', juros_multa: 5 }],
+    [CnabBank.SICOOB, { ...commonFields, codigo_de_ocorrencia: '06', nosso_numero: '000000123456', juros_multa: 5 }],
+    [CnabBank.SICREDI, { valor_pago: 105, seu_numero: 'NF 123', data_de_ocorrencia: new Date(2026, 5, 3), codigo_de_ocorrencia: '06', nosso_numero: '262000001', juros_pago: 3, multa_paga: 2 }]
+  ]
+
+  it.each(fullBoletoCases)('given a %s CNAB 400 liquidação with every field of the layout when writing then no field overwrites another and all are read back', (bank: CnabBank, fields: Record<string, unknown>): void => {
+    // Given
+    const boleto = new CnabBoleto({ fields })
+    const cnab = new Cnab({ boletos: [boleto] })
+    const layoutKeys: string[] = []
+    for (const fieldClass of CNAB_RETORNO_BANK_SCHEMAS[bank][CnabFormat.CNAB400].boleto.fields) {
+      layoutKeys.push(new fieldClass('', 0).fieldKey)
+    }
+
+    // When
+    const lines = CnabWriter.write(cnab, bank, CnabFormat.CNAB400, CnabFileType.RETORNO)
+    const read = CnabFile.fromLines(lines).read()
+    const informedKeys = Object.keys(fields)
+    informedKeys.sort()
+    layoutKeys.sort()
+
+    // Then
+    expect(informedKeys).toEqual(layoutKeys)
+    expect(read.boletos[0].fields).toEqual(boleto.fields)
   })
 
   describe.each([
