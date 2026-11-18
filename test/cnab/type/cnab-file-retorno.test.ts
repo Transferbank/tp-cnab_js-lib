@@ -79,4 +79,28 @@ describe('cnab-file retorno', (): void => {
       expect(valoresPagos).toEqual(expectedValoresPagos)
     }
   )
+
+  it.each([
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', [null, 2.5, null]],
+    ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', [null, 87.38, null]]
+  ])(
+    'given retorno file %s when reading then returns the juros e multa of the liquidações and none for the baixa',
+    (examplePath: string, expectedJurosMulta: Array<number | null>): void => {
+      // Given
+      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
+
+      // When
+      const boletos = cnabFile.read().boletos
+      const jurosMulta: unknown[] = []
+      for (const boleto of boletos) {
+        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
+        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
+          jurosMulta.push(boleto.fields.juros_multa ?? null)
+        }
+      }
+
+      // Then
+      expect(jurosMulta).toEqual(expectedJurosMulta)
+    }
+  )
 })

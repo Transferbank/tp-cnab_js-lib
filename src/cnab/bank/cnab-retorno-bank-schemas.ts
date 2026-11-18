@@ -313,7 +313,8 @@ function registerCnabSchemas(): CnabSchema[] {
         validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField,
-          RetornoFields240.ValorPagoBoletoField
+          RetornoFields240.ValorPagoBoletoField,
+          RetornoFields240.JurosMultaBoletoField
         ],
       },
     }),
@@ -335,7 +336,8 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           BancoDoBrasilRetornoFields400.CodigoDeOcorrenciaBoletoField,
-          BancoDoBrasilRetornoFields400.ValorPagoBoletoField
+          BancoDoBrasilRetornoFields400.ValorPagoBoletoField,
+          BancoDoBrasilRetornoFields400.JurosMultaBoletoField
         ],
       },
     }),
