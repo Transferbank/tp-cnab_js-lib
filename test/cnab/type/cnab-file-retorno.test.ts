@@ -81,6 +81,14 @@ describe('cnab-file retorno', (): void => {
   )
 
   it.each([
+    ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', [null, 5, null]],
+    ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', [null, 23.23, null]],
+    ['caixa/cnab240/retorno/caixa_cnab_240.txt', [null, 25, null]],
+    ['santander/cnab240/retorno/santander_cnab_240.txt', [null, 25, null]],
+    ['santander/cnab400/retorno/santander_cnab_400.RET', [null, 3.68, null]],
+    ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', [null, 25, null]],
+    ['sicoob/cnab240/retorno/sicoob_cnab_240.txt', [null, 25, null]],
+    ['sicoob/cnab400/retorno/sicoob_cnab_400.RET', [null, 2.31, null]],
     ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', [null, 2.5, null]],
     ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', [null, 87.38, null]]
   ])(
