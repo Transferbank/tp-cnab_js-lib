@@ -15,3 +15,4 @@ Mudanças da `@fx55/cnab-lib-ts` por versão. As versões seguem o [versionament
 - Multa: `multa` nos 14 layouts, `codigo_de_multa` nos layouts que têm o código, a data de multa como campo extra (`CNAB_DATA_DE_MULTA_FIELDS`) e `getTipoDeMulta` com `CnabTipoDeMulta`.
 - Espécie do título: `especie_do_titulo` nos 14 layouts e `getEspecieDoTitulo` com `CnabEspecieDoTitulo`.
 - Retorno: `valor_pago`, o total pago pelo pagador, em 13 dos 14 layouts (todos menos o Itaú CNAB 240).
+- Retorno: `juros_multa`, os encargos pagos pelo pagador, em 11 dos 14 layouts (todos menos a Caixa CNAB 400, o Sicredi CNAB 400 e o Itaú CNAB 240).

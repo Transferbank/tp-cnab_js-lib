@@ -352,7 +352,7 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 
 O Itaú CNAB 240 ainda não lê `valor_pago`, por falta de informação: o manual descreve a posição como valor lançado em conta, possivelmente já sem a tarifa de cobrança, que fica em outra linha do boleto.
 
-`juros_multa` já é lido no Banco do Brasil; os outros bancos estão em progresso.
+No Itaú CNAB 400, `juros_multa` só é lido na liquidação (na entrada, a posição já vem preenchida, sem pagamento). A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separadas e ainda não leem `juros_multa`, assim como o Itaú CNAB 240.
 
 #### Ocorrências
 
