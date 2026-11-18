@@ -366,8 +366,6 @@ A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separad
 
 O Sicredi CNAB 400 não tem `uso_da_empresa` no layout do retorno.
 
-`nosso_numero` já é lido no Banco do Brasil; os outros bancos estão em progresso.
-
 #### Ocorrências
 
 O mesmo código significa coisas diferentes em cada banco (na Caixa CNAB 400, por exemplo, `02` é baixa e `21` é liquidação). `getOcorrencia` traduz o código para uma categoria comum, e `getOcorrenciaDescription` devolve a descrição do manual do banco:
