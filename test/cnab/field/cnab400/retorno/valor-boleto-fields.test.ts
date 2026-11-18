@@ -16,6 +16,10 @@ class LiquidacaoOnlyValorPagoBoletoField extends ValorPagoBoletoField {
   protected readonly liquidacaoOnlyTable = OCORRENCIA_TABLE
 }
 
+class SummedValorPagoBoletoField extends ValorPagoBoletoField {
+  protected readonly addedRanges: Array<[number, number]> = [[176, 188], [280, 292]]
+}
+
 const cases: Array<[string, CnabFieldClass<number>, [number, number]]> = [
   ['ValorTituloBoletoField', ValorTituloBoletoField, [153, 165]],
   ['ValorPagoBoletoField', ValorPagoBoletoField, [254, 266]],
@@ -85,6 +89,42 @@ describe('ValorBoletoField', (): void => {
 })
 
 describe('ValorPagoBoletoField', (): void => {
+  it('given amounts in the added ranges when reading then returns the sum with its own range', (): void => {
+    // Given
+    let line = replaceLineRange(cnab400RetornoLine('1'), [254, 266], '0000000010000')
+    line = replaceLineRange(line, [176, 188], '0000000000250')
+    line = replaceLineRange(line, [280, 292], '0000000000005')
+
+    // When
+    const field = new SummedValorPagoBoletoField(line, 1)
+
+    // Then
+    expect(field.validate()).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toBe(102.55)
+  })
+
+  it('given a non numeric added range when validating then reports an invalid format', (): void => {
+    // Given
+    let line = replaceLineRange(cnab400RetornoLine('1'), [254, 266], '0000000010000')
+    line = replaceLineRange(line, [176, 188], '00000000002AB')
+
+    // When
+    const result = new SummedValorPagoBoletoField(line, 1).validate()
+
+    // Then
+    expect(result).toEqual({
+      isValid: false,
+      errors: [
+        new CnabGenericFieldError({
+          message: 'Campo valor_pago com formato inválido: 00000000002AB',
+          lineNumber: 1,
+          fieldKey: 'valor_pago',
+          range: [254, 266]
+        })
+      ]
+    })
+  })
+
   it.each([
     ['06', true],
     ['09', false]
