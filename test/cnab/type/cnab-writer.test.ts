@@ -92,7 +92,7 @@ describe('CnabWriter', (): void => {
     // Given
     const cnab = new Cnab({
       header: new CnabHeader({ fields: { codigo_de_ocorrencia: '06' } }),
-      boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', nosso_numero: '12345678' } })]
+      boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', data_de_credito: new Date(2026, 5, 3) } })]
     })
     const expectedErrors = [
       new CnabGenericFieldError({
@@ -102,9 +102,9 @@ describe('CnabWriter', (): void => {
         range: [1, 400]
       }),
       new CnabGenericFieldError({
-        message: 'Campo nosso_numero não existe no layout do boleto',
+        message: 'Campo data_de_credito não existe no layout do boleto',
         lineNumber: 1,
-        fieldKey: 'nosso_numero',
+        fieldKey: 'data_de_credito',
         range: [1, 400]
       })
     ]
