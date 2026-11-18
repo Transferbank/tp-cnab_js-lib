@@ -177,11 +177,15 @@ export class CnabWriter {
       writeAtRange(line, range, value)
     }
 
-    const unknownKeyErrors = CnabWriter.findUnknownKeys(lineSchema, values, lineNumber)
+    const fields: Array<CnabField<unknown>> = []
+    for (const fieldClass of lineSchema.fields) {
+      fields.push(new fieldClass(line.join(''), lineNumber))
+    }
+
+    const unknownKeyErrors = CnabWriter.findUnknownKeys(lineSchema, fields, values, lineNumber)
     errors.push(...unknownKeyErrors)
 
-    for (const fieldClass of lineSchema.fields) {
-      const field = new fieldClass(line.join(''), lineNumber)
+    for (const field of fields) {
       if (!field.belongsToLine()) {
         continue
       }
@@ -196,12 +200,13 @@ export class CnabWriter {
 
   private static findUnknownKeys(
     lineSchema: CnabLineSchema,
+    fields: Array<CnabField<unknown>>,
     values: Record<string, unknown>,
     lineNumber: number
   ): CnabValidationError[] {
     const knownKeys = new Set<string>()
-    for (const fieldClass of lineSchema.fields) {
-      knownKeys.add(new fieldClass('', lineNumber).fieldKey)
+    for (const field of fields) {
+      knownKeys.add(field.fieldKey)
     }
 
     const errors: CnabValidationError[] = []
