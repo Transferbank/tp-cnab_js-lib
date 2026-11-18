@@ -343,7 +343,13 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 | `codigo_de_ocorrencia` | Código da ocorrência, como está no arquivo | `string` |
 | `valor_pago`           | Valor pago pelo pagador, em reais          | `number` |
 
-`valor_pago` já é lido no Banco do Brasil; os outros bancos estão em progresso.
+`valor_pago` é o total pago pelo pagador. Em alguns layouts, ele junta mais de uma posição do arquivo ou só é lido quando o boleto foi pago:
+
+- Caixa CNAB 400: soma o valor principal, os juros e a multa, que o banco manda em posições separadas.
+- Itaú CNAB 400: soma a tarifa de cobrança ao valor lançado em conta, e só é lido na liquidação (na baixa, a posição traz a tarifa).
+- Sicoob CNAB 240: só é lido na liquidação (na baixa por protesto, a posição repete o valor do título).
+
+O Itaú CNAB 240 ainda não lê `valor_pago`.
 
 #### Ocorrências
 
