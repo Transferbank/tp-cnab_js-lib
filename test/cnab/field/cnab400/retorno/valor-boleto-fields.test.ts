@@ -6,6 +6,8 @@ import { cnab400RetornoLine, replaceLineRange } from '@test/test-utils'
 import { ValorTituloBoletoField } from '@cnab/field/cnab400/retorno/valor-titulo-boleto-field'
 import { ValorPagoBoletoField } from '@cnab/field/cnab400/retorno/valor-pago-boleto-field'
 import { JurosMultaBoletoField } from '@cnab/field/cnab400/retorno/juros-multa-boleto-field'
+import { JurosPagoBoletoField } from '@cnab/field/cnab400/retorno/juros-pago-boleto-field'
+import { MultaPagaBoletoField } from '@cnab/field/cnab400/retorno/multa-paga-boleto-field'
 
 const OCORRENCIA_TABLE: CnabOcorrenciaTable = {
   [CnabOcorrencia.LIQUIDACAO]: { '06': 'Liquidação' },
@@ -23,7 +25,9 @@ class SummedValorPagoBoletoField extends ValorPagoBoletoField {
 const cases: Array<[string, CnabFieldClass<number>, [number, number]]> = [
   ['ValorTituloBoletoField', ValorTituloBoletoField, [153, 165]],
   ['ValorPagoBoletoField', ValorPagoBoletoField, [254, 266]],
-  ['JurosMultaBoletoField', JurosMultaBoletoField, [267, 279]]
+  ['JurosMultaBoletoField', JurosMultaBoletoField, [267, 279]],
+  ['JurosPagoBoletoField', JurosPagoBoletoField, [267, 279]],
+  ['MultaPagaBoletoField', MultaPagaBoletoField, [280, 292]]
 ]
 
 describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<number>, range: [number, number]): void => {
