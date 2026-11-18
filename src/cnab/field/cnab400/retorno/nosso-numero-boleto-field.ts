@@ -3,4 +3,5 @@ import { IdentificacaoBoletoField } from '@cnab/field/cnab400/retorno/identifica
 export class NossoNumeroBoletoField extends IdentificacaoBoletoField {
   readonly fieldKey = 'nosso_numero'
   readonly range: [number, number] = [63, 70]
+  protected readonly numeric: boolean = true
 }

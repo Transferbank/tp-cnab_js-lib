@@ -2,4 +2,5 @@ import { NossoNumeroBoletoField as Cnab400NossoNumeroBoletoField } from '@cnab/f
 
 export class NossoNumeroBoletoField extends Cnab400NossoNumeroBoletoField {
   readonly range: [number, number] = [48, 62]
+  protected readonly numeric: boolean = false
 }

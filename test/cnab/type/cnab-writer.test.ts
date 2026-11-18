@@ -218,6 +218,26 @@ describe('CnabWriter', (): void => {
     expect(error).toHaveProperty('errors', expectedErrors)
   })
 
+  const nossoNumeroCases: Array<[CnabBank, string, [number, number], string, string]> = [
+    [CnabBank.ITAU, '10014', [63, 70], '00010014', '00010014'],
+    [CnabBank.BANCODOBRASIL, '10014', [64, 80], '00000000000010014', '00000000000010014'],
+    [CnabBank.BRADESCO, '09100010141P', [71, 82], '09100010141P', '09100010141P'],
+    [CnabBank.SICREDI, '262000001', [48, 62], '262000001      ', '262000001']
+  ]
+
+  it.each(nossoNumeroCases)('given a %s CNAB 400 nosso número %s when writing then fills its range as the layout does and reads it back', (bank: CnabBank, nossoNumero: string, range: [number, number], expectedRaw: string, expectedRead: string): void => {
+    // Given
+    const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', nosso_numero: nossoNumero } })] })
+
+    // When
+    const lines = CnabWriter.write(cnab, bank, CnabFormat.CNAB400, CnabFileType.RETORNO)
+    const read = CnabFile.fromLines(lines).read()
+
+    // Then
+    expect(lines[1].substring(range[0] - 1, range[1])).toBe(expectedRaw)
+    expect(read.boletos[0].fields.nosso_numero).toBe(expectedRead)
+  })
+
   describe.each([
     { format: CnabFormat.CNAB240, fileType: CnabFileType.RETORNO },
     { format: CnabFormat.CNAB400, fileType: CnabFileType.REMESSA }
