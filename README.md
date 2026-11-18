@@ -8,6 +8,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 - Validação do arquivo inteiro (tamanho, início e tipo de registro de cada linha, campos de cada boleto)
 - Leitura dos boletos, com os valores dos campos já convertidos (texto, número e data)
 - Erros de validação tipados, com linha, campo e mensagem
+- Escrita do lote de validação CNAB 400, conferida pela própria leitura
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
 
 ## Bancos suportados
@@ -456,6 +457,29 @@ const cnab = cnabFile.read([DataDeEmissaoBoletoField])
 
 Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-remessa-bank-schemas.ts`](src/cnab/bank/cnab-remessa-bank-schemas.ts).
 
+### Escrevendo um lote de validação
+
+`CnabWriter.write` monta as linhas de um lote de validação (arquivo retorno) CNAB 400 a partir de um `Cnab`:
+
+```ts
+import { Cnab, CnabBank, CnabBoleto, CnabFileType, CnabFormat, CnabWriter } from '@fx55/cnab-lib-ts'
+
+const cnab = new Cnab({
+  boletos: [
+    new CnabBoleto({ fields: { codigo_de_ocorrencia: '02' } }),
+    new CnabBoleto({ fields: { codigo_de_ocorrencia: '06' } })
+  ]
+})
+
+const lines = CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO) // string[]
+```
+
+- Cada boleto vira um registro de detalhe, entre um header e um trailer.
+- O conteúdo fixo do layout do banco (tipo de registro, `RETORNO`, código do banco) e o número sequencial de cada linha são preenchidos pela lib.
+- Os campos aceitos são os mesmos da leitura do lote de validação, pela mesma chave (veja [Lote de criação e lote de validação](#lote-de-criação-e-lote-de-validação)). Por enquanto, só `codigo_de_ocorrencia` nos boletos.
+- O arquivo escrito é validado e lido de volta como a leitura faria. Se um valor não puder ser escrito, se uma chave não existir no layout da linha ou se o valor lido de volta for diferente do informado, `write` lança `CnabInvalidFileException` com um erro para cada campo.
+- Só o lote de validação CNAB 400 pode ser escrito. Outro formato ou tipo de arquivo lança `CnabWriteNotSupportedException`, e um `Cnab` sem boletos lança `CnabMinimumLinesNotReachedException`.
+
 ### Tratando erros de validação
 
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
@@ -482,3 +506,4 @@ Problemas que impedem o processamento do arquivo lançam exceções que estendem
 | `CnabBankCodeNotFoundException`       | O código do banco no header não é reconhecido     |
 | `CnabBankSchemaNotFoundException`     | Banco sem suporte para o formato/tipo do arquivo  |
 | `CnabInvalidFileException`            | `read()` em um arquivo que não passa na validação |
+| `CnabWriteNotSupportedException`      | `CnabWriter.write` em formato ou tipo sem escrita |
