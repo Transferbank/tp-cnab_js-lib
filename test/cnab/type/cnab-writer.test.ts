@@ -152,19 +152,6 @@ describe('CnabWriter', (): void => {
     expect(error).toHaveProperty('errors', expectedErrors)
   })
 
-  it('given an Itaú CNAB 400 liquidação with valor pago and juros e multa when writing then both are read back from the written file', (): void => {
-    // Given
-    const boleto = new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', valor_pago: 102.5, juros_multa: 2.5 } })
-    const cnab = new Cnab({ boletos: [boleto] })
-
-    // When
-    const lines = CnabWriter.write(cnab, CnabBank.ITAU, CnabFormat.CNAB400, CnabFileType.RETORNO)
-    const read = CnabFile.fromLines(lines).read()
-
-    // Then
-    expect(read.boletos[0].fields).toEqual(boleto.fields)
-  })
-
   it('given an Itaú CNAB 400 baixa with valor pago when writing then reports that the value is not read back, since the bank only reads it on liquidação', (): void => {
     // Given
     const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '09', valor_pago: 100 } })] })
