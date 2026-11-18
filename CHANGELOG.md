@@ -16,3 +16,4 @@ Mudanças da `@fx55/cnab-lib-ts` por versão. As versões seguem o [versionament
 - Espécie do título: `especie_do_titulo` nos 14 layouts e `getEspecieDoTitulo` com `CnabEspecieDoTitulo`.
 - Retorno: `valor_pago`, o total pago pelo pagador, em 13 dos 14 layouts (todos menos o Itaú CNAB 240).
 - Retorno: `juros_multa`, os encargos pagos pelo pagador, em 11 dos 14 layouts (todos menos a Caixa CNAB 400, o Sicredi CNAB 400 e o Itaú CNAB 240).
+- Retorno: `juros_pago` e `multa_paga` na Caixa CNAB 400 e no Sicredi CNAB 400, que mandam juros e multa em posições separadas.
