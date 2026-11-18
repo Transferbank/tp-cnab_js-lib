@@ -252,6 +252,15 @@ describe('cnab-file retorno', (): void => {
   )
 
   it.each([
+    ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', ['000000000NF0000123', '000000000NF0000124', '000000000NF0000125']],
+    ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', ['25.156393.01', '25.155366.01', '25.159184.04']],
+    ['caixa/cnab240/retorno/caixa_cnab_240.txt', ['NF00000001', 'NF00000002', 'NF00000003']],
+    ['itau/cnab240/retorno/itau_cnab_240.txt', ['PED3000-1/1', 'PED3001-2/4', 'PED3003-3/3']],
+    ['itau/cnab400/retorno/ITAU_cnab_400.RET', ['25.150923.04', '25.151082.04', '25.163407.03']],
+    ['santander/cnab400/retorno/santander_cnab_400.RET', ['30.9558.02', '30.9558.03', '30.10505.04']],
+    ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', ['PED7000-1/2', 'PED7001-1/1', 'PED7002-3/3']],
+    ['sicoob/cnab240/retorno/sicoob_cnab_240.txt', ['PED5000-1/1', 'PED5001-2/2', 'PED5002-1/3']],
+    ['sicoob/cnab400/retorno/sicoob_cnab_400.RET', ['PED6000-1/1', 'PED6001-1/2', 'PED6009-1/2']],
     ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', ['PED1234-1/3', 'PED1235-1/1', 'PED1236-2/2']],
     ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', ['25.158033.01', '25.848952.01', '25.158974.06']]
   ])(
