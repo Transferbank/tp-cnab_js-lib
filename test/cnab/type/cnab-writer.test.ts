@@ -184,6 +184,40 @@ describe('CnabWriter', (): void => {
     expect(error).toHaveProperty('errors', expectedErrors)
   })
 
+  it('given a Caixa CNAB 400 liquidação with valor pago, juros pago and multa paga when writing then writes the principal and reads back the informed values', (): void => {
+    // Given
+    const boleto = new CnabBoleto({ fields: { codigo_de_ocorrencia: '21', valor_pago: 105, juros_pago: 3, multa_paga: 2 } })
+    const cnab = new Cnab({ boletos: [boleto] })
+
+    // When
+    const lines = CnabWriter.write(cnab, CnabBank.CAIXA, CnabFormat.CNAB400, CnabFileType.RETORNO)
+    const read = CnabFile.fromLines(lines).read()
+
+    // Then
+    expect(lines[1].substring(253, 266)).toBe('0000000010000')
+    expect(read.boletos[0].fields).toEqual(boleto.fields)
+  })
+
+  it('given a Caixa CNAB 400 boleto whose juros pago and multa paga exceed the valor pago when writing then reports that the valor pago cannot be written', (): void => {
+    // Given
+    const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '21', valor_pago: 1, juros_pago: 5 } })] })
+    const expectedErrors = [
+      new CnabGenericFieldError({
+        message: 'Campo valor_pago não pode ser escrito: valor 1 é menor que juros_pago e multa_paga somados',
+        lineNumber: 1,
+        fieldKey: 'valor_pago',
+        range: [254, 266]
+      })
+    ]
+
+    // When
+    const error = captureError((): string[] => CnabWriter.write(cnab, CnabBank.CAIXA, CnabFormat.CNAB400, CnabFileType.RETORNO))
+
+    // Then
+    expect(error).toBeInstanceOf(CnabInvalidFileException)
+    expect(error).toHaveProperty('errors', expectedErrors)
+  })
+
   describe.each([
     { format: CnabFormat.CNAB240, fileType: CnabFileType.RETORNO },
     { format: CnabFormat.CNAB400, fileType: CnabFileType.REMESSA }
