@@ -154,7 +154,8 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.BOLETO,
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
-          ItauRetornoFields400.ValorPagoBoletoField
+          ItauRetornoFields400.ValorPagoBoletoField,
+          ItauRetornoFields400.JurosMultaBoletoField
         ],
       },
     }),
