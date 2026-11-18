@@ -4,9 +4,9 @@ import { describe, it, expect } from '@jest/globals'
 import { findFirstCnab240SegmentLine, readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 import { CnabFieldClass, optional } from '@cnab/type/cnab-field'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
-import { DddBoletoField as BradescoDddBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/ddd-boleto-field'
-import { DddBoletoField as CaixaDddBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/ddd-boleto-field'
-import { DddBoletoField as BancoDoBrasilDddBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/ddd-boleto-field'
+import { DddBoletoField as BradescoDddBoletoField } from '@cnab/bank/bradesco/cnab/cnab240/field/remessa/ddd-boleto-field'
+import { DddBoletoField as CaixaDddBoletoField } from '@cnab/bank/caixa/cnab/cnab240/field/remessa/ddd-boleto-field'
+import { DddBoletoField as BancoDoBrasilDddBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/remessa/ddd-boleto-field'
 
 describe.each([
   [

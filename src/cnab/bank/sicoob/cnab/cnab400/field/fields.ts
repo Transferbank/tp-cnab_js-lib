@@ -1,8 +1,0 @@
-export { EspecieDoTituloBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/especie-do-titulo-boleto-field'
-export { JurosBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/juros-boleto-field'
-export { MultaBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/multa-boleto-field'
-export { NossoNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/nosso-numero-boleto-field'
-export { ParcelaBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/parcela-boleto-field'
-export { SeuNumeroBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/seu-numero-boleto-field'
-export { TotalDeParcelasBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/total-de-parcelas-boleto-field'
-export { UsoDaEmpresaBoletoField } from '@cnab/bank/sicoob/cnab/cnab400/field/uso-da-empresa-boleto-field'

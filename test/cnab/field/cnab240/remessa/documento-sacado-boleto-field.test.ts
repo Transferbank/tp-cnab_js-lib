@@ -7,7 +7,7 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { genValidCnabValidationResult } from '@test/cnab/doubles/cnab-validation-result-stub'
 import { DocumentoSacadoBoletoField } from '@cnab/field/cnab240/remessa/documento-sacado-boleto-field'
-import { DocumentoSacadoBoletoField as BancoDoBrasilDocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/documento-sacado-boleto-field'
+import { DocumentoSacadoBoletoField as BancoDoBrasilDocumentoSacadoBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/remessa/documento-sacado-boleto-field'
 import {
   readExampleLines, replaceLineRange, realLineNumber, findFirstCnab240SegmentLine,
   filterValidatableLines, createFieldsFromLines, getFieldRange
