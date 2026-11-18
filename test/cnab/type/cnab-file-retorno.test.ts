@@ -285,4 +285,28 @@ describe('cnab-file retorno', (): void => {
       expect(usosDaEmpresa).toEqual(expectedUsosDaEmpresa)
     }
   )
+
+  it.each([
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', ['00035000000001234501', '00035000000001234502', '00035000000001234503']],
+    ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', ['90076541000043451', '90076541000039968', '90076541000044623']]
+  ])(
+    'given retorno file %s when reading then returns the nosso número of the liquidações and of the baixa with its leading zeros',
+    (examplePath: string, expectedNossosNumeros: string[]): void => {
+      // Given
+      const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), examplePath)))
+
+      // When
+      const boletos = cnabFile.read().boletos
+      const nossosNumeros: unknown[] = []
+      for (const boleto of boletos) {
+        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
+        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
+          nossosNumeros.push(boleto.fields.nosso_numero ?? null)
+        }
+      }
+
+      // Then
+      expect(nossosNumeros).toEqual(expectedNossosNumeros)
+    }
+  )
 })
