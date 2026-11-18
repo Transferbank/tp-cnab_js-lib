@@ -191,10 +191,11 @@ describe('CnabWriter', (): void => {
 
     // When
     const lines = CnabWriter.write(cnab, CnabBank.CAIXA, CnabFormat.CNAB400, CnabFileType.RETORNO)
+    const writtenPrincipal = lines[1].substring(253, 266)
     const read = CnabFile.fromLines(lines).read()
 
     // Then
-    expect(lines[1].substring(253, 266)).toBe('0000000010000')
+    expect(writtenPrincipal).toBe('0000000010000')
     expect(read.boletos[0].fields).toEqual(boleto.fields)
   })
 
@@ -231,11 +232,86 @@ describe('CnabWriter', (): void => {
 
     // When
     const lines = CnabWriter.write(cnab, bank, CnabFormat.CNAB400, CnabFileType.RETORNO)
+    const writtenNossoNumero = lines[1].substring(range[0] - 1, range[1])
     const read = CnabFile.fromLines(lines).read()
 
     // Then
-    expect(lines[1].substring(range[0] - 1, range[1])).toBe(expectedRaw)
+    expect(writtenNossoNumero).toBe(expectedRaw)
     expect(read.boletos[0].fields.nosso_numero).toBe(expectedRead)
+  })
+
+  it('given a seu número and an uso da empresa in lowercase with accents when writing then writes them in uppercase without accents, padded with spaces, and reads them back', (): void => {
+    // Given
+    const cnab = new Cnab({
+      boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', seu_numero: 'nf 123', uso_da_empresa: 'pedido ação 12' } })]
+    })
+
+    // When
+    const lines = CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO)
+    const writtenSeuNumero = lines[1].substring(116, 126)
+    const writtenUsoDaEmpresa = lines[1].substring(37, 62)
+    const read = CnabFile.fromLines(lines).read()
+
+    // Then
+    expect(writtenSeuNumero).toBe('NF 123    ')
+    expect(writtenUsoDaEmpresa).toBe('PEDIDO ACAO 12           ')
+    expect(read.boletos[0].fields.seu_numero).toBe('NF 123')
+    expect(read.boletos[0].fields.uso_da_empresa).toBe('PEDIDO ACAO 12')
+  })
+
+  it('given a data de ocorrência when writing then writes it as DDMMAA and reads it back', (): void => {
+    // Given
+    const dataDeOcorrencia = new Date(2027, 0, 2)
+    const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', data_de_ocorrencia: dataDeOcorrencia } })] })
+
+    // When
+    const lines = CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO)
+    const writtenDataDeOcorrencia = lines[1].substring(110, 116)
+    const read = CnabFile.fromLines(lines).read()
+
+    // Then
+    expect(writtenDataDeOcorrencia).toBe('020127')
+    expect(read.boletos[0].fields.data_de_ocorrencia).toEqual(dataDeOcorrencia)
+  })
+
+  it('given a data de ocorrência in a year that two digits cannot represent when writing then reports that it cannot be written', (): void => {
+    // Given
+    const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', data_de_ocorrencia: new Date(2050, 0, 2) } })] })
+    const expectedErrors = [
+      new CnabGenericFieldError({
+        message: 'Campo data_de_ocorrencia não pode ser escrito: ano 2050 não pode ser escrito com 2 dígitos',
+        lineNumber: 1,
+        fieldKey: 'data_de_ocorrencia',
+        range: [111, 116]
+      })
+    ]
+
+    // When
+    const error = captureError((): string[] => CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO))
+
+    // Then
+    expect(error).toBeInstanceOf(CnabInvalidFileException)
+    expect(error).toHaveProperty('errors', expectedErrors)
+  })
+
+  it('given an uso da empresa for Sicredi CNAB 400, whose retorno has no such field, when writing then reports the key as outside the layout', (): void => {
+    // Given
+    const cnab = new Cnab({ boletos: [new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', uso_da_empresa: 'PEDIDO 12' } })] })
+    const expectedErrors = [
+      new CnabGenericFieldError({
+        message: 'Campo uso_da_empresa não existe no layout do boleto',
+        lineNumber: 1,
+        fieldKey: 'uso_da_empresa',
+        range: [1, 400]
+      })
+    ]
+
+    // When
+    const error = captureError((): string[] => CnabWriter.write(cnab, CnabBank.SICREDI, CnabFormat.CNAB400, CnabFileType.RETORNO))
+
+    // Then
+    expect(error).toBeInstanceOf(CnabInvalidFileException)
+    expect(error).toHaveProperty('errors', expectedErrors)
   })
 
   describe.each([
