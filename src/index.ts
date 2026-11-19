@@ -29,7 +29,8 @@ export {
   CnabFileTypeNotRecognizedException,
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException,
-  CnabInvalidFileException
+  CnabInvalidFileException,
+  CnabWriteNotSupportedException
 } from '@cnab/exception/cnab-exception'
 export {
   CnabValidationError,
