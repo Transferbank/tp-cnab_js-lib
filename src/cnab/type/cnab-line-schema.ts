@@ -15,6 +15,8 @@ export type CnabFixedContent = {
   value: string
 }
 
+export type CnabFixedContentBuilder = (bank: CnabBank) => CnabFixedContent[]
+
 interface CnabValidatable {
   shouldValidate(): boolean
   validate(): CnabValidationResult
@@ -60,9 +62,18 @@ export class CnabLineSchema {
     fieldType: CnabFieldType
     fields: CnabFieldClass[]
     validators?: CnabLineValidatorClass[]
-    fixedContent?: CnabFixedContent[]
+    fixedContent?: CnabFixedContentBuilder
   }): CnabLineSchema {
-    return new CnabLineSchema(config)
+    const fixedContent = config.fixedContent?.(config.bank) ?? []
+    return new CnabLineSchema({
+      bank: config.bank,
+      fmt: config.fmt,
+      boletoGroupRule: config.boletoGroupRule,
+      fieldType: config.fieldType,
+      fields: config.fields,
+      validators: config.validators,
+      fixedContent
+    })
   }
 
   get validators(): CnabLineValidatorClass[] {

@@ -1,5 +1,5 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabFixedContent } from '@cnab/type/cnab-line-schema'
+import { CnabFixedContent, CnabFixedContentBuilder } from '@cnab/type/cnab-line-schema'
 
 export function cnab400RetornoHeaderFixedContent(bank: CnabBank): CnabFixedContent[] {
   return [
@@ -21,8 +21,8 @@ export function cnab400RetornoTrailerFixedContent(bank: CnabBank): CnabFixedCont
   ]
 }
 
-export function cnab400RetornoDetalheFixedContent(recordType: string): CnabFixedContent[] {
-  return [
+export function cnab400RetornoDetalheFixedContent(recordType: string): CnabFixedContentBuilder {
+  return (): CnabFixedContent[] => [
     { range: [1, 1], value: recordType },
   ]
 }
