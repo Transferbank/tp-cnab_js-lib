@@ -349,7 +349,7 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 - Itaú CNAB 400: soma a tarifa de cobrança ao valor lançado em conta, e só é lido na liquidação (na baixa, a posição traz a tarifa).
 - Sicoob CNAB 240: só é lido na liquidação (na baixa por protesto, a posição repete o valor do título).
 
-O Itaú CNAB 240 ainda não lê `valor_pago`.
+O Itaú CNAB 240 ainda não lê `valor_pago`, por falta de informação: o manual descreve a posição como valor lançado em conta, possivelmente já sem a tarifa de cobrança, que fica em outra linha do boleto.
 
 #### Ocorrências
 
