@@ -1,4 +1,4 @@
-﻿import { Cnab, CnabBoleto } from '@cnab/type/cnab'
+﻿import { Cnab, CnabBoleto, CnabHeader, CnabTrailer } from '@cnab/type/cnab'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
@@ -62,10 +62,10 @@ export class CnabSchema {
       [this.boleto, rawLines.slice(1, -1), 1],
     ]
 
+    const scopedExtraFields = this.scopedExtraFields(extraFields)
+
     for (const [group, lines, firstLine] of items) {
-      const groupExtraFields = this.scopedExtraFields(extraFields).filter(
-        (field: CnabFieldClass) => field.fieldType === group.fieldType
-      )
+      const groupExtraFields = this.lineExtraFields(group, scopedExtraFields)
 
       const groupResult = group.validate(lines, eagerEnabled, firstLine, groupExtraFields)
 
@@ -97,13 +97,20 @@ export class CnabSchema {
   }
 
   extractCnab(rawLines: string[], extraFields?: CnabFieldClass[]): Cnab {
-    const cnab = new Cnab()
+    const scopedExtraFields = this.scopedExtraFields(extraFields)
+    const lastLine = rawLines.length - 1
 
-    const fields = [
-      ...this.boleto.fields,
-      ...this.scopedExtraFields(extraFields),
-    ]
+    const headerFields: Record<string, unknown> = {}
+    this.readLineFields(this.lineFields(this.header, scopedExtraFields), rawLines[0], 0, headerFields)
+    const trailerFields: Record<string, unknown> = {}
+    this.readLineFields(this.lineFields(this.trailer, scopedExtraFields), rawLines[lastLine], lastLine, trailerFields)
 
+    const cnab = new Cnab({
+      header: new CnabHeader({ fields: headerFields }),
+      trailer: new CnabTrailer({ fields: trailerFields })
+    })
+
+    const boletoFields = this.lineFields(this.boleto, scopedExtraFields)
     let currentBoleto = new CnabBoleto()
     rawLines.forEach((rawLine: string, lineNumber: number) => {
       if (this.boleto.isBoletoGroupStart(rawLine) && Object.keys(currentBoleto.fields).length > 0) {
@@ -111,15 +118,7 @@ export class CnabSchema {
         currentBoleto = new CnabBoleto()
       }
 
-      for (const fieldType of fields) {
-        const field = new fieldType(rawLine, lineNumber)
-        if (!field.shouldValidate()) {
-          continue
-        }
-        if (field.value != null) {
-          currentBoleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, currentBoleto.fields[field.fieldKey])
-        }
-      }
+      this.readLineFields(boletoFields, rawLine, lineNumber, currentBoleto.fields)
     })
 
     if (Object.keys(currentBoleto.fields).length > 0) {
@@ -127,6 +126,31 @@ export class CnabSchema {
     }
 
     return cnab
+  }
+
+  private readLineFields(
+    fields: CnabFieldClass[],
+    rawLine: string,
+    lineNumber: number,
+    values: Record<string, unknown>
+  ): void {
+    for (const fieldType of fields) {
+      const field = new fieldType(rawLine, lineNumber)
+      if (!field.shouldValidate()) {
+        continue
+      }
+      if (field.value != null) {
+        values[field.fieldKey] = this.handleDuplicatedFields(field, values[field.fieldKey])
+      }
+    }
+  }
+
+  private lineFields(lineSchema: CnabLineSchema, scopedExtraFields: CnabFieldClass[]): CnabFieldClass[] {
+    return [...lineSchema.fields, ...this.lineExtraFields(lineSchema, scopedExtraFields)]
+  }
+
+  private lineExtraFields(lineSchema: CnabLineSchema, scopedExtraFields: CnabFieldClass[]): CnabFieldClass[] {
+    return scopedExtraFields.filter((field: CnabFieldClass) => field.fieldType === lineSchema.fieldType)
   }
 
   private handleDuplicatedFields(field: CnabField<unknown>, previousValue: unknown): unknown {

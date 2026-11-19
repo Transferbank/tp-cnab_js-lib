@@ -1,5 +1,5 @@
-export class CnabBoleto {
-  // Valores dos campos do boleto, indexados pelo fieldKey (ex: nome_do_sacado)
+export class CnabRecord {
+  // Valores dos campos, indexados pelo fieldKey (ex: nome_do_sacado)
   readonly fields: Record<string, unknown>
 
   constructor(config: { fields?: Record<string, unknown> } = {}) {
@@ -7,10 +7,20 @@ export class CnabBoleto {
   }
 }
 
-export class Cnab {
-  readonly boletos: CnabBoleto[]
+export class CnabBoleto extends CnabRecord {}
 
-  constructor(config: { boletos?: CnabBoleto[] } = {}) {
+export class CnabHeader extends CnabRecord {}
+
+export class CnabTrailer extends CnabRecord {}
+
+export class Cnab {
+  readonly header: CnabHeader
+  readonly boletos: CnabBoleto[]
+  readonly trailer: CnabTrailer
+
+  constructor(config: { header?: CnabHeader, boletos?: CnabBoleto[], trailer?: CnabTrailer } = {}) {
+    this.header = config.header ?? new CnabHeader()
     this.boletos = config.boletos ?? []
+    this.trailer = config.trailer ?? new CnabTrailer()
   }
 }
