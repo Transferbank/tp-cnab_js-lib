@@ -137,7 +137,7 @@ function registerCnabSchemas(): CnabSchema[] {
         fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
-          CaixaRetornoFields400.ValorPagoBoletoField,
+          RetornoFields400.ValorPagoBoletoField,
           RetornoFields400.JurosPagoBoletoField,
           RetornoFields400.MultaPagaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,

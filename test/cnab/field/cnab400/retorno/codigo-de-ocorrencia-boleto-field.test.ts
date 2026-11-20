@@ -52,7 +52,7 @@ describe('CodigoDeOcorrenciaBoletoField', (): void => {
     const field = new CodigoDeOcorrenciaBoletoField(rawLine, 1)
 
     // When
-    field.write(line, '06', {})
+    field.write(line, '06')
 
     // Then
     expect(line.join('')).toBe(replaceLineRange(rawLine, [109, 110], '06'))

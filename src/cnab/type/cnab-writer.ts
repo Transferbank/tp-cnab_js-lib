@@ -233,13 +233,9 @@ export class CnabWriter {
     errors: CnabValidationError[]
   ): void {
     const value = values[field.fieldKey] ?? null
-    const dependencies: Record<string, unknown> = {}
-    for (const key of field.writeDependencies()) {
-      dependencies[key] = values[key] ?? null
-    }
 
     try {
-      field.write(line, value, dependencies)
+      field.write(line, value)
     } catch (error) {
       if (!(error instanceof TypeError || error instanceof RangeError)) {
         throw error

@@ -98,11 +98,7 @@ export abstract class CnabField<T> {
     throw new CnabFieldWriteNotImplementedException(this.fieldKey)
   }
 
-  writeDependencies(): string[] {
-    return []
-  }
-
-  write(line: string[], value: unknown, _dependencies: Record<string, unknown>): void {
+  write(line: string[], value: unknown): void {
     writeAtRange(line, this.range, this.formatValue(value))
   }
 
