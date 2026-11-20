@@ -3,6 +3,10 @@ import * as path from 'path'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabOcorrencia } from '@cnab/type/cnab-ocorrencia'
 import { getOcorrencia, getOcorrenciaDescription } from '@cnab/bank/cnab-ocorrencia-tables'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabField } from '@cnab/type/cnab-field'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 function readFieldOutsideEntradas(examplePath: string, fieldKey: string): unknown[] {
@@ -16,6 +20,42 @@ function readFieldOutsideEntradas(examplePath: string, fieldKey: string): unknow
     }
   }
   return values
+}
+
+class NomeDoBancoHeaderField extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.HEADER
+  readonly fieldKey = 'nome_do_banco'
+  readonly range: [number, number] = [80, 94]
+
+  shouldValidate(): boolean {
+    return Cnab400LineTypeChecker.isHeader(this.rawLine)
+  }
+
+  protected performValidation(): CnabValidationResult {
+    return { isValid: true, errors: [] }
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
+}
+
+class SequencialTrailerField extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.TRAILER
+  readonly fieldKey = 'sequencial_do_trailer'
+  readonly range: [number, number] = [395, 400]
+
+  shouldValidate(): boolean {
+    return Cnab400LineTypeChecker.isTrailer(this.rawLine)
+  }
+
+  protected performValidation(): CnabValidationResult {
+    return { isValid: true, errors: [] }
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
 }
 
 describe('cnab-file retorno', (): void => {
@@ -274,4 +314,18 @@ describe('cnab-file retorno', (): void => {
       expect(nossosNumeros).toEqual(expectedNossosNumeros)
     }
   )
+
+  it('given extra header and trailer fields when reading then they are read into the header and trailer without touching the boletos', (): void => {
+    // Given
+    const cnabFile = CnabFile.fromLines(readExampleLines(path.join(resPath(), 'bradesco/cnab400/retorno/bradesco_cnab_400.RET')))
+    const withoutExtras = cnabFile.read()
+
+    // When
+    const cnab = cnabFile.read([NomeDoBancoHeaderField, SequencialTrailerField])
+
+    // Then
+    expect(cnab.header.fields).toEqual({ nome_do_banco: 'BRADESCO' })
+    expect(cnab.trailer.fields).toEqual({ sequencial_do_trailer: '000042' })
+    expect(cnab.boletos).toEqual(withoutExtras.boletos)
+  })
 })

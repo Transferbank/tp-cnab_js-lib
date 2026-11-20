@@ -416,9 +416,15 @@ for (const boleto of cnab.boletos) {
 
 Campos opcionais vazios no arquivo (como o endereço na Caixa CNAB 240) não aparecem em `fields`.
 
+O `Cnab` também traz `header` e `trailer`, cada um com seus próprios `fields`. A leitura padrão ainda não tem campos de header e de trailer, então os dois vêm vazios.
+
 ### Campos extras
 
-Para ler um campo que a lib não oferece, escreva uma classe de campo e passe-a em `validate` e `read`, no parâmetro `extraFields`. O campo é validado e lido como os demais, e o valor aparece em `fields` pela chave do campo.
+Para ler um campo que a lib não oferece, escreva uma classe de campo e passe-a em `validate` e `read`, no parâmetro `extraFields`. O campo é validado e lido como os demais, e o valor aparece em `fields` pela chave do campo. O `fieldType` do campo decide onde:
+
+- `CnabFieldType.BOLETO`: em `cnab.boletos[i].fields`;
+- `CnabFieldType.HEADER`: em `cnab.header.fields`;
+- `CnabFieldType.TRAILER`: em `cnab.trailer.fields`.
 
 Por padrão, um campo extra é aplicado a qualquer banco e formato. Como a posição de um dado costuma mudar de um banco para outro, e principalmente entre CNAB 240 e CNAB 400, o campo pode declarar `bank` e `format` para limitar onde é aplicado. Antes de validar e de ler, a lib descarta os campos extras que não são do banco e do formato do arquivo:
 
