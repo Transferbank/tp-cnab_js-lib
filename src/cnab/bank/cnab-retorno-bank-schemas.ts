@@ -4,6 +4,7 @@ import { CnabSchema } from '@cnab/type/cnab-schema'
 import { indexCnabSchemas } from '@cnab/bank/index-cnab-schemas'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator } from '@cnab/validators/cnab400/cnab400-line-start-validator'
+import { Cnab240HeaderRecordTypeValidator, Cnab240LoteRecordTypeValidator, Cnab240TrailerRecordTypeValidator } from '@cnab/validators/cnab240/cnab240-record-type-validator'
 import { Cnab240RetornoBoletoGroupRule } from '@cnab/group-rule/cnab240/retorno-boleto-group-rule'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
 
@@ -21,14 +22,17 @@ function registerCnabSchemas(): CnabSchema[] {
       boletoGroupRule: new Cnab240RetornoBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
+        validators: [Cnab240HeaderRecordTypeValidator],
         fields: [],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
+        validators: [Cnab240TrailerRecordTypeValidator],
         fields: [],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField
         ],
@@ -62,14 +66,17 @@ function registerCnabSchemas(): CnabSchema[] {
       boletoGroupRule: new Cnab240RetornoBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
+        validators: [Cnab240HeaderRecordTypeValidator],
         fields: [],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
+        validators: [Cnab240TrailerRecordTypeValidator],
         fields: [],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField
         ],
@@ -103,14 +110,17 @@ function registerCnabSchemas(): CnabSchema[] {
       boletoGroupRule: new Cnab240RetornoBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
+        validators: [Cnab240HeaderRecordTypeValidator],
         fields: [],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
+        validators: [Cnab240TrailerRecordTypeValidator],
         fields: [],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField
         ],
@@ -144,14 +154,17 @@ function registerCnabSchemas(): CnabSchema[] {
       boletoGroupRule: new Cnab240RetornoBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
+        validators: [Cnab240HeaderRecordTypeValidator],
         fields: [],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
+        validators: [Cnab240TrailerRecordTypeValidator],
         fields: [],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField
         ],
@@ -185,14 +198,17 @@ function registerCnabSchemas(): CnabSchema[] {
       boletoGroupRule: new Cnab240RetornoBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
+        validators: [Cnab240HeaderRecordTypeValidator],
         fields: [],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
+        validators: [Cnab240TrailerRecordTypeValidator],
         fields: [],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField
         ],
@@ -226,14 +242,17 @@ function registerCnabSchemas(): CnabSchema[] {
       boletoGroupRule: new Cnab240RetornoBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
+        validators: [Cnab240HeaderRecordTypeValidator],
         fields: [],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
+        validators: [Cnab240TrailerRecordTypeValidator],
         fields: [],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField
         ],
@@ -267,14 +286,17 @@ function registerCnabSchemas(): CnabSchema[] {
       boletoGroupRule: new Cnab240RetornoBoletoGroupRule(),
       header: {
         fieldType: CnabFieldType.HEADER,
+        validators: [Cnab240HeaderRecordTypeValidator],
         fields: [],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
+        validators: [Cnab240TrailerRecordTypeValidator],
         fields: [],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        validators: [Cnab240LoteRecordTypeValidator],
         fields: [
           RetornoFields240.CodigoDeOcorrenciaBoletoField
         ],

@@ -92,7 +92,7 @@ export class CnabLineSchema {
           yield group
         }
         group = [numberedLine]
-      } else if (group.length > 0) {
+      } else {
         group.push(numberedLine)
       }
     }

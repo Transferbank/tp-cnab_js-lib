@@ -5,7 +5,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 ## Funcionalidades
 
 - Detecção automática de banco, formato (CNAB 240 ou CNAB 400), tipo de arquivo (lote de criação ou de validação) e quantidade de boletos, a partir do próprio conteúdo do arquivo
-- Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
+- Validação do arquivo inteiro (tamanho, início e tipo de registro de cada linha, campos de cada boleto)
 - Leitura dos boletos, com os valores dos campos já convertidos (texto, número e data)
 - Erros de validação tipados, com linha, campo e mensagem
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
