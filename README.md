@@ -15,17 +15,16 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 | Banco                   | Remessa CNAB 240 | Remessa CNAB 400 | Retorno CNAB 240 | Retorno CNAB 400 |
 | ----------------------- | :--------------: | :--------------: | :--------------: | :--------------: |
 | Banco do Brasil         |        ✅        |        ✅        |        ✅        |        ✅        |
-| Bradesco                |        ✅        |        ✅        |        ❌        |        ❌        |
-| Caixa Econômica Federal |        ✅        |        ✅        |        ❌        |        ❌        |
-| Itaú                    |        ✅        |        ✅        |        ❌        |        ❌        |
-| Santander               |        ✅        |        ✅        |        ❌        |        ❌        |
-| Sicoob                  |        ✅        |        ✅        |        ❌        |        ❌        |
-| Sicredi                 |        ✅        |        ✅        |        ❌        |        ❌        |
+| Bradesco                |        ✅        |        ✅        |        ✅        |        ✅        |
+| Caixa Econômica Federal |        ✅        |        ✅        |        ✅        |        ✅        |
+| Itaú                    |        ✅        |        ✅        |        ✅        |        ✅        |
+| Santander               |        ✅        |        ✅        |        ✅        |        ✅        |
+| Sicoob                  |        ✅        |        ✅        |        ✅        |        ✅        |
+| Sicredi                 |        ✅        |        ✅        |        ✅        |        ✅        |
 
 Remessa é o lote de criação e retorno é o lote de validação (veja [Lote de criação e lote de validação](#lote-de-criação-e-lote-de-validação)).
 
 - ✅ Suportado: o arquivo é validado e lido.
-- ❌ Não suportado ainda: o banco é reconhecido, mas abrir o arquivo lança `CnabBankSchemaNotFoundException`.
 
 Abrir o arquivo de um banco fora desta tabela lança `CnabBankCodeNotFoundException` (veja [Exceções](#exceções)).
 
