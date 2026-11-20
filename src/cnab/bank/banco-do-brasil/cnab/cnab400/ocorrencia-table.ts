@@ -48,7 +48,7 @@ export const BANCO_DO_BRASIL_CNAB400_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
     '73': 'Confirmação de Instrução de Parâmetro de Pagamento Parcial'
   },
   [CnabOcorrencia.INSTRUCAO_REJEITADA]: {
-    '03': 'Comando recusado (motivo nas posições 087/088)'
+    '03': 'Comando recusado'
   },
   [CnabOcorrencia.PROTESTO]: {
     '19': 'Confirmação de recebimento de instruções para protesto',

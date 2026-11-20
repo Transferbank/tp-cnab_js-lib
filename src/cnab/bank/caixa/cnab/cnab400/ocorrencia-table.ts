@@ -5,7 +5,7 @@ export const CAIXA_CNAB400_OCORRENCIA_TABLE: CnabOcorrenciaTable = {
     '01': 'Entrada Confirmada'
   },
   [CnabOcorrencia.ENTRADA_REJEITADA]: {
-    '99': 'Rejeição do Título (código de rejeição nas posições 80 a 82)'
+    '99': 'Rejeição do Título'
   },
   [CnabOcorrencia.LIQUIDACAO]: {
     '21': 'Liquidação',
