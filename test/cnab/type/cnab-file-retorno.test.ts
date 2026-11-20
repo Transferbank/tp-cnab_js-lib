@@ -3,7 +3,7 @@ import * as path from 'path'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabOcorrencia } from '@cnab/type/cnab-ocorrencia'
 import { getOcorrencia, getOcorrenciaDescription } from '@cnab/bank/cnab-ocorrencia-tables'
-import { readExampleLines, resPath } from '@test/test-utils'
+import { readExampleLines, replaceLineRange, resPath } from '@test/test-utils'
 
 describe('cnab-file retorno', (): void => {
   it.each([
@@ -138,4 +138,44 @@ describe('cnab-file retorno', (): void => {
     expect(entradaLines.length).toBeGreaterThan(0)
     expect(entradasWithJurosMulta).toEqual([])
   })
+
+  it.each([
+    ['caixa/cnab400/retorno/caixa_cnab_400.RET', [null, 2.31, null], [150, 233.81, null]],
+    ['sicredi/cnab400/retorno/sicredi_cnab_400.RET', [7.36, 25, null], [375.48, 1275, null]]
+  ])(
+    'given retorno file %s with a multa in the last liquidação when reading then returns juros pago and multa paga separately',
+    (examplePath: string, expectedJurosPagos: Array<number | null>, expectedValoresPagos: Array<number | null>): void => {
+      // Given
+      const lines = readExampleLines(path.join(resPath(), examplePath))
+      const cnabFile = CnabFile.fromLines(lines)
+      let lastLiquidacaoIndex = -1
+      for (const [index, line] of lines.entries()) {
+        const isDetalhe = line.startsWith('1')
+        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, line.substring(108, 110))
+        if (isDetalhe && ocorrencia == CnabOcorrencia.LIQUIDACAO) {
+          lastLiquidacaoIndex = index
+        }
+      }
+      lines[lastLiquidacaoIndex] = replaceLineRange(lines[lastLiquidacaoIndex], [280, 292], '0000000000100')
+
+      // When
+      const boletos = CnabFile.fromLines(lines).read().boletos
+      const jurosPagos: unknown[] = []
+      const multasPagas: unknown[] = []
+      const valoresPagos: unknown[] = []
+      for (const boleto of boletos) {
+        const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
+        if (ocorrencia != CnabOcorrencia.ENTRADA_CONFIRMADA) {
+          jurosPagos.push(boleto.fields.juros_pago ?? null)
+          multasPagas.push(boleto.fields.multa_paga ?? null)
+          valoresPagos.push(boleto.fields.valor_pago ?? null)
+        }
+      }
+
+      // Then
+      expect(jurosPagos).toEqual(expectedJurosPagos)
+      expect(multasPagas).toEqual([null, 1, null])
+      expect(valoresPagos).toEqual(expectedValoresPagos)
+    }
+  )
 })

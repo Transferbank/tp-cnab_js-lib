@@ -343,6 +343,8 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 | `codigo_de_ocorrencia` | Código da ocorrência, como está no arquivo            | `string` |
 | `valor_pago`           | Valor pago pelo pagador, em reais                     | `number` |
 | `juros_multa`          | Encargos pagos pelo pagador (juros e multa), em reais | `number` |
+| `juros_pago`           | Juros pagos pelo pagador, em reais                    | `number` |
+| `multa_paga`           | Multa paga pelo pagador, em reais                     | `number` |
 
 `valor_pago` é o total pago pelo pagador. Em alguns layouts, ele junta mais de uma posição do arquivo ou só é lido quando o boleto foi pago:
 
@@ -352,7 +354,9 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 
 O Itaú CNAB 240 ainda não lê `valor_pago`, por falta de informação: o manual descreve a posição como valor lançado em conta, possivelmente já sem a tarifa de cobrança, que fica em outra linha do boleto.
 
-No Itaú CNAB 400, `juros_multa` só é lido na liquidação (na entrada, a posição já vem preenchida, sem pagamento). A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separadas e ainda não leem `juros_multa`. O Itaú CNAB 240 também não lê `juros_multa`, por falta de informação: no CNAB 400 o Itaú preenche essa posição também na entrada, e não há retornos do CNAB 240 para conferir se ele faz o mesmo.
+No Itaú CNAB 400, `juros_multa` só é lido na liquidação (na entrada, a posição já vem preenchida, sem pagamento). O Itaú CNAB 240 ainda não lê `juros_multa`, por falta de informação: no CNAB 400 o Itaú preenche essa posição também na entrada, e não há retornos do CNAB 240 para conferir se ele faz o mesmo.
+
+A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separadas. Nesses dois layouts, o boleto traz `juros_pago` e `multa_paga` no lugar de `juros_multa`; nos outros, `juros_pago` e `multa_paga` não existem.
 
 #### Ocorrências
 
