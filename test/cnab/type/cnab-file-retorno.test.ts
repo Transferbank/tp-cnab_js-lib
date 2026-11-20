@@ -180,6 +180,18 @@ describe('cnab-file retorno', (): void => {
   )
 
   it.each([
+    ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', [new Date(2026, 11, 15), new Date(2026, 11, 22), new Date(2026, 11, 23)]],
+    ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', [new Date(2026, 5, 3), new Date(2026, 5, 7), new Date(2026, 5, 8)]],
+    ['caixa/cnab240/retorno/caixa_cnab_240.txt', [new Date(2026, 11, 15), new Date(2027, 0, 22), new Date(2027, 0, 25)]],
+    ['caixa/cnab400/retorno/caixa_cnab_400.RET', [new Date(2026, 7, 15), new Date(2026, 7, 22), new Date(2026, 7, 23)]],
+    ['itau/cnab240/retorno/itau_cnab_240.txt', [new Date(2026, 11, 18), new Date(2026, 11, 20), new Date(2026, 11, 21)]],
+    ['itau/cnab400/retorno/ITAU_cnab_400.RET', [new Date(2026, 6, 6), new Date(2026, 6, 7), new Date(2026, 6, 8)]],
+    ['santander/cnab240/retorno/santander_cnab_240.txt', [new Date(2026, 11, 15), new Date(2027, 0, 22), new Date(2027, 0, 23)]],
+    ['santander/cnab400/retorno/santander_cnab_400.RET', [new Date(2026, 5, 6), new Date(2026, 5, 23), new Date(2026, 5, 24)]],
+    ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', [new Date(2026, 11, 15), new Date(2026, 11, 22), new Date(2026, 11, 23)]],
+    ['sicredi/cnab400/retorno/sicredi_cnab_400.RET', [new Date(2026, 8, 5), new Date(2026, 8, 9), new Date(2026, 8, 10)]],
+    ['sicoob/cnab240/retorno/sicoob_cnab_240.txt', [new Date(2026, 11, 15), new Date(2026, 11, 22), new Date(2026, 11, 23)]],
+    ['sicoob/cnab400/retorno/sicoob_cnab_400.RET', [new Date(2026, 7, 15), new Date(2026, 7, 22), new Date(2026, 7, 23)]],
     ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', [new Date(2026, 11, 15), new Date(2027, 0, 22), new Date(2027, 0, 25)]],
     ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', [new Date(2026, 5, 11), new Date(2026, 5, 13), new Date(2026, 5, 14)]]
   ])(
