@@ -18,3 +18,4 @@ Mudanças da `@fx55/cnab-lib-ts` por versão. As versões seguem o [versionament
 - Retorno: `juros_multa`, os encargos pagos pelo pagador, em 11 dos 14 layouts (todos menos a Caixa CNAB 400, o Sicredi CNAB 400 e o Itaú CNAB 240).
 - Retorno: `juros_pago` e `multa_paga` na Caixa CNAB 400 e no Sicredi CNAB 400, que mandam juros e multa em posições separadas.
 - Retorno: `data_de_ocorrencia`, a data em que o banco registrou a ocorrência, nos 14 layouts.
+- Retorno: `seu_numero`, o número do documento dado pelo beneficiário, nos 14 layouts.

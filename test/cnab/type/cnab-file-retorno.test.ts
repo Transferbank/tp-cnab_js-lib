@@ -216,6 +216,18 @@ describe('cnab-file retorno', (): void => {
   )
 
   it.each([
+    ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', ['NF0000123', 'NF0000124', 'NF0000125']],
+    ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', ['NF80673-01', 'NF80386-01', 'NF82759-04']],
+    ['caixa/cnab240/retorno/caixa_cnab_240.txt', ['NF00000001', 'NF00000002', 'NF00000003']],
+    ['caixa/cnab400/retorno/caixa_cnab_400.RET', ['NF00020000', 'NF00020001', 'NF00020009']],
+    ['itau/cnab240/retorno/itau_cnab_240.txt', ['NF0000123', 'NF0000124', 'NF0000126']],
+    ['itau/cnab400/retorno/ITAU_cnab_400.RET', ['NF76872-04', 'NF76870-04', 'NF85895-03']],
+    ['santander/cnab240/retorno/santander_cnab_240.txt', ['NF00012345', 'NF00012346', 'NF00012347']],
+    ['santander/cnab400/retorno/santander_cnab_400.RET', ['9558.02', '9558.03', '10505.04']],
+    ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', ['NF00000001', 'NF00000002', 'NF00000003']],
+    ['sicredi/cnab400/retorno/sicredi_cnab_400.RET', ['NF00000001', 'NF00000002', 'NF00000003']],
+    ['sicoob/cnab240/retorno/sicoob_cnab_240.txt', ['NF00000001', 'NF00000002', 'NF00000003']],
+    ['sicoob/cnab400/retorno/sicoob_cnab_400.RET', ['NF00000001', 'NF00000002', 'NF00000010']],
     ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', ['NF00012345', 'NF00012346', 'NF00012347']],
     ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', ['NF81972-01', 'NF76666-01', 'NF82670-06']]
   ])(
