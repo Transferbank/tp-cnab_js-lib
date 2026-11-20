@@ -81,6 +81,15 @@ describe('cnab-file retorno', (): void => {
   )
 
   it.each([
+    ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', [null, 5, null]],
+    ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', [null, 23.23, null]],
+    ['caixa/cnab240/retorno/caixa_cnab_240.txt', [null, 25, null]],
+    ['itau/cnab400/retorno/ITAU_cnab_400.RET', [null, 2.25, null]],
+    ['santander/cnab240/retorno/santander_cnab_240.txt', [null, 25, null]],
+    ['santander/cnab400/retorno/santander_cnab_400.RET', [null, 3.68, null]],
+    ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', [null, 25, null]],
+    ['sicoob/cnab240/retorno/sicoob_cnab_240.txt', [null, 25, null]],
+    ['sicoob/cnab400/retorno/sicoob_cnab_400.RET', [null, 2.31, null]],
     ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', [null, 2.5, null]],
     ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', [null, 87.38, null]]
   ])(
@@ -103,4 +112,30 @@ describe('cnab-file retorno', (): void => {
       expect(jurosMulta).toEqual(expectedJurosMulta)
     }
   )
+
+  it('given the Itaú CNAB 400 retorno file when reading then the entradas confirmadas have no juros e multa even with the mora por dia in its position', (): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), 'itau/cnab400/retorno/ITAU_cnab_400.RET'))
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When
+    const boletos = cnabFile.read().boletos
+    const entradasWithJurosMulta: unknown[] = []
+    for (const boleto of boletos) {
+      const ocorrencia = getOcorrencia(cnabFile.bank, cnabFile.format, boleto.fields.codigo_de_ocorrencia as string)
+      if (ocorrencia == CnabOcorrencia.ENTRADA_CONFIRMADA && boleto.fields.juros_multa != null) {
+        entradasWithJurosMulta.push(boleto.fields.juros_multa)
+      }
+    }
+    const entradaLines: string[] = []
+    for (const line of lines) {
+      if (line.startsWith('1') && line.substring(108, 110) == '02' && line.substring(266, 279) != '0000000000000') {
+        entradaLines.push(line)
+      }
+    }
+
+    // Then
+    expect(entradaLines.length).toBeGreaterThan(0)
+    expect(entradasWithJurosMulta).toEqual([])
+  })
 })
