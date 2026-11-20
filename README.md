@@ -347,6 +347,7 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 | `multa_paga`           | Multa paga pelo pagador, em reais                     | `number` |
 | `data_de_ocorrencia`   | Data em que o banco registrou a ocorrência            | `Date`   |
 | `seu_numero`           | Número do documento dado pelo beneficiário            | `string` |
+| `uso_da_empresa`       | Identificação do boleto na empresa                    | `string` |
 
 `valor_pago` é o total pago pelo pagador. Em alguns layouts, ele junta mais de uma posição do arquivo ou só é lido quando o boleto foi pago:
 
@@ -361,6 +362,8 @@ No Itaú CNAB 400, `juros_multa` só é lido na liquidação (na entrada, a posi
 A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separadas. Nesses dois layouts, o boleto traz `juros_pago` e `multa_paga` no lugar de `juros_multa`; nos outros, `juros_pago` e `multa_paga` não existem.
 
 `data_de_ocorrencia` é a data em que o banco registrou a ocorrência, e não necessariamente a data em que o pagador pagou. No Itaú CNAB 240, o manual a descreve como a data de geração do arquivo.
+
+`uso_da_empresa` já é lido no Banco do Brasil; os outros bancos estão em progresso.
 
 #### Ocorrências
 
