@@ -70,14 +70,17 @@ function createFileFromPath(filePath: string): File {
 
 describe('cnab-file', (): void => {
   it.each([
-    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', CnabBank.BRADESCO, CnabFormat.CNAB240, 17, 3],
-    ['bradesco/cnab400/remessa/bradesco_cnab_400.txt', CnabBank.BRADESCO, CnabFormat.CNAB400, 76, 37]
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', CnabBank.BRADESCO, CnabFormat.CNAB240, CnabFileType.REMESSA, 17, 3],
+    ['bradesco/cnab400/remessa/bradesco_cnab_400.txt', CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.REMESSA, 76, 37],
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', CnabBank.BANCODOBRASIL, CnabFormat.CNAB240, CnabFileType.RETORNO, 16, 6],
+    ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', CnabBank.BANCODOBRASIL, CnabFormat.CNAB400, CnabFileType.RETORNO, 118, 116]
   ])(
     'given document file when opening then detects bank, format, file type, lines and boleto count',
     async (
       examplePath: string,
       expectedBank: CnabBank,
       expectedFormat: CnabFormat,
+      expectedFileType: CnabFileType,
       expectedLineCount: number,
       expectedBoletoCount: number
     ): Promise<void> => {
@@ -91,7 +94,7 @@ describe('cnab-file', (): void => {
       // Then
       expect(cnabFile.bank).toBe(expectedBank)
       expect(cnabFile.format).toBe(expectedFormat)
-      expect(cnabFile.fileType).toBe(CnabFileType.REMESSA)
+      expect(cnabFile.fileType).toBe(expectedFileType)
       expect(cnabFile.rawLines.length).toBe(expectedLineCount)
       expect(cnabFile.boletoCount).toBe(expectedBoletoCount)
       expect(cnabFile.schema).not.toBeNull()
