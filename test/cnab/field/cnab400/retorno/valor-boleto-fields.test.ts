@@ -1,10 +1,24 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabOcorrencia, CnabOcorrenciaTable } from '@cnab/type/cnab-ocorrencia'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { cnab400RetornoLine, replaceLineRange } from '@test/test-utils'
 import { ValorTituloBoletoField } from '@cnab/field/cnab400/retorno/valor-titulo-boleto-field'
 import { ValorPagoBoletoField } from '@cnab/field/cnab400/retorno/valor-pago-boleto-field'
 import { JurosMultaBoletoField } from '@cnab/field/cnab400/retorno/juros-multa-boleto-field'
+
+const OCORRENCIA_TABLE: CnabOcorrenciaTable = {
+  [CnabOcorrencia.LIQUIDACAO]: { '06': 'Liquidação' },
+  [CnabOcorrencia.BAIXA]: { '09': 'Baixa' }
+}
+
+class LiquidacaoOnlyValorPagoBoletoField extends ValorPagoBoletoField {
+  protected readonly liquidacaoOnlyTable = OCORRENCIA_TABLE
+}
+
+class SummedValorPagoBoletoField extends ValorPagoBoletoField {
+  protected readonly addedRanges: Array<[number, number]> = [[176, 188], [280, 292]]
+}
 
 const cases: Array<[string, CnabFieldClass<number>, [number, number]]> = [
   ['ValorTituloBoletoField', ValorTituloBoletoField, [153, 165]],
@@ -71,5 +85,57 @@ describe('ValorBoletoField', (): void => {
         })
       ]
     })
+  })
+})
+
+describe('ValorPagoBoletoField', (): void => {
+  it('given amounts in the added ranges when reading then returns the sum with its own range', (): void => {
+    // Given
+    let line = replaceLineRange(cnab400RetornoLine('1'), [254, 266], '0000000010000')
+    line = replaceLineRange(line, [176, 188], '0000000000250')
+    line = replaceLineRange(line, [280, 292], '0000000000005')
+
+    // When
+    const field = new SummedValorPagoBoletoField(line, 1)
+
+    // Then
+    expect(field.validate()).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toBe(102.55)
+  })
+
+  it('given a non numeric added range when validating then reports an invalid format', (): void => {
+    // Given
+    let line = replaceLineRange(cnab400RetornoLine('1'), [254, 266], '0000000010000')
+    line = replaceLineRange(line, [176, 188], '00000000002AB')
+
+    // When
+    const result = new SummedValorPagoBoletoField(line, 1).validate()
+
+    // Then
+    expect(result).toEqual({
+      isValid: false,
+      errors: [
+        new CnabGenericFieldError({
+          message: 'Campo valor_pago com formato inválido: 00000000002AB',
+          lineNumber: 1,
+          fieldKey: 'valor_pago',
+          range: [254, 266]
+        })
+      ]
+    })
+  })
+
+  it.each([
+    ['06', true],
+    ['09', false]
+  ])('given the ocorrência %s when the field is read only on liquidação then shouldValidate is %s', (code: string, expected: boolean): void => {
+    // Given
+    const line = replaceLineRange(cnab400RetornoLine('1'), [109, 110], code)
+
+    // When
+    const shouldValidate = new LiquidacaoOnlyValorPagoBoletoField(line, 1).shouldValidate()
+
+    // Then
+    expect(shouldValidate).toBe(expected)
   })
 })

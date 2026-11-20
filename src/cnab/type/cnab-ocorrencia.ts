@@ -66,3 +66,7 @@ export function findOcorrencia(table: CnabOcorrenciaTable, code: string): CnabOc
   }
   return index.get(code) ?? null
 }
+
+export function isLiquidacao(table: CnabOcorrenciaTable, code: string): boolean {
+  return findOcorrencia(table, code)?.ocorrencia == CnabOcorrencia.LIQUIDACAO
+}

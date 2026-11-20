@@ -1,5 +1,7 @@
-import { CnabField } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CodigoDeOcorrenciaBoletoField } from '@cnab/field/cnab240/retorno/codigo-de-ocorrencia-boleto-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabOcorrenciaTable, isLiquidacao } from '@cnab/type/cnab-ocorrencia'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabFieldInvalidNumberError } from '@cnab/type/cnab-validation-error'
 import { blankIfZeros } from '@cnab/utils/phone-parser'
@@ -7,6 +9,8 @@ import { parseImpliedDecimal } from '@cnab/utils/value-parser'
 
 export abstract class ValorBoletoField extends CnabField<number> {
   static readonly fieldType = CnabFieldType.BOLETO
+  protected readonly liquidacaoOnlyTable: CnabOcorrenciaTable | null = null
+  protected readonly ocorrenciaField: CnabFieldClass<string> = CodigoDeOcorrenciaBoletoField
 
   protected extractRawValue(): string {
     return blankIfZeros(super.extractRawValue())
@@ -22,5 +26,13 @@ export abstract class ValorBoletoField extends CnabField<number> {
       throw new CnabFieldInvalidNumberError(this.fieldKey, rawValue)
     }
     return value
+  }
+
+  protected isReadableOcorrencia(): boolean {
+    if (this.liquidacaoOnlyTable == null) {
+      return true
+    }
+    const code = new this.ocorrenciaField(this.rawLine, this.lineNumber).value ?? ''
+    return isLiquidacao(this.liquidacaoOnlyTable, code)
   }
 }
