@@ -479,7 +479,7 @@ const lines = CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, Cnab
 - Texto é escrito em maiúsculas e sem acento.
 - Cada valor é escrito como foi informado, na posição do seu campo, sem conta entre campos.
 - No Itaú CNAB 400, `valor_pago` e `juros_multa` só são lidos em ocorrências de liquidação; informados em outra ocorrência, como uma entrada ou uma baixa, são recusados.
-- O arquivo escrito é validado e lido de volta como a leitura faria. Se um valor não puder ser escrito, se uma chave não existir no layout da linha ou se o valor lido de volta for diferente do informado, `write` lança `CnabInvalidFileException` com um erro para cada campo.
+- O arquivo escrito é validado e lido de volta como a leitura faria. Se um valor não puder ser escrito, se uma chave não existir no layout da linha ou se o valor lido de volta for diferente do informado, `write` para no primeiro problema e lança `CnabInvalidFileException` só com o erro dele.
 - Só o lote de validação CNAB 400 pode ser escrito. Outro formato ou tipo de arquivo lança `CnabWriteNotSupportedException`, e um `Cnab` sem boletos lança `CnabMinimumLinesNotReachedException`.
 
 ### Tratando erros de validação

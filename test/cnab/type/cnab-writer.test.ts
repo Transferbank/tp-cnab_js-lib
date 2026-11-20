@@ -57,7 +57,7 @@ describe('CnabWriter', (): void => {
     })
   })
 
-  it('given boletos with values that cannot be written when writing then throws an invalid file exception with an error for each field', (): void => {
+  it('given boletos with values that cannot be written when writing then stops at the first one and throws an invalid file exception with its error', (): void => {
     // Given
     const cnab = new Cnab({
       boletos: [
@@ -72,12 +72,6 @@ describe('CnabWriter', (): void => {
         lineNumber: 2,
         fieldKey: 'codigo_de_ocorrencia',
         range: [109, 110]
-      }),
-      new CnabGenericFieldError({
-        message: 'Campo codigo_de_ocorrencia não pode ser escrito: valor 6 deve ser texto',
-        lineNumber: 3,
-        fieldKey: 'codigo_de_ocorrencia',
-        range: [109, 110]
       })
     ]
 
@@ -89,7 +83,7 @@ describe('CnabWriter', (): void => {
     expect(error).toHaveProperty('errors', expectedErrors)
   })
 
-  it('given keys that do not exist in the layout of their line when writing then throws an invalid file exception with an error for each key', (): void => {
+  it('given keys that do not exist in the layout of their line when writing then stops at the first one and throws an invalid file exception with its error', (): void => {
     // Given
     const cnab = new Cnab({
       header: new CnabHeader({ fields: { codigo_de_ocorrencia: '06' } }),
@@ -100,12 +94,6 @@ describe('CnabWriter', (): void => {
         message: 'Campo codigo_de_ocorrencia não existe no layout do header',
         lineNumber: 0,
         fieldKey: 'codigo_de_ocorrencia',
-        range: [1, 400]
-      }),
-      new CnabGenericFieldError({
-        message: 'Campo data_de_credito não existe no layout do boleto',
-        lineNumber: 1,
-        fieldKey: 'data_de_credito',
         range: [1, 400]
       })
     ]

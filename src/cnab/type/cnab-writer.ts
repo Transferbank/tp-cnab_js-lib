@@ -5,8 +5,7 @@ import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
-import { CnabSchema } from '@cnab/type/cnab-schema'
-import { CnabGenericFieldError, CnabValidationError } from '@cnab/type/cnab-validation-error'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { CNAB_RETORNO_BANK_SCHEMAS } from '@cnab/bank/cnab-retorno-bank-schemas'
 import {
   CnabInvalidFileException,
@@ -36,74 +35,27 @@ export class CnabWriter {
 
     const schema = CNAB_RETORNO_BANK_SCHEMAS[bank][format]
     const lines: string[] = []
-    const errors: CnabValidationError[] = []
-    const boletoLineNumbers: number[] = []
 
-    lines.push(CnabWriter.writeLine(schema.header, cnab.header.fields, lines.length, errors))
-    cnab.boletos.forEach((boleto: CnabBoleto): void => {
-      boletoLineNumbers.push(lines.length)
-      lines.push(CnabWriter.writeLine(schema.boleto, boleto.fields, lines.length, errors))
-    })
-    lines.push(CnabWriter.writeLine(schema.trailer, cnab.trailer.fields, lines.length, errors))
-
-    if (errors.length > 0) {
-      throw new CnabInvalidFileException(errors)
+    lines.push(CnabWriter.writeLine(schema.header, cnab.header.fields, lines.length))
+    for (const boleto of cnab.boletos) {
+      lines.push(CnabWriter.writeLine(schema.boleto, boleto.fields, lines.length))
     }
+    lines.push(CnabWriter.writeLine(schema.trailer, cnab.trailer.fields, lines.length))
 
-    const result = schema.validate(lines, false)
+    const result = schema.validate(lines, true)
     if (!result.isValid) {
-      throw new CnabInvalidFileException(result.errors)
+      throw new CnabInvalidFileException(result.errors.slice(0, 1))
     }
 
-    const mismatches = CnabWriter.compareWithWritten(cnab, schema, lines, boletoLineNumbers)
-    if (mismatches.length > 0) {
-      throw new CnabInvalidFileException(mismatches)
-    }
-
-    return lines
-  }
-
-  private static compareWithWritten(
-    cnab: Cnab,
-    schema: CnabSchema,
-    lines: string[],
-    boletoLineNumbers: number[]
-  ): CnabValidationError[] {
     const written = schema.extractCnab(lines)
-    const trailerLineNumber = lines.length - 1
-    const errors: CnabValidationError[] = []
-
-    const headerErrors = CnabWriter.compareLine(
-      schema.header,
-      cnab.header.fields,
-      written.header.fields,
-      lines,
-      0
-    )
-    errors.push(...headerErrors)
-
+    CnabWriter.compareLine(schema.header, cnab.header.fields, written.header.fields, lines, 0)
     cnab.boletos.forEach((boleto: CnabBoleto, index: number): void => {
       const writtenFields = written.boletos[index]?.fields ?? {}
-      const boletoErrors = CnabWriter.compareLine(
-        schema.boleto,
-        boleto.fields,
-        writtenFields,
-        lines,
-        boletoLineNumbers[index]
-      )
-      errors.push(...boletoErrors)
+      CnabWriter.compareLine(schema.boleto, boleto.fields, writtenFields, lines, index + 1)
     })
+    CnabWriter.compareLine(schema.trailer, cnab.trailer.fields, written.trailer.fields, lines, lines.length - 1)
 
-    const trailerErrors = CnabWriter.compareLine(
-      schema.trailer,
-      cnab.trailer.fields,
-      written.trailer.fields,
-      lines,
-      trailerLineNumber
-    )
-    errors.push(...trailerErrors)
-
-    return errors
+    return lines
   }
 
   private static compareLine(
@@ -112,9 +64,7 @@ export class CnabWriter {
     writtenFields: Record<string, unknown>,
     lines: string[],
     lineNumber: number
-  ): CnabValidationError[] {
-    const errors: CnabValidationError[] = []
-
+  ): void {
     for (const fieldClass of lineSchema.fields) {
       const field = new fieldClass(lines[lineNumber], lineNumber)
       const informed = informedFields[field.fieldKey] ?? null
@@ -122,15 +72,13 @@ export class CnabWriter {
       if (CnabWriter.isSameValue(field, informed, read)) {
         continue
       }
-      errors.push(new CnabGenericFieldError({
+      throw new CnabInvalidFileException([new CnabGenericFieldError({
         message: CnabWriter.describeMismatch(field, informed, read),
         lineNumber,
         fieldKey: field.fieldKey,
         range: field.range
-      }))
+      })])
     }
-
-    return errors
   }
 
   private static isSameValue(field: CnabField<unknown>, informed: unknown, read: unknown): boolean {
@@ -165,12 +113,7 @@ export class CnabWriter {
     return String(value)
   }
 
-  private static writeLine(
-    lineSchema: CnabLineSchema,
-    values: Record<string, unknown>,
-    lineNumber: number,
-    errors: CnabValidationError[]
-  ): string {
+  private static writeLine(lineSchema: CnabLineSchema, values: Record<string, unknown>, lineNumber: number): string {
     const line = Array.from({ length: Cnab400LineSizeValidator.expectedSize }, (): string => ' ')
 
     for (const { range, value } of lineSchema.fixedContent) {
@@ -182,14 +125,13 @@ export class CnabWriter {
       fields.push(new fieldClass(line.join(''), lineNumber))
     }
 
-    const unknownKeyErrors = CnabWriter.findUnknownKeys(lineSchema, fields, values, lineNumber)
-    errors.push(...unknownKeyErrors)
+    CnabWriter.checkKnownKeys(lineSchema, fields, values, lineNumber)
 
     for (const field of fields) {
       if (!field.belongsToLine()) {
         continue
       }
-      CnabWriter.writeField(field, line, values, lineNumber, errors)
+      CnabWriter.writeField(field, line, values, lineNumber)
     }
 
     const sequencial = String(lineNumber + 1).padStart(6, '0')
@@ -198,40 +140,31 @@ export class CnabWriter {
     return line.join('')
   }
 
-  private static findUnknownKeys(
+  private static checkKnownKeys(
     lineSchema: CnabLineSchema,
     fields: Array<CnabField<unknown>>,
     values: Record<string, unknown>,
     lineNumber: number
-  ): CnabValidationError[] {
+  ): void {
     const knownKeys = new Set<string>()
     for (const field of fields) {
       knownKeys.add(field.fieldKey)
     }
 
-    const errors: CnabValidationError[] = []
     for (const fieldKey of Object.keys(values)) {
       if (knownKeys.has(fieldKey)) {
         continue
       }
-      errors.push(new CnabGenericFieldError({
+      throw new CnabInvalidFileException([new CnabGenericFieldError({
         message: `Campo ${fieldKey} não existe no layout do ${LINE_NAMES[lineSchema.fieldType]}`,
         lineNumber,
         fieldKey,
         range: [1, Cnab400LineSizeValidator.expectedSize]
-      }))
+      })])
     }
-
-    return errors
   }
 
-  private static writeField(
-    field: CnabField<unknown>,
-    line: string[],
-    values: Record<string, unknown>,
-    lineNumber: number,
-    errors: CnabValidationError[]
-  ): void {
+  private static writeField(field: CnabField<unknown>, line: string[], values: Record<string, unknown>, lineNumber: number): void {
     const value = values[field.fieldKey] ?? null
 
     try {
@@ -240,12 +173,12 @@ export class CnabWriter {
       if (!(error instanceof TypeError || error instanceof RangeError)) {
         throw error
       }
-      errors.push(new CnabGenericFieldError({
+      throw new CnabInvalidFileException([new CnabGenericFieldError({
         message: `Campo ${field.fieldKey} não pode ser escrito: ${error.message}`,
         lineNumber,
         fieldKey: field.fieldKey,
         range: field.range
-      }))
+      })])
     }
   }
 }
