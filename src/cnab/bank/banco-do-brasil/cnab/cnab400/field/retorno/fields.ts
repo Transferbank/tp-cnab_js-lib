@@ -4,3 +4,4 @@ export { JurosMultaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/f
 export { DataDeOcorrenciaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/retorno/data-de-ocorrencia-boleto-field'
 export { SeuNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/retorno/seu-numero-boleto-field'
 export { UsoDaEmpresaBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/retorno/uso-da-empresa-boleto-field'
+export { NossoNumeroBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/retorno/nosso-numero-boleto-field'
