@@ -44,6 +44,19 @@ describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<number>, range
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(1234.56)
   })
+
+  it('given an amount in reais when formatting and reading it back then returns the same amount', (): void => {
+    // Given
+    const line = cnab400RetornoLine('1')
+    const formatted = new FieldClass(line, 1).formatValue(1234.56)
+
+    // When
+    const field = new FieldClass(replaceLineRange(line, range, formatted), 1)
+
+    // Then
+    expect(formatted).toBe('0000000123456')
+    expect(field.value).toBe(1234.56)
+  })
 })
 
 describe('ValorBoletoField', (): void => {
@@ -132,14 +145,16 @@ describe('ValorPagoBoletoField', (): void => {
   it.each([
     ['06', true],
     ['09', false]
-  ])('given the ocorrência %s when the field is read only on liquidação then shouldValidate is %s', (code: string, expected: boolean): void => {
+  ])('given the ocorrência %s when the field is read only on liquidação then shouldValidate is %s and the field still belongs to the line', (code: string, expected: boolean): void => {
     // Given
-    const line = replaceLineRange(cnab400RetornoLine('1'), [109, 110], code)
+    const field = new LiquidacaoOnlyValorPagoBoletoField(replaceLineRange(cnab400RetornoLine('1'), [109, 110], code), 1)
 
     // When
-    const shouldValidate = new LiquidacaoOnlyValorPagoBoletoField(line, 1).shouldValidate()
+    const shouldValidate = field.shouldValidate()
+    const belongsToLine = field.belongsToLine()
 
     // Then
     expect(shouldValidate).toBe(expected)
+    expect(belongsToLine).toBe(true)
   })
 })

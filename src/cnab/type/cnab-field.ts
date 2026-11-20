@@ -6,6 +6,8 @@ import {
   CnabFieldParseError,
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
+import { CnabFieldWriteNotImplementedException } from '@cnab/exception/cnab-exception'
+import { writeAtRange } from '@cnab/utils/line-writer'
 
 export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
@@ -86,6 +88,22 @@ export abstract class CnabField<T> {
 
   handleDuplicatedValue(_previousValue: unknown): T | null {
     return this.value
+  }
+
+  belongsToLine(): boolean {
+    return this.shouldValidate()
+  }
+
+  formatValue(_value: unknown): string {
+    throw new CnabFieldWriteNotImplementedException(this.fieldKey)
+  }
+
+  write(line: string[], value: unknown): void {
+    writeAtRange(line, this.range, this.formatValue(value))
+  }
+
+  protected get length(): number {
+    return this.range[1] - this.range[0] + 1
   }
 
   abstract shouldValidate(): boolean

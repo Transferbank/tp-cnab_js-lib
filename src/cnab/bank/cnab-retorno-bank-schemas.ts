@@ -11,6 +11,10 @@ import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-ru
 import * as RetornoFields240 from '@cnab/field/cnab240/retorno/fields'
 import * as RetornoFields400 from '@cnab/field/cnab400/retorno/fields'
 
+import { cnab400RetornoDetalheFixedContent, cnab400RetornoHeaderFixedContent, cnab400RetornoTrailerFixedContent } from '@cnab/field/cnab400/retorno/fixed-content'
+import { sicrediCnab400RetornoTrailerFixedContent } from '@cnab/bank/sicredi/cnab/cnab400/retorno-fixed-content'
+import { sicoobCnab400RetornoTrailerFixedContent } from '@cnab/bank/sicoob/cnab/cnab400/retorno-fixed-content'
+
 import * as BancoDoBrasilRetornoFields400 from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/retorno/fields'
 import * as BradescoRetornoFields400 from '@cnab/bank/bradesco/cnab/cnab400/field/retorno/fields'
 import * as CaixaRetornoFields240 from '@cnab/bank/caixa/cnab/cnab240/field/retorno/fields'
@@ -61,14 +65,17 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent,
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -117,17 +124,20 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent,
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
-          CaixaRetornoFields400.ValorPagoBoletoField,
+          RetornoFields400.ValorPagoBoletoField,
           RetornoFields400.JurosPagoBoletoField,
           RetornoFields400.MultaPagaBoletoField,
           RetornoFields400.DataDeOcorrenciaBoletoField,
@@ -172,14 +182,17 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent,
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           ItauRetornoFields400.ValorPagoBoletoField,
@@ -228,14 +241,17 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent,
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -284,14 +300,17 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent,
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: sicrediCnab400RetornoTrailerFixedContent,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -340,14 +359,17 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent,
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: sicoobCnab400RetornoTrailerFixedContent,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('1'),
         fields: [
           RetornoFields400.CodigoDeOcorrenciaBoletoField,
           RetornoFields400.ValorPagoBoletoField,
@@ -396,14 +418,17 @@ function registerCnabSchemas(): CnabSchema[] {
         fieldType: CnabFieldType.HEADER,
         fields: [],
         validators: [Cnab400HeaderLineStartValidator],
+        fixedContent: cnab400RetornoHeaderFixedContent,
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
         validators: [Cnab400TrailerLineStartValidator],
+        fixedContent: cnab400RetornoTrailerFixedContent,
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
+        fixedContent: cnab400RetornoDetalheFixedContent('7'),
         fields: [
           BancoDoBrasilRetornoFields400.CodigoDeOcorrenciaBoletoField,
           BancoDoBrasilRetornoFields400.ValorPagoBoletoField,

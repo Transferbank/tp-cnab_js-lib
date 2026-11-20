@@ -8,6 +8,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 - Validação do arquivo inteiro (tamanho, início e tipo de registro de cada linha, campos de cada boleto)
 - Leitura dos boletos, com os valores dos campos já convertidos (texto, número e data)
 - Erros de validação tipados, com linha, campo e mensagem
+- Escrita do lote de validação CNAB 400, conferida pela própria leitura
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
 
 ## Bancos suportados
@@ -350,9 +351,8 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 | `uso_da_empresa`       | Identificação do boleto na empresa                    | `string` |
 | `nosso_numero`         | Identificação do boleto no banco                      | `string` |
 
-`valor_pago` é o total pago pelo pagador. Em alguns layouts, ele junta mais de uma posição do arquivo ou só é lido quando o boleto foi pago:
+`valor_pago` é o valor pago que o banco informa no arquivo. Em alguns layouts, ele junta mais de uma posição do arquivo ou só é lido quando o boleto foi pago:
 
-- Caixa CNAB 400: soma o valor principal, os juros e a multa, que o banco manda em posições separadas.
 - Itaú CNAB 400: soma a tarifa de cobrança ao valor lançado em conta, e só é lido na liquidação (na baixa, a posição traz a tarifa).
 - Sicoob CNAB 240: só é lido na liquidação (na baixa por protesto, a posição repete o valor do título).
 
@@ -360,7 +360,7 @@ O Itaú CNAB 240 ainda não lê `valor_pago`, por falta de informação: o manua
 
 No Itaú CNAB 400, `juros_multa` só é lido na liquidação (na entrada, a posição já vem preenchida, sem pagamento). O Itaú CNAB 240 ainda não lê `juros_multa`, por falta de informação: no CNAB 400 o Itaú preenche essa posição também na entrada, e não há retornos do CNAB 240 para conferir se ele faz o mesmo.
 
-A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separadas. Nesses dois layouts, o boleto traz `juros_pago` e `multa_paga` no lugar de `juros_multa`; nos outros, `juros_pago` e `multa_paga` não existem.
+A Caixa CNAB 400 e o Sicredi CNAB 400 mandam juros e multa em posições separadas. Nesses dois layouts, o boleto traz `juros_pago` e `multa_paga` no lugar de `juros_multa`; nos outros, `juros_pago` e `multa_paga` não existem. Na Caixa CNAB 400, `valor_pago` é o valor da posição do valor pago, sem somar `juros_pago` e `multa_paga`.
 
 `data_de_ocorrencia` é a data em que o banco registrou a ocorrência, e não necessariamente a data em que o pagador pagou. No Itaú CNAB 240, o manual a descreve como a data de geração do arquivo.
 
@@ -456,6 +456,32 @@ const cnab = cnabFile.read([DataDeEmissaoBoletoField])
 
 Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-remessa-bank-schemas.ts`](src/cnab/bank/cnab-remessa-bank-schemas.ts).
 
+### Escrevendo um lote de validação
+
+`CnabWriter.write` monta as linhas de um lote de validação (arquivo retorno) CNAB 400 a partir de um `Cnab`:
+
+```ts
+import { Cnab, CnabBank, CnabBoleto, CnabFileType, CnabFormat, CnabWriter } from '@fx55/cnab-lib-ts'
+
+const cnab = new Cnab({
+  boletos: [
+    new CnabBoleto({ fields: { codigo_de_ocorrencia: '02', nosso_numero: '10014' } }),
+    new CnabBoleto({ fields: { codigo_de_ocorrencia: '06', nosso_numero: '10015', valor_pago: 102.5, juros_multa: 2.5 } })
+  ]
+})
+
+const lines = CnabWriter.write(cnab, CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO) // string[]
+```
+
+- Cada boleto vira um registro de detalhe, entre um header e um trailer.
+- O conteúdo fixo do layout do banco (tipo de registro, `RETORNO`, código do banco) e o número sequencial de cada linha são preenchidos pela lib.
+- Os campos aceitos são os mesmos da leitura do lote de validação do banco, pela mesma chave (veja [Lote de criação e lote de validação](#lote-de-criação-e-lote-de-validação)). Um campo não informado é escrito vazio.
+- Texto é escrito em maiúsculas e sem acento.
+- Cada valor é escrito como foi informado, na posição do seu campo, sem conta entre campos.
+- No Itaú CNAB 400, `valor_pago` e `juros_multa` só são lidos em ocorrências de liquidação; informados em outra ocorrência, como uma entrada ou uma baixa, são recusados.
+- O arquivo escrito é validado e lido de volta como a leitura faria. Se um valor não puder ser escrito, se uma chave não existir no layout da linha ou se o valor lido de volta for diferente do informado, `write` para no primeiro problema e lança `CnabInvalidFileException` só com o erro dele.
+- Só o lote de validação CNAB 400 pode ser escrito. Outro formato ou tipo de arquivo lança `CnabWriteNotSupportedException`, e um `Cnab` sem boletos lança `CnabMinimumLinesNotReachedException`.
+
 ### Tratando erros de validação
 
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.
@@ -482,3 +508,4 @@ Problemas que impedem o processamento do arquivo lançam exceções que estendem
 | `CnabBankCodeNotFoundException`       | O código do banco no header não é reconhecido     |
 | `CnabBankSchemaNotFoundException`     | Banco sem suporte para o formato/tipo do arquivo  |
 | `CnabInvalidFileException`            | `read()` em um arquivo que não passa na validação |
+| `CnabWriteNotSupportedException`      | `CnabWriter.write` em formato ou tipo sem escrita |

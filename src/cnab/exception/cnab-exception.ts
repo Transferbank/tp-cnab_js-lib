@@ -72,3 +72,15 @@ export class CnabDuplicatedOcorrenciaCodeException extends CnabException {
     super(`Tabela de ocorrências inválida: código ${code} registrado em ${ocorrencia} e em ${otherOcorrencia}`)
   }
 }
+
+export class CnabFieldWriteNotImplementedException extends CnabException {
+  constructor(fieldKey: string) {
+    super(`Campo ${fieldKey} não tem escrita implementada`)
+  }
+}
+
+export class CnabWriteNotSupportedException extends CnabException {
+  constructor(cnabFormat: CnabFormat, fileType: CnabFileType) {
+    super(`Escrita de CNAB${cnabFormat} de ${fileType} não suportada`)
+  }
+}
