@@ -4,9 +4,12 @@ import { cnab240RetornoLine, replaceLineRange } from '@test/test-utils'
 import { CodigoDeOcorrenciaBoletoField } from '@cnab/field/cnab240/retorno/codigo-de-ocorrencia-boleto-field'
 
 describe('CodigoDeOcorrenciaBoletoField', (): void => {
-  it('given a segment T line when reading then returns the code as written', (): void => {
+  it.each([
+    ['digits', '06'],
+    ['a letter and a digit', 'A4']
+  ])('given a segment T line with a code of %s when reading then returns the code as written', (_: string, code: string): void => {
     // Given
-    const field = new CodigoDeOcorrenciaBoletoField(replaceLineRange(cnab240RetornoLine('3', 'T'), [16, 17], '06'), 1)
+    const field = new CodigoDeOcorrenciaBoletoField(replaceLineRange(cnab240RetornoLine('3', 'T'), [16, 17], code), 1)
 
     // When
     const shouldValidate = field.shouldValidate()
@@ -15,7 +18,7 @@ describe('CodigoDeOcorrenciaBoletoField', (): void => {
     // Then
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(field.value).toBe('06')
+    expect(field.value).toBe(code)
   })
 
   it('given a segment U line when checking then does not read the field', (): void => {
@@ -31,7 +34,7 @@ describe('CodigoDeOcorrenciaBoletoField', (): void => {
 
   it.each([
     ['blank', '  '],
-    ['non numeric', 'A6']
+    ['invalid character', '6#']
   ])('given a segment T line with %s code when validating then returns field error', (_: string, code: string): void => {
     // Given
     const field = new CodigoDeOcorrenciaBoletoField(replaceLineRange(cnab240RetornoLine('3', 'T'), [16, 17], code), 1)
@@ -44,7 +47,7 @@ describe('CodigoDeOcorrenciaBoletoField', (): void => {
       isValid: false,
       errors: [
         new CnabGenericFieldError({
-          message: 'Campo código de ocorrência inválido: deve conter 2 dígitos numéricos',
+          message: 'Campo código de ocorrência inválido: deve conter 2 letras maiúsculas ou dígitos',
           lineNumber: 1,
           fieldKey: 'codigo_de_ocorrencia',
           range: [16, 17]
