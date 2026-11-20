@@ -340,7 +340,8 @@ function registerCnabSchemas(): CnabSchema[] {
           RetornoFields240.CodigoDeOcorrenciaBoletoField,
           RetornoFields240.ValorPagoBoletoField,
           RetornoFields240.JurosMultaBoletoField,
-          RetornoFields240.DataDeOcorrenciaBoletoField
+          RetornoFields240.DataDeOcorrenciaBoletoField,
+          RetornoFields240.SeuNumeroBoletoField
         ],
       },
     }),
@@ -364,7 +365,8 @@ function registerCnabSchemas(): CnabSchema[] {
           BancoDoBrasilRetornoFields400.CodigoDeOcorrenciaBoletoField,
           BancoDoBrasilRetornoFields400.ValorPagoBoletoField,
           BancoDoBrasilRetornoFields400.JurosMultaBoletoField,
-          BancoDoBrasilRetornoFields400.DataDeOcorrenciaBoletoField
+          BancoDoBrasilRetornoFields400.DataDeOcorrenciaBoletoField,
+          BancoDoBrasilRetornoFields400.SeuNumeroBoletoField
         ],
       },
     }),
