@@ -6,6 +6,6 @@ export class JurosMultaBoletoField extends ValorBoletoField {
   readonly range: [number, number] = [18, 32]
 
   shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoU(this.rawLine)
+    return Cnab240LineTypeChecker.isSegmentoU(this.rawLine) && this.isReadableOcorrencia()
   }
 }
