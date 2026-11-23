@@ -103,7 +103,7 @@ describe('ValorPagoBoletoField', (): void => {
     expect(field.value).toBe(102.55)
   })
 
-  it('given a non numeric added range when validating then reports an invalid format', (): void => {
+  it('given a non numeric added range when validating then reports an invalid format in the added range', (): void => {
     // Given
     let line = replaceLineRange(cnab400RetornoLine('1'), [254, 266], '0000000010000')
     line = replaceLineRange(line, [176, 188], '00000000002AB')
@@ -119,7 +119,7 @@ describe('ValorPagoBoletoField', (): void => {
           message: 'Campo valor_pago com formato inválido: 00000000002AB',
           lineNumber: 1,
           fieldKey: 'valor_pago',
-          range: [254, 266]
+          range: [176, 188]
         })
       ]
     })
