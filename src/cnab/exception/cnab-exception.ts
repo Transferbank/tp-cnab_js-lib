@@ -1,5 +1,6 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabFileType } from '@cnab/type/cnab-file-type'
 import { CnabValidationError } from '@cnab/type/cnab-validation-error'
 
 export abstract class CnabException extends Error {
@@ -21,6 +22,12 @@ export class CnabFormatNotRecognizedException extends CnabException {
   }
 }
 
+export class CnabFileTypeNotRecognizedException extends CnabException {
+  constructor(fileTypeCode: string, cnabFormat: CnabFormat) {
+    super(`Tipo de arquivo não reconhecido: código ${fileTypeCode} no header do CNAB${cnabFormat}. Esperado: 1 (remessa) ou 2 (retorno)`)
+  }
+}
+
 export class CnabBankCodeNotFoundException extends CnabException {
   constructor(bankCode: string, cnabFormat: CnabFormat) {
     super(`Código do banco não encontrado: ${bankCode} para o CNAB${cnabFormat}`)
@@ -28,8 +35,8 @@ export class CnabBankCodeNotFoundException extends CnabException {
 }
 
 export class CnabBankSchemaNotFoundException extends CnabException {
-  constructor(bank: CnabBank, cnabFormat: CnabFormat) {
-    super(`CNAB${cnabFormat} para o banco ${bank} não suportado`)
+  constructor(bank: CnabBank, cnabFormat: CnabFormat, fileType: CnabFileType) {
+    super(`CNAB${cnabFormat} de ${fileType} para o banco ${bank} não suportado`)
   }
 }
 
