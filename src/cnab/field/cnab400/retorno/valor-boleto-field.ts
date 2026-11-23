@@ -34,7 +34,7 @@ export abstract class ValorBoletoField extends CnabField<number> {
     return value
   }
 
-  private isReadableOcorrencia(): boolean {
+  protected isReadableOcorrencia(): boolean {
     if (this.liquidacaoOnlyTable == null) {
       return true
     }
