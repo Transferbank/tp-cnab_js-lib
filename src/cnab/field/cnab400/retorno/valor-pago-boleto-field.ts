@@ -10,14 +10,14 @@ export class ValorPagoBoletoField extends ValorBoletoField {
   protected readonly addedRanges: Array<[number, number]> = []
 
   validate(): CnabValidationResult {
-    const ranges = [this.range, ...this.addedRanges]
-    for (const range of ranges) {
+    const mainRawAmount = super.extractRawValue()
+    if (mainRawAmount == '' || !isDigitsOnly(mainRawAmount)) {
+      return super.validate()
+    }
+    for (const range of this.addedRanges) {
       const rawAmount = this.extractRangeFromLine(range[0] - 1, range[1])
       if (rawAmount == '' || isDigitsOnly(rawAmount)) {
         continue
-      }
-      if (range == this.range) {
-        break
       }
       return {
         isValid: false,
@@ -35,7 +35,11 @@ export class ValorPagoBoletoField extends ValorBoletoField {
   }
 
   protected extractRawValue(): string {
-    const rawAmounts = [super.extractRawValue()]
+    const mainRawAmount = super.extractRawValue()
+    if (mainRawAmount == '') {
+      return ''
+    }
+    const rawAmounts = [mainRawAmount]
     for (const [start, end] of this.addedRanges) {
       rawAmounts.push(this.extractRangeFromLine(start - 1, end))
     }

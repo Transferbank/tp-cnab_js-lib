@@ -103,6 +103,18 @@ describe('ValorPagoBoletoField', (): void => {
     expect(field.value).toBe(102.55)
   })
 
+  it('given a blank own range and an amount in an added range when reading then the field is absent', (): void => {
+    // Given
+    let line = replaceLineRange(cnab400RetornoLine('1'), [254, 266], '0000000000000')
+    line = replaceLineRange(line, [176, 188], '0000000000250')
+
+    // When
+    const field = new SummedValorPagoBoletoField(line, 1)
+
+    // Then
+    expect(field.value).toBeNull()
+  })
+
   it('given a non numeric added range when validating then reports an invalid format in the added range', (): void => {
     // Given
     let line = replaceLineRange(cnab400RetornoLine('1'), [254, 266], '0000000010000')
