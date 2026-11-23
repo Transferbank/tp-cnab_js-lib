@@ -7,20 +7,30 @@ import { ValorTituloBoletoField } from '@cnab/field/cnab240/retorno/valor-titulo
 import { ValorPagoBoletoField } from '@cnab/field/cnab240/retorno/valor-pago-boleto-field'
 import { JurosMultaBoletoField } from '@cnab/field/cnab240/retorno/juros-multa-boleto-field'
 
-class LiquidacaoOnlyValorPagoBoletoField extends ValorPagoBoletoField {
-  protected readonly liquidacaoOnlyTable: CnabOcorrenciaTable = {
-    [CnabOcorrencia.LIQUIDACAO]: { '06': 'Liquidação' },
-    [CnabOcorrencia.BAIXA]: { '25': 'Protestado e baixado' }
-  }
+const OCORRENCIA_TABLE: CnabOcorrenciaTable = {
+  [CnabOcorrencia.LIQUIDACAO]: { '06': 'Liquidação' },
+  [CnabOcorrencia.BAIXA]: { '25': 'Protestado e baixado' }
 }
 
-const cases: Array<[string, CnabFieldClass<number>, string, [number, number]]> = [
-  ['ValorTituloBoletoField', ValorTituloBoletoField, 'T', [82, 96]],
-  ['ValorPagoBoletoField', ValorPagoBoletoField, 'U', [78, 92]],
-  ['JurosMultaBoletoField', JurosMultaBoletoField, 'U', [18, 32]]
+class LiquidacaoOnlyValorTituloBoletoField extends ValorTituloBoletoField {
+  protected readonly liquidacaoOnlyTable = OCORRENCIA_TABLE
+}
+
+class LiquidacaoOnlyValorPagoBoletoField extends ValorPagoBoletoField {
+  protected readonly liquidacaoOnlyTable = OCORRENCIA_TABLE
+}
+
+class LiquidacaoOnlyJurosMultaBoletoField extends JurosMultaBoletoField {
+  protected readonly liquidacaoOnlyTable = OCORRENCIA_TABLE
+}
+
+const cases: Array<[string, CnabFieldClass<number>, CnabFieldClass<number>, string, [number, number]]> = [
+  ['ValorTituloBoletoField', ValorTituloBoletoField, LiquidacaoOnlyValorTituloBoletoField, 'T', [82, 96]],
+  ['ValorPagoBoletoField', ValorPagoBoletoField, LiquidacaoOnlyValorPagoBoletoField, 'U', [78, 92]],
+  ['JurosMultaBoletoField', JurosMultaBoletoField, LiquidacaoOnlyJurosMultaBoletoField, 'U', [18, 32]]
 ]
 
-describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<number>, segment: string, range: [number, number]): void => {
+describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<number>, LiquidacaoOnlyFieldClass: CnabFieldClass<number>, segment: string, range: [number, number]): void => {
   it('given a filled amount in its segment when reading then returns it in reais', (): void => {
     // Given
     const field = new FieldClass(replaceLineRange(cnab240RetornoLine('3', segment), range, '000000000123456'), 1)
@@ -33,6 +43,20 @@ describe.each(cases)('%s', (_: string, FieldClass: CnabFieldClass<number>, segme
     expect(shouldValidate).toBe(true)
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(field.value).toBe(1234.56)
+  })
+
+  it.each([
+    ['06', true],
+    ['25', false]
+  ])('given the ocorrência %s in its segment when the field is read only on liquidação then shouldValidate is %s', (code: string, expected: boolean): void => {
+    // Given
+    const line = replaceLineRange(cnab240RetornoLine('3', segment), [16, 17], code)
+
+    // When
+    const shouldValidate = new LiquidacaoOnlyFieldClass(line, 1).shouldValidate()
+
+    // Then
+    expect(shouldValidate).toBe(expected)
   })
 })
 
@@ -79,21 +103,5 @@ describe('ValorBoletoField', (): void => {
         })
       ]
     })
-  })
-})
-
-describe('ValorPagoBoletoField', (): void => {
-  it.each([
-    ['06', true],
-    ['25', false]
-  ])('given the ocorrência %s in segment U when the field is read only on liquidação then shouldValidate is %s', (code: string, expected: boolean): void => {
-    // Given
-    const line = replaceLineRange(cnab240RetornoLine('3', 'U'), [16, 17], code)
-
-    // When
-    const shouldValidate = new LiquidacaoOnlyValorPagoBoletoField(line, 1).shouldValidate()
-
-    // Then
-    expect(shouldValidate).toBe(expected)
   })
 })
