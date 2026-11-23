@@ -341,6 +341,9 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 | Chave                  | Descrição                                  | Tipo     |
 | ---------------------- | ------------------------------------------ | -------- |
 | `codigo_de_ocorrencia` | Código da ocorrência, como está no arquivo | `string` |
+| `valor_pago`           | Valor pago pelo pagador, em reais          | `number` |
+
+`valor_pago` já é lido no Banco do Brasil; os outros bancos estão em progresso.
 
 #### Ocorrências
 
