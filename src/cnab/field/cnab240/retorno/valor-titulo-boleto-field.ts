@@ -6,6 +6,6 @@ export class ValorTituloBoletoField extends ValorBoletoField {
   readonly range: [number, number] = [82, 96]
 
   shouldValidate(): boolean {
-    return Cnab240LineTypeChecker.isSegmentoT(this.rawLine)
+    return Cnab240LineTypeChecker.isSegmentoT(this.rawLine) && this.isReadableOcorrencia()
   }
 }

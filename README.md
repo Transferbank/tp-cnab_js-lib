@@ -5,7 +5,7 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 ## Funcionalidades
 
 - Detecção automática de banco, formato (CNAB 240 ou CNAB 400), tipo de arquivo (lote de criação ou de validação) e quantidade de boletos, a partir do próprio conteúdo do arquivo
-- Validação do arquivo inteiro (tamanho e início de linha, campos de cada boleto)
+- Validação do arquivo inteiro (tamanho, início e tipo de registro de cada linha, campos de cada boleto)
 - Leitura dos boletos, com os valores dos campos já convertidos (texto, número e data)
 - Erros de validação tipados, com linha, campo e mensagem
 - Suporte a 7 bancos, em CNAB 240 e CNAB 400
@@ -15,17 +15,16 @@ Biblioteca TypeScript para leitura e validação de arquivos de remessa CNAB 240
 | Banco                   | Remessa CNAB 240 | Remessa CNAB 400 | Retorno CNAB 240 | Retorno CNAB 400 |
 | ----------------------- | :--------------: | :--------------: | :--------------: | :--------------: |
 | Banco do Brasil         |        ✅        |        ✅        |        ✅        |        ✅        |
-| Bradesco                |        ✅        |        ✅        |        ❌        |        ❌        |
-| Caixa Econômica Federal |        ✅        |        ✅        |        ❌        |        ❌        |
-| Itaú                    |        ✅        |        ✅        |        ❌        |        ❌        |
-| Santander               |        ✅        |        ✅        |        ❌        |        ❌        |
-| Sicoob                  |        ✅        |        ✅        |        ❌        |        ❌        |
-| Sicredi                 |        ✅        |        ✅        |        ❌        |        ❌        |
+| Bradesco                |        ✅        |        ✅        |        ✅        |        ✅        |
+| Caixa Econômica Federal |        ✅        |        ✅        |        ✅        |        ✅        |
+| Itaú                    |        ✅        |        ✅        |        ✅        |        ✅        |
+| Santander               |        ✅        |        ✅        |        ✅        |        ✅        |
+| Sicoob                  |        ✅        |        ✅        |        ✅        |        ✅        |
+| Sicredi                 |        ✅        |        ✅        |        ✅        |        ✅        |
 
 Remessa é o lote de criação e retorno é o lote de validação (veja [Lote de criação e lote de validação](#lote-de-criação-e-lote-de-validação)).
 
 - ✅ Suportado: o arquivo é validado e lido.
-- ❌ Não suportado ainda: o banco é reconhecido, mas abrir o arquivo lança `CnabBankSchemaNotFoundException`.
 
 Abrir o arquivo de um banco fora desta tabela lança `CnabBankCodeNotFoundException` (veja [Exceções](#exceções)).
 
@@ -342,6 +341,9 @@ Cada registro de detalhe do retorno é uma ocorrência: o mesmo boleto aparece u
 | Chave                  | Descrição                                  | Tipo     |
 | ---------------------- | ------------------------------------------ | -------- |
 | `codigo_de_ocorrencia` | Código da ocorrência, como está no arquivo | `string` |
+| `valor_pago`           | Valor pago pelo pagador, em reais          | `number` |
+
+`valor_pago` já é lido no Banco do Brasil; os outros bancos estão em progresso.
 
 #### Ocorrências
 

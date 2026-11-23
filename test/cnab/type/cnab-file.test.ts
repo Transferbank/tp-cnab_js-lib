@@ -7,7 +7,7 @@ import {
   CnabFileTypeNotRecognizedException,
   CnabInvalidFileException
 } from '@cnab/exception/cnab-exception'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabInvalidLineSizeError, CnabInvalidRecordTypeError } from '@cnab/type/cnab-validation-error'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -72,6 +72,18 @@ describe('cnab-file', (): void => {
   it.each([
     ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', CnabBank.BRADESCO, CnabFormat.CNAB240, CnabFileType.REMESSA, 17, 3],
     ['bradesco/cnab400/remessa/bradesco_cnab_400.txt', CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.REMESSA, 76, 37],
+    ['bradesco/cnab240/retorno/bradesco_cnab_240.txt', CnabBank.BRADESCO, CnabFormat.CNAB240, CnabFileType.RETORNO, 16, 6],
+    ['bradesco/cnab400/retorno/bradesco_cnab_400.RET', CnabBank.BRADESCO, CnabFormat.CNAB400, CnabFileType.RETORNO, 42, 40],
+    ['caixa/cnab240/retorno/caixa_cnab_240.txt', CnabBank.CAIXA, CnabFormat.CNAB240, CnabFileType.RETORNO, 16, 6],
+    ['caixa/cnab400/retorno/caixa_cnab_400.RET', CnabBank.CAIXA, CnabFormat.CNAB400, CnabFileType.RETORNO, 15, 13],
+    ['itau/cnab240/retorno/itau_cnab_240.txt', CnabBank.ITAU, CnabFormat.CNAB240, CnabFileType.RETORNO, 18, 7],
+    ['itau/cnab400/retorno/ITAU_cnab_400.RET', CnabBank.ITAU, CnabFormat.CNAB400, CnabFileType.RETORNO, 324, 322],
+    ['santander/cnab240/retorno/santander_cnab_240.txt', CnabBank.SANTANDER, CnabFormat.CNAB240, CnabFileType.RETORNO, 16, 6],
+    ['santander/cnab400/retorno/santander_cnab_400.RET', CnabBank.SANTANDER, CnabFormat.CNAB400, CnabFileType.RETORNO, 133, 131],
+    ['sicredi/cnab240/retorno/sicredi_cnab_240.txt', CnabBank.SICREDI, CnabFormat.CNAB240, CnabFileType.RETORNO, 16, 6],
+    ['sicredi/cnab400/retorno/sicredi_cnab_400.RET', CnabBank.SICREDI, CnabFormat.CNAB400, CnabFileType.RETORNO, 8, 6],
+    ['sicoob/cnab240/retorno/sicoob_cnab_240.txt', CnabBank.SICOOB, CnabFormat.CNAB240, CnabFileType.RETORNO, 16, 6],
+    ['sicoob/cnab400/retorno/sicoob_cnab_400.RET', CnabBank.SICOOB, CnabFormat.CNAB400, CnabFileType.RETORNO, 15, 13],
     ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', CnabBank.BANCODOBRASIL, CnabFormat.CNAB240, CnabFileType.RETORNO, 16, 6],
     ['banco-do-brasil/cnab400/retorno/banco_do_brasil_cnab_400.RET', CnabBank.BANCODOBRASIL, CnabFormat.CNAB400, CnabFileType.RETORNO, 118, 116]
   ])(
@@ -138,6 +150,8 @@ describe('cnab-file', (): void => {
 
   it.each([
     ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 5, 240],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 1, 240],
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', 1, 240],
     ['itau/cnab400/remessa/ITAU_cnab_400.REM', 640, 400]
   ])(
     'given document file with truncated line when validating then reports line size error',
@@ -163,6 +177,31 @@ describe('cnab-file', (): void => {
       // Then
       expect(result.isValid).toBe(false)
       expect(result.errors).toEqual(expectedErrors)
+    }
+  )
+
+  it.each([
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'file header', 0, ['0']],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'batch header', 1, ['1', '2', '3', '4', '5']],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'batch trailer', 15, ['1', '2', '3', '4', '5']],
+    ['bradesco/cnab240/remessa/bradesco_cnab_240.txt', 'file trailer', 16, ['9']],
+    ['banco-do-brasil/cnab240/retorno/banco_do_brasil_cnab_240.txt', 'batch header', 1, ['1', '2', '3', '4', '5']]
+  ])(
+    'given document file %s with an invalid record type in the %s when validating then reports the record type error',
+    (examplePath: string, _: string, lineNumber: number, expectedRecordTypes: string[]): void => {
+      // Given
+      const rawLines = readExampleLines(path.join(resPath(), examplePath))
+      rawLines[lineNumber] = replaceLineRange(rawLines[lineNumber], [8, 8], '7')
+      const cnabFile = CnabFile.fromLines(rawLines)
+
+      // When
+      const result = cnabFile.validate(true)
+
+      // Then
+      expect(result).toEqual({
+        isValid: false,
+        errors: [new CnabInvalidRecordTypeError({ lineNumber, expectedRecordTypes, recordType: '7' })]
+      })
     }
   )
 
