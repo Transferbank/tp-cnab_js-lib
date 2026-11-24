@@ -36,18 +36,30 @@ describe('DescontosAdicionaisBoletoField', (): void => {
     expect(field.value).toEqual([{ codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 10), valor: 5 }])
   })
 
-  it.each([
-    ['a code without value', '1' + '10122026' + '000000000000000', null],
-    ['a cancelamento', '7' + '00000000' + '000000000000000', null]
-  ])('given %s when reading then leaves it out of the list', (_: string, desconto: string, expected: unknown): void => {
+  it('given a code without value when reading then leaves it out of the list', (): void => {
     // Given
-    const field = new BradescoDescontosAdicionaisBoletoField(segmentoR(desconto + '0'.repeat(24)), 5)
+    const field = new BradescoDescontosAdicionaisBoletoField(segmentoR('1' + '10122026' + '000000000000000' + '0'.repeat(24)), 5)
 
     // When
     const descontos = field.value
 
     // Then
-    expect(descontos).toEqual(expected)
+    expect(descontos).toBeNull()
+  })
+
+  it.each([
+    ['without value', '000000000000000', null],
+    ['with value', '000000000000500', 5]
+  ])('given a cancelamento %s when reading then keeps it in the list', (_: string, valor: string, expected: number | null): void => {
+    // Given
+    const field = new BradescoDescontosAdicionaisBoletoField(segmentoR('7' + '00000000' + valor + '0'.repeat(24)), 5)
+
+    // When
+    const result = field.validate()
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(field.value).toEqual([{ codigo: '7', tipo: CnabTipoDeDesconto.CANCELAMENTO, data: null, valor: expected }])
   })
 
   it('given code 0 with a value when the manual defines 0 as no desconto then leaves it out of the list', (): void => {

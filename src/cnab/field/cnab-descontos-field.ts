@@ -26,7 +26,7 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   }
 
   protected extractRawValue(): string {
-    return this.informedDescontos().map(ranges => this.extractInformed(ranges.valor)).join(' ')
+    return this.informedDescontos().map(ranges => this.extractInformed(ranges.valor) ?? this.extractCodigo(ranges)).join(' ')
   }
 
   validate(): CnabValidationResult {
@@ -75,6 +75,7 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
   protected abstract parseDate(rawValue: string): Date | null
 
   protected isInformed(ranges: CnabDescontoRanges): boolean {
+    if (this.isCancelamento(ranges)) return true
     return this.extractInformed(ranges.valor) != null && !this.hasNoDescontoCode(ranges)
   }
 
@@ -98,6 +99,10 @@ export abstract class CnabDescontosField extends CnabField<CnabDesconto[]> {
     const { bank, format } = this.constructor as typeof CnabField<CnabDesconto[]>
     if (bank == null || format == null || ranges.codigo == null) return false
     return zeroCodeMeansNoDesconto(bank, format) && this.extractRangeFromLine(ranges.codigo[0] - 1, ranges.codigo[1]) == '0'
+  }
+
+  private isCancelamento(ranges: CnabDescontoRanges): boolean {
+    return this.resolveTipo(ranges, this.extractCodigo(ranges)) == CnabTipoDeDesconto.CANCELAMENTO
   }
 
   private informedDescontos(): CnabDescontoRanges[] {

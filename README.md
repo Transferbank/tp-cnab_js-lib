@@ -197,11 +197,12 @@ boleto.fields.descontos
 | `PERCENTUAL_POR_ANTECIPACAO_DIA_CORRIDO` | percentual por dia corrido de antecipação                                                 |
 | `PERCENTUAL_POR_ANTECIPACAO_DIA_UTIL`    | percentual por dia útil de antecipação                                                    |
 | `PERCENTUAL_POR_ANTECIPACAO`             | percentual por dia de antecipação, quando o manual não diz se o dia é corrido ou útil     |
+| `CANCELAMENTO`                           | pedido de cancelamento do desconto; o valor vem como no arquivo, ou `null` se vier zerado |
 | `OUTRO`                                  | código sem um desses tipos como equivalente                                               |
 
 Quando uma parte do desconto vem vazia:
 
-- **Valor:** o desconto não entra na lista.
+- **Valor:** o desconto não entra na lista. A exceção é o cancelamento (código `7` no Bradesco, no Sicoob e no Sicredi CNAB 240), que entra na lista mesmo sem valor, para não se confundir com um boleto sem desconto.
 - **Código:** o layout não tem código, porque o banco só aceita um tipo, e o tipo já vem preenchido em cada desconto. Quando o layout tem código, ele precisa estar na tabela do banco, como nos juros e na multa. Se o código vier vazio ou `0`, o arquivo não informou o tipo, e o desconto vem com `tipo: null`. No Banco do Brasil CNAB 240 e no Sicredi CNAB 240, o manual define `0` como sem desconto, e ele não entra na lista.
 - **Data:** o desconto até a data (valor fixo ou percentual) precisa da data, mesmo nos layouts sem código, e sem ela é erro de validação. Os descontos por dia de antecipação não têm data.
 
