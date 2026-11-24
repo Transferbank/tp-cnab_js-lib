@@ -983,11 +983,31 @@ describe('cnab-file', (): void => {
   })
 
   it.each([
-    ['caixa/cnab240/caixa_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]],
-    ['caixa/cnab400/caixa_cnab_400.REM', (line: string): boolean => line[0] == '1', [84, 84] as [number, number]],
-    ['santander/cnab240/santander_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]],
-    ['sicoob/cnab240/sicoob_cnab_240.txt', (line: string): boolean => line[7] == '3' && line[13] == 'P', [142, 142] as [number, number]]
-  ])('given document file %s with code 0 and a filled desconto when reading then leaves it out because the manual defines 0 as no desconto', (examplePath: string, isDescontoLine: (line: string) => boolean, codigoRange: [number, number]): void => {
+    [
+      'caixa/cnab240/caixa_cnab_240.txt',
+      (line: string): boolean => line[7] == '3' && line[13] == 'P',
+      [142, 142] as [number, number],
+      [{ codigo: '2', tipo: CnabTipoDeDesconto.PERCENTUAL, data: new Date(2026, 11, 12), valor: 2.3 }]
+    ],
+    [
+      'caixa/cnab400/caixa_cnab_400.REM',
+      (line: string): boolean => line[0] == '1',
+      [84, 84] as [number, number],
+      undefined
+    ],
+    [
+      'santander/cnab240/santander_cnab_240.txt',
+      (line: string): boolean => line[7] == '3' && line[13] == 'P',
+      [142, 142] as [number, number],
+      [{ codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 6.7 }]
+    ],
+    [
+      'sicoob/cnab240/sicoob_cnab_240.txt',
+      (line: string): boolean => line[7] == '3' && line[13] == 'P',
+      [142, 142] as [number, number],
+      [{ codigo: '1', tipo: CnabTipoDeDesconto.VALOR_FIXO, data: new Date(2026, 11, 12), valor: 7.9 }]
+    ]
+  ])('given document file %s with code 0 and a filled desconto when reading then leaves it out because the manual defines 0 as no desconto', (examplePath: string, isDescontoLine: (line: string) => boolean, codigoRange: [number, number], expected: unknown): void => {
     // Given
     const rawLines = readExampleLines(path.join(resPath(), examplePath))
     const lineIndex = rawLines.findIndex(isDescontoLine)
@@ -1000,7 +1020,7 @@ describe('cnab-file', (): void => {
 
     // Then
     expect(result).toEqual({ isValid: true, errors: [] })
-    expect(boleto.fields.descontos ?? []).not.toContainEqual(expect.objectContaining({ codigo: null }))
+    expect(boleto.fields.descontos).toEqual(expected)
   })
 
   it('given sicredi cnab400 boleto with desconto 1 and desconto por dia when reading then ignores the desconto por dia', (): void => {
