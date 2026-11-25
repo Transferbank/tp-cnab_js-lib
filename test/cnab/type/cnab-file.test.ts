@@ -616,7 +616,7 @@ describe('cnab-file', (): void => {
     fieldKey: string
   }
 
-  const especiesWithCharges = ['  ', '77']
+  const especiesWithJurosAndMulta = ['  ', '77']
 
   const bancoDoBrasilJurosCases = [
     [
@@ -676,7 +676,7 @@ describe('cnab-file', (): void => {
     expect(result.errors).toMatchObject(expectedErrors)
   })
 
-  describe.each(especiesWithCharges)('given especie "%s" outside the dispensing list', (especie: string): void => {
+  describe.each(especiesWithJurosAndMulta)('given especie "%s" outside the dispensing list', (especie: string): void => {
     it.each(bancoDoBrasilJurosCases)('in document file %s with invalid juros when validating then rejects the especie and the juros', (examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], invalidJuros: InvalidValue[]): void => {
       // Given
       const cnabFile = bancoDoBrasilJurosFile(examplePath, isJurosLine, especieRange, especie, invalidJuros)
@@ -755,7 +755,7 @@ describe('cnab-file', (): void => {
     expect(result.errors).toMatchObject(expectedErrors)
   })
 
-  describe.each(especiesWithCharges)('given especie "%s" outside the dispensing list', (especie: string): void => {
+  describe.each(especiesWithJurosAndMulta)('given especie "%s" outside the dispensing list', (especie: string): void => {
     it.each(bancoDoBrasilMultaCases)('in document file %s with invalid multa on another line when validating then rejects the especie and the multa', (examplePath: string, isEspecieLine: (line: string) => boolean, especieRange: [number, number], isMultaLine: (line: string) => boolean, invalidMulta: InvalidValue[]): void => {
       // Given
       const cnabFile = bancoDoBrasilMultaFile(examplePath, isEspecieLine, especieRange, isMultaLine, especie, invalidMulta)

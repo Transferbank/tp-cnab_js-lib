@@ -106,7 +106,7 @@ export class CnabSchema {
 
     const boletoGroups = this.boleto.genLineGroups(rawLines, 0)
     for (const group of boletoGroups) {
-      const boleto = this.readBoleto(group, fields)
+      const boleto = this.extractBoleto(group, fields)
       if (hasFields(boleto)) {
         cnab.boletos.push(boleto)
       }
@@ -115,7 +115,7 @@ export class CnabSchema {
     return cnab
   }
 
-  private readBoleto(group: CnabNumberedLine[], fields: CnabFieldClass[]): CnabBoleto {
+  private extractBoleto(group: CnabNumberedLine[], fields: CnabFieldClass[]): CnabBoleto {
     const boleto = new CnabBoleto()
     for (const { lineNumber, rawLine } of group) {
       for (const fieldType of fields) {

@@ -48,17 +48,17 @@ class FakeDependentField extends FakeNumberField {
   static readonly dependencies = [FakeSecondLineField]
 
   readSecondLine(group: CnabNumberedLine[]): number | null {
-    return this.groupValue(group, FakeSecondLineField)
+    return this.readDependency(group, FakeSecondLineField)
   }
 }
 
 class FakeUndeclaredDependentField extends FakeNumberField {
   readSecondLine(group: CnabNumberedLine[]): number | null {
-    return this.groupValue(group, FakeSecondLineField)
+    return this.readDependency(group, FakeSecondLineField)
   }
 }
 
-describe('groupValue', (): void => {
+describe('readDependency', (): void => {
   it('given the field on another line of the boleto when reading then returns its value', (): void => {
     // Given
     const group: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]

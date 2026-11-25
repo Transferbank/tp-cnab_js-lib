@@ -36,7 +36,7 @@ class FakeGroupField extends CnabField<string> {
   }
 
   readInGroup(group: CnabNumberedLine[]): string | null {
-    const secondRecord = this.groupValue(group, FakeSecondRecordField)
+    const secondRecord = this.readDependency(group, FakeSecondRecordField)
     return secondRecord == null ? null : this.value
   }
 

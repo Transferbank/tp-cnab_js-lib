@@ -108,7 +108,7 @@ export abstract class CnabField<T> {
     return this.value
   }
 
-  protected groupValue<V>(group: CnabNumberedLine[], fieldClass: CnabFieldClass<V>): V | null {
+  protected readDependency<V>(group: CnabNumberedLine[], fieldClass: CnabFieldClass<V>): V | null {
     const { dependencies } = this.constructor as typeof CnabField<T>
     if (!dependencies.includes(fieldClass)) {
       throw new CnabFieldDependencyNotDeclaredException(this.fieldKey, fieldClass.name)

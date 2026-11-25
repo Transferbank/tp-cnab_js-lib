@@ -4,7 +4,7 @@ import { DataDeJurosBoletoField as Cnab240DataDeJurosBoletoField } from '@cnab/f
 import { EspecieDoTituloBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/especie-do-titulo-boleto-field'
 import { CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { isEspecieWithoutCharges } from '@cnab/bank/banco-do-brasil/especie-without-charges'
+import { isEspecieWithoutJurosAndMulta } from '@cnab/bank/banco-do-brasil/especie-without-juros-and-multa'
 
 export class DataDeJurosBoletoField extends Cnab240DataDeJurosBoletoField {
   static readonly bank = CnabBank.BANCODOBRASIL
@@ -12,16 +12,16 @@ export class DataDeJurosBoletoField extends Cnab240DataDeJurosBoletoField {
   static readonly dependencies = [EspecieDoTituloBoletoField]
 
   validateInGroup(group: CnabNumberedLine[]): CnabValidationResult {
-    const especie = this.groupValue(group, EspecieDoTituloBoletoField)
-    if (isEspecieWithoutCharges(especie)) {
+    const especie = this.readDependency(group, EspecieDoTituloBoletoField)
+    if (isEspecieWithoutJurosAndMulta(especie)) {
       return { isValid: true, errors: [] }
     }
     return super.validateInGroup(group)
   }
 
   readInGroup(group: CnabNumberedLine[]): Date | null {
-    const especie = this.groupValue(group, EspecieDoTituloBoletoField)
-    if (isEspecieWithoutCharges(especie)) {
+    const especie = this.readDependency(group, EspecieDoTituloBoletoField)
+    if (isEspecieWithoutJurosAndMulta(especie)) {
       return null
     }
     return super.readInGroup(group)
