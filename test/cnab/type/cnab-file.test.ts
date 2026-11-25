@@ -610,6 +610,56 @@ describe('cnab-file', (): void => {
     expect(boleto.fields.juros).toBeDefined()
   })
 
+  const bancoDoBrasilJurosCases = [
+    [
+      'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+      (line: string): boolean => line[7] == '3' && line[13] == 'P',
+      [107, 108],
+      [[[118, 118], '9'], [[127, 141], 'A'.repeat(15)]]
+    ],
+    [
+      'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+      (line: string): boolean => line[0] == '7',
+      [148, 149],
+      [[[161, 173], 'A'.repeat(13)]]
+    ]
+  ] as Array<[string, (line: string) => boolean, [number, number], Array<[[number, number], string]>]>
+
+  function bancoDoBrasilJurosFile(examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], especie: string, invalidJuros: Array<[[number, number], string]>): CnabFile {
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+    const lineIndex = lines.findIndex(isJurosLine)
+    const withEspecie = replaceLineRange(lines[lineIndex], especieRange, especie)
+    lines[lineIndex] = invalidJuros.reduce((line, [range, value]) => replaceLineRange(line, range, value), withEspecie)
+    return CnabFile.fromLines(lines)
+  }
+
+  it.each(bancoDoBrasilJurosCases)('given document file %s with especie 31 and invalid juros when reading then dispenses the juros', (examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], invalidJuros: Array<[[number, number], string]>): void => {
+    // Given
+    const cnabFile = bancoDoBrasilJurosFile(examplePath, isJurosLine, especieRange, '31', invalidJuros)
+
+    // When
+    const result = cnabFile.validate(true, CNAB_DATA_DE_JUROS_FIELDS)
+    const boleto = cnabFile.read(CNAB_DATA_DE_JUROS_FIELDS).boletos[0]
+
+    // Then
+    expect(result).toEqual({ isValid: true, errors: [] })
+    expect(boleto.fields).not.toHaveProperty('codigo_de_juros')
+    expect(boleto.fields).not.toHaveProperty('data_de_juros')
+    expect(boleto.fields).not.toHaveProperty('juros')
+  })
+
+  it.each(bancoDoBrasilJurosCases)('given document file %s with especie 02 and invalid juros when validating then rejects the juros', (examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], invalidJuros: Array<[[number, number], string]>): void => {
+    // Given
+    const cnabFile = bancoDoBrasilJurosFile(examplePath, isJurosLine, especieRange, '02', invalidJuros)
+
+    // When
+    const result = cnabFile.validate(true, CNAB_DATA_DE_JUROS_FIELDS)
+
+    // Then
+    expect(result.isValid).toBe(false)
+    expect(result.errors.length).toBe(invalidJuros.length)
+  })
+
   it('given bradesco cnab240 file with invalid data de juros when reading then rejects the file', (): void => {
     // Given
     const lines = readExampleLines(path.join(resPath(), 'bradesco/cnab240/bradesco_cnab_240.txt'))
