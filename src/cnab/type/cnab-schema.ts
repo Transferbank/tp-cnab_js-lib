@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 
@@ -104,29 +104,31 @@ export class CnabSchema {
       ...this.scopedExtraFields(extraFields),
     ]
 
-    let currentBoleto = new CnabBoleto()
-    rawLines.forEach((rawLine: string, lineNumber: number) => {
-      if (this.boleto.isBoletoGroupStart(rawLine) && Object.keys(currentBoleto.fields).length > 0) {
-        cnab.boletos.push(currentBoleto)
-        currentBoleto = new CnabBoleto()
+    const boletoGroups = this.boleto.genLineGroups(rawLines, 0)
+    for (const group of boletoGroups) {
+      const boleto = this.readBoleto(group, fields)
+      if (boleto.hasFields()) {
+        cnab.boletos.push(boleto)
       }
+    }
 
+    return cnab
+  }
+
+  private readBoleto(group: CnabNumberedLine[], fields: CnabFieldClass[]): CnabBoleto {
+    const boleto = new CnabBoleto()
+    for (const [lineNumber, rawLine] of group) {
       for (const fieldType of fields) {
         const field = new fieldType(rawLine, lineNumber)
         if (!field.shouldValidate()) {
           continue
         }
         if (field.value != null) {
-          currentBoleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, currentBoleto.fields[field.fieldKey])
+          boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, boleto.fields[field.fieldKey])
         }
       }
-    })
-
-    if (Object.keys(currentBoleto.fields).length > 0) {
-      cnab.boletos.push(currentBoleto)
     }
-
-    return cnab
+    return boleto
   }
 
   private handleDuplicatedFields(field: CnabField<unknown>, previousValue: unknown): unknown {
