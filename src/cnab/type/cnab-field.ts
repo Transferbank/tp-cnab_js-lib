@@ -95,9 +95,36 @@ export abstract class CnabField<T> {
     return this.value
   }
 
+  protected groupValue<V>(group: CnabNumberedLine[], fieldClass: CnabFieldClass<V>): V | null {
+    let value: V | null = null
+    for (const [lineNumber, rawLine] of group) {
+      const field = new fieldClass(rawLine, lineNumber)
+      if (!field.shouldValidate()) {
+        continue
+      }
+      const lineValue = readableValue(field)
+      if (lineValue == null) {
+        continue
+      }
+      value = value == null ? lineValue : field.handleDuplicatedValue(value)
+    }
+    return value
+  }
+
   abstract shouldValidate(): boolean
   protected abstract parseValue(rawValue: string): T
   protected abstract performValidation(): CnabValidationResult
+}
+
+function readableValue<V>(field: CnabField<V>): V | null {
+  try {
+    return field.value
+  } catch (error) {
+    if (error instanceof CnabFieldParseError) {
+      return null
+    }
+    throw error
+  }
 }
 
 export interface CnabFieldClass<T = unknown> {

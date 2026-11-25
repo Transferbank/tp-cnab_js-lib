@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals'
-import { CnabField, optional } from '@cnab/type/cnab-field'
+import { CnabField, CnabNumberedLine, optional } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
@@ -34,6 +34,46 @@ class FakeNumberField extends CnabField<number> {
     return { isValid: true, errors: [] }
   }
 }
+
+class FakeSecondLineField extends FakeNumberField {
+  readonly range: [number, number] = [2, 3]
+
+  shouldValidate(): boolean {
+    return this.rawLine.startsWith('2')
+  }
+}
+
+class FakeDependentField extends FakeNumberField {
+  readSecondLine(group: CnabNumberedLine[]): number | null {
+    return this.groupValue(group, FakeSecondLineField)
+  }
+}
+
+describe('groupValue', (): void => {
+  it('given the field on another line of the boleto when reading then returns its value', (): void => {
+    // Given
+    const group: CnabNumberedLine[] = [[1, '100'], [2, '231']]
+    const field = new FakeDependentField('100', 1)
+
+    // When
+    const value = field.readSecondLine(group)
+
+    // Then
+    expect(value).toBe(31)
+  })
+
+  it('given the field with an unreadable value when reading then returns null without throwing', (): void => {
+    // Given
+    const group: CnabNumberedLine[] = [[1, '100'], [2, '2AB']]
+    const field = new FakeDependentField('100', 1)
+
+    // When
+    const value = field.readSecondLine(group)
+
+    // Then
+    expect(value).toBeNull()
+  })
+})
 
 describe('optional', (): void => {
   const OptionalFakeNumberField = optional(FakeNumberField)
