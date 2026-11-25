@@ -8,9 +8,27 @@ import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
 import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
 
+class FakeSecondRecordField extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.BOLETO
+  readonly fieldKey = 'segundo_registro'
+  readonly range: [number, number] = [1, 1]
+
+  shouldValidate(): boolean {
+    return this.rawLine.startsWith('2')
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
+
+  protected performValidation(): CnabValidationResult {
+    return { isValid: true, errors: [] }
+  }
+}
+
 class FakeGroupField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  static readonly validatesInGroup = true
+  static readonly dependencies = [FakeSecondRecordField]
   readonly fieldKey = 'campo_do_boleto'
   readonly range: [number, number] = [1, 1]
 

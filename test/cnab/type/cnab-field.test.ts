@@ -94,7 +94,7 @@ class FakeSecondLineCodeField extends CnabField<string> {
 }
 
 class FakeDispensableField extends FakeNumberField {
-  static readonly validatesInGroup = true
+  static readonly dependencies = [FakeSecondLineCodeField]
   protected readonly dispensingField = FakeSecondLineCodeField
   protected readonly dispensingValues = ['31']
 }

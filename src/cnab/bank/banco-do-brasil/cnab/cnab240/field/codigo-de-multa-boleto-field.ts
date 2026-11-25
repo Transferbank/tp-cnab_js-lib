@@ -6,7 +6,7 @@ import { EspecieDoTituloBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab
 export class CodigoDeMultaBoletoField extends Cnab240CodigoDeMultaBoletoField {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB240
-  static readonly validatesInGroup = true
+  static readonly dependencies = [EspecieDoTituloBoletoField]
   protected readonly dispensingField = EspecieDoTituloBoletoField
   protected readonly dispensingValues = ['31', '32']
 }
