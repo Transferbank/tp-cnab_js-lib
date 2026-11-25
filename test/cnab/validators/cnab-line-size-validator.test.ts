@@ -10,11 +10,11 @@ describe('CnabLineSizeValidator', (): void => {
   it.each([
     { 
       validatorType: Cnab240LineSizeValidator, 
-      examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt' 
+      examplePath: 'bradesco/cnab240/remessa/bradesco_cnab_240.txt' 
     },
     { 
       validatorType: Cnab400LineSizeValidator, 
-      examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt' 
+      examplePath: 'bradesco/cnab400/remessa/bradesco_cnab_400.txt' 
     }
   ])(
     'given valid doc lines ($validatorType.name) when validating size then accepts all lines',
@@ -38,13 +38,13 @@ describe('CnabLineSizeValidator', (): void => {
   it.each([
     {
       validatorType: Cnab240LineSizeValidator,
-      examplePath: 'bradesco/cnab240/bradesco_cnab_240.txt',
+      examplePath: 'bradesco/cnab240/remessa/bradesco_cnab_240.txt',
       transform: (line: string): string => line.slice(0, -1),
       sizeDelta: -1
     },
     {
       validatorType: Cnab400LineSizeValidator,
-      examplePath: 'bradesco/cnab400/bradesco_cnab_400.txt',
+      examplePath: 'bradesco/cnab400/remessa/bradesco_cnab_400.txt',
       transform: (line: string): string => `${line} `,
       sizeDelta: 1
     }
