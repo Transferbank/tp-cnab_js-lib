@@ -123,15 +123,16 @@ export class CnabSchema {
         if (!field.shouldValidate()) {
           continue
         }
-        if (field.value != null) {
-          boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, boleto.fields[field.fieldKey])
+        const value = fieldType.validatesInGroup ? field.readInGroup(group) : field.value
+        if (value != null) {
+          boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, value, boleto.fields[field.fieldKey])
         }
       }
     }
     return boleto
   }
 
-  private handleDuplicatedFields(field: CnabField<unknown>, previousValue: unknown): unknown {
-    return previousValue == null ? field.value : field.handleDuplicatedValue(previousValue)
+  private handleDuplicatedFields(field: CnabField<unknown>, value: unknown, previousValue: unknown): unknown {
+    return previousValue == null ? value : field.handleDuplicatedValue(previousValue)
   }
 }

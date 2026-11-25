@@ -91,6 +91,10 @@ export abstract class CnabField<T> {
     return this.validate()
   }
 
+  readInGroup(_group: CnabNumberedLine[]): T | null {
+    return this.value
+  }
+
   handleDuplicatedValue(_previousValue: unknown): T | null {
     return this.value
   }
