@@ -4,6 +4,7 @@ export { DataDeJurosBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/data
 export { DataDeMultaBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/data-de-multa-boleto-field'
 export { DddBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/ddd-boleto-field'
 export { EmailBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/email-boleto-field'
+export { EspecieDoTituloBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/especie-do-titulo-boleto-field'
 export { JurosBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/juros-boleto-field'
 export { MultaBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/multa-boleto-field'
 export { NossoNumeroBoletoField } from '@cnab/bank/caixa/cnab/cnab400/field/nosso-numero-boleto-field'
