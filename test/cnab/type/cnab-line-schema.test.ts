@@ -1,0 +1,66 @@
+import { describe, it, expect } from '@jest/globals'
+import { CnabBank } from '@cnab/type/cnab-bank'
+import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabField, CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabGenericFieldError } from '@cnab/type/cnab-validation-error'
+import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-rule'
+
+class FakeGroupField extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.BOLETO
+  static readonly validatesInGroup = true
+  readonly fieldKey = 'campo_do_boleto'
+  readonly range: [number, number] = [1, 1]
+
+  shouldValidate(): boolean {
+    return this.rawLine.startsWith('1')
+  }
+
+  validateInGroup(group: CnabNumberedLine[]): CnabValidationResult {
+    return this.errorResult(`boleto com ${group.length} linhas`)
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
+
+  protected performValidation(): CnabValidationResult {
+    return this.errorResult('validado na linha')
+  }
+
+  private errorResult(message: string): CnabValidationResult {
+    return {
+      isValid: false,
+      errors: [new CnabGenericFieldError({ message, lineNumber: this.lineNumber, fieldKey: this.fieldKey, range: this.range })]
+    }
+  }
+}
+
+function boletoSchema(): CnabLineSchema {
+  return CnabLineSchema.create({
+    bank: CnabBank.BRADESCO,
+    fmt: CnabFormat.CNAB400,
+    boletoGroupRule: new Cnab400BoletoGroupRule(),
+    fieldType: CnabFieldType.BOLETO,
+    fields: [FakeGroupField]
+  })
+}
+
+describe('CnabLineSchema', (): void => {
+  it('given a field validated in group when validating then validates it once per boleto with all its lines', (): void => {
+    // Given
+    const rawLines = ['1'.padEnd(400, ' '), '2'.padEnd(400, ' '), '1'.padEnd(400, ' ')]
+
+    // When
+    const result = boletoSchema().validate(rawLines, false, 1, [])
+
+    // Then
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toMatchObject([
+      { message: 'boleto com 2 linhas', lineNumber: 1 },
+      { message: 'boleto com 1 linhas', lineNumber: 3 }
+    ])
+  })
+})
