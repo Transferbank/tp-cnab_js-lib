@@ -5,10 +5,6 @@ export class CnabBoleto {
   constructor(config: { fields?: Record<string, unknown> } = {}) {
     this.fields = config.fields ?? {}
   }
-
-  hasFields(): boolean {
-    return Object.keys(this.fields).length > 0
-  }
 }
 
 export class Cnab {

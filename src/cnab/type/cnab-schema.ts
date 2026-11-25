@@ -107,7 +107,7 @@ export class CnabSchema {
     const boletoGroups = this.boleto.genLineGroups(rawLines, 0)
     for (const group of boletoGroups) {
       const boleto = this.readBoleto(group, fields)
-      if (boleto.hasFields()) {
+      if (hasFields(boleto)) {
         cnab.boletos.push(boleto)
       }
     }
@@ -135,4 +135,8 @@ export class CnabSchema {
   private handleDuplicatedFields(field: CnabField<unknown>, value: unknown, previousValue: unknown): unknown {
     return previousValue == null ? value : field.handleDuplicatedValue(previousValue)
   }
+}
+
+function hasFields(boleto: CnabBoleto): boolean {
+  return Object.keys(boleto.fields).length > 0
 }

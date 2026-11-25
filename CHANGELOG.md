@@ -16,4 +16,3 @@ Mudanças da `@fx55/cnab-lib-ts` por versão. As versões seguem o [versionament
 - Multa: `multa` nos 14 layouts, `codigo_de_multa` nos layouts que têm o código, a data de multa como campo extra (`CNAB_DATA_DE_MULTA_FIELDS`) e `getTipoDeMulta` com `CnabTipoDeMulta`.
 - Espécie do título: `especie_do_titulo` nos 14 layouts e `getEspecieDoTitulo` com `CnabEspecieDoTitulo`.
 - Validação e leitura no boleto inteiro: um `CnabField` que declara `dependencies` é validado e lido com todas as linhas do boleto, por `validateInGroup` e `readInGroup`, e lê os campos de que depende com `groupValue`. Ler um campo que não está em `dependencies` lança `CnabFieldDependencyNotDeclaredException`. O tipo `CnabNumberedLine` descreve as linhas do boleto.
-- `CnabBoleto.hasFields()`.
