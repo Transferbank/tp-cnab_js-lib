@@ -1,6 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabField, CnabNumberedLine, optional } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
+import { CnabFieldDependencyNotDeclaredException } from '@cnab/exception/cnab-exception'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabFieldInvalidNumberError,
@@ -44,6 +45,14 @@ class FakeSecondLineField extends FakeNumberField {
 }
 
 class FakeDependentField extends FakeNumberField {
+  static readonly dependencies = [FakeSecondLineField]
+
+  readSecondLine(group: CnabNumberedLine[]): number | null {
+    return this.groupValue(group, FakeSecondLineField)
+  }
+}
+
+class FakeUndeclaredDependentField extends FakeNumberField {
   readSecondLine(group: CnabNumberedLine[]): number | null {
     return this.groupValue(group, FakeSecondLineField)
   }
@@ -72,6 +81,18 @@ describe('groupValue', (): void => {
 
     // Then
     expect(value).toBeNull()
+  })
+
+  it('given a field not declared as dependency when reading then throws', (): void => {
+    // Given
+    const group: CnabNumberedLine[] = [[1, '100'], [2, '231']]
+    const field = new FakeUndeclaredDependentField('100', 1)
+
+    // When
+    const read = (): number | null => field.readSecondLine(group)
+
+    // Then
+    expect(read).toThrow(new CnabFieldDependencyNotDeclaredException('campo_numerico', 'FakeSecondLineField'))
   })
 })
 

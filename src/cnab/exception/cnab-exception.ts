@@ -59,3 +59,9 @@ export class CnabSchemaRegistrationException extends CnabException {
     )
   }
 }
+
+export class CnabFieldDependencyNotDeclaredException extends CnabException {
+  constructor(fieldKey: string, dependencyName: string) {
+    super(`Campo ${fieldKey} lê ${dependencyName} no boleto sem declarar a dependência`)
+  }
+}

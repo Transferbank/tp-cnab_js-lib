@@ -2,6 +2,7 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabFieldDependencyNotDeclaredException } from '@cnab/exception/cnab-exception'
 import {
   CnabFieldParseError,
   CnabGenericFieldError
@@ -105,6 +106,10 @@ export abstract class CnabField<T> {
   }
 
   protected groupValue<V>(group: CnabNumberedLine[], fieldClass: CnabFieldClass<V>): V | null {
+    const { dependencies } = this.constructor as typeof CnabField<T>
+    if (!dependencies.includes(fieldClass)) {
+      throw new CnabFieldDependencyNotDeclaredException(this.fieldKey, fieldClass.name)
+    }
     let value: V | null = null
     for (const [lineNumber, rawLine] of group) {
       const field = new fieldClass(rawLine, lineNumber)
