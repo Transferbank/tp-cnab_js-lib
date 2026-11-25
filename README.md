@@ -174,7 +174,7 @@ for (const boleto of cnabFile.read().boletos) {
 }
 ```
 
-No Banco do Brasil, as espécies `31` (cartão de crédito) e `32` (boleto de proposta) não aceitam cobrança de juros nem de multa, e o manual diz que esses campos não devem ser validados. A lib aplica essa regra no boleto inteiro: nesses boletos, `codigo_de_juros`, `data_de_juros`, `juros`, `codigo_de_multa`, `data_de_multa` e `multa` não são validados e não aparecem na leitura, mesmo com a multa em outra linha (segmento R no CNAB 240, registro 5 no CNAB 400). Com outra espécie, ou com a espécie vazia ou fora da tabela, juros e multa são validados e lidos normalmente.
+No Banco do Brasil, os boletos de espécie `31` (cartão de crédito) e `32` (boleto de proposta) não cobram juros nem multa: nesses boletos, os campos de juros e de multa não são validados nem aparecem na leitura.
 
 ### Campos extras da lib
 
