@@ -21,6 +21,8 @@ export abstract class CnabField<T> {
 
   protected readonly rawLine: string
   protected readonly lineNumber: number
+  protected readonly dispensingField: CnabFieldClass<string> | null = null
+  protected readonly dispensingValues: string[] = []
   private cachedValue?: T | null
 
   constructor(rawLine: string, lineNumber: number) {
@@ -87,12 +89,30 @@ export abstract class CnabField<T> {
     return this.performValidation()
   }
 
-  validateInGroup(_group: CnabNumberedLine[]): CnabValidationResult {
+  validateInGroup(group: CnabNumberedLine[]): CnabValidationResult {
+    if (this.isDispensedInGroup(group)) {
+      return { isValid: true, errors: [] }
+    }
     return this.validate()
   }
 
-  readInGroup(_group: CnabNumberedLine[]): T | null {
+  readInGroup(group: CnabNumberedLine[]): T | null {
+    if (this.isDispensedInGroup(group)) {
+      return null
+    }
     return this.value
+  }
+
+  protected isDispensedBy(value: string): boolean {
+    return this.dispensingValues.includes(value)
+  }
+
+  private isDispensedInGroup(group: CnabNumberedLine[]): boolean {
+    if (this.dispensingField == null) {
+      return false
+    }
+    const value = this.groupValue(group, this.dispensingField)
+    return value != null && this.isDispensedBy(value)
   }
 
   handleDuplicatedValue(_previousValue: unknown): T | null {
