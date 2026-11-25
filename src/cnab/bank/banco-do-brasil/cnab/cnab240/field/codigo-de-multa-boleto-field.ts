@@ -2,11 +2,28 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CodigoDeMultaBoletoField as Cnab240CodigoDeMultaBoletoField } from '@cnab/field/cnab240/codigo-de-multa-boleto-field'
 import { EspecieDoTituloBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/especie-do-titulo-boleto-field'
+import { CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { isEspecieWithoutCharges } from '@cnab/bank/banco-do-brasil/especie-without-charges'
 
 export class CodigoDeMultaBoletoField extends Cnab240CodigoDeMultaBoletoField {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB240
   static readonly dependencies = [EspecieDoTituloBoletoField]
-  protected readonly dispensingField = EspecieDoTituloBoletoField
-  protected readonly dispensingValues = ['31', '32']
+
+  validateInGroup(group: CnabNumberedLine[]): CnabValidationResult {
+    const especie = this.groupValue(group, EspecieDoTituloBoletoField)
+    if (isEspecieWithoutCharges(especie)) {
+      return { isValid: true, errors: [] }
+    }
+    return super.validateInGroup(group)
+  }
+
+  readInGroup(group: CnabNumberedLine[]): string | null {
+    const especie = this.groupValue(group, EspecieDoTituloBoletoField)
+    if (isEspecieWithoutCharges(especie)) {
+      return null
+    }
+    return super.readInGroup(group)
+  }
 }

@@ -75,59 +75,6 @@ describe('groupValue', (): void => {
   })
 })
 
-class FakeSecondLineCodeField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'codigo'
-  readonly range: [number, number] = [2, 3]
-
-  shouldValidate(): boolean {
-    return this.rawLine.startsWith('2')
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
-  }
-
-  protected performValidation(): CnabValidationResult {
-    return { isValid: true, errors: [] }
-  }
-}
-
-class FakeDispensableField extends FakeNumberField {
-  static readonly dependencies = [FakeSecondLineCodeField]
-  protected readonly dispensingField = FakeSecondLineCodeField
-  protected readonly dispensingValues = ['31']
-}
-
-describe('dispensa no boleto', (): void => {
-  it('given the other field with a dispensing value when validating and reading in group then accepts the field and leaves it out', (): void => {
-    // Given
-    const group: CnabNumberedLine[] = [[1, '1A2'], [2, '231']]
-    const field = new FakeDispensableField('1A2', 1)
-
-    // When
-    const result = field.validateInGroup(group)
-    const value = field.readInGroup(group)
-
-    // Then
-    expect(result).toEqual({ isValid: true, errors: [] })
-    expect(value).toBeNull()
-  })
-
-  it('given the other field with another value when validating in group then validates the field as usual', (): void => {
-    // Given
-    const group: CnabNumberedLine[] = [[1, '1A2'], [2, '277']]
-    const field = new FakeDispensableField('1A2', 1)
-
-    // When
-    const result = field.validateInGroup(group)
-
-    // Then
-    expect(result.isValid).toBe(false)
-    expect(result.errors).toMatchObject([{ message: 'Campo campo_numerico com formato inválido: 1A2' }])
-  })
-})
-
 describe('optional', (): void => {
   const OptionalFakeNumberField = optional(FakeNumberField)
 
