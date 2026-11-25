@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { CnabField, CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabGroupReader, CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -35,8 +35,8 @@ class FakeGroupField extends CnabField<string> {
     return this.rawLine.startsWith('1')
   }
 
-  readInGroup(group: CnabNumberedLine[]): string | null {
-    const secondRecord = this.readDependency(group, FakeSecondRecordField)
+  readInGroup(group: CnabGroupReader): string | null {
+    const secondRecord = group.read(FakeSecondRecordField)
     return secondRecord == null ? null : this.value
   }
 

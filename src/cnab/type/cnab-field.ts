@@ -92,11 +92,11 @@ export abstract class CnabField<T> {
     return this.performValidation()
   }
 
-  validateInGroup(_group: CnabNumberedLine[]): CnabValidationResult {
+  validateInGroup(_group: CnabGroupReader): CnabValidationResult {
     return this.validate()
   }
 
-  readInGroup(_group: CnabNumberedLine[]): T | null {
+  readInGroup(_group: CnabGroupReader): T | null {
     return this.value
   }
 
@@ -104,13 +104,28 @@ export abstract class CnabField<T> {
     return this.value
   }
 
-  protected readDependency<V>(group: CnabNumberedLine[], fieldClass: CnabFieldClass<V>): V | null {
-    const { dependencies } = this.constructor as typeof CnabField<T>
-    if (!dependencies.includes(fieldClass)) {
+  abstract shouldValidate(): boolean
+  protected abstract parseValue(rawValue: string): T
+  protected abstract performValidation(): CnabValidationResult
+}
+
+export class CnabGroupReader {
+  private readonly lines: CnabNumberedLine[]
+  private readonly declared: CnabFieldClass[]
+  private readonly fieldKey: string
+
+  constructor(lines: CnabNumberedLine[], declared: CnabFieldClass[], fieldKey: string) {
+    this.lines = lines
+    this.declared = declared
+    this.fieldKey = fieldKey
+  }
+
+  read<V>(fieldClass: CnabFieldClass<V>): V | null {
+    if (!this.declared.includes(fieldClass)) {
       throw new CnabFieldDependencyNotDeclaredException(this.fieldKey, fieldClass.name)
     }
     let value: V | null = null
-    for (const { lineNumber, rawLine } of group) {
+    for (const { lineNumber, rawLine } of this.lines) {
       const field = new fieldClass(rawLine, lineNumber)
       if (!field.shouldValidate()) {
         continue
@@ -123,10 +138,6 @@ export abstract class CnabField<T> {
     }
     return value
   }
-
-  abstract shouldValidate(): boolean
-  protected abstract parseValue(rawValue: string): T
-  protected abstract performValidation(): CnabValidationResult
 }
 
 function readableValue<V>(field: CnabField<V>): V | null {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { CnabField, CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabGroupReader, CnabField } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -11,7 +11,7 @@ import { Cnab400BoletoGroupRule } from '@cnab/group-rule/cnab400/boleto-group-ru
 class FakeSecondRecordField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
   readonly fieldKey = 'segundo_registro'
-  readonly range: [number, number] = [1, 1]
+  readonly range: [number, number] = [2, 4]
 
   shouldValidate(): boolean {
     return this.rawLine.startsWith('2')
@@ -36,8 +36,9 @@ class FakeGroupField extends CnabField<string> {
     return this.rawLine.startsWith('1')
   }
 
-  validateInGroup(group: CnabNumberedLine[]): CnabValidationResult {
-    return this.errorResult(`boleto com ${group.length} linhas`)
+  validateInGroup(group: CnabGroupReader): CnabValidationResult {
+    const secondRecord = group.read(FakeSecondRecordField)
+    return this.errorResult(`segundo registro do boleto: ${secondRecord ?? 'ausente'}`)
   }
 
   protected parseValue(rawValue: string): string {
@@ -67,9 +68,9 @@ function boletoSchema(): CnabLineSchema {
 }
 
 describe('CnabLineSchema', (): void => {
-  it('given a field validated in group when validating then validates it once per boleto with all its lines', (): void => {
+  it('given a field that depends on another field when validating then reads it only in its own boleto', (): void => {
     // Given
-    const rawLines = ['1'.padEnd(400, ' '), '2'.padEnd(400, ' '), '1'.padEnd(400, ' ')]
+    const rawLines = ['1'.padEnd(400, ' '), '2AAA'.padEnd(400, ' '), '1'.padEnd(400, ' ')]
 
     // When
     const result = boletoSchema().validate(rawLines, false, 1, [])
@@ -77,8 +78,8 @@ describe('CnabLineSchema', (): void => {
     // Then
     expect(result.isValid).toBe(false)
     expect(result.errors).toMatchObject([
-      { message: 'boleto com 2 linhas', lineNumber: 1 },
-      { message: 'boleto com 1 linhas', lineNumber: 3 }
+      { message: 'segundo registro do boleto: AAA', lineNumber: 1 },
+      { message: 'segundo registro do boleto: ausente', lineNumber: 3 }
     ])
   })
 })

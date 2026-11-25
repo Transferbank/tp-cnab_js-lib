@@ -1,5 +1,5 @@
 ﻿import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabGroupReader, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
@@ -11,11 +11,13 @@ import {
 } from '@cnab/validators/cnab-line-size-validator'
 
 interface CnabValidatable {
+  readonly fieldKey?: string
   shouldValidate(): boolean
-  validateInGroup(group: CnabNumberedLine[]): CnabValidationResult
+  validateInGroup(group: CnabGroupReader): CnabValidationResult
 }
 
 interface CnabValidatableConstructor {
+  readonly dependencies?: CnabFieldClass[]
   new (rawLine: string, lineNumber: number): CnabValidatable
 }
 
@@ -124,7 +126,8 @@ export class CnabLineSchema {
             continue
           }
 
-          if (this.addResult(result, instance.validateInGroup(group)) && eagerEnabled) {
+          const groupReader = new CnabGroupReader(group, validationType.dependencies ?? [], instance.fieldKey ?? '')
+          if (this.addResult(result, instance.validateInGroup(groupReader)) && eagerEnabled) {
             return result
           }
         }

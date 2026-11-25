@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals'
-import { CnabField, CnabNumberedLine, optional } from '@cnab/type/cnab-field'
+import { CnabGroupReader, CnabField, CnabNumberedLine, optional } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabFieldDependencyNotDeclaredException } from '@cnab/exception/cnab-exception'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -44,40 +44,26 @@ class FakeSecondLineField extends FakeNumberField {
   }
 }
 
-class FakeDependentField extends FakeNumberField {
-  static readonly dependencies = [FakeSecondLineField]
-
-  readSecondLine(group: CnabNumberedLine[]): number | null {
-    return this.readDependency(group, FakeSecondLineField)
-  }
-}
-
-class FakeUndeclaredDependentField extends FakeNumberField {
-  readSecondLine(group: CnabNumberedLine[]): number | null {
-    return this.readDependency(group, FakeSecondLineField)
-  }
-}
-
-describe('readDependency', (): void => {
-  it('given the field on another line of the boleto when reading then returns its value', (): void => {
+describe('CnabGroupReader', (): void => {
+  it('given the declared field on another line of the boleto when reading then returns its value', (): void => {
     // Given
-    const group: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
-    const field = new FakeDependentField('100', 1)
+    const lines: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
+    const group = new CnabGroupReader(lines, [FakeSecondLineField], 'campo_numerico')
 
     // When
-    const value = field.readSecondLine(group)
+    const value = group.read(FakeSecondLineField)
 
     // Then
     expect(value).toBe(31)
   })
 
-  it('given the field with an unreadable value when reading then returns null without throwing', (): void => {
+  it('given the declared field with an unreadable value when reading then returns null without throwing', (): void => {
     // Given
-    const group: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '2AB' }]
-    const field = new FakeDependentField('100', 1)
+    const lines: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '2AB' }]
+    const group = new CnabGroupReader(lines, [FakeSecondLineField], 'campo_numerico')
 
     // When
-    const value = field.readSecondLine(group)
+    const value = group.read(FakeSecondLineField)
 
     // Then
     expect(value).toBeNull()
@@ -85,11 +71,11 @@ describe('readDependency', (): void => {
 
   it('given a field not declared as dependency when reading then throws', (): void => {
     // Given
-    const group: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
-    const field = new FakeUndeclaredDependentField('100', 1)
+    const lines: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
+    const group = new CnabGroupReader(lines, [], 'campo_numerico')
 
     // When
-    const read = (): number | null => field.readSecondLine(group)
+    const read = (): number | null => group.read(FakeSecondLineField)
 
     // Then
     expect(read).toThrow(new CnabFieldDependencyNotDeclaredException('campo_numerico', 'FakeSecondLineField'))

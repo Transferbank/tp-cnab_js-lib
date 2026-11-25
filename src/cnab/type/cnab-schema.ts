@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabField, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabGroupReader, CnabField, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 
@@ -123,7 +123,8 @@ export class CnabSchema {
         if (!field.shouldValidate()) {
           continue
         }
-        const value = field.readInGroup(group)
+        const groupReader = new CnabGroupReader(group, fieldType.dependencies, field.fieldKey)
+        const value = field.readInGroup(groupReader)
         if (value != null) {
           boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, value, boleto.fields[field.fieldKey])
         }
