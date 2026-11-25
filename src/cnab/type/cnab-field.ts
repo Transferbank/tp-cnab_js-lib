@@ -20,10 +20,6 @@ export abstract class CnabField<T> {
   static readonly bank?: CnabBank
   static readonly format?: CnabFormat
 
-  static get validatesInGroup(): boolean {
-    return this.dependencies.length > 0
-  }
-
   abstract readonly fieldKey: string
   // O range começa a partir de start + 1, seguindo as documentações dos arquivos cnab
   abstract readonly range: [number, number]
@@ -148,7 +144,6 @@ export interface CnabFieldClass<T = unknown> {
   readonly fieldType: CnabFieldType
   readonly isOptional: boolean
   readonly dependencies: CnabFieldClass[]
-  readonly validatesInGroup: boolean
   readonly bank?: CnabBank
   readonly format?: CnabFormat
   new (rawLine: string, lineNumber: number): CnabField<T>

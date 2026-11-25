@@ -123,7 +123,7 @@ export class CnabSchema {
         if (!field.shouldValidate()) {
           continue
         }
-        const value = fieldType.validatesInGroup ? field.readInGroup(group) : field.value
+        const value = field.readInGroup(group)
         if (value != null) {
           boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, value, boleto.fields[field.fieldKey])
         }

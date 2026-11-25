@@ -12,11 +12,10 @@ import {
 
 interface CnabValidatable {
   shouldValidate(): boolean
-  validate(): CnabValidationResult
+  validateInGroup(group: CnabNumberedLine[]): CnabValidationResult
 }
 
 interface CnabValidatableConstructor {
-  readonly validatesInGroup?: boolean
   new (rawLine: string, lineNumber: number): CnabValidatable
 }
 
@@ -115,28 +114,11 @@ export class CnabLineSchema {
       ...this.fields,
       ...extraFields,
     ] as CnabValidatableConstructor[]
-    const lineTypes = validationTypes.filter(validationType => validationType.validatesInGroup != true)
-    const allFields = [...this.fields, ...extraFields]
-    const groupFields = allFields.filter(field => field.validatesInGroup)
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
       for (const { lineNumber, rawLine } of group) {
-        for (const validationType of lineTypes) {
+        for (const validationType of validationTypes) {
           const instance = new validationType(rawLine, lineNumber)
-
-          if (!instance.shouldValidate()) {
-            continue
-          }
-
-          if (this.addResult(result, instance.validate()) && eagerEnabled) {
-            return result
-          }
-        }
-      }
-
-      for (const { lineNumber, rawLine } of group) {
-        for (const field of groupFields) {
-          const instance = new field(rawLine, lineNumber)
 
           if (!instance.shouldValidate()) {
             continue

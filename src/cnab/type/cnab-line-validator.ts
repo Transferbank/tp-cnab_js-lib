@@ -1,4 +1,5 @@
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
+import { CnabNumberedLine } from '@cnab/type/cnab-field'
 
 export abstract class CnabLineValidator {
   protected readonly rawLine: string
@@ -12,6 +13,10 @@ export abstract class CnabLineValidator {
   abstract shouldValidate(): boolean
 
   abstract validate(): CnabValidationResult
+
+  validateInGroup(_group: CnabNumberedLine[]): CnabValidationResult {
+    return this.validate()
+  }
 }
 
 export interface CnabLineValidatorClass {
