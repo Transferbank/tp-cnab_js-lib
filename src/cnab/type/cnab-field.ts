@@ -8,7 +8,10 @@ import {
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 
-export type CnabNumberedLine = [number, string]
+export interface CnabNumberedLine {
+  lineNumber: number
+  rawLine: string
+}
 
 export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
@@ -111,7 +114,7 @@ export abstract class CnabField<T> {
       throw new CnabFieldDependencyNotDeclaredException(this.fieldKey, fieldClass.name)
     }
     let value: V | null = null
-    for (const [lineNumber, rawLine] of group) {
+    for (const { lineNumber, rawLine } of group) {
       const field = new fieldClass(rawLine, lineNumber)
       if (!field.shouldValidate()) {
         continue

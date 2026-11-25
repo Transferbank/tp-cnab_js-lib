@@ -117,7 +117,7 @@ export class CnabSchema {
 
   private readBoleto(group: CnabNumberedLine[], fields: CnabFieldClass[]): CnabBoleto {
     const boleto = new CnabBoleto()
-    for (const [lineNumber, rawLine] of group) {
+    for (const { lineNumber, rawLine } of group) {
       for (const fieldType of fields) {
         const field = new fieldType(rawLine, lineNumber)
         if (!field.shouldValidate()) {

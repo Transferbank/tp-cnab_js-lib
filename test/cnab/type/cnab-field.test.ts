@@ -61,7 +61,7 @@ class FakeUndeclaredDependentField extends FakeNumberField {
 describe('groupValue', (): void => {
   it('given the field on another line of the boleto when reading then returns its value', (): void => {
     // Given
-    const group: CnabNumberedLine[] = [[1, '100'], [2, '231']]
+    const group: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
     const field = new FakeDependentField('100', 1)
 
     // When
@@ -73,7 +73,7 @@ describe('groupValue', (): void => {
 
   it('given the field with an unreadable value when reading then returns null without throwing', (): void => {
     // Given
-    const group: CnabNumberedLine[] = [[1, '100'], [2, '2AB']]
+    const group: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '2AB' }]
     const field = new FakeDependentField('100', 1)
 
     // When
@@ -85,7 +85,7 @@ describe('groupValue', (): void => {
 
   it('given a field not declared as dependency when reading then throws', (): void => {
     // Given
-    const group: CnabNumberedLine[] = [[1, '100'], [2, '231']]
+    const group: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
     const field = new FakeUndeclaredDependentField('100', 1)
 
     // When

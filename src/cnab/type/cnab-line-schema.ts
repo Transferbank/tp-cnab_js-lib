@@ -76,7 +76,7 @@ export class CnabLineSchema {
   *genLineGroups(rawLines: string[], firstLine: number): Generator<CnabNumberedLine[]> {
     const numberedLines: CnabNumberedLine[] = Array.from(
       rawLines,
-      (line: string, index: number): CnabNumberedLine => [firstLine + index, line]
+      (line: string, index: number): CnabNumberedLine => ({ lineNumber: firstLine + index, rawLine: line })
     )
 
     if (this.fieldType !== CnabFieldType.BOLETO) {
@@ -87,7 +87,7 @@ export class CnabLineSchema {
     let group: CnabNumberedLine[] = []
 
     for (const numberedLine of numberedLines) {
-      const [, rawLine] = numberedLine
+      const { rawLine } = numberedLine
       if (this.isBoletoGroupStart(rawLine)) {
         if (group.length !== 0) {
           yield group
@@ -120,7 +120,7 @@ export class CnabLineSchema {
     const groupFields = allFields.filter(field => field.validatesInGroup)
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
-      for (const [lineNumber, rawLine] of group) {
+      for (const { lineNumber, rawLine } of group) {
         for (const validationType of lineTypes) {
           const instance = new validationType(rawLine, lineNumber)
 
@@ -134,7 +134,7 @@ export class CnabLineSchema {
         }
       }
 
-      for (const [lineNumber, rawLine] of group) {
+      for (const { lineNumber, rawLine } of group) {
         for (const field of groupFields) {
           const instance = new field(rawLine, lineNumber)
 
