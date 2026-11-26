@@ -65,3 +65,9 @@ export class CnabFieldDependencyNotDeclaredException extends CnabException {
     super(`Campo ${fieldKey} lê ${dependencyName} no boleto sem declarar a dependência`)
   }
 }
+
+export class CnabFieldDependencyCycleException extends CnabException {
+  constructor(fieldKey: string, cycle: string) {
+    super(`Campo ${fieldKey} lê dependências em ciclo: ${cycle}`)
+  }
+}

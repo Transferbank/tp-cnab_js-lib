@@ -25,7 +25,8 @@ export {
   CnabBankCodeNotFoundException,
   CnabBankSchemaNotFoundException,
   CnabInvalidFileException,
-  CnabFieldDependencyNotDeclaredException
+  CnabFieldDependencyNotDeclaredException,
+  CnabFieldDependencyCycleException
 } from '@cnab/exception/cnab-exception'
 export {
   CnabValidationError,

@@ -1,7 +1,10 @@
 import { describe, it, expect } from '@jest/globals'
-import { CnabGroupReader, CnabField, CnabNumberedLine, optional } from '@cnab/type/cnab-field'
+import { CnabGroupReader, CnabField, CnabFieldClass, CnabNumberedLine, optional } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
-import { CnabFieldDependencyNotDeclaredException } from '@cnab/exception/cnab-exception'
+import {
+  CnabFieldDependencyCycleException,
+  CnabFieldDependencyNotDeclaredException
+} from '@cnab/exception/cnab-exception'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import {
   CnabFieldInvalidNumberError,
@@ -61,7 +64,27 @@ class FakeGroupAwareSecondLineField extends FakeSecondLineField {
   }
 }
 
+class FakeSelfReadingField extends FakeSecondLineField {
+  static readonly dependencies: CnabFieldClass[] = [this]
+
+  readInGroup(group: CnabGroupReader): number | null {
+    return group.read(FakeSelfReadingField)
+  }
+}
+
 describe('CnabGroupReader', (): void => {
+  it('given a field that reads itself when reading then throws with the cycle', (): void => {
+    // Given
+    const lines: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
+    const group = new CnabGroupReader(lines, [FakeSelfReadingField], 'campo_numerico')
+
+    // When
+    const read = (): number | null => group.read(FakeSelfReadingField)
+
+    // Then
+    expect(read).toThrow(new CnabFieldDependencyCycleException('campo_numerico', 'FakeSelfReadingField → FakeSelfReadingField'))
+  })
+
   it('given a declared field that reads in group when reading then returns its value read in group', (): void => {
     // Given
     const lines: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }, { lineNumber: 3, rawLine: '307' }]

@@ -2,7 +2,10 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabFieldDependencyNotDeclaredException } from '@cnab/exception/cnab-exception'
+import {
+  CnabFieldDependencyCycleException,
+  CnabFieldDependencyNotDeclaredException
+} from '@cnab/exception/cnab-exception'
 import {
   CnabFieldParseError,
   CnabGenericFieldError
@@ -113,16 +116,23 @@ export class CnabGroupReader {
   private readonly lines: CnabNumberedLine[]
   private readonly declared: CnabFieldClass[]
   private readonly fieldKey: string
+  private readonly reading: CnabFieldClass[]
 
-  constructor(lines: CnabNumberedLine[], declared: CnabFieldClass[], fieldKey: string) {
+  constructor(lines: CnabNumberedLine[], declared: CnabFieldClass[], fieldKey: string, reading: CnabFieldClass[] = []) {
     this.lines = lines
     this.declared = declared
     this.fieldKey = fieldKey
+    this.reading = reading
   }
 
   read<V>(fieldClass: CnabFieldClass<V>): V | null {
     if (!this.declared.includes(fieldClass)) {
       throw new CnabFieldDependencyNotDeclaredException(this.fieldKey, fieldClass.name)
+    }
+    const reading = [...this.reading, fieldClass]
+    if (this.reading.includes(fieldClass)) {
+      const cycleNames = reading.map(readingClass => readingClass.name)
+      throw new CnabFieldDependencyCycleException(this.fieldKey, cycleNames.join(' → '))
     }
     let value: V | null = null
     for (const { lineNumber, rawLine } of this.lines) {
@@ -130,7 +140,7 @@ export class CnabGroupReader {
       if (!field.shouldValidate()) {
         continue
       }
-      const fieldReader = new CnabGroupReader(this.lines, fieldClass.dependencies, field.fieldKey)
+      const fieldReader = new CnabGroupReader(this.lines, fieldClass.dependencies, field.fieldKey, reading)
       const lineValue = readableInGroup(field, fieldReader)
       if (lineValue == null) {
         continue
