@@ -100,8 +100,8 @@ export abstract class CnabField<T> {
     return this.value
   }
 
-  handleDuplicatedValue(_previousValue: unknown): T | null {
-    return this.value
+  handleDuplicatedValue(_previousValue: unknown, value: T | null = this.value): T | null {
+    return value
   }
 
   abstract shouldValidate(): boolean
@@ -134,7 +134,7 @@ export class CnabGroupReader {
       if (lineValue == null) {
         continue
       }
-      value = value == null ? lineValue : field.handleDuplicatedValue(value)
+      value = value == null ? lineValue : field.handleDuplicatedValue(value, lineValue)
     }
     return value
   }

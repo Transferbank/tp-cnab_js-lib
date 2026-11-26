@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { CnabGroupReader, CnabField } from '@cnab/type/cnab-field'
+import { CnabGroupReader, CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -49,14 +49,40 @@ class FakeGroupField extends CnabField<string> {
   }
 }
 
-function schemaWithGroupField(): CnabSchema {
+class FakeNormalizedField extends CnabField<string> {
+  static readonly fieldType = CnabFieldType.BOLETO
+  readonly fieldKey = 'campo_normalizado'
+  readonly range: [number, number] = [2, 4]
+
+  shouldValidate(): boolean {
+    return this.rawLine.startsWith('2')
+  }
+
+  readInGroup(_group: CnabGroupReader): string | null {
+    return this.value?.toLowerCase() ?? null
+  }
+
+  handleDuplicatedValue(previousValue: unknown, value: string | null = this.value): string {
+    return `${String(previousValue)}+${value ?? ''}`
+  }
+
+  protected parseValue(rawValue: string): string {
+    return rawValue
+  }
+
+  protected performValidation(): CnabValidationResult {
+    return { isValid: true, errors: [] }
+  }
+}
+
+function schemaWith(field: CnabFieldClass): CnabSchema {
   return new CnabSchema({
     bank: CnabBank.BRADESCO,
     fmt: CnabFormat.CNAB400,
     boletoGroupRule: new Cnab400BoletoGroupRule(),
     header: { fieldType: CnabFieldType.HEADER, fields: [] },
     trailer: { fieldType: CnabFieldType.TRAILER, fields: [] },
-    boleto: { fieldType: CnabFieldType.BOLETO, fields: [FakeGroupField] }
+    boleto: { fieldType: CnabFieldType.BOLETO, fields: [field] }
   })
 }
 
@@ -66,9 +92,20 @@ describe('CnabSchema', (): void => {
     const rawLines = ['0', '1AAA', '2', '1BBB', '9']
 
     // When
-    const cnab = schemaWithGroupField().extractCnab(rawLines)
+    const cnab = schemaWith(FakeGroupField).extractCnab(rawLines)
 
     // Then
     expect(cnab.boletos.map(boleto => boleto.fields)).toEqual([{ campo_do_boleto: 'AAA' }])
+  })
+
+  it('given a field read in group on several lines when extracting then merges the values read in group', (): void => {
+    // Given
+    const rawLines = ['0', '1', '2AAA', '2BBB', '9']
+
+    // When
+    const cnab = schemaWith(FakeNormalizedField).extractCnab(rawLines)
+
+    // Then
+    expect(cnab.boletos.map(boleto => boleto.fields)).toEqual([{ campo_normalizado: 'aaa+bbb' }])
   })
 })

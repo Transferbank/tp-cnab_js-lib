@@ -134,7 +134,7 @@ export class CnabSchema {
   }
 
   private handleDuplicatedFields(field: CnabField<unknown>, value: unknown, previousValue: unknown): unknown {
-    return previousValue == null ? value : field.handleDuplicatedValue(previousValue)
+    return previousValue == null ? value : field.handleDuplicatedValue(previousValue, value)
   }
 }
 
