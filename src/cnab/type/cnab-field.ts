@@ -130,7 +130,8 @@ export class CnabGroupReader {
       if (!field.shouldValidate()) {
         continue
       }
-      const lineValue = readableValue(field)
+      const fieldReader = new CnabGroupReader(this.lines, fieldClass.dependencies, field.fieldKey)
+      const lineValue = readableInGroup(field, fieldReader)
       if (lineValue == null) {
         continue
       }
@@ -140,9 +141,9 @@ export class CnabGroupReader {
   }
 }
 
-function readableValue<V>(field: CnabField<V>): V | null {
+function readableInGroup<V>(field: CnabField<V>, group: CnabGroupReader): V | null {
   try {
-    return field.value
+    return field.readInGroup(group)
   } catch (error) {
     if (error instanceof CnabFieldParseError) {
       return null

@@ -44,7 +44,36 @@ class FakeSecondLineField extends FakeNumberField {
   }
 }
 
+class FakeThirdLineField extends FakeNumberField {
+  readonly range: [number, number] = [2, 3]
+
+  shouldValidate(): boolean {
+    return this.rawLine.startsWith('3')
+  }
+}
+
+class FakeGroupAwareSecondLineField extends FakeSecondLineField {
+  static readonly dependencies = [FakeThirdLineField]
+
+  readInGroup(group: CnabGroupReader): number | null {
+    const thirdLine = group.read(FakeThirdLineField)
+    return (this.value ?? 0) + (thirdLine ?? 0)
+  }
+}
+
 describe('CnabGroupReader', (): void => {
+  it('given a declared field that reads in group when reading then returns its value read in group', (): void => {
+    // Given
+    const lines: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }, { lineNumber: 3, rawLine: '307' }]
+    const group = new CnabGroupReader(lines, [FakeGroupAwareSecondLineField], 'campo_numerico')
+
+    // When
+    const value = group.read(FakeGroupAwareSecondLineField)
+
+    // Then
+    expect(value).toBe(38)
+  })
+
   it('given the declared field on another line of the boleto when reading then returns its value', (): void => {
     // Given
     const lines: CnabNumberedLine[] = [{ lineNumber: 1, rawLine: '100' }, { lineNumber: 2, rawLine: '231' }]
