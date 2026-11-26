@@ -616,40 +616,55 @@ describe('cnab-file', (): void => {
     fieldKey: string
   }
 
+  interface BancoDoBrasilJurosCase {
+    examplePath: string
+    isJurosLine: (line: string) => boolean
+    especieRange: [number, number]
+    invalidJuros: InvalidValue[]
+  }
+
+  interface BancoDoBrasilMultaCase {
+    examplePath: string
+    isEspecieLine: (line: string) => boolean
+    especieRange: [number, number]
+    isMultaLine: (line: string) => boolean
+    invalidMulta: InvalidValue[]
+  }
+
   const especiesWithJurosAndMulta = ['  ', '77']
 
-  const bancoDoBrasilJurosCases = [
-    [
-      'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
-      (line: string): boolean => line[7] == '3' && line[13] == 'P',
-      [107, 108],
-      [
+  const bancoDoBrasilJurosCases: BancoDoBrasilJurosCase[] = [
+    {
+      examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+      isJurosLine: (line: string): boolean => line[7] == '3' && line[13] == 'P',
+      especieRange: [107, 108],
+      invalidJuros: [
         { range: [118, 118], value: '9', fieldKey: 'codigo_de_juros' },
         { range: [127, 141], value: 'A'.repeat(15), fieldKey: 'juros' },
         { range: [119, 126], value: '99999999', fieldKey: 'data_de_juros' }
       ]
-    ],
-    [
-      'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
-      (line: string): boolean => line[0] == '7',
-      [148, 149],
-      [
+    },
+    {
+      examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+      isJurosLine: (line: string): boolean => line[0] == '7',
+      especieRange: [148, 149],
+      invalidJuros: [
         { range: [161, 173], value: 'A'.repeat(13), fieldKey: 'juros' }
       ]
-    ]
-  ] as Array<[string, (line: string) => boolean, [number, number], InvalidValue[]]>
+    }
+  ]
 
-  function bancoDoBrasilJurosFile(examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], especie: string, invalidJuros: InvalidValue[]): CnabFile {
-    const lines = readExampleLines(path.join(resPath(), examplePath))
-    const lineIndex = lines.findIndex(isJurosLine)
-    const withEspecie = replaceLineRange(lines[lineIndex], especieRange, especie)
-    lines[lineIndex] = invalidJuros.reduce((line, invalid) => replaceLineRange(line, invalid.range, invalid.value), withEspecie)
+  function bancoDoBrasilJurosFile(jurosCase: BancoDoBrasilJurosCase, especie: string): CnabFile {
+    const lines = readExampleLines(path.join(resPath(), jurosCase.examplePath))
+    const lineIndex = lines.findIndex(jurosCase.isJurosLine)
+    const withEspecie = replaceLineRange(lines[lineIndex], jurosCase.especieRange, especie)
+    lines[lineIndex] = jurosCase.invalidJuros.reduce((line, invalid) => replaceLineRange(line, invalid.range, invalid.value), withEspecie)
     return CnabFile.fromLines(lines)
   }
 
-  it.each(bancoDoBrasilJurosCases)('given document file %s with especie 31 and invalid juros when reading then dispenses the juros', (examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], invalidJuros: InvalidValue[]): void => {
+  it.each(bancoDoBrasilJurosCases)('given document file $examplePath with especie 31 and invalid juros when reading then dispenses the juros', (jurosCase: BancoDoBrasilJurosCase): void => {
     // Given
-    const cnabFile = bancoDoBrasilJurosFile(examplePath, isJurosLine, especieRange, '31', invalidJuros)
+    const cnabFile = bancoDoBrasilJurosFile(jurosCase, '31')
 
     // When
     const result = cnabFile.validate(true, CNAB_DATA_DE_JUROS_FIELDS)
@@ -663,72 +678,72 @@ describe('cnab-file', (): void => {
     expect(boleto.fields).not.toHaveProperty('juros')
   })
 
-  it.each(bancoDoBrasilJurosCases)('given document file %s with especie 02 and invalid juros when validating then rejects the juros', (examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], invalidJuros: InvalidValue[]): void => {
+  it.each(bancoDoBrasilJurosCases)('given document file $examplePath with especie 02 and invalid juros when validating then rejects the juros', (jurosCase: BancoDoBrasilJurosCase): void => {
     // Given
-    const cnabFile = bancoDoBrasilJurosFile(examplePath, isJurosLine, especieRange, '02', invalidJuros)
+    const cnabFile = bancoDoBrasilJurosFile(jurosCase, '02')
 
     // When
     const result = cnabFile.validate(true, CNAB_DATA_DE_JUROS_FIELDS)
 
     // Then
-    const expectedErrors = invalidJuros.map(invalid => ({ fieldKey: invalid.fieldKey }))
+    const expectedErrors = jurosCase.invalidJuros.map(invalid => ({ fieldKey: invalid.fieldKey }))
     expect(result.isValid).toBe(false)
     expect(result.errors).toMatchObject(expectedErrors)
   })
 
   describe.each(especiesWithJurosAndMulta)('given especie "%s" outside the dispensing list', (especie: string): void => {
-    it.each(bancoDoBrasilJurosCases)('in document file %s with invalid juros when validating then rejects the especie and the juros', (examplePath: string, isJurosLine: (line: string) => boolean, especieRange: [number, number], invalidJuros: InvalidValue[]): void => {
+    it.each(bancoDoBrasilJurosCases)('in document file $examplePath with invalid juros when validating then rejects the especie and the juros', (jurosCase: BancoDoBrasilJurosCase): void => {
       // Given
-      const cnabFile = bancoDoBrasilJurosFile(examplePath, isJurosLine, especieRange, especie, invalidJuros)
+      const cnabFile = bancoDoBrasilJurosFile(jurosCase, especie)
 
       // When
       const result = cnabFile.validate(true, CNAB_DATA_DE_JUROS_FIELDS)
 
       // Then
-      const jurosErrors = invalidJuros.map(invalid => ({ fieldKey: invalid.fieldKey }))
+      const jurosErrors = jurosCase.invalidJuros.map(invalid => ({ fieldKey: invalid.fieldKey }))
       const expectedErrors = [{ fieldKey: 'especie_do_titulo' }, ...jurosErrors]
       expect(result.isValid).toBe(false)
       expect(result.errors).toMatchObject(expectedErrors)
     })
   })
 
-  const bancoDoBrasilMultaCases = [
-    [
-      'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
-      (line: string): boolean => line[7] == '3' && line[13] == 'P',
-      [107, 108],
-      (line: string): boolean => line[7] == '3' && line[13] == 'R',
-      [
+  const bancoDoBrasilMultaCases: BancoDoBrasilMultaCase[] = [
+    {
+      examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+      isEspecieLine: (line: string): boolean => line[7] == '3' && line[13] == 'P',
+      especieRange: [107, 108],
+      isMultaLine: (line: string): boolean => line[7] == '3' && line[13] == 'R',
+      invalidMulta: [
         { range: [66, 66], value: '8', fieldKey: 'codigo_de_multa' },
         { range: [75, 89], value: 'A'.repeat(15), fieldKey: 'multa' },
         { range: [67, 74], value: '99999999', fieldKey: 'data_de_multa' }
       ]
-    ],
-    [
-      'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
-      (line: string): boolean => line[0] == '7',
-      [148, 149],
-      (line: string): boolean => line.startsWith('599'),
-      [
+    },
+    {
+      examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+      isEspecieLine: (line: string): boolean => line[0] == '7',
+      especieRange: [148, 149],
+      isMultaLine: (line: string): boolean => line.startsWith('599'),
+      invalidMulta: [
         { range: [4, 4], value: '8', fieldKey: 'codigo_de_multa' },
         { range: [11, 22], value: 'A'.repeat(12), fieldKey: 'multa' },
         { range: [5, 10], value: '999999', fieldKey: 'data_de_multa' }
       ]
-    ]
-  ] as Array<[string, (line: string) => boolean, [number, number], (line: string) => boolean, InvalidValue[]]>
+    }
+  ]
 
-  function bancoDoBrasilMultaFile(examplePath: string, isEspecieLine: (line: string) => boolean, especieRange: [number, number], isMultaLine: (line: string) => boolean, especie: string, invalidMulta: InvalidValue[]): CnabFile {
-    const lines = readExampleLines(path.join(resPath(), examplePath))
-    const especieIndex = lines.findIndex(isEspecieLine)
-    const multaIndex = lines.findIndex((line, index) => index > especieIndex && isMultaLine(line))
-    lines[especieIndex] = replaceLineRange(lines[especieIndex], especieRange, especie)
-    lines[multaIndex] = invalidMulta.reduce((line, invalid) => replaceLineRange(line, invalid.range, invalid.value), lines[multaIndex])
+  function bancoDoBrasilMultaFile(multaCase: BancoDoBrasilMultaCase, especie: string): CnabFile {
+    const lines = readExampleLines(path.join(resPath(), multaCase.examplePath))
+    const especieIndex = lines.findIndex(multaCase.isEspecieLine)
+    const multaIndex = lines.findIndex((line, index) => index > especieIndex && multaCase.isMultaLine(line))
+    lines[especieIndex] = replaceLineRange(lines[especieIndex], multaCase.especieRange, especie)
+    lines[multaIndex] = multaCase.invalidMulta.reduce((line, invalid) => replaceLineRange(line, invalid.range, invalid.value), lines[multaIndex])
     return CnabFile.fromLines(lines)
   }
 
-  it.each(bancoDoBrasilMultaCases)('given document file %s with especie 31 and invalid multa on another line when reading then dispenses the multa', (examplePath: string, isEspecieLine: (line: string) => boolean, especieRange: [number, number], isMultaLine: (line: string) => boolean, invalidMulta: InvalidValue[]): void => {
+  it.each(bancoDoBrasilMultaCases)('given document file $examplePath with especie 31 and invalid multa on another line when reading then dispenses the multa', (multaCase: BancoDoBrasilMultaCase): void => {
     // Given
-    const cnabFile = bancoDoBrasilMultaFile(examplePath, isEspecieLine, especieRange, isMultaLine, '31', invalidMulta)
+    const cnabFile = bancoDoBrasilMultaFile(multaCase, '31')
 
     // When
     const result = cnabFile.validate(true, CNAB_DATA_DE_MULTA_FIELDS)
@@ -742,29 +757,29 @@ describe('cnab-file', (): void => {
     expect(boleto.fields).not.toHaveProperty('multa')
   })
 
-  it.each(bancoDoBrasilMultaCases)('given document file %s with especie 02 and invalid multa on another line when validating then rejects the multa', (examplePath: string, isEspecieLine: (line: string) => boolean, especieRange: [number, number], isMultaLine: (line: string) => boolean, invalidMulta: InvalidValue[]): void => {
+  it.each(bancoDoBrasilMultaCases)('given document file $examplePath with especie 02 and invalid multa on another line when validating then rejects the multa', (multaCase: BancoDoBrasilMultaCase): void => {
     // Given
-    const cnabFile = bancoDoBrasilMultaFile(examplePath, isEspecieLine, especieRange, isMultaLine, '02', invalidMulta)
+    const cnabFile = bancoDoBrasilMultaFile(multaCase, '02')
 
     // When
     const result = cnabFile.validate(true, CNAB_DATA_DE_MULTA_FIELDS)
 
     // Then
-    const expectedErrors = invalidMulta.map(invalid => ({ fieldKey: invalid.fieldKey }))
+    const expectedErrors = multaCase.invalidMulta.map(invalid => ({ fieldKey: invalid.fieldKey }))
     expect(result.isValid).toBe(false)
     expect(result.errors).toMatchObject(expectedErrors)
   })
 
   describe.each(especiesWithJurosAndMulta)('given especie "%s" outside the dispensing list', (especie: string): void => {
-    it.each(bancoDoBrasilMultaCases)('in document file %s with invalid multa on another line when validating then rejects the especie and the multa', (examplePath: string, isEspecieLine: (line: string) => boolean, especieRange: [number, number], isMultaLine: (line: string) => boolean, invalidMulta: InvalidValue[]): void => {
+    it.each(bancoDoBrasilMultaCases)('in document file $examplePath with invalid multa on another line when validating then rejects the especie and the multa', (multaCase: BancoDoBrasilMultaCase): void => {
       // Given
-      const cnabFile = bancoDoBrasilMultaFile(examplePath, isEspecieLine, especieRange, isMultaLine, especie, invalidMulta)
+      const cnabFile = bancoDoBrasilMultaFile(multaCase, especie)
 
       // When
       const result = cnabFile.validate(true, CNAB_DATA_DE_MULTA_FIELDS)
 
       // Then
-      const multaErrors = invalidMulta.map(invalid => ({ fieldKey: invalid.fieldKey }))
+      const multaErrors = multaCase.invalidMulta.map(invalid => ({ fieldKey: invalid.fieldKey }))
       const expectedErrors = [{ fieldKey: 'especie_do_titulo' }, ...multaErrors]
       expect(result.isValid).toBe(false)
       expect(result.errors).toMatchObject(expectedErrors)
