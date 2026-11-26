@@ -1,5 +1,6 @@
 ﻿import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabGroupReader, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'

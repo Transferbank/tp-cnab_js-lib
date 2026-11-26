@@ -2,7 +2,7 @@ import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CodigoDeJurosBoletoField as Cnab240CodigoDeJurosBoletoField } from '@cnab/field/cnab240/codigo-de-juros-boleto-field'
 import { EspecieDoTituloBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/especie-do-titulo-boleto-field'
-import { CnabGroupReader } from '@cnab/type/cnab-field'
+import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { isEspecieWithoutJurosAndMulta } from '@cnab/bank/banco-do-brasil/especie-without-juros-and-multa'
 

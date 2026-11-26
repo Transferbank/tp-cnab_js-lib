@@ -1,5 +1,5 @@
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabGroupReader } from '@cnab/type/cnab-field'
+import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
 
 export abstract class CnabLineValidator {
   protected readonly rawLine: string

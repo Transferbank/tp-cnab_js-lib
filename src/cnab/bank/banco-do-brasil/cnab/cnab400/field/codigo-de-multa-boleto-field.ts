@@ -3,7 +3,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CodigoDeMultaBoletoField as Cnab400CodigoDeMultaBoletoField } from '@cnab/field/cnab400/codigo-de-multa-boleto-field'
 import { Cnab400LineTypeChecker } from '@cnab/utils/line-type-checker'
 import { EspecieDoTituloBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab400/field/especie-do-titulo-boleto-field'
-import { CnabGroupReader } from '@cnab/type/cnab-field'
+import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { isEspecieWithoutJurosAndMulta } from '@cnab/bank/banco-do-brasil/especie-without-juros-and-multa'
 
