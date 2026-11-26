@@ -104,7 +104,7 @@ export class CnabSchema {
       ...this.scopedExtraFields(extraFields),
     ]
 
-    const boletoGroups = this.boleto.genLineGroups(rawLines, 0)
+    const boletoGroups = this.boleto.genLineGroups(rawLines.slice(1, -1), 1)
     for (const group of boletoGroups) {
       const boleto = this.extractBoleto(group, fields)
       if (hasFields(boleto)) {

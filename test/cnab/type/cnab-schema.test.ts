@@ -98,6 +98,17 @@ describe('CnabSchema', (): void => {
     expect(cnab.boletos.map(boleto => boleto.fields)).toEqual([{ campo_do_boleto: 'AAA' }])
   })
 
+  it('given a dependency that matches the file trailer when extracting then does not read it in the last boleto', (): void => {
+    // Given
+    const rawLines = ['0', '1AAA', '2', '1BBB', '2']
+
+    // When
+    const cnab = schemaWith(FakeGroupField).extractCnab(rawLines)
+
+    // Then
+    expect(cnab.boletos.map(boleto => boleto.fields)).toEqual([{ campo_do_boleto: 'AAA' }])
+  })
+
   it('given a field read in group on several lines when extracting then merges the values read in group', (): void => {
     // Given
     const rawLines = ['0', '1', '2AAA', '2BBB', '9']
