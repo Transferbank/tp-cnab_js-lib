@@ -174,7 +174,7 @@ for (const boleto of cnabFile.read().boletos) {
 }
 ```
 
-No Banco do Brasil, os boletos de espécie `31` (cartão de crédito) e `32` (boleto de proposta) não cobram juros nem multa: nesses boletos, os campos de juros e de multa não são validados nem aparecem na leitura.
+No Banco do Brasil, os boletos de espécie `31` (cartão de crédito) e `32` (boleto de proposta) não cobram juros nem multa: nesses boletos, os campos de juros e de multa não são validados nem aparecem na leitura. Por isso, o tipo devolvido por `getTipoDeJuros` e `getTipoDeMulta` não se aplica a eles, nem o tipo fixo de juros do Banco do Brasil 400 (`VALOR_POR_DIA`).
 
 ### Campos extras da lib
 
