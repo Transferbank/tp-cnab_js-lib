@@ -7,9 +7,15 @@ import {
   CnabGenericFieldError
 } from '@cnab/type/cnab-validation-error'
 
+export interface CnabNumberedLine {
+  lineNumber: number
+  rawLine: string
+}
+
 export abstract class CnabField<T> {
   static readonly fieldType: CnabFieldType
   static readonly isOptional: boolean = false
+  static readonly resolvesInGroup: boolean = false
   static readonly bank?: CnabBank
   static readonly format?: CnabFormat
   abstract readonly fieldKey: string
@@ -84,8 +90,37 @@ export abstract class CnabField<T> {
     return this.performValidation()
   }
 
+  validateInGroup(_lines: CnabNumberedLine[], lineResult: CnabValidationResult): CnabValidationResult {
+    return lineResult
+  }
+
+  readInGroup(_lines: CnabNumberedLine[]): T | null {
+    return this.value
+  }
+
   handleDuplicatedValue(_previousValue: unknown): T | null {
     return this.value
+  }
+
+  protected readFieldInGroup<V>(lines: CnabNumberedLine[], fieldClass: CnabFieldClass<V>): V | null {
+    for (const { lineNumber, rawLine } of lines) {
+      const field = new fieldClass(rawLine, lineNumber)
+
+      if (!field.shouldValidate()) {
+        continue
+      }
+
+      try {
+        return field.value
+      } catch (error) {
+        if (error instanceof CnabFieldParseError) {
+          return null
+        }
+        throw error
+      }
+    }
+
+    return null
   }
 
   abstract shouldValidate(): boolean
@@ -96,6 +131,7 @@ export abstract class CnabField<T> {
 export interface CnabFieldClass<T = unknown> {
   readonly fieldType: CnabFieldType
   readonly isOptional: boolean
+  readonly resolvesInGroup: boolean
   readonly bank?: CnabBank
   readonly format?: CnabFormat
   new (rawLine: string, lineNumber: number): CnabField<T>

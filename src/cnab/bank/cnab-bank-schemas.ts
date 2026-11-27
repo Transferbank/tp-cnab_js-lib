@@ -5,6 +5,7 @@ import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { optional } from '@cnab/type/cnab-field'
 import { CnabSchemaRegistrationException } from '@cnab/exception/cnab-exception'
 import { Cnab400HeaderLineStartValidator, Cnab400TrailerLineStartValidator} from '@cnab/validators/cnab400/cnab400-line-start-validator'
+import { Cnab240HeaderRecordTypeValidator, Cnab240TrailerRecordTypeValidator } from '@cnab/validators/cnab240/cnab240-record-type-validator'
 import * as Cnab240 from '@cnab/field/cnab240/fields'
 import * as Cnab400 from '@cnab/field/cnab400/fields'
 
@@ -37,10 +38,12 @@ function registerCnabSchemas(): CnabSchema[] {
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
+        validators: [Cnab240HeaderRecordTypeValidator],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
+        validators: [Cnab240TrailerRecordTypeValidator],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -102,10 +105,12 @@ function registerCnabSchemas(): CnabSchema[] {
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
+        validators: [Cnab240HeaderRecordTypeValidator],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
+        validators: [Cnab240TrailerRecordTypeValidator],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -169,10 +174,12 @@ function registerCnabSchemas(): CnabSchema[] {
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
+        validators: [Cnab240HeaderRecordTypeValidator],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
+        validators: [Cnab240TrailerRecordTypeValidator],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -237,10 +244,12 @@ function registerCnabSchemas(): CnabSchema[] {
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
+        validators: [Cnab240HeaderRecordTypeValidator],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
+        validators: [Cnab240TrailerRecordTypeValidator],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -305,10 +314,12 @@ function registerCnabSchemas(): CnabSchema[] {
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
+        validators: [Cnab240HeaderRecordTypeValidator],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
+        validators: [Cnab240TrailerRecordTypeValidator],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -373,10 +384,12 @@ function registerCnabSchemas(): CnabSchema[] {
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
+        validators: [Cnab240HeaderRecordTypeValidator],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
+        validators: [Cnab240TrailerRecordTypeValidator],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,
@@ -438,10 +451,12 @@ function registerCnabSchemas(): CnabSchema[] {
       header: {
         fieldType: CnabFieldType.HEADER,
         fields: [],
+        validators: [Cnab240HeaderRecordTypeValidator],
       },
       trailer: {
         fieldType: CnabFieldType.TRAILER,
         fields: [],
+        validators: [Cnab240TrailerRecordTypeValidator],
       },
       boleto: {
         fieldType: CnabFieldType.BOLETO,

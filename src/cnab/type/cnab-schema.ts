@@ -4,7 +4,7 @@ import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
+import { CnabField, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 
@@ -104,32 +104,55 @@ export class CnabSchema {
       ...this.scopedExtraFields(extraFields),
     ]
 
-    let currentBoleto = new CnabBoleto()
-    rawLines.forEach((rawLine: string, lineNumber: number) => {
-      if (this.boleto.isBoletoGroupStart(rawLine) && Object.keys(currentBoleto.fields).length > 0) {
-        cnab.boletos.push(currentBoleto)
-        currentBoleto = new CnabBoleto()
+    const boletoGroups = this.boleto.genLineGroups(rawLines.slice(1, -1), 1)
+    for (const group of boletoGroups) {
+      const boleto = this.extractBoleto(group, fields)
+      if (hasFields(boleto)) {
+        cnab.boletos.push(boleto)
       }
-
-      for (const fieldType of fields) {
-        const field = new fieldType(rawLine, lineNumber)
-        if (!field.shouldValidate()) {
-          continue
-        }
-        if (field.value != null) {
-          currentBoleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, currentBoleto.fields[field.fieldKey])
-        }
-      }
-    })
-
-    if (Object.keys(currentBoleto.fields).length > 0) {
-      cnab.boletos.push(currentBoleto)
     }
 
     return cnab
   }
 
-  private handleDuplicatedFields(field: CnabField<unknown>, previousValue: unknown): unknown {
-    return previousValue == null ? field.value : field.handleDuplicatedValue(previousValue)
+  private extractBoleto(group: CnabNumberedLine[], fields: CnabFieldClass[]): CnabBoleto {
+    const boleto = new CnabBoleto()
+    const groupReadings: CnabField<unknown>[] = []
+
+    for (const { lineNumber, rawLine } of group) {
+      for (const fieldType of fields) {
+        const field = new fieldType(rawLine, lineNumber)
+        if (!field.shouldValidate()) {
+          continue
+        }
+
+        if (fieldType.resolvesInGroup) {
+          groupReadings.push(field)
+          continue
+        }
+
+        this.mergeFieldValue(boleto, field, field.value)
+      }
+    }
+
+    for (const field of groupReadings) {
+      this.mergeFieldValue(boleto, field, field.readInGroup(group))
+    }
+
+    return boleto
   }
+
+  private mergeFieldValue(boleto: CnabBoleto, field: CnabField<unknown>, value: unknown): void {
+    if (value != null) {
+      boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, value, boleto.fields[field.fieldKey])
+    }
+  }
+
+  private handleDuplicatedFields(field: CnabField<unknown>, value: unknown, previousValue: unknown): unknown {
+    return previousValue == null ? value : field.handleDuplicatedValue(previousValue)
+  }
+}
+
+function hasFields(boleto: CnabBoleto): boolean {
+  return Object.keys(boleto.fields).length > 0
 }

@@ -4,7 +4,7 @@ import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabInvalidLineSizeError, CnabInvalidRecordTypeError } from '@cnab/type/cnab-validation-error'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -303,6 +303,49 @@ describe('cnab-file', (): void => {
     } catch (error) {
       expect((error as CnabInvalidFileException).errors).toEqual(expectedErrors)
     }
+  })
+
+  const cnab240ExamplePaths = [
+    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'caixa/cnab240/caixa_cnab_240.txt',
+    'itau/cnab240/itau_cnab_240.txt',
+    'santander/cnab240/santander_cnab_240.txt',
+    'sicoob/cnab240/sicoob_cnab_240.txt',
+    'sicredi/cnab240/sicredi_cnab_240.txt'
+  ]
+
+  it.each(cnab240ExamplePaths)('given document file %s truncated after a segment Q when validating then rejects the missing file trailer', (examplePath: string): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+    const segmentoQLines = lines.map((line: string) => Cnab240LineTypeChecker.isSegmentoQ(line))
+    const lastSegmentoQIndex = segmentoQLines.lastIndexOf(true)
+    const cnabFile = CnabFile.fromLines(lines.slice(0, lastSegmentoQIndex + 1))
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result).toEqual({
+      isValid: false,
+      errors: [new CnabInvalidRecordTypeError({ lineNumber: lastSegmentoQIndex, expectedRecordType: '9', actualRecordType: '3' })]
+    })
+  })
+
+  it.each(cnab240ExamplePaths)('given document file %s with a header that is not a file header when validating then rejects the header', (examplePath: string): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+    lines[0] = replaceLineRange(lines[0], [8, 8], '1')
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result).toEqual({
+      isValid: false,
+      errors: [new CnabInvalidRecordTypeError({ lineNumber: 0, expectedRecordType: '0', actualRecordType: '1' })]
+    })
   })
 
   it.each([
@@ -608,6 +651,137 @@ describe('cnab-file', (): void => {
     expect(result).toEqual({ isValid: true, errors: [] })
     expect(boleto.fields).not.toHaveProperty('data_de_juros')
     expect(boleto.fields.juros).toBeDefined()
+  })
+
+  interface InvalidValue {
+    range: [number, number]
+    value: string
+    fieldKey: string
+  }
+
+  interface BancoDoBrasilCase {
+    fieldGroup: string
+    examplePath: string
+    extraFields: CnabFieldClass[]
+    isEspecieLine: (line: string) => boolean
+    especieRange: [number, number]
+    isInvalidLine: (line: string) => boolean
+    invalidValues: InvalidValue[]
+  }
+
+  const especiesWithoutJurosAndMulta = ['31', '32']
+  const invalidEspecies = ['  ', '77']
+
+  const isBancoDoBrasil240SegmentoP = (line: string): boolean => line[7] == '3' && line[13] == 'P'
+  const isBancoDoBrasil400Registro7 = (line: string): boolean => line[0] == '7'
+
+  const bancoDoBrasilCases: BancoDoBrasilCase[] = [
+    {
+      fieldGroup: 'juros',
+      examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+      extraFields: CNAB_DATA_DE_JUROS_FIELDS,
+      isEspecieLine: isBancoDoBrasil240SegmentoP,
+      especieRange: [107, 108],
+      isInvalidLine: isBancoDoBrasil240SegmentoP,
+      invalidValues: [
+        { range: [118, 118], value: '9', fieldKey: 'codigo_de_juros' },
+        { range: [127, 141], value: 'A'.repeat(15), fieldKey: 'juros' },
+        { range: [119, 126], value: '99999999', fieldKey: 'data_de_juros' }
+      ]
+    },
+    {
+      fieldGroup: 'juros',
+      examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+      extraFields: CNAB_DATA_DE_JUROS_FIELDS,
+      isEspecieLine: isBancoDoBrasil400Registro7,
+      especieRange: [148, 149],
+      isInvalidLine: isBancoDoBrasil400Registro7,
+      invalidValues: [
+        { range: [161, 173], value: 'A'.repeat(13), fieldKey: 'juros' }
+      ]
+    },
+    {
+      fieldGroup: 'multa',
+      examplePath: 'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+      extraFields: CNAB_DATA_DE_MULTA_FIELDS,
+      isEspecieLine: isBancoDoBrasil240SegmentoP,
+      especieRange: [107, 108],
+      isInvalidLine: (line: string): boolean => line[7] == '3' && line[13] == 'R',
+      invalidValues: [
+        { range: [66, 66], value: '8', fieldKey: 'codigo_de_multa' },
+        { range: [75, 89], value: 'A'.repeat(15), fieldKey: 'multa' },
+        { range: [67, 74], value: '99999999', fieldKey: 'data_de_multa' }
+      ]
+    },
+    {
+      fieldGroup: 'multa',
+      examplePath: 'banco-do-brasil/cnab400/banco_do_brasil_cnab_400.REM',
+      extraFields: CNAB_DATA_DE_MULTA_FIELDS,
+      isEspecieLine: isBancoDoBrasil400Registro7,
+      especieRange: [148, 149],
+      isInvalidLine: (line: string): boolean => line.startsWith('599'),
+      invalidValues: [
+        { range: [4, 4], value: '8', fieldKey: 'codigo_de_multa' },
+        { range: [11, 22], value: 'A'.repeat(12), fieldKey: 'multa' },
+        { range: [5, 10], value: '999999', fieldKey: 'data_de_multa' }
+      ]
+    }
+  ]
+
+  function bancoDoBrasilFile(bancoDoBrasilCase: BancoDoBrasilCase, especie: string): CnabFile {
+    const lines = readExampleLines(path.join(resPath(), bancoDoBrasilCase.examplePath))
+    const especieIndex = lines.findIndex(bancoDoBrasilCase.isEspecieLine)
+    lines[especieIndex] = replaceLineRange(lines[especieIndex], bancoDoBrasilCase.especieRange, especie)
+    const invalidIndex = lines.findIndex((line, index) => index >= especieIndex && bancoDoBrasilCase.isInvalidLine(line))
+    lines[invalidIndex] = bancoDoBrasilCase.invalidValues.reduce((line, invalid) => replaceLineRange(line, invalid.range, invalid.value), lines[invalidIndex])
+    return CnabFile.fromLines(lines)
+  }
+
+  describe.each(especiesWithoutJurosAndMulta)('given especie %s', (especie: string): void => {
+    it.each(bancoDoBrasilCases)('in document file $examplePath with invalid $fieldGroup when reading then dispenses the $fieldGroup', (bancoDoBrasilCase: BancoDoBrasilCase): void => {
+      // Given
+      const cnabFile = bancoDoBrasilFile(bancoDoBrasilCase, especie)
+
+      // When
+      const result = cnabFile.validate(true, bancoDoBrasilCase.extraFields)
+      const boleto = cnabFile.read(bancoDoBrasilCase.extraFields).boletos[0]
+
+      // Then
+      expect(result).toEqual({ isValid: true, errors: [] })
+      expect(boleto.fields.especie_do_titulo).toBe(especie)
+      for (const invalid of bancoDoBrasilCase.invalidValues) {
+        expect(boleto.fields).not.toHaveProperty(invalid.fieldKey)
+      }
+    })
+  })
+
+  it.each(bancoDoBrasilCases)('given document file $examplePath with especie 02 and invalid $fieldGroup when validating then rejects the $fieldGroup', (bancoDoBrasilCase: BancoDoBrasilCase): void => {
+    // Given
+    const cnabFile = bancoDoBrasilFile(bancoDoBrasilCase, '02')
+
+    // When
+    const result = cnabFile.validate(true, bancoDoBrasilCase.extraFields)
+
+    // Then
+    const expectedErrors = bancoDoBrasilCase.invalidValues.map(invalid => ({ fieldKey: invalid.fieldKey }))
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toMatchObject(expectedErrors)
+  })
+
+  describe.each(invalidEspecies)('given invalid especie "%s"', (especie: string): void => {
+    it.each(bancoDoBrasilCases)('in document file $examplePath with invalid $fieldGroup when validating then rejects the especie and the $fieldGroup', (bancoDoBrasilCase: BancoDoBrasilCase): void => {
+      // Given
+      const cnabFile = bancoDoBrasilFile(bancoDoBrasilCase, especie)
+
+      // When
+      const result = cnabFile.validate(true, bancoDoBrasilCase.extraFields)
+
+      // Then
+      const invalidErrors = bancoDoBrasilCase.invalidValues.map(invalid => ({ fieldKey: invalid.fieldKey }))
+      const expectedErrors = [{ fieldKey: 'especie_do_titulo' }, ...invalidErrors]
+      expect(result.isValid).toBe(false)
+      expect(result.errors).toMatchObject(expectedErrors)
+    })
   })
 
   it('given bradesco cnab240 file with invalid data de juros when reading then rejects the file', (): void => {
