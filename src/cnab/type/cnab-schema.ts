@@ -5,7 +5,6 @@ import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabBoletoGroupRule } from '@cnab/type/cnab-boleto-group-rule'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CnabField, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
-import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
 
@@ -118,24 +117,39 @@ export class CnabSchema {
 
   private extractBoleto(group: CnabNumberedLine[], fields: CnabFieldClass[]): CnabBoleto {
     const boleto = new CnabBoleto()
+    const groupReadings: CnabField<unknown>[] = []
+
     for (const { lineNumber, rawLine } of group) {
       for (const fieldType of fields) {
         const field = new fieldType(rawLine, lineNumber)
         if (!field.shouldValidate()) {
           continue
         }
-        const groupReader = new CnabGroupReader(group, fieldType.dependencies, field.fieldKey)
-        const value = field.readInGroup(groupReader)
-        if (value != null) {
-          boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, value, boleto.fields[field.fieldKey])
+
+        if (fieldType.resolvesInGroup) {
+          groupReadings.push(field)
+          continue
         }
+
+        this.mergeFieldValue(boleto, field, field.value)
       }
     }
+
+    for (const field of groupReadings) {
+      this.mergeFieldValue(boleto, field, field.readInGroup(group))
+    }
+
     return boleto
   }
 
+  private mergeFieldValue(boleto: CnabBoleto, field: CnabField<unknown>, value: unknown): void {
+    if (value != null) {
+      boleto.fields[field.fieldKey] = this.handleDuplicatedFields(field, value, boleto.fields[field.fieldKey])
+    }
+  }
+
   private handleDuplicatedFields(field: CnabField<unknown>, value: unknown, previousValue: unknown): unknown {
-    return previousValue == null ? value : field.handleDuplicatedValue(previousValue, value)
+    return previousValue == null ? value : field.handleDuplicatedValue(previousValue)
   }
 }
 

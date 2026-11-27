@@ -33,8 +33,8 @@ export abstract class EmailBoletoField extends CnabField<string[]> {
     }
   }
 
-  handleDuplicatedValue(previousValue: unknown, value: string[] | null = this.value): string[] {
-    const allEmails = [...(previousValue as string[]), ...(value ?? [])]
+  handleDuplicatedValue(previousValue: unknown): string[] {
+    const allEmails = [...(previousValue as string[]), ...(this.value ?? [])]
     const uniqueEmails = new Set(allEmails)
     return [...uniqueEmails]
   }

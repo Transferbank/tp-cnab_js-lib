@@ -1,29 +1,30 @@
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
+import { CnabNumberedLine } from '@cnab/type/cnab-field'
+import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
 import { CodigoDeJurosBoletoField as Cnab240CodigoDeJurosBoletoField } from '@cnab/field/cnab240/codigo-de-juros-boleto-field'
 import { EspecieDoTituloBoletoField } from '@cnab/bank/banco-do-brasil/cnab/cnab240/field/especie-do-titulo-boleto-field'
-import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
-import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
-import { isEspecieWithoutJurosAndMulta } from '@cnab/bank/banco-do-brasil/especie-without-juros-and-multa'
+
+const ESPECIES_WITHOUT_JUROS_AND_MULTA = ['31', '32']
 
 export class CodigoDeJurosBoletoField extends Cnab240CodigoDeJurosBoletoField {
   static readonly bank = CnabBank.BANCODOBRASIL
   static readonly format = CnabFormat.CNAB240
-  static readonly dependencies = [EspecieDoTituloBoletoField]
+  static readonly resolvesInGroup = true
 
-  validateInGroup(group: CnabGroupReader): CnabValidationResult {
-    const especie = group.read(EspecieDoTituloBoletoField)
-    if (isEspecieWithoutJurosAndMulta(especie)) {
+  validateInGroup(lines: CnabNumberedLine[], lineResult: CnabValidationResult): CnabValidationResult {
+    const especie = this.readFieldInGroup(lines, EspecieDoTituloBoletoField)
+    if (especie != null && ESPECIES_WITHOUT_JUROS_AND_MULTA.includes(especie)) {
       return { isValid: true, errors: [] }
     }
-    return super.validateInGroup(group)
+    return lineResult
   }
 
-  readInGroup(group: CnabGroupReader): string | null {
-    const especie = group.read(EspecieDoTituloBoletoField)
-    if (isEspecieWithoutJurosAndMulta(especie)) {
+  readInGroup(lines: CnabNumberedLine[]): string | null {
+    const especie = this.readFieldInGroup(lines, EspecieDoTituloBoletoField)
+    if (especie != null && ESPECIES_WITHOUT_JUROS_AND_MULTA.includes(especie)) {
       return null
     }
-    return super.readInGroup(group)
+    return this.value
   }
 }

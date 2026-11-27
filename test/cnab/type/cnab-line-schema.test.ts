@@ -1,8 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { CnabField } from '@cnab/type/cnab-field'
-import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
+import { CnabField, CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineSchema } from '@cnab/type/cnab-line-schema'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -29,7 +28,7 @@ class FakeSecondRecordField extends CnabField<string> {
 
 class FakeGroupField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  static readonly dependencies = [FakeSecondRecordField]
+  static readonly resolvesInGroup = true
   readonly fieldKey = 'campo_do_boleto'
   readonly range: [number, number] = [1, 1]
 
@@ -37,8 +36,8 @@ class FakeGroupField extends CnabField<string> {
     return this.rawLine.startsWith('1')
   }
 
-  validateInGroup(group: CnabGroupReader): CnabValidationResult {
-    const secondRecord = group.read(FakeSecondRecordField)
+  validateInGroup(lines: CnabNumberedLine[], _lineResult: CnabValidationResult): CnabValidationResult {
+    const secondRecord = this.readFieldInGroup(lines, FakeSecondRecordField)
     return this.errorResult(`segundo registro do boleto: ${secondRecord ?? 'ausente'}`)
   }
 
@@ -69,7 +68,7 @@ function boletoSchema(): CnabLineSchema {
 }
 
 describe('CnabLineSchema', (): void => {
-  it('given a field that depends on another field when validating then reads it only in its own boleto', (): void => {
+  it('given a field resolved in group when validating then the group decides the result with the lines of its own boleto', (): void => {
     // Given
     const rawLines = ['1'.padEnd(400, ' '), '2AAA'.padEnd(400, ' '), '1'.padEnd(400, ' ')]
 

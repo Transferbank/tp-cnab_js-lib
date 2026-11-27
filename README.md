@@ -385,6 +385,37 @@ const cnab = cnabFile.read([DataDeEmissaoBoletoField])
 
 Assim, uma mesma lista com campos de vários bancos pode ser passada para qualquer arquivo: em um Itaú CNAB 400, o campo acima é lido; em um Bradesco ou em um Itaú CNAB 240, ele é ignorado. Sem `bank` e `format`, o campo vale para todos os bancos e formatos. `bank` e `format` só têm efeito em campos extras: os campos do catálogo já são separados por banco e formato em [`cnab-bank-schemas.ts`](src/cnab/bank/cnab-bank-schemas.ts).
 
+#### Campos que dependem de outras linhas do boleto
+
+Um campo que precisa de outro campo do mesmo boleto, em qualquer linha, declara `static readonly resolvesInGroup = true`. A lib primeiro valida e lê cada linha normalmente e, depois de passar por todas as linhas do boleto, chama nesse campo:
+
+- `validateInGroup(lines, lineResult)`: recebe as linhas do boleto e o resultado de `validate()` na linha do campo, e devolve o resultado final. Por padrão, devolve `lineResult`.
+- `readInGroup(lines)`: recebe as linhas do boleto e devolve o valor que aparece em `fields`. Por padrão, devolve o valor da linha. Devolver `null` tira o campo da leitura.
+
+Dentro desses métodos, `readFieldInGroup(lines, OutroCampo)` devolve o valor de `OutroCampo` na primeira linha do boleto aceita pelo `shouldValidate` dele, ou `null` se nenhuma linha tiver o campo ou se o valor estiver em formato inválido. As linhas chegam como `CnabNumberedLine`, com `lineNumber` e `rawLine`:
+
+```ts
+import { CnabField, CnabNumberedLine, CnabValidationResult } from '@fx55/cnab-lib-ts'
+
+class DescontoBoletoField extends CnabField<number> {
+  static readonly resolvesInGroup = true
+
+  validateInGroup(lines: CnabNumberedLine[], lineResult: CnabValidationResult): CnabValidationResult {
+    const dataDeEmissao = this.readFieldInGroup(lines, DataDeEmissaoBoletoField)
+    return dataDeEmissao == null ? { isValid: true, errors: [] } : lineResult
+  }
+
+  readInGroup(lines: CnabNumberedLine[]): number | null {
+    const dataDeEmissao = this.readFieldInGroup(lines, DataDeEmissaoBoletoField)
+    return dataDeEmissao == null ? null : this.value
+  }
+
+  // fieldType, fieldKey, range, shouldValidate, parseValue e performValidation como em qualquer campo
+}
+```
+
+No exemplo, o desconto só é validado e lido quando o boleto tem data de emissão. Em `validate()`, os erros desses campos aparecem depois dos demais erros do boleto; em `read()`, as chaves deles entram em `fields` depois das demais.
+
 ### Tratando erros de validação
 
 Todo erro implementa `CnabValidationError`, com `errorType` (`'line'` ou `'field'`), `lineNumber` (começando em 0) e `message`. Erros de campo (`CnabFieldValidationError`) também trazem `fieldKey`, `fieldLabel` (ex: `'Nome do sacado'`) e `range`.

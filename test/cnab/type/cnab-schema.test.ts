@@ -1,8 +1,7 @@
 import { describe, it, expect } from '@jest/globals'
 import { CnabBank } from '@cnab/type/cnab-bank'
 import { CnabFormat } from '@cnab/type/cnab-format'
-import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
-import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
+import { CnabField, CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabSchema } from '@cnab/type/cnab-schema'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -28,7 +27,7 @@ class FakeSecondRecordField extends CnabField<string> {
 
 class FakeGroupField extends CnabField<string> {
   static readonly fieldType = CnabFieldType.BOLETO
-  static readonly dependencies = [FakeSecondRecordField]
+  static readonly resolvesInGroup = true
   readonly fieldKey = 'campo_do_boleto'
   readonly range: [number, number] = [2, 4]
 
@@ -36,8 +35,8 @@ class FakeGroupField extends CnabField<string> {
     return this.rawLine.startsWith('1')
   }
 
-  readInGroup(group: CnabGroupReader): string | null {
-    const secondRecord = group.read(FakeSecondRecordField)
+  readInGroup(lines: CnabNumberedLine[]): string | null {
+    const secondRecord = this.readFieldInGroup(lines, FakeSecondRecordField)
     return secondRecord == null ? null : this.value
   }
 
@@ -50,74 +49,37 @@ class FakeGroupField extends CnabField<string> {
   }
 }
 
-class FakeNormalizedField extends CnabField<string> {
-  static readonly fieldType = CnabFieldType.BOLETO
-  readonly fieldKey = 'campo_normalizado'
-  readonly range: [number, number] = [2, 4]
-
-  shouldValidate(): boolean {
-    return this.rawLine.startsWith('2')
-  }
-
-  readInGroup(_group: CnabGroupReader): string | null {
-    return this.value?.toLowerCase() ?? null
-  }
-
-  handleDuplicatedValue(previousValue: unknown, value: string | null = this.value): string {
-    return `${String(previousValue)}+${value ?? ''}`
-  }
-
-  protected parseValue(rawValue: string): string {
-    return rawValue
-  }
-
-  protected performValidation(): CnabValidationResult {
-    return { isValid: true, errors: [] }
-  }
-}
-
-function schemaWith(field: CnabFieldClass): CnabSchema {
+function boletoSchema(): CnabSchema {
   return new CnabSchema({
     bank: CnabBank.BRADESCO,
     fmt: CnabFormat.CNAB400,
     boletoGroupRule: new Cnab400BoletoGroupRule(),
     header: { fieldType: CnabFieldType.HEADER, fields: [] },
     trailer: { fieldType: CnabFieldType.TRAILER, fields: [] },
-    boleto: { fieldType: CnabFieldType.BOLETO, fields: [field] }
+    boleto: { fieldType: CnabFieldType.BOLETO, fields: [FakeGroupField] }
   })
 }
 
 describe('CnabSchema', (): void => {
-  it('given a field read in group when extracting then reads it with the lines of its own boleto', (): void => {
+  it('given a field resolved in group when extracting then reads it with the lines of its own boleto', (): void => {
     // Given
     const rawLines = ['0', '1AAA', '2', '1BBB', '9']
 
     // When
-    const cnab = schemaWith(FakeGroupField).extractCnab(rawLines)
+    const cnab = boletoSchema().extractCnab(rawLines)
 
     // Then
     expect(cnab.boletos.map(boleto => boleto.fields)).toEqual([{ campo_do_boleto: 'AAA' }])
   })
 
-  it('given a dependency that matches the file trailer when extracting then does not read it in the last boleto', (): void => {
+  it('given a line in group that matches the file trailer when extracting then does not read it in the last boleto', (): void => {
     // Given
     const rawLines = ['0', '1AAA', '2', '1BBB', '2']
 
     // When
-    const cnab = schemaWith(FakeGroupField).extractCnab(rawLines)
+    const cnab = boletoSchema().extractCnab(rawLines)
 
     // Then
     expect(cnab.boletos.map(boleto => boleto.fields)).toEqual([{ campo_do_boleto: 'AAA' }])
-  })
-
-  it('given a field read in group on several lines when extracting then merges the values read in group', (): void => {
-    // Given
-    const rawLines = ['0', '1', '2AAA', '2BBB', '9']
-
-    // When
-    const cnab = schemaWith(FakeNormalizedField).extractCnab(rawLines)
-
-    // Then
-    expect(cnab.boletos.map(boleto => boleto.fields)).toEqual([{ campo_normalizado: 'aaa+bbb' }])
   })
 })

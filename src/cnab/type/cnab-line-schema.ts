@@ -1,6 +1,5 @@
 ﻿import { CnabBank } from '@cnab/type/cnab-bank'
-import { CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
-import { CnabGroupReader } from '@cnab/type/cnab-group-reader'
+import { CnabField, CnabFieldClass, CnabNumberedLine } from '@cnab/type/cnab-field'
 import { CnabFormat } from '@cnab/type/cnab-format'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabLineValidatorClass } from '@cnab/type/cnab-line-validator'
@@ -10,17 +9,6 @@ import {
   Cnab240LineSizeValidator,
   Cnab400LineSizeValidator,
 } from '@cnab/validators/cnab-line-size-validator'
-
-interface CnabValidatable {
-  readonly fieldKey?: string
-  shouldValidate(): boolean
-  validateInGroup(group: CnabGroupReader): CnabValidationResult
-}
-
-interface CnabValidatableConstructor {
-  readonly dependencies?: CnabFieldClass[]
-  new (rawLine: string, lineNumber: number): CnabValidatable
-}
 
 export class CnabLineSchema {
   readonly bank: CnabBank
@@ -112,25 +100,50 @@ export class CnabLineSchema {
     extraFields: CnabFieldClass[]
   ): CnabValidationResult {
     const result: CnabValidationResult = { isValid: true, errors: [] }
-    const validationTypes = [
-      ...this.validators,
-      ...this.fields,
-      ...extraFields,
-    ] as CnabValidatableConstructor[]
+    const fields = [...this.fields, ...extraFields]
 
     for (const group of this.genLineGroups(rawLines, firstLine)) {
-      for (const { lineNumber, rawLine } of group) {
-        for (const validationType of validationTypes) {
-          const instance = new validationType(rawLine, lineNumber)
+      const groupValidations: Array<[CnabField<unknown>, CnabValidationResult]> = []
 
-          if (!instance.shouldValidate()) {
+      for (const { lineNumber, rawLine } of group) {
+        for (const validatorType of this.validators) {
+          const validator = new validatorType(rawLine, lineNumber)
+
+          if (!validator.shouldValidate()) {
             continue
           }
 
-          const groupReader = new CnabGroupReader(group, validationType.dependencies ?? [], instance.fieldKey ?? '')
-          if (this.addResult(result, instance.validateInGroup(groupReader)) && eagerEnabled) {
+          this.mergeValidationResult(result, validator.validate())
+          if (!result.isValid && eagerEnabled) {
             return result
           }
+        }
+
+        for (const fieldType of fields) {
+          const field = new fieldType(rawLine, lineNumber)
+
+          if (!field.shouldValidate()) {
+            continue
+          }
+
+          const lineResult = field.validate()
+
+          if (fieldType.resolvesInGroup) {
+            groupValidations.push([field, lineResult])
+            continue
+          }
+
+          this.mergeValidationResult(result, lineResult)
+          if (!result.isValid && eagerEnabled) {
+            return result
+          }
+        }
+      }
+
+      for (const [field, lineResult] of groupValidations) {
+        this.mergeValidationResult(result, field.validateInGroup(group, lineResult))
+        if (!result.isValid && eagerEnabled) {
+          return result
         }
       }
     }
@@ -138,9 +151,8 @@ export class CnabLineSchema {
     return result
   }
 
-  private addResult(result: CnabValidationResult, validationResult: CnabValidationResult): boolean {
+  private mergeValidationResult(result: CnabValidationResult, validationResult: CnabValidationResult): void {
     result.isValid = result.isValid && validationResult.isValid
     result.errors.push(...validationResult.errors)
-    return !result.isValid
   }
 }
