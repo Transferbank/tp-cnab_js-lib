@@ -78,6 +78,21 @@ export class CnabInvalidLineStartError extends CnabLineValidationError {
   }
 }
 
+export class CnabInvalidRecordTypeError extends CnabLineValidationError {
+  readonly expectedRecordType: string
+  readonly actualRecordType: string
+
+  constructor(params: { lineNumber: number; expectedRecordType: string; actualRecordType: string }) {
+    super({ lineNumber: params.lineNumber })
+    this.expectedRecordType = params.expectedRecordType
+    this.actualRecordType = params.actualRecordType
+  }
+
+  get message(): string {
+    return `Tipo de registro inválido: esperado "${this.expectedRecordType}", recebido "${this.actualRecordType}"`
+  }
+}
+
 export class CnabFieldMinLengthError extends CnabFieldValidationError {
   readonly minLength: number
 

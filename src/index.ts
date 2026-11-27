@@ -33,6 +33,7 @@ export {
   CnabFieldValidationError,
   CnabInvalidLineSizeError,
   CnabInvalidLineStartError,
+  CnabInvalidRecordTypeError,
   CnabFieldMinLengthError,
   CnabGenericFieldError,
   CnabFieldParseError,

@@ -4,7 +4,7 @@ import * as path from 'path'
 import { CnabBoleto } from '@cnab/type/cnab'
 import { CnabFile } from '@cnab/type/cnab-file'
 import { CnabInvalidFileException } from '@cnab/exception/cnab-exception'
-import { CnabInvalidLineSizeError } from '@cnab/type/cnab-validation-error'
+import { CnabInvalidLineSizeError, CnabInvalidRecordTypeError } from '@cnab/type/cnab-validation-error'
 import { CnabField, CnabFieldClass } from '@cnab/type/cnab-field'
 import { CnabFieldType } from '@cnab/type/cnab-field-type'
 import { CnabValidationResult } from '@cnab/type/cnab-validation-result'
@@ -303,6 +303,49 @@ describe('cnab-file', (): void => {
     } catch (error) {
       expect((error as CnabInvalidFileException).errors).toEqual(expectedErrors)
     }
+  })
+
+  const cnab240ExamplePaths = [
+    'banco-do-brasil/cnab240/banco_do_brasil_cnab_240.txt',
+    'bradesco/cnab240/bradesco_cnab_240.txt',
+    'caixa/cnab240/caixa_cnab_240.txt',
+    'itau/cnab240/itau_cnab_240.txt',
+    'santander/cnab240/santander_cnab_240.txt',
+    'sicoob/cnab240/sicoob_cnab_240.txt',
+    'sicredi/cnab240/sicredi_cnab_240.txt'
+  ]
+
+  it.each(cnab240ExamplePaths)('given document file %s truncated after a segment Q when validating then rejects the missing file trailer', (examplePath: string): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+    const segmentoQLines = lines.map((line: string) => Cnab240LineTypeChecker.isSegmentoQ(line))
+    const lastSegmentoQIndex = segmentoQLines.lastIndexOf(true)
+    const cnabFile = CnabFile.fromLines(lines.slice(0, lastSegmentoQIndex + 1))
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result).toEqual({
+      isValid: false,
+      errors: [new CnabInvalidRecordTypeError({ lineNumber: lastSegmentoQIndex, expectedRecordType: '9', actualRecordType: '3' })]
+    })
+  })
+
+  it.each(cnab240ExamplePaths)('given document file %s with a header that is not a file header when validating then rejects the header', (examplePath: string): void => {
+    // Given
+    const lines = readExampleLines(path.join(resPath(), examplePath))
+    lines[0] = replaceLineRange(lines[0], [8, 8], '1')
+    const cnabFile = CnabFile.fromLines(lines)
+
+    // When
+    const result = cnabFile.validate(true)
+
+    // Then
+    expect(result).toEqual({
+      isValid: false,
+      errors: [new CnabInvalidRecordTypeError({ lineNumber: 0, expectedRecordType: '0', actualRecordType: '1' })]
+    })
   })
 
   it.each([
