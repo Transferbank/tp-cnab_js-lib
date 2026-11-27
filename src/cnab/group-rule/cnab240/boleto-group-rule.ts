@@ -5,4 +5,8 @@ export class Cnab240BoletoGroupRule extends CnabBoletoGroupRule {
   check(rawLine: string): boolean {
     return Cnab240LineTypeChecker.isSegmentoP(rawLine)
   }
+
+  isOutsideBoleto(rawLine: string): boolean {
+    return Cnab240LineTypeChecker.isHeaderLote(rawLine) || Cnab240LineTypeChecker.isTrailerLote(rawLine)
+  }
 }

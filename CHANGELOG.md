@@ -20,3 +20,4 @@ Mudanças da `@fx55/cnab-lib-ts` por versão. As versões seguem o [versionament
 ### Corrigido
 
 - `read()` não lê mais as linhas de header e trailer como parte dos boletos: um campo de boleto que aceitasse a linha de trailer era lido no último boleto.
+- No CNAB 240, o header e o trailer de lote não entram mais no boleto anterior. Antes, o último boleto de um lote recebia o trailer do lote e, em arquivos com vários lotes, o header do lote seguinte. As duas linhas continuam validadas, agora também o header do primeiro lote, que antes ficava de fora.

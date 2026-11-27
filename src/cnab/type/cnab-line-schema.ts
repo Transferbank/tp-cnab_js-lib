@@ -83,6 +83,12 @@ export class CnabLineSchema {
           yield group
         }
         group = [numberedLine]
+      } else if (this.boletoGroupRule.isOutsideBoleto(rawLine)) {
+        if (group.length != 0) {
+          yield group
+        }
+        group = []
+        yield [numberedLine]
       } else if (group.length > 0) {
         group.push(numberedLine)
       }
